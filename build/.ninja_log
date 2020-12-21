@@ -1,0 +1,13 @@
+# ninja log v5
+1	36	1608532655	annotator-resources.h	ea4e645ff1abb132
+1	42	1608532655	annotator-resources.c	cd0df367db6874f4
+1	328	1608532655	data/com.github.phase1geo.annotator.desktop	188137ef609621ad
+2	333	1608532655	data/com.github.phase1geo.annotator.appdata.xml	ea9213a48e15189e
+0	433	1608532686	build.ninja	4d2fb2d2d8eb3aa1
+1	236	1608532686	com.github.phase1geo.annotator@exe/meson-generated_.._annotator-resources.c.o	d4338cb46728797b
+1	420	1608532814	com.github.phase1geo.annotator@exe/src/Application.c	b5d51d8095d7579
+1	420	1608532814	com.github.phase1geo.annotator@exe/src/MainWindow.c	b5d51d8095d7579
+420	783	1608532815	com.github.phase1geo.annotator@exe/meson-generated_src_MainWindow.c.o	7b49f3f0727dc68b
+420	785	1608532815	com.github.phase1geo.annotator@exe/meson-generated_src_Application.c.o	36fdca7b6dbf7544
+785	917	1608532815	com.github.phase1geo.annotator	84c90310d3d8bbd9
+3	2824	0	meson-install	9bd7faa9472bf40f

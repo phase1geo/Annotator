@@ -1,0 +1,14 @@
+[Desktop Entry]
+Name=Annotator
+GenericName=Annotator
+Comment=Communicate with images better
+Categories=Utility;Development;
+Exec=com.github.phase1geo.annotator %f
+Icon=com.github.phase1geo.annotator
+Terminal=false
+Type=Application
+MimeType=image/png;image/jpeg;image/tiff;
+X-GNOME-Gettext-Domain=Annotator
+X-GNOME-UsesNotifications=true
+Keywords=annotator;image;annotate;
+

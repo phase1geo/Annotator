@@ -1,0 +1,12 @@
+# List of files installed by Meson
+# Does not contain files installed by custom scripts.
+/usr/share/applications/com.github.phase1geo.annotator.desktop
+/usr/share/metainfo/com.github.phase1geo.annotator.appdata.xml
+/usr/bin/com.github.phase1geo.annotator
+/usr/share/icons/hicolor/16x16/apps/com.github.phase1geo.annotator.svg
+/usr/share/icons/hicolor/24x24/apps/com.github.phase1geo.annotator.svg
+/usr/share/icons/hicolor/32x32/apps/com.github.phase1geo.annotator.svg
+/usr/share/icons/hicolor/48x48/apps/com.github.phase1geo.annotator.svg
+/usr/share/icons/hicolor/64x64/apps/com.github.phase1geo.annotator.svg
+/usr/share/icons/hicolor/128x128/apps/com.github.phase1geo.annotator.svg
+/usr/share/glib-2.0/schemas/com.github.phase1geo.annotator.gschema.xml
