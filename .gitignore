@@ -1,0 +1,8 @@
+build-flatpak/
+build/
+.flatpak-builder
+src/*.o
+src/*.c
+src/*.swp
+src/undo_actions/*.c
+src/undo_actions/*.swp
