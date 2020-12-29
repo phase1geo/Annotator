@@ -27,8 +27,10 @@ public class MainWindow : ApplicationWindow {
   private const string DESKTOP_SCHEMA = "io.elementary.desktop";
   private const string DARK_KEY       = "prefer-dark";
 
-  private HeaderBar                _header;
-  private FontButton               _font;
+  private HeaderBar  _header;
+  private FontButton _font;
+  private Canvas     _canvas;
+  private Button     _open_btn;
 
   private const GLib.ActionEntry[] action_entries = {
     { "action_open",       do_open },
@@ -60,21 +62,20 @@ public class MainWindow : ApplicationWindow {
     create_header();
 
     /* Create editor */
-    /*
-    _editor = new Editor( this );
-    _editor.buffer_changed.connect( do_buffer_changed );
+    _canvas = new Canvas( this );
+
+    /* Create the overlay that will hold the canvas so that we can add emoji support */
+    var overlay = new Overlay();
+    overlay.add( _canvas );
 
     var sw = new ScrolledWindow( null, null );
     sw.min_content_width  = 600;
     sw.min_content_height = 400;
-    sw.add( _editor );
+    sw.vscrollbar_policy  = PolicyType.AUTOMATIC;
+    sw.hscrollbar_policy  = PolicyType.AUTOMATIC;
+    sw.add( overlay );
 
-    var ebox = new Box( Orientation.VERTICAL, 0 );
-
-    ebox.pack_start( sw,          true,  true, 0 );
-
-    box.pack_start( ebox, true, true, 5 );
-    */
+    box.pack_start( sw, true, true, 5 );
 
     add( box );
     show_all();
@@ -141,12 +142,12 @@ public class MainWindow : ApplicationWindow {
     _header = new HeaderBar();
     _header.set_show_close_button( true );
 
-    /*
     _open_btn = new Button.from_icon_name( "document-open", IconSize.LARGE_TOOLBAR );
-    _open_btn.set_tooltip_markup( Utils.tooltip_with_accel( _( "Open File" ), "<Control>o" ) );
+    _open_btn.set_tooltip_markup( Utils.tooltip_with_accel( _( "Open Image" ), "<Control>o" ) );
     _open_btn.clicked.connect( do_open );
     _header.pack_start( _open_btn );
 
+    /*
     _save_btn = new Button.from_icon_name( "document-save", IconSize.LARGE_TOOLBAR );
     _save_btn.set_tooltip_markup( Utils.tooltip_with_accel( _( "Save File" ), "<Control>s" ) );
     _save_btn.clicked.connect( do_save );
@@ -217,7 +218,21 @@ public class MainWindow : ApplicationWindow {
 
   private void do_open() {
 
-    /* TBD */
+    /* Get the file to open from the user */
+    var dialog   = new FileChooserNative( _( "Open Image File" ), this, FileChooserAction.OPEN, _( "Open" ), _( "Cancel" ) );
+    Utils.set_chooser_folder( dialog );
+
+    /* Create file filters */
+    var filter = new FileFilter();
+    filter.set_filter_name( "PNG" );
+    filter.add_pattern( "*.png" );
+    dialog.add_filter( filter );
+
+    if( dialog.run() == ResponseType.ACCEPT ) {
+      var filename = dialog.get_filename();
+      _canvas.open_image( filename );
+      Utils.store_chooser_folder( filename );
+    }
 
   }
 
@@ -234,7 +249,7 @@ public class MainWindow : ApplicationWindow {
 
   /* Performs an undo operation */
   private void do_undo() {
-    /* TBD 
+    /* TBD
     _editor.undo_buffer.undo();
     _editor.grab_focus();
     */

@@ -31,5 +31,10 @@
       <summary>Default font size</summary>
       <description>Default font size to use for the editor.</description>
     </key>
+    <key name="last-directory" type="s">
+      <default>""</default>
+      <summary>Last opened/saved directory.</summary>
+      <description>Last successfully opened or saved directory.</description>
+    </key>
   </schema>
 </schemalist>
