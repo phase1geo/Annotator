@@ -28,12 +28,9 @@ public class Editor : Box {
   private string        _filename;
 
   /* Constructor */
-  public Editor( MainWindow win, string filename ) {
+  public Editor( MainWindow win ) {
 
     Object( orientation: Orientation.VERTICAL, spacing: 0 );
-
-    /* Save the image filename */
-    _filename = filename;
 
     /* Create the canvas */
     _canvas = new Canvas( win );
@@ -59,13 +56,11 @@ public class Editor : Box {
 
     show_all();
 
-    /* Open the specified image */
-    open_image( filename );
-
   }
 
   /* Opens the given image */
   public void open_image( string filename ) {
+    _filename = filename;
     _canvas.open_image( filename );
   }
 

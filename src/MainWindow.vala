@@ -35,11 +35,11 @@ public class MainWindow : ApplicationWindow {
   private Editor?    _editor = null;
 
   private const GLib.ActionEntry[] action_entries = {
-    { "action_open",       do_open },
-    { "action_save",       do_save },
-    { "action_quit",       do_quit },
-    { "action_undo",       do_undo },
-    { "action_redo",       do_redo }
+    { "action_open", do_open },
+    { "action_save", do_save },
+    { "action_quit", do_quit },
+    { "action_undo", do_undo },
+    { "action_redo", do_redo }
   };
 
   /* Constructor */
@@ -62,6 +62,9 @@ public class MainWindow : ApplicationWindow {
 
     /* Create the header */
     create_header();
+
+    /* Create editor */
+    create_editor();
 
     add( _box );
     show_all();
@@ -167,6 +170,31 @@ public class MainWindow : ApplicationWindow {
 
   }
 
+  private void create_editor() {
+
+    /* Create the welcome screen */
+    var welcome = new Granite.Widgets.Welcome( "Foobar", "This is just a foobar" );
+    welcome.append( "document-open", _( "Open Image From File" ), _( "Open a PNG, JPEG, TIFF or BMP file" ) );
+    welcome.append( "edit-paste", _( "Paste Image From Clipboard" ), _( "Open an image from the clipboard" ) );
+    welcome.activated.connect((index) => {
+      switch( index ) {
+        case 0  :  do_open();   break;
+        case 1  :  do_paste();  break;
+        default :  assert_not_reached();
+      }
+    });
+
+    /* Create the editor */
+    _editor = new Editor( this );
+
+    /* Add the elements to the stack */
+    var stack = new Stack();
+    stack.transition_type = StackTransitionType.NONE;
+    stack.add_named( welcome, "welcome" );
+    stack.add_named( _editor,  "editor" );
+
+  }
+
   /* Create font selection box */
   private Box create_font_selection() {
 
@@ -216,11 +244,15 @@ public class MainWindow : ApplicationWindow {
 
     if( dialog.run() == ResponseType.ACCEPT ) {
       var filename = dialog.get_filename();
-      _editor = new Editor( this, filename );
-      _box.pack_start( _editor, true, true, 0 );
-      _box.show_all();
+      _editor.open_image( filename );
       Utils.store_chooser_folder( filename );
     }
+
+  }
+
+  private void do_paste() {
+
+    /* TBD */
 
   }
 
