@@ -31,6 +31,8 @@ public class MainWindow : ApplicationWindow {
   private FontButton _font;
   private Canvas     _canvas;
   private Button     _open_btn;
+  private Box        _box;
+  private Editor?    _editor = null;
 
   private const GLib.ActionEntry[] action_entries = {
     { "action_open",       do_open },
@@ -50,7 +52,7 @@ public class MainWindow : ApplicationWindow {
     provider.load_from_resource( "/com/github/phase1geo/annotator/css/style.css" );
     StyleContext.add_provider_for_screen( Gdk.Screen.get_default(), provider, STYLE_PROVIDER_PRIORITY_APPLICATION );
 
-    var box = new Box( Orientation.HORIZONTAL, 0 );
+    _box = new Box( Orientation.HORIZONTAL, 0 );
 
     /* Handle any changes to the dark mode preference setting */
     handle_prefer_dark_changes();
@@ -61,23 +63,7 @@ public class MainWindow : ApplicationWindow {
     /* Create the header */
     create_header();
 
-    /* Create editor */
-    _canvas = new Canvas( this );
-
-    /* Create the overlay that will hold the canvas so that we can add emoji support */
-    var overlay = new Overlay();
-    overlay.add( _canvas );
-
-    var sw = new ScrolledWindow( null, null );
-    sw.min_content_width  = 600;
-    sw.min_content_height = 400;
-    sw.vscrollbar_policy  = PolicyType.AUTOMATIC;
-    sw.hscrollbar_policy  = PolicyType.AUTOMATIC;
-    sw.add( overlay );
-
-    box.pack_start( sw, true, true, 5 );
-
-    add( box );
+    add( _box );
     show_all();
 
     /* Add keyboard shortcuts */
@@ -230,7 +216,9 @@ public class MainWindow : ApplicationWindow {
 
     if( dialog.run() == ResponseType.ACCEPT ) {
       var filename = dialog.get_filename();
-      _canvas.open_image( filename );
+      _editor = new Editor( this, filename );
+      _box.pack_start( _editor, true, true, 0 );
+      _box.show_all();
       Utils.store_chooser_folder( filename );
     }
 
