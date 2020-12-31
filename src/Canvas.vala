@@ -70,6 +70,11 @@ public class Canvas : DrawingArea {
 
   }
 
+  /* Returns true if the surface image has been set */
+  public bool is_surface_set() {
+    return( _surface != null );
+  }
+
   /* Sets the cursor */
   public void set_cursor( CursorType? type = null ) {
 
@@ -104,6 +109,18 @@ public class Canvas : DrawingArea {
 
     return( true );
 
+  }
+
+  /* Pastes an image from the given pixbuf to the canvas */
+  public void paste_image( Pixbuf buf ) {
+    _surface = (ImageSurface)cairo_surface_create_from_pixbuf( buf, 1, null );
+    set_size_request( buf.width, buf.height );
+    queue_draw();
+  }
+
+  /* Pastes a text from the given string to the canvas (only valid when editing a text item */
+  public void paste_text( string txt ) {
+    /* TBD */
   }
 
   /* Called by the input method manager when the user has a string to commit */

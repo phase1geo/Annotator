@@ -65,6 +65,20 @@ public class Editor : Box {
     _canvas.open_image( filename );
   }
 
-}
+  /* Pastes the given image pixbuf to the canvas */
+  public void paste_image( Gdk.Pixbuf buf ) {
+    _canvas.paste_image( buf );
+  }
 
+  /* Pastes the given text to the canvas */
+  public void paste_text( string txt ) {
+    _canvas.paste_text( txt );
+  }
+
+  /* Returns true if the image has been successfully set */
+  public bool is_image_set() {
+    return( _canvas.is_surface_set() );
+  }
+
+}
 

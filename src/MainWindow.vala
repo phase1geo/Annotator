@@ -27,20 +27,22 @@ public class MainWindow : ApplicationWindow {
   private const string DESKTOP_SCHEMA = "io.elementary.desktop";
   private const string DARK_KEY       = "prefer-dark";
 
-  private HeaderBar  _header;
-  private FontButton _font;
-  private Canvas     _canvas;
-  private Button     _open_btn;
-  private Box        _box;
-  private Editor     _editor;
-  private Stack      _stack;
+  private HeaderBar         _header;
+  private FontButton        _font;
+  private Canvas            _canvas;
+  private Button            _open_btn;
+  private Box               _box;
+  private Editor            _editor;
+  private Stack             _stack;
+  private SList<FileFilter> _image_filters;
 
   private const GLib.ActionEntry[] action_entries = {
-    { "action_open", do_open },
-    { "action_save", do_save },
-    { "action_quit", do_quit },
-    { "action_undo", do_undo },
-    { "action_redo", do_redo }
+    { "action_open",  do_open },
+    { "action_save",  do_save },
+    { "action_quit",  do_quit },
+    { "action_undo",  do_undo },
+    { "action_redo",  do_redo },
+    { "action_paste", do_paste }
   };
 
   /* Constructor */
@@ -73,6 +75,9 @@ public class MainWindow : ApplicationWindow {
     /* Add keyboard shortcuts */
     add_keyboard_shortcuts( app );
 
+    /* Gather the image filters */
+    gather_image_filters();
+
     /* Handle the application closing */
     destroy.connect( Gtk.main_quit );
 
@@ -85,6 +90,7 @@ public class MainWindow : ApplicationWindow {
     app.set_accels_for_action( "win.action_quit",       { "<Control>q" } );
     app.set_accels_for_action( "win.action_undo",       { "<Control>z" } );
     app.set_accels_for_action( "win.action_redo",       { "<Control><Shift>z" } );
+    app.set_accels_for_action( "win.action_paste",      { "<Control>v" } );
   }
 
   /* Handles any changes to the dark mode preference gsettings for the desktop */
@@ -236,31 +242,63 @@ public class MainWindow : ApplicationWindow {
 
   }
 
+  /* Creates a list of image filters that can be used in the open dialog */
+  private void gather_image_filters() {
+
+    _image_filters = new SList<FileFilter>();
+
+    string[] patterns = {};
+
+    foreach( Gdk.PixbufFormat format in Gdk.Pixbuf.get_formats() ) {
+      var filter = new FileFilter();
+      filter.set_filter_name( format.get_description() + "  (" + format.get_name() + ")" );
+      foreach( string ext in format.get_extensions() ) {
+        var pattern = "*" + ext;
+        filter.add_pattern( pattern );
+        patterns += pattern;
+      }
+      _image_filters.append( filter );
+    }
+
+    /* Add the 'all image formats' filter first */
+    var filter = new FileFilter();
+    filter.set_filter_name( _( "All Image Formats  (*)" ) );
+    foreach( string pattern in patterns ) {
+      filter.add_pattern( pattern );
+    }
+    _image_filters.prepend( filter );
+
+  }
+
+  /* Opens an image file for loading */
   private void do_open() {
 
     /* Get the file to open from the user */
     var dialog   = new FileChooserNative( _( "Open Image File" ), this, FileChooserAction.OPEN, _( "Open" ), _( "Cancel" ) );
     Utils.set_chooser_folder( dialog );
 
-    /* Create file filters */
-    var filter = new FileFilter();
-    filter.set_filter_name( "PNG" );
-    filter.add_pattern( "*.png" );
-    dialog.add_filter( filter );
+    /* Create file filters for each supported format */
+    foreach( FileFilter filter in _image_filters ) {
+      dialog.add_filter( filter );
+    }
 
     if( dialog.run() == ResponseType.ACCEPT ) {
       var filename = dialog.get_filename();
       _editor.open_image( filename );
-      _stack.visible_child_name = "editor";
+      if( _editor.is_image_set() ) {
+        _stack.visible_child_name = "editor";
+      }
       Utils.store_chooser_folder( filename );
     }
 
   }
 
+  /* Pastes text or images to the editor */
   private void do_paste() {
-
-    /* TBD */
-
+    AnnotatorClipboard.paste( _editor );
+    if( _editor.is_image_set() ) {
+      _stack.visible_child_name = "editor";
+    }
   }
 
   private void do_save() {
