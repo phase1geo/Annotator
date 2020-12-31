@@ -28,16 +28,18 @@ public class Canvas : DrawingArea {
   private ImageSurface?  _surface = null;
   private IMMulticontext _im_context;
 
-  public MainWindow  win     { get; private set; }
-  public double      sfactor { get; set; default = 1.0; }
-  public CanvasItems items   { get; private set; }
+  public MainWindow  win         { get; private set; }
+  public double      sfactor     { get; set; default = 1.0; }
+  public CanvasItems items       { get; private set; }
+  public UndoBuffer  undo_buffer { get; private set; }
 
   /* Constructor */
   public Canvas( MainWindow win ) {
 
     this.win = win;
 
-    this.items = new CanvasItems( this );
+    this.items       = new CanvasItems( this );
+    this.undo_buffer = new UndoBuffer( this );
 
     this.draw.connect( on_draw );
     this.button_press_event.connect( on_press );

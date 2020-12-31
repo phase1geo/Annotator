@@ -11,3 +11,4 @@ sources += files(
 )
 
 subdir('canvas_items')
+subdir('undo_actions')
