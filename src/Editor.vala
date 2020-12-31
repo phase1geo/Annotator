@@ -49,6 +49,7 @@ public class Editor : Box {
 
     /* Create the toolbar */
     _toolbar = new CanvasToolbar( _canvas.items );
+    _toolbar.halign = Align.CENTER;
 
     /* Pack the box */
     pack_start( _toolbar, false, true, 0 );

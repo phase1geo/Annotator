@@ -32,7 +32,8 @@ public class MainWindow : ApplicationWindow {
   private Canvas     _canvas;
   private Button     _open_btn;
   private Box        _box;
-  private Editor?    _editor = null;
+  private Editor     _editor;
+  private Stack      _stack;
 
   private const GLib.ActionEntry[] action_entries = {
     { "action_open", do_open },
@@ -52,7 +53,7 @@ public class MainWindow : ApplicationWindow {
     provider.load_from_resource( "/com/github/phase1geo/annotator/css/style.css" );
     StyleContext.add_provider_for_screen( Gdk.Screen.get_default(), provider, STYLE_PROVIDER_PRIORITY_APPLICATION );
 
-    _box = new Box( Orientation.HORIZONTAL, 0 );
+    var box = new Box( Orientation.HORIZONTAL, 0 );
 
     /* Handle any changes to the dark mode preference setting */
     handle_prefer_dark_changes();
@@ -64,9 +65,9 @@ public class MainWindow : ApplicationWindow {
     create_header();
 
     /* Create editor */
-    create_editor();
+    create_editor( box );
 
-    add( _box );
+    add( box );
     show_all();
 
     /* Add keyboard shortcuts */
@@ -170,10 +171,10 @@ public class MainWindow : ApplicationWindow {
 
   }
 
-  private void create_editor() {
+  private void create_editor( Box box ) {
 
     /* Create the welcome screen */
-    var welcome = new Granite.Widgets.Welcome( "Foobar", "This is just a foobar" );
+    var welcome = new Granite.Widgets.Welcome( _( "Welcome to Annotator" ), _( "Let's get started annotating an image" ) );
     welcome.append( "document-open", _( "Open Image From File" ), _( "Open a PNG, JPEG, TIFF or BMP file" ) );
     welcome.append( "edit-paste", _( "Paste Image From Clipboard" ), _( "Open an image from the clipboard" ) );
     welcome.activated.connect((index) => {
@@ -188,10 +189,15 @@ public class MainWindow : ApplicationWindow {
     _editor = new Editor( this );
 
     /* Add the elements to the stack */
-    var stack = new Stack();
-    stack.transition_type = StackTransitionType.NONE;
-    stack.add_named( welcome, "welcome" );
-    stack.add_named( _editor,  "editor" );
+    _stack = new Stack();
+    _stack.transition_type = StackTransitionType.NONE;
+    _stack.add_named( welcome, "welcome" );
+    _stack.add_named( _editor,  "editor" );
+
+    box.pack_start( _stack, true, true, 0 );
+    box.show_all();
+
+    _stack.visible_child_name = "welcome";
 
   }
 
@@ -245,6 +251,7 @@ public class MainWindow : ApplicationWindow {
     if( dialog.run() == ResponseType.ACCEPT ) {
       var filename = dialog.get_filename();
       _editor.open_image( filename );
+      _stack.visible_child_name = "editor";
       Utils.store_chooser_folder( filename );
     }
 

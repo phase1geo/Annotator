@@ -23,14 +23,14 @@ using Gtk;
 using Gdk;
 using Cairo;
 
-public class CanvasItemRect : CanvasItem {
+public class CanvasItemCircle : CanvasItem {
 
   private bool _fill;
 
   /* Constructor */
-  public CanvasItemRect( double x, double y, bool fill, RGBA color, int stroke_width ) {
+  public CanvasItemCircle( double x, double y, bool fill, RGBA color, int stroke_width ) {
 
-    base( "rectangle", x, y, color, stroke_width );
+    base( "circle", x, y, color, stroke_width );
 
     _fill = fill;
 
@@ -58,7 +58,6 @@ public class CanvasItemRect : CanvasItem {
     selects.index( 5 ).copy_coords( bbox.x2(), bbox.mid_y() );
     selects.index( 6 ).copy_coords( bbox.mid_x(), bbox.y2() );
     selects.index( 7 ).copy_coords( bbox.x1(), bbox.mid_y() );
-
   }
 
   /* Adjusts the bounding box */
@@ -77,7 +76,7 @@ public class CanvasItemRect : CanvasItem {
       case 7 :  box.x += diffx;                   box.width -= diffx;                        break;
     }
 
-    if( (box.width >= (select_offset * 2)) && (box.height >= (select_offset * 2)) ) {
+    if( (box.width >= (select_offset * 3)) && (box.height >= (select_offset * 3)) ) {
       bbox = box;
     }
 
@@ -101,15 +100,23 @@ public class CanvasItemRect : CanvasItem {
   /* Draw the rectangle */
   public override void draw_item( Context ctx ) {
 
-    ctx.set_line_width( stroke_width );
+    var scale_width  = (bbox.width < bbox.height) ? (bbox.width / bbox.height) : 1.0;
+    var scale_height = (bbox.width < bbox.height) ? 1.0 : (bbox.height / bbox.width);
+    var radius       = (bbox.width < bbox.height) ? (bbox.height / 2.0) : (bbox.width / 2.0);
 
     Utils.set_context_color( ctx, color );
-    ctx.rectangle( bbox.x, bbox.y, bbox.width, bbox.height );
 
+    var save_matrix = ctx.get_matrix();
+    ctx.translate( bbox.mid_x(), bbox.mid_y() );
+    ctx.scale( scale_width, scale_height );
+    ctx.translate( (0 - bbox.mid_x()), (0 - bbox.mid_y()) );
+    ctx.new_path();
+    ctx.arc( bbox.mid_x(), bbox.mid_y(), radius, 0, (2 * Math.PI) );
+    ctx.set_matrix( save_matrix );
+    ctx.set_line_width( stroke_width );
     if( _fill ) {
       ctx.fill_preserve();
     }
-
     ctx.stroke();
 
   }

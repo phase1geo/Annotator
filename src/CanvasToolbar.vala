@@ -31,8 +31,7 @@ public class CanvasToolbar : Toolbar {
     _items = items;
 
     create_shapes();
-    create_fill();
-    create_stroke();
+    create_color();
     create_stroke_width();
 
     show_all();
@@ -66,30 +65,15 @@ public class CanvasToolbar : Toolbar {
 
   }
 
-  private void create_fill() {
+  private void create_color() {
 
     var colors = new ColorButton();
     colors.color_set.connect(() => {
-      _items.fill = colors.rgba;
+      _items.color = colors.rgba;
     });
 
     var btn = new ToolItem();
-    btn.set_tooltip_text( _( "Fill Color" ) );
-    btn.add( colors );
-
-    add( btn );
-
-  }
-
-  private void create_stroke() {
-
-    var colors = new ColorButton();
-    colors.color_set.connect(() => {
-      _items.stroke = colors.rgba;
-    });
-
-    var btn = new ToolItem();
-    btn.set_tooltip_text( _( "Stroke Color" ) );
+    btn.set_tooltip_text( _( "Item Color" ) );
     btn.add( colors );
 
     add( btn );

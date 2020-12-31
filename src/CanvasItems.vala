@@ -33,8 +33,7 @@ public class CanvasItems {
   private double           _last_y;
   private CanvasRect?      _select_box       = null;
   private int              _draw_index       = -1;
-  private RGBA             _fill             = {1.0, 1.0, 1.0, 1.0};
-  private RGBA             _stroke           = {1.0, 1.0, 1.0, 1.0};
+  private RGBA             _color            = {1.0, 1.0, 1.0, 1.0};
   private int              _stroke_width     = 4;
 
   public Array<Image> shape_icons  { get; private set; default = new Array<Image>(); }
@@ -51,24 +50,13 @@ public class CanvasItems {
       }
     }
   }
-  public RGBA fill {
+  public RGBA color {
     get {
-      return( _fill );
+      return( _color );
     }
     set {
-      if( !_fill.equal( value ) ) {
-        _fill = value;
-        update_selected_attributes();
-      }
-    }
-  }
-  public RGBA stroke {
-    get {
-      return( _stroke );
-    }
-    set {
-      if( !_stroke.equal( value ) ) {
-        _stroke = value;
+      if( !_color.equal( value ) ) {
+        _color = value;
         update_selected_attributes();
       }
     }
@@ -94,14 +82,22 @@ public class CanvasItems {
     _items = new List<CanvasItem>();
 
     /* Load the shapes */
-    shape_icons.append_val( new Image.from_icon_name( "media-playback-stop-symbolic", IconSize.SMALL_TOOLBAR ) );
+    shape_icons.append_val( new Image.from_icon_name( "media-playback-stop-symbolic",  IconSize.SMALL_TOOLBAR ) );
+    shape_icons.append_val( new Image.from_icon_name( "media-playback-stop-symbolic",  IconSize.SMALL_TOOLBAR ) );
+    shape_icons.append_val( new Image.from_icon_name( "media-playback-pause-symbolic", IconSize.SMALL_TOOLBAR ) );
+    shape_icons.append_val( new Image.from_icon_name( "media-playback-pause-symbolic", IconSize.SMALL_TOOLBAR ) );
+    shape_icons.append_val( new Image.from_icon_name( "media-playback-start-symbolic", IconSize.SMALL_TOOLBAR ) );
 
   }
 
   /* Adds the given shape to the top of the item stack */
   private void add_shape_item( double x, double y ) {
     switch( draw_index ) {
-      case 0  :  _active = new CanvasItemRect( x, y, fill, stroke, stroke_width );  break;
+      case 0  :  _active = new CanvasItemRect(   x, y, false, color, stroke_width );  break;
+      case 1  :  _active = new CanvasItemRect(   x, y, true,  color, stroke_width );  break;
+      case 2  :  _active = new CanvasItemCircle( x, y, false, color, stroke_width );  break;
+      case 3  :  _active = new CanvasItemCircle( x, y, true,  color, stroke_width );  break;
+      case 4  :  _active = new CanvasItemArrow( x, y, color, stroke_width );          break;
       default :  assert_not_reached();
     }
     _items.append( _active );
@@ -139,8 +135,7 @@ public class CanvasItems {
   private void update_selected_attributes() {
     foreach( CanvasItem item in _items ) {
       if( item.mode == CanvasItemMode.SELECTED ) {
-        item.fill         = fill;
-        item.stroke       = stroke;
+        item.color        = color;
         item.stroke_width = stroke_width;
       }
     }

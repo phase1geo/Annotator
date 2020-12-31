@@ -56,7 +56,7 @@ public class CanvasItem {
   private CanvasItemMode _mode = CanvasItemMode.NONE;
 
   protected Array<CanvasPoint> selects { get; set; default = new Array<CanvasPoint>(); }
-  protected const int          select_offset = 3;
+  protected const int          select_offset = 5;
 
   public CanvasRect bbox {
     get {
@@ -78,19 +78,17 @@ public class CanvasItem {
       }
     }
   }
-  public RGBA fill         { get; set; default = {1.0, 1.0, 1.0, 1.0}; }
-  public RGBA stroke       { get; set; default = {1.0, 1.0, 1.0, 1.0}; }
+  public RGBA color        { get; set; default = {1.0, 1.0, 1.0, 1.0}; }
   public int  stroke_width { get; set; default = 4; }
 
   /* Constructor */
-  public CanvasItem( string name, double x, double y, RGBA fill, RGBA stroke, int stroke_width ) {
+  public CanvasItem( string name, double x, double y, RGBA color, int stroke_width ) {
 
     _name   = name;
     _bbox.x = x;
     _bbox.y = y;
 
-    this.fill         = fill;
-    this.stroke       = stroke;
+    this.color        = color;
     this.stroke_width = stroke_width;
 
   }
@@ -100,22 +98,6 @@ public class CanvasItem {
 
   /* Called whenever the mode changes */
   protected virtual void mode_changed() {}
-
-  protected double x1() {
-    return( _bbox.x );
-  }
-
-  protected double y1() {
-    return( _bbox.y );
-  }
-
-  protected double x2() {
-    return( _bbox.x + _bbox.width );
-  }
-
-  protected double y2() {
-    return( _bbox.y + _bbox.height );
-  }
 
   /* Moves the item by the given amount */
   public void move_item( double diffx, double diffy ) {
@@ -146,8 +128,8 @@ public class CanvasItem {
   /* Returns the bounding box of the given selector */
   private void selector_bbox( int index, CanvasRect rect ) {
     var sel  = selects.index( index );
-    rect.x      = sel.x;
-    rect.y      = sel.y;
+    rect.x      = (sel.x - select_offset);
+    rect.y      = (sel.y - select_offset);
     rect.width  = 10;
     rect.height = 10;
   }
@@ -158,7 +140,7 @@ public class CanvasItem {
   }
 
   /* Returns true if the given coordinates are within this item */
-  public bool is_within( double x, double y ) {
+  public virtual bool is_within( double x, double y ) {
     return( bbox.contains( x, y ) );
   }
 
@@ -191,15 +173,17 @@ public class CanvasItem {
 
     var blue  = Utils.color_from_string( "light blue" );
     var black = Utils.color_from_string( "black" );
+    var box   = new CanvasRect();
 
     for( int i=0; i<selects.length; i++ ) {
 
-      var select = selects.index( i );
+      selector_bbox( i, box );
+
       ctx.set_line_width( 1 );
 
       /* Draw the selection rectangle */
       Utils.set_context_color( ctx, blue );
-      ctx.rectangle( select.x, select.y, 10, 10 );
+      ctx.rectangle( box.x, box.y, box.width, box.height );
       ctx.fill_preserve();
 
       /* Draw the stroke */
@@ -213,13 +197,13 @@ public class CanvasItem {
   /* Saves the item in XML format */
   public virtual Xml.Node* save() {
     Xml.Node* node = new Xml.Node( null, "item" );
-    node->set_prop( "x",      bbox.x.to_string() );
-    node->set_prop( "y",      bbox.y.to_string() );
-    node->set_prop( "w",      bbox.width.to_string() );
-    node->set_prop( "h",      bbox.height.to_string() );
-    node->set_prop( "mode",   mode.to_string() );
-    node->set_prop( "fill",   Utils.color_from_rgba( fill ) );
-    node->set_prop( "stroke", Utils.color_from_rgba( stroke ) );
+    node->set_prop( "x",     bbox.x.to_string() );
+    node->set_prop( "y",     bbox.y.to_string() );
+    node->set_prop( "w",     bbox.width.to_string() );
+    node->set_prop( "h",     bbox.height.to_string() );
+    node->set_prop( "mode",  mode.to_string() );
+    node->set_prop( "color", Utils.color_from_rgba( color ) );
+    node->set_prop( "width", stroke_width.to_string() );
     return( node );
   }
 
@@ -246,13 +230,13 @@ public class CanvasItem {
     if( m != null ) {
       mode = CanvasItemMode.parse( m );
     }
-    var f = node->get_prop( "fill" );
-    if( f != null ) {
-      fill.parse( f );
+    var c = node->get_prop( "color" );
+    if( c != null ) {
+      color.parse( c );
     }
-    var s = node->get_prop( "stroke" );
+    var s = node->get_prop( "width" );
     if( s != null ) {
-      stroke.parse( s );
+      stroke_width = int.parse( s );
     }
 
   }

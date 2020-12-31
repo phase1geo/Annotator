@@ -30,7 +30,7 @@ public class CanvasPoint {
   public CanvasPoint() {}
 
   /* Copy constructor */
-  public CanvasPoint.with_point( CanvasPoint point ) {
+  public CanvasPoint.from_point( CanvasPoint point ) {
     copy( point );
   }
 
@@ -107,6 +107,16 @@ public class CanvasRect {
   /* Returns the y2 value */
   public double y2() {
     return( (y + height) );
+  }
+
+  /* Returns the mid-point between x1 and x2 */
+  public double mid_x() {
+    return( x + (width / 2) );
+  }
+
+  /* Returns the mid-point between y1 and y2 */
+  public double mid_y() {
+    return( y + (height / 2) );
   }
 
   /* Returns true if the given rectangle intersects with this rectangle */
