@@ -11,4 +11,8 @@ MimeType=image/bmp;image/gif;image/png;image/jpeg;image/svg+xml;image/tiff;image
 X-GNOME-Gettext-Domain=Annotator
 X-GNOME-UsesNotifications=true
 Keywords=annotator;image;annotate;
+Actions=EditClipboard;
 
+[Desktop Action EditClipboard]
+Name=Edit Clipboard Image
+Exec=com.github.phase1geo.annotator --use-clipboard

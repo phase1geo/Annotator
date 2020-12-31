@@ -54,6 +54,11 @@ public class Annotator : Granite.Application {
     /* Create the main window */
     appwin = new MainWindow( this );
 
+    /* Attempt to paste from the clipboard */
+    if( use_clipboard ) {
+      appwin.do_paste();
+    }
+
     /* Handle any changes to the position of the window */
     appwin.configure_event.connect(() => {
       int root_x, root_y;

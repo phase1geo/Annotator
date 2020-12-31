@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.annotator\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-31 03:37-0600\n"
+"POT-Creation-Date: 2020-12-31 03:43-0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,15 +17,15 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/Application.vala:77
+#: src/Application.vala:82
 msgid "Opening file"
 msgstr ""
 
-#: src/Application.vala:98
+#: src/Application.vala:103
 msgid "Display version number"
 msgstr ""
 
-#: src/Application.vala:99
+#: src/Application.vala:104
 msgid "Annotate clipboard image"
 msgstr ""
 

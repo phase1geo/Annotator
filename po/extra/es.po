@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: extra\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-31 03:37-0600\n"
+"POT-Creation-Date: 2020-12-31 03:43-0600\n"
 "PO-Revision-Date: 2020-12-27 19:30-0600\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -34,6 +34,10 @@ msgstr ""
 
 #: data/com.github.phase1geo.annotator.desktop.in:14
 msgid "annotator;image;annotate;"
+msgstr ""
+
+#: data/com.github.phase1geo.annotator.desktop.in:18
+msgid "Edit Clipboard Image"
 msgstr ""
 
 #: data/com.github.phase1geo.annotator.appdata.xml.in:9

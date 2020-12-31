@@ -302,7 +302,7 @@ public class MainWindow : ApplicationWindow {
   }
 
   /* Pastes text or images to the editor */
-  private void do_paste() {
+  public void do_paste() {
     AnnotatorClipboard.paste( _editor );
     if( _editor.is_image_set() ) {
       _stack.visible_child_name = "editor";
