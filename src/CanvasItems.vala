@@ -82,11 +82,11 @@ public class CanvasItems {
     _items = new List<CanvasItem>();
 
     /* Load the shapes */
-    shape_icons.append_val( new Image.from_icon_name( "media-playback-stop-symbolic",  IconSize.SMALL_TOOLBAR ) );
-    shape_icons.append_val( new Image.from_icon_name( "media-playback-stop-symbolic",  IconSize.SMALL_TOOLBAR ) );
-    shape_icons.append_val( new Image.from_icon_name( "media-playback-pause-symbolic", IconSize.SMALL_TOOLBAR ) );
-    shape_icons.append_val( new Image.from_icon_name( "media-playback-pause-symbolic", IconSize.SMALL_TOOLBAR ) );
-    shape_icons.append_val( new Image.from_icon_name( "media-playback-start-symbolic", IconSize.SMALL_TOOLBAR ) );
+    shape_icons.append_val( new Image.from_icon_name( "rect-stroke-symbolic",   IconSize.SMALL_TOOLBAR ) );
+    shape_icons.append_val( new Image.from_icon_name( "rect-fill-symbolic",     IconSize.SMALL_TOOLBAR ) );
+    shape_icons.append_val( new Image.from_icon_name( "circle-stroke-symbolic", IconSize.SMALL_TOOLBAR ) );
+    shape_icons.append_val( new Image.from_icon_name( "circle-fill-symbolic",   IconSize.SMALL_TOOLBAR ) );
+    shape_icons.append_val( new Image.from_icon_name( "arrow-symbolic",         IconSize.SMALL_TOOLBAR ) );
 
   }
 

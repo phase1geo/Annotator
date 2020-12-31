@@ -33,6 +33,8 @@ public class Canvas : DrawingArea {
   public CanvasItems items       { get; private set; }
   public UndoBuffer  undo_buffer { get; private set; }
 
+  public signal void image_loaded();
+
   /* Constructor */
   public Canvas( MainWindow win ) {
 
@@ -103,6 +105,7 @@ public class Canvas : DrawingArea {
       _surface = (ImageSurface)cairo_surface_create_from_pixbuf( buf, 1, null );
       set_size_request( buf.width, buf.height );
       queue_draw();
+      image_loaded();
     } catch( Error e ) {
       return( false );
     }
@@ -116,6 +119,7 @@ public class Canvas : DrawingArea {
     _surface = (ImageSurface)cairo_surface_create_from_pixbuf( buf, 1, null );
     set_size_request( buf.width, buf.height );
     queue_draw();
+    image_loaded();
   }
 
   /* Pastes a text from the given string to the canvas (only valid when editing a text item */

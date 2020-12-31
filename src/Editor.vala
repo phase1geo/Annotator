@@ -27,6 +27,8 @@ public class Editor : Box {
   private Canvas        _canvas;
   private string        _filename;
 
+  public signal void image_loaded();
+
   /* Constructor */
   public Editor( MainWindow win ) {
 
@@ -35,6 +37,9 @@ public class Editor : Box {
     /* Create the canvas */
     _canvas = new Canvas( win );
     _canvas.halign = Align.CENTER;
+    _canvas.image_loaded.connect(() => {
+      image_loaded();
+    });
 
     /* Create the overlay that will hold the canvas so that we can add emoji support */
     var overlay = new Overlay();

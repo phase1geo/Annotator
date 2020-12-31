@@ -193,6 +193,9 @@ public class MainWindow : ApplicationWindow {
 
     /* Create the editor */
     _editor = new Editor( this );
+    _editor.image_loaded.connect(() => {
+      _stack.visible_child_name = "editor";
+    });
 
     /* Add the elements to the stack */
     _stack = new Stack();
@@ -296,17 +299,11 @@ public class MainWindow : ApplicationWindow {
   */
   public void open_file( string filename ) {
     _editor.open_image( filename );
-    if( _editor.is_image_set() ) {
-      _stack.visible_child_name = "editor";
-    }
   }
 
   /* Pastes text or images to the editor */
   public void do_paste() {
     AnnotatorClipboard.paste( _editor );
-    if( _editor.is_image_set() ) {
-      _stack.visible_child_name = "editor";
-    }
   }
 
   private void do_save() {
