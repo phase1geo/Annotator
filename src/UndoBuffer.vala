@@ -23,7 +23,7 @@ using GLib;
 
 public class UndoBuffer : Object {
 
-  protected Canvas.         _canvas;
+  protected Canvas          _canvas;
   protected Array<UndoItem> _undo_buffer;
   protected Array<UndoItem> _redo_buffer;
   private   bool            _debug = false;

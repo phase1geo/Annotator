@@ -7,6 +7,8 @@ sources += files(
     'CanvasToolbar.vala',
     'Editor.vala',
     'MainWindow.vala',
+    'UndoBuffer.vala',
+    'UndoItem.vala',
     'Utils.vala',
 )
 
