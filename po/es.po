@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.annotator\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-27 19:30-0600\n"
+"POT-Creation-Date: 2020-12-31 03:37-0600\n"
 "PO-Revision-Date: 2020-12-27 19:30-0600\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -21,18 +21,62 @@ msgstr ""
 msgid "Opening file"
 msgstr ""
 
-#: src/Application.vala:100
+#: src/Application.vala:98
 msgid "Display version number"
 msgstr ""
 
-#: src/Application.vala:101
-msgid "Transform clipboard text"
+#: src/Application.vala:99
+msgid "Annotate clipboard image"
 msgstr ""
 
-#: src/MainWindow.vala:179
+#: src/MainWindow.vala:142
+msgid "Open Image"
+msgstr ""
+
+#: src/MainWindow.vala:176
 msgid "Annotator"
 msgstr ""
 
-#: src/MainWindow.vala:187
+#: src/MainWindow.vala:183
+msgid "Welcome to Annotator"
+msgstr ""
+
+#: src/MainWindow.vala:183
+msgid "Let's get started annotating an image"
+msgstr ""
+
+#: src/MainWindow.vala:184
+msgid "Open Image From File"
+msgstr ""
+
+#: src/MainWindow.vala:184
+msgid "Open a PNG, JPEG, TIFF or BMP file"
+msgstr ""
+
+#: src/MainWindow.vala:185
+msgid "Paste Image From Clipboard"
+msgstr ""
+
+#: src/MainWindow.vala:185
+msgid "Open an image from the clipboard"
+msgstr ""
+
+#: src/MainWindow.vala:214
 msgid "Font:"
+msgstr ""
+
+#: src/MainWindow.vala:265
+msgid "All Image Formats  (*)"
+msgstr ""
+
+#: src/MainWindow.vala:277
+msgid "Open Image File"
+msgstr ""
+
+#: src/MainWindow.vala:277
+msgid "Open"
+msgstr ""
+
+#: src/MainWindow.vala:277
+msgid "Cancel"
 msgstr ""

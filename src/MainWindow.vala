@@ -284,13 +284,21 @@ public class MainWindow : ApplicationWindow {
 
     if( dialog.run() == ResponseType.ACCEPT ) {
       var filename = dialog.get_filename();
-      _editor.open_image( filename );
-      if( _editor.is_image_set() ) {
-        _stack.visible_child_name = "editor";
-      }
+      open_file( filename );
       Utils.store_chooser_folder( filename );
     }
 
+  }
+
+  /*
+   Opens the given image file in the canvas and displays the canvas if the
+   image is successfully read and displayed.
+  */
+  public void open_file( string filename ) {
+    _editor.open_image( filename );
+    if( _editor.is_image_set() ) {
+      _stack.visible_child_name = "editor";
+    }
   }
 
   /* Pastes text or images to the editor */

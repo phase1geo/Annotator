@@ -75,9 +75,7 @@ public class Annotator : Granite.Application {
     foreach( File open_file in files ) {
       var file = open_file.get_path();
       appwin.notification( _( "Opening file" ), file );
-//      if( !appwin.open_file( file ) ) {
- //       stdout.printf( "ERROR:  Unable to open file '%s'\n", file );
-  //    }
+      appwin.open_file( file );
     }
     Gtk.main();
     release();
@@ -98,7 +96,7 @@ public class Annotator : Granite.Application {
 
     /* Create the command-line options */
     options[0] = {"version",       0, 0, OptionArg.NONE, ref show_version, _( "Display version number" ), null};
-    options[1] = {"use-clipboard", 0, 0, OptionArg.NONE, ref use_clipboard, _( "Transform clipboard text" ), null};
+    options[1] = {"use-clipboard", 0, 0, OptionArg.NONE, ref use_clipboard, _( "Annotate clipboard image" ), null};
     options[2] = {null};
 
     /* Parse the arguments */
