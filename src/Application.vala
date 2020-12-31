@@ -49,7 +49,7 @@ public class Annotator : Granite.Application {
 
     /* Add the application-specific icons */
     weak IconTheme default_theme = IconTheme.get_default();
-    default_theme.add_resource_path( "/com/github/phase1geo/annotator" );
+    default_theme.add_resource_path( "/com/github/phase1geo/annotator/images" );
 
     /* Create the main window */
     appwin = new MainWindow( this );
