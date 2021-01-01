@@ -290,7 +290,9 @@ public class CanvasItemArrow : CanvasItem {
       default :  assert_not_reached();
     }
 
-    ctx.set_line_width( stroke_width );
+    var black = Utils.color_from_string( "black" );
+
+    ctx.set_line_width( 1 );
     ctx.new_path();
     ctx.move_to( hx, hy );
     ctx.line_to( ppx, ppy );
@@ -300,6 +302,8 @@ public class CanvasItemArrow : CanvasItem {
     ctx.line_to( psx, psy );
     ctx.close_path();
     ctx.fill_preserve();
+
+    Utils.set_context_color( ctx, black );
     ctx.stroke();
 
   }

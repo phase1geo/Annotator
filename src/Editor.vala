@@ -37,6 +37,7 @@ public class Editor : Box {
     /* Create the canvas */
     _canvas = new Canvas( win );
     _canvas.halign = Align.CENTER;
+    _canvas.valign = Align.CENTER;
     _canvas.image_loaded.connect(() => {
       image_loaded();
     });
@@ -55,7 +56,6 @@ public class Editor : Box {
     /* Create the toolbar */
     _toolbar = new CanvasToolbar( _canvas.items );
     _toolbar.halign = Align.CENTER;
-    _toolbar.valign = Align.CENTER;
 
     /* Pack the box */
     pack_start( _toolbar, false, true, 0 );

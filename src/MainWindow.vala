@@ -72,6 +72,11 @@ public class MainWindow : ApplicationWindow {
     add( box );
     show_all();
 
+    /* Set the stage for menu actions */
+    var actions = new SimpleActionGroup ();
+    actions.add_action_entries( action_entries, this );
+    insert_action_group( "win", actions );
+
     /* Add keyboard shortcuts */
     add_keyboard_shortcuts( app );
 
@@ -80,6 +85,7 @@ public class MainWindow : ApplicationWindow {
 
     /* Handle the application closing */
     destroy.connect( Gtk.main_quit );
+
 
   }
 

@@ -54,9 +54,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="1"
-     inkscape:cx="104"
-     inkscape:cy="-120"
+     inkscape:zoom="2"
+     inkscape:cx="84"
+     inkscape:cy="20"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -74,7 +74,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -84,7 +84,7 @@
      id="layer1"
      transform="translate(0,-263.13332)">
     <path
-       style="fill:none;stroke:#000000;stroke-width:1.15100002;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-start:url(#Arrow1Lstart);marker-mid:url(#Arrow1Lstart);marker-end:url(#Arrow1Lend)"
+       style="fill:none;stroke:#000000;stroke-width:1.75100002;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:9.1;stroke-dasharray:none;stroke-opacity:1;marker-start:url(#Arrow1Lstart);marker-mid:url(#Arrow1Lstart);marker-end:url(#Arrow1Lend)"
        d="m 31.97714,265.06766 c -70.248234,71.07254 0,0 0,0 z"
        id="path817"
        inkscape:connector-curvature="0" />
@@ -105,9 +105,10 @@
        d="M 1,0 H 0 L 0.30901699,0.95105652 0,0 -0.80901699,0.58778525 0,0 -0.80901699,-0.58778525 0,0 0.30901699,-0.95105652 0,0 Z"
        transform="matrix(0.26458333,0,0,0.26458333,0,263.13332)" />
     <path
-       style="fill:#000000;stroke:#000000;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;fill-opacity:1"
-       d="m 1.0583333,296.20624 21.4312497,-24.87084 3.175,3.70417 z"
+       style="fill:#020000;fill-opacity:1;stroke:#000000;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M -3.5546051e-7,297.39686 20.6375,270.80623 l 5.953125,5.42396 z"
        id="path2675"
-       inkscape:connector-curvature="0" />
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cccc" />
   </g>
 </svg>

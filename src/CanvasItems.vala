@@ -305,7 +305,10 @@ public class CanvasItems {
   /* Draws all of the canvas items on the given context */
   public void draw( Context ctx ) {
     foreach( CanvasItem item in _items ) {
-      item.draw( ctx );
+      item.draw_item( ctx );
+    }
+    foreach( CanvasItem item in _items ) {
+      item.draw_selectors( ctx );
     }
     draw_select_box( ctx );
   }

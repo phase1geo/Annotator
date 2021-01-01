@@ -11,10 +11,10 @@
         <file alias="48-com.github.phase1geo.annotator.svg" compressed="true" preprocess="xml-stripblanks">images/icons/48/com.github.phase1geo.annotator.svg</file>
         <file alias="64-com.github.phase1geo.annotator.svg" compressed="true" preprocess="xml-stripblanks">images/icons/64/com.github.phase1geo.annotator.svg</file>
         <file alias="128-com.github.phase1geo.annotator.svg" compressed="true" preprocess="xml-stripblanks">images/icons/128/com.github.phase1geo.annotator.svg</file>
-        <file alias="rect-fill-symbolic.svg">images/icons/128/rect-fill-symbolic.svg</file>
-        <file alias="rect-stroke-symbolic.svg">images/icons/128/rect-stroke-symbolic.svg</file>
-        <file alias="circle-fill-symbolic.svg">images/icons/128/circle-fill-symbolic.svg</file>
-        <file alias="circle-stroke-symbolic.svg">images/icons/128/circle-stroke-symbolic.svg</file>
-        <file alias="arrow-symbolic.svg">images/icons/128/arrow-symbolic.svg</file>
+        <file alias="rect-fill-symbolic.svg">images/icons/scalable/rect-fill-symbolic.svg</file>
+        <file alias="rect-stroke-symbolic.svg">images/icons/scalable/rect-stroke-symbolic.svg</file>
+        <file alias="circle-fill-symbolic.svg">images/icons/scalable/circle-fill-symbolic.svg</file>
+        <file alias="circle-stroke-symbolic.svg">images/icons/scalable/circle-stroke-symbolic.svg</file>
+        <file alias="arrow-symbolic.svg">images/icons/scalable/arrow-symbolic.svg</file>
     </gresource>
 </gresources>

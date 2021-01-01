@@ -160,14 +160,8 @@ public class CanvasItem {
   /* Draw the current item */
   public virtual void draw_item( Context ctx ) {}
 
-  /* Draws the current item and draws the selection points, if necessary */
-  public void draw( Context ctx ) {
-    draw_item( ctx );
-    draw_selects( ctx );
-  }
-
   /* Draw the selection boxes */
-  protected void draw_selects( Context ctx ) {
+  public void draw_selectors( Context ctx ) {
 
     if( mode != CanvasItemMode.SELECTED ) return;
 
