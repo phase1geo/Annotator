@@ -94,6 +94,35 @@ public class Utils {
     return( (bx < x) && (x < (bx + bw)) && (by < y) && (y < (by + bh)) );
   }
 
+  /* Returns true if the given set of coordinates is within the given polygon */
+  public static bool is_within_polygon( double x, double y, Array<CanvasPoint> points ) {
+
+    var corners   = (int)points.length;
+    var j         = corners - 1;
+    var odd_nodes = false;
+
+    for( int i=0; i<corners; i++ ) {
+      var pi = points.index( i );
+      var pj = points.index( j );
+      if( (((pi.y < y) && (pj.y >= y)) || ((pj.y < y) && (pi.y >= y))) && ((pi.x <= x) || (pj.x <= x)) ) {
+        odd_nodes ^= ((pi.x + (y - pi.y) / (pj.y - pi.y) * (pj.x - pi.x)) < x);
+      }
+      j = i;
+    }
+
+    return( odd_nodes );
+
+  }
+
+  /*
+   Returns true if the given point exists within the given ellipsis.
+     where h = mid_x, k = mid_y, a = widest width, b = narrowest width
+  */
+  public static bool is_within_oval( double x, double y, double h, double k, double a, double b ) {
+    var p = (Math.pow( (x - h), 2 ) / Math.pow( a, 2 )) + (Math.pow( (y - k), 2 ) / Math.pow( b, 2 ));
+    return( p <= 1 );
+  }
+
   /* Returns a string that is suitable to use as an inspector title */
   public static string make_title( string str ) {
     return( "<b>" + str + "</b>" );
