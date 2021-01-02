@@ -59,6 +59,10 @@ public class CanvasItemArrow : CanvasItem {
     points.append_val( new CanvasPoint( false ) );
     points.append_val( new CanvasPoint( false ) );
 
+    /* Initialize ourselves */
+    points.index( PType.HD ).copy_coords( x, y );
+    points.index( PType.TL ).copy_coords( x, y );
+
   }
 
   /* Updates the selection boxes whenever the bounding box changes */
@@ -125,6 +129,7 @@ public class CanvasItemArrow : CanvasItem {
 
     var point = points.index( selector_index );
     var width = 0.0, height = 0.0;
+    var peak  = _peak_a == a;
 
     /* Calculate _valley_c (length from head) */
     switch( _dir ) {
@@ -138,6 +143,11 @@ public class CanvasItemArrow : CanvasItem {
     var angle = Math.atan( height / width );
     a = angle - Math.atan( bbox.height / bbox.width );
     c = height / Math.sin( angle );
+
+    /* Make sure that the arrow shape doesn't get weird */
+    if( (_peak_a - _valley_a) < 0.25 ) {
+      // a = peak ? (_valley_a + 0.25) : (_peak_a - 0.25);
+    }
 
   }
 
@@ -171,16 +181,16 @@ public class CanvasItemArrow : CanvasItem {
     if( head.x < tail.x ) {
       if( head.y < tail.y ) {
         switch( index ) {
-          case PType.HD :  box.x = head.x;  box.y = head.y;  box.width -= diffx;  box.height -= diffy;  break;
-          case PType.TL :                                    box.width += diffx;  box.height += diffy;  break;
+          case PType.HD :
+          case PType.TL :  box.x = head.x;  box.y = head.y;  break;
           case PType.PP :  points.index( PType.SP ).copy_coords( (bbox.x1() + w), (bbox.y1() + h) );  break;
           case PType.PV :  points.index( PType.SV ).copy_coords( (bbox.x1() + w), (bbox.y1() + h) );  break;
         }
         _dir = ArrowHeadDirection.UPPER_LEFT;
       } else {
         switch( index ) {
-          case PType.HD :  box.x = head.x;                   box.width -= diffx;  box.height += diffy;  break;
-          case PType.TL :                   box.y = tail.y;  box.width += diffx;  box.height -= diffy;  break;
+          case PType.HD :
+          case PType.TL :  box.x = head.x;  box.y = tail.y;  break;
           case PType.PP :  points.index( PType.SP ).copy_coords( (bbox.x1() + w), (bbox.y2() - h) );  break;
           case PType.PV :  points.index( PType.SV ).copy_coords( (bbox.x1() + w), (bbox.y2() - h) );  break;
         }
@@ -188,20 +198,25 @@ public class CanvasItemArrow : CanvasItem {
       }
     } else if( head.y < tail.y ) {
       switch( index ) {
-        case PType.HD :                   box.y = head.y;  box.width += diffx;  box.height -= diffy;  break;
-        case PType.TL :  box.x = tail.x;                   box.width -= diffx;  box.height += diffy;  break;
+        case PType.HD :
+        case PType.TL :  box.x = tail.x;  box.y = head.y;  break;
         case PType.PP :  points.index( PType.SP ).copy_coords( (bbox.x2() - w), (bbox.y1() + h) );  break;
         case PType.PV :  points.index( PType.SV ).copy_coords( (bbox.x2() - w), (bbox.y1() + h) );  break;
       }
       _dir = ArrowHeadDirection.UPPER_RIGHT;
     } else {
       switch( index ) {
-        case PType.HD :                                    box.width += diffx;  box.height += diffy;  break;
-        case PType.TL :  box.x = tail.x;  box.y = tail.y;  box.width -= diffx;  box.height -= diffy;  break;
+        case PType.HD :
+        case PType.TL :  box.x = tail.x;  box.y = tail.y;  break;
         case PType.PP :  points.index( PType.SP ).copy_coords( (bbox.x2() - w), (bbox.y2() - h) );  break;
         case PType.PV :  points.index( PType.SV ).copy_coords( (bbox.x2() - w), (bbox.y2() - h) );  break;
       }
       _dir = ArrowHeadDirection.LOWER_RIGHT;
+    }
+
+    if( (index == PType.HD) || (index == PType.TL) ) {
+      box.width  = Math.fabs( tail.x - head.x );
+      box.height = Math.fabs( tail.y - head.y );
     }
 
     bbox = box;

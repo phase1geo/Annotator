@@ -38,7 +38,7 @@ public class CanvasPoint {
   }
 
   /* Constructor */
-  public CanvasPoint.with_coords( double x, double y, bool draw = false ) {
+  public CanvasPoint.from_coords( double x, double y, bool draw = false ) {
     copy_coords( x, y );
     this.draw = draw;
   }
