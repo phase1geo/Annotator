@@ -37,12 +37,7 @@ public class CanvasItemText : CanvasItem {
 
     base( "text", x, y, color, 1 );
 
-    /* Create the selection points */
-    points.append_val( new CanvasPoint( false ) );  // Upper left corner
-    points.append_val( new CanvasPoint( false ) );  // Lower left corner
-    points.append_val( new CanvasPoint( false ) );  // Upper right corner
-    points.append_val( new CanvasPoint( false ) );  // Upper left corner
-    points.append_val( new CanvasPoint( true ) );   // Drag handle to right of text
+    
 
   }
 

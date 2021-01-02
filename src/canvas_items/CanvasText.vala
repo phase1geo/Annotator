@@ -25,7 +25,7 @@ using Gdk;
 using Cairo;
 using Pango;
 
-public class CanvasText : Object {
+public class CanvasItemText : CanvasItem {
 
   /* Member variables */
   private FormattedText  _text;
@@ -52,18 +52,6 @@ public class CanvasText : Object {
   public FormattedText text {
     get {
       return( _text );
-    }
-  }
-  public double posx   { get; set; default = 0; }
-  public double posy   { get; set; default = 0; }
-  public double width  {
-    get {
-      return( _width );
-    }
-  }
-  public double height {
-    get {
-      return( _height );
     }
   }
   public double max_width {
@@ -109,43 +97,26 @@ public class CanvasText : Object {
   }
 
   /* Default constructor */
-  public CanvasText( OutlineTable table, double max_width ) {
-    _text         = new FormattedText( table );
+  public CanvasItemText( double x, double y, RGBA color ) {
+    
+    base( x, y, color, 1 );
+    
+    _text = new FormattedText();
     _text.changed.connect( text_changed );
-    _max_width    = max_width;
     _line_layout  = table.create_pango_layout( "M" );
     _pango_layout = table.create_pango_layout( null );
     _pango_layout.set_wrap( Pango.WrapMode.WORD_CHAR );
     _pango_layout.set_width( (int)_max_width * Pango.SCALE );
     initialize_font_description();
     update_size( false );
-  }
-
-  /* Constructor initializing string */
-  public CanvasText.with_text( OutlineTable table, double max_width, string txt ) {
-    _text         = new FormattedText.with_text( table, txt );
-    _text.changed.connect( text_changed );
-    _max_width    = max_width;
-    _line_layout  = table.create_pango_layout( "M" );
-    _pango_layout = table.create_pango_layout( txt );
-    _pango_layout.set_wrap( Pango.WrapMode.WORD_CHAR );
-    _pango_layout.set_width( (int)_max_width * Pango.SCALE );
-    initialize_font_description();
-    update_size( false );
-  }
-
-  /* Constructor which is cloned from the given FormattedText */
-  public CanvasText.clone_from( OutlineTable table, double max_width, CanvasText ct ) {
-    _text         = ct.text;
-    _text.changed.connect( text_changed );
-    _max_width    = max_width;
-    _font_size    = ct._font_size;
-    _line_layout  = table.create_pango_layout( "M" );
-    _pango_layout = table.create_pango_layout( ct.text.text );
-    _pango_layout.set_wrap( Pango.WrapMode.WORD_CHAR );
-    _pango_layout.set_width( (int)_max_width * Pango.SCALE );
-    initialize_font_description();
-    update_size( false );
+    
+    /* Create the selection points */
+    points.append_val( new CanvasPoint( false ) );  // Upper left corner
+    points.append_val( new CanvasPoint( false ) );  // Lower left corner
+    points.append_val( new CanvasPoint( false ) );  // Upper right corner
+    points.append_val( new CanvasPoint( false ) );  // Upper left corner
+    points.append_val( new CanvasPoint( true ) );   // Drag handle to right of text
+    
   }
 
   /* Allocates and initializes the font description for the layouts */
@@ -157,31 +128,14 @@ public class CanvasText : Object {
   }
 
   /* Copies an existing CanvasText to this CanvasText */
-  public void copy( CanvasText ct ) {
-    posx       = ct.posx;
-    posy       = ct.posy;
+  public void copy( CanvasItemText ct ) {
+    base.copy( ct );
     _max_width = ct._max_width;
     _font_size = ct._font_size;
     _text.copy( ct.text );
     _line_layout.set_font_description( ct._pango_layout.get_font_description() );
     _pango_layout.set_font_description( ct._pango_layout.get_font_description() );
     _pango_layout.set_width( (int)_max_width * Pango.SCALE );
-    update_size( true );
-  }
-
-  /* Clones an existing CanvasText */
-  public void clone( FormattedText text ) {
-    _text = text;
-    _text.changed.connect( text_changed );
-    update_size( true );
-  }
-
-  /* Unclones the text */
-  public void unclone( OutlineTable ot ) {
-    var orig_text = _text;
-    _text = new FormattedText( ot );
-    _text.copy( orig_text );
-    _text.changed.connect( text_changed );
     update_size( true );
   }
 
@@ -211,34 +165,10 @@ public class CanvasText : Object {
     return( _pango_layout.is_wrapped() );
   }
 
-  /* Returns true if the given cursor coordinates lies within this node */
-  public bool is_within( double x, double y ) {
-    return( Utils.is_within_bounds( x, y, posx, posy, _width, _height ) );
-  }
-
-  /*
-   Returns true if the given coordinates within a URL and returns the matching
-   URL.
-  */
-  public bool is_within_clickable( double x, double y, out FormatTag tag, out string extra ) {
-    int adjusted_x = (int)(x - posx) * Pango.SCALE;
-    int adjusted_y = (int)(y - posy) * Pango.SCALE;
-    int cursor, trailing;
-    tag   = FormatTag.URL;
-    extra = "";
-    if( _pango_layout.xy_to_index( adjusted_x, adjusted_y, out cursor, out trailing ) ) {
-      var cindex = text.text.char_count( cursor + trailing );
-      FormatTag[] tags = { FormatTag.URL };  // TEMPORARY , FormatTag.TAG };
-      foreach( FormatTag t in tags ) {
-        var e = text.get_extra( t, cindex );
-        if( e != null ) {
-          tag   = t;
-          extra = e;
-          return( true );
-        }
-      }
-    }
-    return( false );
+    /* Adjusts the bounding box */
+  public override void move_selector( int index, double diffx, double diffy ) {
+    points.index( 4 ).x += diffx;
+    max_width = diffx;
   }
 
   /* Returns true if text is currently selected */
@@ -247,47 +177,21 @@ public class CanvasText : Object {
   }
 
   /* Saves the current instace into the given XML tree */
-  public virtual Xml.Node* save( string title ) {
-
-    Xml.Node* n = new Xml.Node( null, title );
-
-    n->set_prop( "posx",     posx.to_string() );
-    n->set_prop( "posy",     posy.to_string() );
-    n->set_prop( "maxwidth", _max_width.to_string() );
-
-    n->add_child( _text.save() );
-
-    return( n );
-
+  public override Xml.Node* save() {
+    Xml.Node* node = base.save();
+    node->add_child( _text.save() );
+    return( node );
   }
 
   /* Loads the file contents into this instance */
-  public virtual void load( Xml.Node* n ) {
-
-    string? x = n->get_prop( "posx" );
-    if( x != null ) {
-      posx = double.parse( x );
-    }
-
-    string? y = n->get_prop( "posy" );
-    if( y != null ) {
-      posy = double.parse( y );
-    }
-
-    string? mw = n->get_prop( "maxwidth" );
-    if( mw != null ) {
-      _max_width = double.parse( mw );
-      _pango_layout.set_width( (int)_max_width * Pango.SCALE );
-    }
-
-    /* Load the text and formatting */
-    for( Xml.Node* it = n->children; it != null; it = it->next ) {
+  public override void load( Xml.Node* node ) {
+    base.load( node );
+    for( Xml.Node* it = node->children; it != null; it = it->next ) {
       if( (it->type == Xml.ElementType.ELEMENT_NODE) && (it->name == "text" ) )  {
         _text.load( it );
         update_size( false );
       }
     }
-
   }
 
   /* Returns the height of a single line of text */
@@ -320,15 +224,14 @@ public class CanvasText : Object {
   */
   public void update_size( bool call_resized = true ) {
     if( _pango_layout != null ) {
+      CanvasRect box = new CanvasRect.from_rect( bbox );
       int text_width, text_height;
       _pango_layout.set_text( _text.text, -1 );
       _pango_layout.set_attributes( _text.get_attributes() );
       _pango_layout.get_size( out text_width, out text_height );
-      _width  = (text_width  / Pango.SCALE);
-      _height = (text_height / Pango.SCALE);
-      if( call_resized ) {
-        resized();
-      }
+      box.width  = (text_width  / Pango.SCALE);
+      box.height = (text_height / Pango.SCALE);
+      bbox = box;
     }
   }
 
@@ -384,8 +287,8 @@ public class CanvasText : Object {
   /* Selects the word at the current x/y position in the text */
   public void set_cursor_at_word( double x, double y, bool motion ) {
     int cursor, trailing;
-    int adjusted_x = (int)(x - posx) * Pango.SCALE;
-    int adjusted_y = (int)(y - posy) * Pango.SCALE;
+    int adjusted_x = (int)(x - bbox.x) * Pango.SCALE;
+    int adjusted_y = (int)(y - bbox.y) * Pango.SCALE;
     if( _pango_layout.xy_to_index( adjusted_x, adjusted_y, out cursor, out trailing ) ) {
       cursor += trailing;
       var word_start = text.text.substring( 0, cursor ).last_index_of( " " );
@@ -895,7 +798,7 @@ public class CanvasText : Object {
   }
 
   /* Draws the node font to the screen */
-  public void draw( Cairo.Context ctx, Theme theme, RGBA fg, double alpha, bool copy_layout ) {
+  public void draw_item( Cairo.Context ctx ) {
 
     var layout = _pango_layout;
 

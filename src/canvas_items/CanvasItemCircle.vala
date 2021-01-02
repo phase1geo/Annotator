@@ -97,25 +97,6 @@ public class CanvasItemCircle : CanvasItem {
     }
   }
 
-  private bool is_within_edge( double a1, double a2, double mid_a, double mid_b, double b, double br ) {
-    return( (a1 <= mid_a) && (mid_a <= a2) && (Math.fabs( b - mid_b ) <= br) );
-  }
-
-  public override bool is_within_box( CanvasRect rect ) {
-    return(
-      is_within_edge( rect.x1(), rect.x2(), bbox.mid_x(), bbox.mid_y(), rect.y1(), (bbox.height / 2) ) ||   // Top
-      is_within_edge( rect.x1(), rect.x2(), bbox.mid_x(), bbox.mid_y(), rect.y2(), (bbox.height / 2) ) ||   // Bottom
-      is_within_edge( rect.y1(), rect.y2(), bbox.mid_y(), bbox.mid_x(), rect.x1(), (bbox.width  / 2) ) ||   // Left
-      is_within_edge( rect.y1(), rect.y2(), bbox.mid_y(), bbox.mid_x(), rect.x2(), (bbox.width  / 2) ) ||   // Right
-      rect.contains( bbox.mid_x(), bbox.mid_y() ) ||  // If the center of the oval is within
-      is_within( rect.x1(), rect.y1() ) ||
-      is_within( rect.x2(), rect.y1() ) ||
-      is_within( rect.x2(), rect.y2() ) ||
-      is_within( rect.x1(), rect.y2() )
-    );
-
-  }
-
   /* Returns true if the given point is within this circle */
   public override bool is_within( double x, double y ) {
     if( _fill ) {
