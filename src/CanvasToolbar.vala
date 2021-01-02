@@ -23,6 +23,8 @@ using Gtk;
 
 public class CanvasToolbar : Toolbar {
 
+  private const int margin = 10;
+
   private CanvasItems _items;
 
   /* Constructor */
@@ -31,6 +33,8 @@ public class CanvasToolbar : Toolbar {
     _items = items;
 
     create_shapes();
+    create_text();
+    create_separator();
     create_color();
     create_stroke_width();
 
@@ -61,10 +65,23 @@ public class CanvasToolbar : Toolbar {
     mb.popup.show_all();
 
     var btn = new ToolItem();
-    btn.margin_left  = 10;
-    btn.margin_right = 10;
+    btn.margin_left  = margin;
+    btn.margin_right = margin;
     btn.set_tooltip_text( _( "Add Shape" ) );
     btn.add( mb );
+
+    add( btn );
+
+  }
+
+  /* Adds the text insertion button */
+  private void create_text() {
+
+    var btn = new ToolButton( null, null );
+    btn.icon_name = "insert-text-symbolic";
+    btn.clicked.connect(() => {
+      _items.draw_text = true;
+    });
 
     add( btn );
 
@@ -81,8 +98,8 @@ public class CanvasToolbar : Toolbar {
     });
 
     var btn = new ToolItem();
-    btn.margin_left  = 10;
-    btn.margin_right = 10;
+    btn.margin_left  = margin;
+    btn.margin_right = margin;
     btn.set_tooltip_text( _( "Item Color" ) );
     btn.add( colors );
 
@@ -111,8 +128,8 @@ public class CanvasToolbar : Toolbar {
     mb.popup.show_all();
 
     var btn = new ToolItem();
-    btn.margin_left  = 10;
-    btn.margin_right = 10;
+    btn.margin_left  = margin;
+    btn.margin_right = margin;
     btn.set_tooltip_text( _( "Stroke Width" ) );
     btn.add( mb );
 
@@ -135,6 +152,17 @@ public class CanvasToolbar : Toolbar {
 
     return( surface );
 
+  }
+
+  /* Adds a separator to the toolbar */
+  private void create_separator() {
+
+    var btn = new ToolItem();
+    btn.margin_left  = margin;
+    btn.margin_right = margin;
+    btn.add( new Separator( Orientation.VERTICAL ) );
+
+    add( btn );
   }
 
 }

@@ -31,10 +31,10 @@ public class CanvasItems {
   private int              _selector_index = -1;
   private double           _last_x;
   private double           _last_y;
-  private CanvasRect?      _select_box       = null;
-  private int              _draw_index       = -1;
-  private RGBA             _color            = {1.0, 1.0, 1.0, 1.0};
-  private int              _stroke_width     = 5;
+  private int              _draw_index     = -1;
+  private bool             _draw_text      = false;
+  private RGBA             _color          = {1.0, 1.0, 1.0, 1.0};
+  private int              _stroke_width   = 5;
   private Array<string>    _shape_icons;
 
   public int draw_index {
@@ -45,6 +45,19 @@ public class CanvasItems {
       if( _draw_index != value ) {
         _draw_index = value;
         if( _draw_index != -1 ) {
+          clear_selection();
+        }
+      }
+    }
+  }
+  public bool draw_text {
+    get {
+      return( _draw_text );
+    }
+    set {
+      if( _draw_text != value ) {
+        _draw_text = value;
+        if( _draw_text ) {
           clear_selection();
         }
       }
@@ -109,6 +122,7 @@ public class CanvasItems {
       case 2  :  _active = new CanvasItemCircle( x, y, false, color, stroke_width );  break;
       case 3  :  _active = new CanvasItemCircle( x, y, true,  color, stroke_width );  break;
       case 4  :  _active = new CanvasItemArrow( x, y, color, stroke_width );          break;
+      case 5  :  _active = new CanvasItemText( x, y, color );                         break;
       default :  assert_not_reached();
     }
     _items.append( _active );
@@ -135,31 +149,11 @@ public class CanvasItems {
     return( retval );
   }
 
-  /* Converts the selection box into something that can be compared and drawn */
-  private Cairo.Rectangle convert_select_box() {
-    Cairo.Rectangle box = {
-      ((_select_box.width  < 0) ? (_select_box.x + _select_box.width)  : _select_box.x),
-      ((_select_box.height < 0) ? (_select_box.y + _select_box.height) : _select_box.y),
-      ((_select_box.width  < 0) ? (0 - _select_box.width)  : _select_box.width),
-      ((_select_box.height < 0) ? (0 - _select_box.height) : _select_box.height)
-    };
-    return( box );
-  }
-
   /* Clears the currently selected items */
   public void clear_selection() {
     _selector_index = -1;
     foreach( CanvasItem item in _items ) {
       item.mode = CanvasItemMode.NONE;
-    }
-  }
-
-  /* Selects all items in the canvas that are within the given selection box */
-  private void select_items_within() {
-    CanvasRect box;
-    _select_box.normalize( out box );
-    foreach( CanvasItem item in _items ) {
-      item.mode = item.is_within_box( box ) ? CanvasItemMode.SELECTED : CanvasItemMode.NONE;
     }
   }
 
@@ -216,10 +210,9 @@ public class CanvasItems {
         }
       }
 
-      /* If we didn't click on anything, draw out a selection box */
+      /* If we didn't click on anything, clear the selection */
       if( _active == null ) {
         clear_selection();
-        _select_box = new CanvasRect.from_coords( x, y, 0.0, 0.0 );
       }
 
     }
@@ -240,18 +233,8 @@ public class CanvasItems {
     _last_x = x;
     _last_y = y;
 
-    /*
-     If we are drawing out a selection box, draw the box and select any items
-     that are within the selection box.
-    */
-    if( _select_box != null ) {
-      _select_box.width  += diff_x;
-      _select_box.height += diff_y;
-      select_items_within();
-      return( true );
-
-    /* If we are drawing something, item */
-    } else if( (draw_index != -1) && (_active != null) ) {
+    /* If we are drawing something, resize the item */
+    if( (draw_index != -1) && (_active != null) ) {
       _active.resize( diff_x, diff_y );
       return( true );
 
@@ -301,14 +284,8 @@ public class CanvasItems {
   */
   public bool cursor_released( double x, double y, ModifierType state ) {
 
-    /* If we are drawing out a selection box, stop it */
-    if( _select_box != null ) {
-      _select_box = null;
-      _canvas.grab_focus();
-      return( true );
-
     /* If we were drawing a shape, select the shape */
-    } else if( draw_index != -1 ) {
+    if( draw_index != -1 ) {
       draw_index = -1;
       _active.mode = CanvasItemMode.SELECTED;
       _active      = null;
@@ -334,23 +311,6 @@ public class CanvasItems {
 
   }
 
-  /* Draws the selection box */
-  private void draw_select_box( Context ctx ) {
-
-    if( _select_box == null ) return;
-
-    CanvasRect box;
-    var        blue = Utils.color_from_string( "light blue" );
-
-    _select_box.normalize( out box );
-
-    Utils.set_context_color_with_alpha( ctx, blue, 0.5 );
-    ctx.set_line_width( 1 );
-    ctx.rectangle( box.x, box.y, box.width, box.height );
-    ctx.fill();
-
-  }
-
   /* Draws all of the canvas items on the given context */
   public void draw( Context ctx ) {
     foreach( CanvasItem item in _items ) {
@@ -359,7 +319,6 @@ public class CanvasItems {
     foreach( CanvasItem item in _items ) {
       item.draw_selectors( ctx );
     }
-    draw_select_box( ctx );
   }
 
 }
