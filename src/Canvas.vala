@@ -187,6 +187,8 @@ public class Canvas : DrawingArea {
     var x = scale_value( e.x );
     var y = scale_value( e.y );
 
+    grab_focus();
+
     if( _items.cursor_pressed( x, y, e.state ) ) {
       queue_draw();
     }

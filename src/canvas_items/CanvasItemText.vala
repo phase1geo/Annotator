@@ -33,9 +33,9 @@ public class CanvasItemText : CanvasItem {
   private TextMode _mode = TextMode.NONE;
 
   /* Constructor */
-  public CanvasItemRect( double x, double y, RGBA color ) {
+  public CanvasItemText( double x, double y, RGBA color ) {
 
-    base( "rectangle", x, y, color, 1 );
+    base( "text", x, y, color, 1 );
 
     /* Create the selection points */
     points.append_val( new CanvasPoint( false ) );  // Upper left corner
