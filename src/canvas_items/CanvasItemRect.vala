@@ -98,22 +98,44 @@ public class CanvasItemRect : CanvasItem {
     }
   }
 
+  public override bool is_within( double x, double y ) {
+    if( _fill ) {
+      return( base.is_within( x, y ) );
+    } else {
+      var half_width = stroke_width / 2;
+      var outer      = new CanvasRect.from_rect( bbox );  outer.resize( half_width );
+      var inner      = new CanvasRect.from_rect( bbox );  inner.resize( 0 - half_width );
+      return( outer.contains( x, y ) && !inner.contains( x, y ) );
+    }
+  }
+
   /* Draw the rectangle */
   public override void draw_item( Context ctx ) {
 
-    Utils.set_context_color( ctx, color );
-    ctx.set_line_width( stroke_width );
+    var outline = Granite.contrasting_foreground_color( color );
+
     ctx.rectangle( bbox.x, bbox.y, bbox.width, bbox.height );
 
     if( _fill ) {
+
+      Utils.set_context_color( ctx, color );
       ctx.fill_preserve();
-      ctx.set_line_width( 1 );
 
-      var outline = Granite.contrasting_foreground_color( color );
       Utils.set_context_color_with_alpha( ctx, outline, 0.5 );
-    }
+      ctx.set_line_width( 1 );
+      ctx.stroke();
 
-    ctx.stroke();
+    } else {
+
+      Utils.set_context_color_with_alpha( ctx, outline, 0.5 );
+      ctx.set_line_width( stroke_width + 2 );
+      ctx.stroke_preserve();
+
+      Utils.set_context_color( ctx, color );
+      ctx.set_line_width( stroke_width );
+      ctx.stroke();
+
+    }
 
   }
 

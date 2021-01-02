@@ -138,6 +138,7 @@ public class CanvasItemCircle : CanvasItem {
     var scale_width  = (bbox.width < bbox.height) ? (bbox.width / bbox.height) : 1.0;
     var scale_height = (bbox.width < bbox.height) ? 1.0 : (bbox.height / bbox.width);
     var radius       = (bbox.width < bbox.height) ? (bbox.height / 2.0) : (bbox.width / 2.0);
+    var outline      = Granite.contrasting_foreground_color( color );
 
     Utils.set_context_color( ctx, color );
 
@@ -148,17 +149,27 @@ public class CanvasItemCircle : CanvasItem {
     ctx.new_path();
     ctx.arc( bbox.mid_x(), bbox.mid_y(), radius, 0, (2 * Math.PI) );
     ctx.set_matrix( save_matrix );
-    ctx.set_line_width( stroke_width );
 
     if( _fill ) {
-      ctx.fill_preserve();
-      ctx.set_line_width( 1 );
 
-      var outline = Granite.contrasting_foreground_color( color );
+      ctx.fill_preserve();
+
       Utils.set_context_color_with_alpha( ctx, outline, 0.5 );
+      ctx.set_line_width( 1 );
+      ctx.stroke();
+
+    } else {
+
+      Utils.set_context_color_with_alpha( ctx, outline, 0.5 );
+      ctx.set_line_width( stroke_width + 2 );
+      ctx.stroke_preserve();
+
+      Utils.set_context_color( ctx, color );
+      ctx.set_line_width( stroke_width );
+      ctx.stroke();
+
     }
 
-    ctx.stroke();
 
   }
 

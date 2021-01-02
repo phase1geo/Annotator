@@ -79,7 +79,7 @@ public class CanvasItem {
     }
   }
   public RGBA color        { get; set; default = {1.0, 1.0, 1.0, 1.0}; }
-  public int  stroke_width { get; set; default = 4; }
+  public int  stroke_width { get; set; default = 6; }
 
   /* Constructor */
   public CanvasItem( string name, double x, double y, RGBA color, int stroke_width ) {

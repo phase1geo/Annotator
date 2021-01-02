@@ -34,7 +34,7 @@ public class CanvasItems {
   private CanvasRect?      _select_box       = null;
   private int              _draw_index       = -1;
   private RGBA             _color            = {1.0, 1.0, 1.0, 1.0};
-  private int              _stroke_width     = 4;
+  private int              _stroke_width     = 5;
   private Array<string>    _shape_icons;
 
   public int draw_index {

@@ -124,6 +124,14 @@ public class CanvasRect {
     return( y + (height / 2) );
   }
 
+  /* Resizes the size of the rectangle by the numb of pixels */
+  public void resize( double amount ) {
+    x      -= amount;
+    y      -= amount;
+    width  += (amount * 2);
+    height += (amount * 2);
+  }
+
   /* Returns true if the given rectangle intersects with this rectangle */
   public bool intersects( CanvasRect rect ) {
     var x5 = (x1() < rect.x1()) ? rect.x1() : x1();

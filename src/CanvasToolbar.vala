@@ -93,7 +93,7 @@ public class CanvasToolbar : Toolbar {
     mb.label = _items.stroke_width.to_string();
 
     for( int i=1; i<=4; i++ ) {
-      var width     = i * 4;
+      var width     = i * _items.stroke_width;
       var menu_item = new Gtk.MenuItem.with_label( width.to_string() );
       menu_item.activate.connect(() => {
         _items.stroke_width = width;
