@@ -55,7 +55,7 @@ public class CanvasItem {
   private CanvasRect     _bbox = new CanvasRect();
   private CanvasItemMode _mode = CanvasItemMode.NONE;
 
-  protected Array<CanvasPoint> selects { get; set; default = new Array<CanvasPoint>(); }
+  protected Array<CanvasPoint> points { get; set; default = new Array<CanvasPoint>(); }
   protected const int          select_offset = 5;
 
   public CanvasRect bbox {
@@ -127,7 +127,7 @@ public class CanvasItem {
 
   /* Returns the bounding box of the given selector */
   private void selector_bbox( int index, CanvasRect rect ) {
-    var sel  = selects.index( index );
+    var sel     = points.index( index );
     rect.x      = (sel.x - select_offset);
     rect.y      = (sel.y - select_offset);
     rect.width  = 10;
@@ -148,10 +148,12 @@ public class CanvasItem {
   public int is_within_selector( double x, double y ) {
     if( mode != CanvasItemMode.SELECTED ) return( -1 );
     var box = new CanvasRect();
-    for( int i=0; i<selects.length; i++ ) {
-      selector_bbox( i, box );
-      if( box.contains( x, y ) ) {
-        return( i );
+    for( int i=0; i<points.length; i++ ) {
+      if( points.index( i ).draw ) {
+        selector_bbox( i, box );
+        if( box.contains( x, y ) ) {
+          return( i );
+        }
       }
     }
     return( -1 );
@@ -169,20 +171,24 @@ public class CanvasItem {
     var black = Utils.color_from_string( "black" );
     var box   = new CanvasRect();
 
-    for( int i=0; i<selects.length; i++ ) {
+    for( int i=0; i<points.length; i++ ) {
 
-      selector_bbox( i, box );
+      if( points.index( i ).draw ) {
 
-      ctx.set_line_width( 1 );
+        selector_bbox( i, box );
 
-      /* Draw the selection rectangle */
-      Utils.set_context_color( ctx, blue );
-      ctx.rectangle( box.x, box.y, box.width, box.height );
-      ctx.fill_preserve();
+        ctx.set_line_width( 1 );
 
-      /* Draw the stroke */
-      Utils.set_context_color( ctx, black );
-      ctx.stroke();
+        /* Draw the selection rectangle */
+        Utils.set_context_color( ctx, blue );
+        ctx.rectangle( box.x, box.y, box.width, box.height );
+        ctx.fill_preserve();
+
+        /* Draw the stroke */
+        Utils.set_context_color( ctx, black );
+        ctx.stroke();
+
+      }
 
     }
 

@@ -44,6 +44,7 @@ public class Canvas : DrawingArea {
     this.undo_buffer = new UndoBuffer( this );
 
     this.draw.connect( on_draw );
+    this.key_press_event.connect( on_keypress );
     this.button_press_event.connect( on_press );
     this.button_release_event.connect( on_release );
     this.motion_notify_event.connect( on_motion );
@@ -106,6 +107,7 @@ public class Canvas : DrawingArea {
       set_size_request( buf.width, buf.height );
       queue_draw();
       image_loaded();
+      grab_focus();
     } catch( Error e ) {
       return( false );
     }
@@ -120,11 +122,14 @@ public class Canvas : DrawingArea {
     set_size_request( buf.width, buf.height );
     queue_draw();
     image_loaded();
+    grab_focus();
   }
 
   /* Pastes a text from the given string to the canvas (only valid when editing a text item */
   public void paste_text( string txt ) {
     /* TBD */
+    queue_draw();
+    grab_focus();
   }
 
   /* Called by the input method manager when the user has a string to commit */
@@ -165,13 +170,24 @@ public class Canvas : DrawingArea {
     return( value / scale_factor );
   }
 
+  /* Handles keypress events */
+  private bool on_keypress( EventKey e ) {
+
+    if( _items.key_pressed( e.keyval, e.state ) ) {
+      queue_draw();
+    }
+
+    return( false );
+
+  }
+
   /* Handles a mouse cursor button press event */
   private bool on_press( EventButton e ) {
 
     var x = scale_value( e.x );
     var y = scale_value( e.y );
 
-    if( _items.cursor_pressed( x, y ) ) {
+    if( _items.cursor_pressed( x, y, e.state ) ) {
       queue_draw();
     }
 
@@ -185,7 +201,7 @@ public class Canvas : DrawingArea {
     var x = scale_value( e.x );
     var y = scale_value( e.y );
 
-    if( _items.cursor_moved( x, y ) ) {
+    if( _items.cursor_moved( x, y, e.state ) ) {
       queue_draw();
     }
 
@@ -199,7 +215,7 @@ public class Canvas : DrawingArea {
     var x = scale_value( e.x );
     var y = scale_value( e.y );
 
-    if( _items.cursor_released( x, y ) ) {
+    if( _items.cursor_released( x, y, e.state ) ) {
       queue_draw();
     }
 

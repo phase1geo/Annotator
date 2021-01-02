@@ -35,8 +35,8 @@ public class CanvasItems {
   private int              _draw_index       = -1;
   private RGBA             _color            = {1.0, 1.0, 1.0, 1.0};
   private int              _stroke_width     = 4;
+  private Array<string>    _shape_icons;
 
-  public Array<Image> shape_icons  { get; private set; default = new Array<Image>(); }
   public int draw_index {
     get {
       return( _draw_index );
@@ -82,12 +82,23 @@ public class CanvasItems {
     _items = new List<CanvasItem>();
 
     /* Load the shapes */
-    shape_icons.append_val( new Image.from_icon_name( "rect-stroke-symbolic",   IconSize.SMALL_TOOLBAR ) );
-    shape_icons.append_val( new Image.from_icon_name( "rect-fill-symbolic",     IconSize.SMALL_TOOLBAR ) );
-    shape_icons.append_val( new Image.from_icon_name( "circle-stroke-symbolic", IconSize.SMALL_TOOLBAR ) );
-    shape_icons.append_val( new Image.from_icon_name( "circle-fill-symbolic",   IconSize.SMALL_TOOLBAR ) );
-    shape_icons.append_val( new Image.from_icon_name( "arrow-symbolic",         IconSize.SMALL_TOOLBAR ) );
+    _shape_icons = new Array<string>();
+    _shape_icons.append_val( "rect-stroke-symbolic" );
+    _shape_icons.append_val( "rect-fill-symbolic" );
+    _shape_icons.append_val( "circle-stroke-symbolic" );
+    _shape_icons.append_val( "circle-fill-symbolic" );
+    _shape_icons.append_val( "arrow-symbolic" );
 
+  }
+
+  /* Returns the number of shapes that we support */
+  public int num_shapes() {
+    return( (int)_shape_icons.length );
+  }
+
+  /* Returns the shape of the icon */
+  public Image get_shape_icon( int index ) {
+    return( new Image.from_icon_name( _shape_icons.index( index ), IconSize.SMALL_TOOLBAR ) );
   }
 
   /* Adds the given shape to the top of the item stack */
@@ -101,6 +112,27 @@ public class CanvasItems {
       default :  assert_not_reached();
     }
     _items.append( _active );
+  }
+
+  /* Removes all of the canvas items */
+  private void clear() {
+    while( _items.first() != null ) {
+      _items.delete_link( _items.first() );
+    }
+    _canvas.queue_draw();
+  }
+
+  /* Deletes all of the selected items */
+  private bool remove_selected() {
+    var retval = false;
+    for( unowned List<CanvasItem> item=_items.first(); item!=null; item=item.next ) {
+      if( item.data.mode == CanvasItemMode.SELECTED ) {
+        _items.delete_link( item );
+        _canvas.set_cursor( null );
+        retval = true;
+      }
+    }
+    return( retval );
   }
 
   /* Converts the selection box into something that can be compared and drawn */
@@ -142,11 +174,23 @@ public class CanvasItems {
     _canvas.queue_draw();
   }
 
+  /* Handles keypress events */
+  public bool key_pressed( uint keyval, ModifierType state ) {
+
+    switch( keyval ) {
+      case Key.BackSpace :
+      case Key.Delete    :  return( remove_selected() );
+    }
+
+    return( false );
+
+  }
+
   /*
    Called whenever the cursor is pressed.  Returns true if the canvas should
    draw itself.
   */
-  public bool cursor_pressed( double x, double y ) {
+  public bool cursor_pressed( double x, double y, ModifierType state ) {
 
     /* If we need to draw a shape, create the shape at the given coordinates */
     if( draw_index != -1 ) {
@@ -188,7 +232,7 @@ public class CanvasItems {
    Called whenever the cursor is moved.  Returns true if the canvas should draw
    itself.
   */
-  public bool cursor_moved( double x, double y ) {
+  public bool cursor_moved( double x, double y, ModifierType state ) {
 
     var diff_x = x - _last_x;
     var diff_y = y - _last_y;
@@ -255,11 +299,12 @@ public class CanvasItems {
    Called whenever the cursor button is released.  Returns true if the canvas
    should draw itself.
   */
-  public bool cursor_released( double x, double y ) {
+  public bool cursor_released( double x, double y, ModifierType state ) {
 
     /* If we are drawing out a selection box, stop it */
     if( _select_box != null ) {
       _select_box = null;
+      _canvas.grab_focus();
       return( true );
 
     /* If we were drawing a shape, select the shape */
@@ -267,6 +312,7 @@ public class CanvasItems {
       draw_index = -1;
       _active.mode = CanvasItemMode.SELECTED;
       _active      = null;
+      _canvas.grab_focus();
       return( true );
 
     /* If we are finished dragging the selector, clear it */
@@ -280,6 +326,9 @@ public class CanvasItems {
 
     /* Clear the cursor */
     _canvas.set_cursor( null );
+
+    /* Make sure that the canvas has input focus */
+    _canvas.grab_focus();
 
     return( false );
 

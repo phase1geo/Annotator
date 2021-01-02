@@ -41,23 +41,26 @@ public class CanvasToolbar : Toolbar {
   /* Creates the shape toolbar item */
   private void create_shapes() {
 
-    var icons = _items.shape_icons;
-    var mb    = new MenuButton();
-    mb.popup  = new Gtk.Menu();
+    var mb   = new MenuButton();
+    mb.popup = new Gtk.Menu();
+    mb.image = _items.get_shape_icon( 0 );
 
-    for( int i=0; i<icons.length; i++ ) {
+    for( int i=0; i<_items.num_shapes(); i++ ) {
       var menu_item   = new Gtk.MenuItem();
       var shape_index = i;
       menu_item.activate.connect(() => {
         _items.draw_index = shape_index;
+        mb.image = _items.get_shape_icon( shape_index );
       });
-      menu_item.add( icons.index( i ) );
+      menu_item.add( _items.get_shape_icon( i ) );
       mb.popup.add( menu_item );
     }
 
     mb.popup.show_all();
 
     var btn = new ToolItem();
+    btn.margin_left  = 10;
+    btn.margin_right = 10;
     btn.set_tooltip_text( _( "Add Shape" ) );
     btn.add( mb );
 
@@ -68,11 +71,14 @@ public class CanvasToolbar : Toolbar {
   private void create_color() {
 
     var colors = new ColorButton();
+    colors.rgba = _items.color;
     colors.color_set.connect(() => {
       _items.color = colors.rgba;
     });
 
     var btn = new ToolItem();
+    btn.margin_left  = 10;
+    btn.margin_right = 10;
     btn.set_tooltip_text( _( "Item Color" ) );
     btn.add( colors );
 
@@ -84,9 +90,10 @@ public class CanvasToolbar : Toolbar {
 
     var mb   = new MenuButton();
     mb.popup = new Gtk.Menu();
+    mb.label = _items.stroke_width.to_string();
 
     for( int i=1; i<=4; i++ ) {
-      var width     = i * 2;
+      var width     = i * 4;
       var menu_item = new Gtk.MenuItem.with_label( width.to_string() );
       menu_item.activate.connect(() => {
         _items.stroke_width = width;
@@ -97,6 +104,8 @@ public class CanvasToolbar : Toolbar {
     mb.popup.show_all();
 
     var btn = new ToolItem();
+    btn.margin_left  = 10;
+    btn.margin_right = 10;
     btn.set_tooltip_text( _( "Stroke Width" ) );
     btn.add( mb );
 
@@ -105,5 +114,4 @@ public class CanvasToolbar : Toolbar {
   }
 
 }
-
 

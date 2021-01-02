@@ -23,11 +23,14 @@ using Gtk;
 
 public class CanvasPoint {
 
-  public double x { get; set; default = 0.0; }
-  public double y { get; set; default = 0.0; }
+  public double x    { get; set; default = 0.0; }
+  public double y    { get; set; default = 0.0; }
+  public bool   draw { get; private set; default = false; }
 
   /* Constructor */
-  public CanvasPoint() {}
+  public CanvasPoint( bool draw = false ) {
+    this.draw = draw;
+  }
 
   /* Copy constructor */
   public CanvasPoint.from_point( CanvasPoint point ) {
@@ -35,14 +38,16 @@ public class CanvasPoint {
   }
 
   /* Constructor */
-  public CanvasPoint.with_coords( double x, double y ) {
+  public CanvasPoint.with_coords( double x, double y, bool draw = false ) {
     copy_coords( x, y );
+    this.draw = draw;
   }
 
   /* Copies the point information to this instance */
   public void copy( CanvasPoint point ) {
-    x = point.x;
-    y = point.y;
+    this.x    = point.x;
+    this.y    = point.y;
+    this.draw = point.draw;
   }
 
   /* Copies the x,y coordinates to this instance */
@@ -53,7 +58,7 @@ public class CanvasPoint {
 
   /* Returns a printable version of this point */
   public string to_string() {
-    return( "x: %g, y: %g".printf( x, y ) );
+    return( "x: %g, y: %g, draw: %s".printf( x, y, draw.to_string() ) );
   }
 
 }

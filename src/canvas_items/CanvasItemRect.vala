@@ -34,30 +34,30 @@ public class CanvasItemRect : CanvasItem {
 
     _fill = fill;
 
-    selects.append_val( new CanvasPoint() );  // upper-left
-    selects.append_val( new CanvasPoint() );  // upper-right
-    selects.append_val( new CanvasPoint() );  // lower-left
-    selects.append_val( new CanvasPoint() );  // lower-right
+    points.append_val( new CanvasPoint( true ) );  // upper-left
+    points.append_val( new CanvasPoint( true ) );  // upper-right
+    points.append_val( new CanvasPoint( true ) );  // lower-left
+    points.append_val( new CanvasPoint( true ) );  // lower-right
 
-    selects.append_val( new CanvasPoint() );  // top
-    selects.append_val( new CanvasPoint() );  // right
-    selects.append_val( new CanvasPoint() );  // bottom
-    selects.append_val( new CanvasPoint() );  // left
+    points.append_val( new CanvasPoint( true ) );  // top
+    points.append_val( new CanvasPoint( true ) );  // right
+    points.append_val( new CanvasPoint( true ) );  // bottom
+    points.append_val( new CanvasPoint( true ) );  // left
 
   }
 
   /* Updates the selection boxes whenever the bounding box changes */
   protected override void bbox_changed() {
 
-    selects.index( 0 ).copy_coords( bbox.x1(), bbox.y1() );
-    selects.index( 1 ).copy_coords( bbox.x2(), bbox.y1() );
-    selects.index( 2 ).copy_coords( bbox.x1(), bbox.y2() );
-    selects.index( 3 ).copy_coords( bbox.x2(), bbox.y2() );
+    points.index( 0 ).copy_coords( bbox.x1(), bbox.y1() );
+    points.index( 1 ).copy_coords( bbox.x2(), bbox.y1() );
+    points.index( 2 ).copy_coords( bbox.x1(), bbox.y2() );
+    points.index( 3 ).copy_coords( bbox.x2(), bbox.y2() );
 
-    selects.index( 4 ).copy_coords( bbox.mid_x(), bbox.y1() );
-    selects.index( 5 ).copy_coords( bbox.x2(), bbox.mid_y() );
-    selects.index( 6 ).copy_coords( bbox.mid_x(), bbox.y2() );
-    selects.index( 7 ).copy_coords( bbox.x1(), bbox.mid_y() );
+    points.index( 4 ).copy_coords( bbox.mid_x(), bbox.y1() );
+    points.index( 5 ).copy_coords( bbox.x2(), bbox.mid_y() );
+    points.index( 6 ).copy_coords( bbox.mid_x(), bbox.y2() );
+    points.index( 7 ).copy_coords( bbox.x1(), bbox.mid_y() );
 
   }
 
@@ -101,13 +101,16 @@ public class CanvasItemRect : CanvasItem {
   /* Draw the rectangle */
   public override void draw_item( Context ctx ) {
 
-    ctx.set_line_width( stroke_width );
-
     Utils.set_context_color( ctx, color );
+    ctx.set_line_width( stroke_width );
     ctx.rectangle( bbox.x, bbox.y, bbox.width, bbox.height );
 
     if( _fill ) {
       ctx.fill_preserve();
+      ctx.set_line_width( 1 );
+
+      var outline = Granite.contrasting_foreground_color( color );
+      Utils.set_context_color_with_alpha( ctx, outline, 0.5 );
     }
 
     ctx.stroke();
