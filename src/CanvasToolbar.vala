@@ -41,9 +41,11 @@ public class CanvasToolbar : Toolbar {
   /* Creates the shape toolbar item */
   private void create_shapes() {
 
-    var mb   = new MenuButton();
-    mb.popup = new Gtk.Menu();
-    mb.image = _items.get_shape_icon( 0 );
+    var mb    = new MenuButton();
+    mb.set_tooltip_text( _( "Shapes" ) );
+    mb.image  = _items.get_shape_icon( 0 );
+    mb.relief = ReliefStyle.NONE;
+    mb.popup  = new Gtk.Menu();
 
     for( int i=0; i<_items.num_shapes(); i++ ) {
       var menu_item   = new Gtk.MenuItem();
@@ -70,8 +72,10 @@ public class CanvasToolbar : Toolbar {
 
   private void create_color() {
 
-    var colors = new ColorButton();
-    colors.rgba = _items.color;
+    var colors    = new ColorButton();
+    colors.set_tooltip_text( _( "Item Color" ) );
+    colors.relief = ReliefStyle.NONE;
+    colors.rgba   = _items.color;
     colors.color_set.connect(() => {
       _items.color = colors.rgba;
     });
@@ -88,16 +92,19 @@ public class CanvasToolbar : Toolbar {
 
   private void create_stroke_width() {
 
-    var mb   = new MenuButton();
-    mb.popup = new Gtk.Menu();
-    mb.label = _items.stroke_width.to_string();
+    var mb    = new MenuButton();
+    mb.set_tooltip_text( _( "Line Width" ) );
+    mb.relief = ReliefStyle.NONE;
+    mb.image  = new Image.from_surface( make_stroke_icon( 24, _items.stroke_width ) );
+    mb.popup  = new Gtk.Menu();
 
     for( int i=1; i<=4; i++ ) {
-      var width     = i * _items.stroke_width;
-      var menu_item = new Gtk.MenuItem.with_label( width.to_string() );
+      var width       = i * _items.stroke_width;
+      var menu_item   = new Gtk.MenuItem();
+      menu_item.add( new Image.from_surface( make_stroke_icon( 50, width ) ) );
       menu_item.activate.connect(() => {
         _items.stroke_width = width;
-        mb.label = width.to_string();
+        mb.image = new Image.from_surface( make_stroke_icon( 24, width ) );
       });
       mb.popup.add( menu_item );
     }
@@ -110,6 +117,23 @@ public class CanvasToolbar : Toolbar {
     btn.add( mb );
 
     add( btn );
+
+  }
+
+  private Cairo.Surface make_stroke_icon( int width, int stroke_width ) {
+
+    var height  = stroke_width;
+    var surface = new Cairo.ImageSurface( Cairo.Format.ARGB32, width, height );
+    var ctx     = new Cairo.Context( surface );
+
+    /* Draw the stroke */
+    Utils.set_context_color( ctx, Utils.color_from_string( "black" ) );
+    ctx.set_line_width( stroke_width );
+    ctx.move_to( 0, (height / 2) );
+    ctx.line_to( width, (height / 2) );
+    ctx.stroke();
+
+    return( surface );
 
   }
 

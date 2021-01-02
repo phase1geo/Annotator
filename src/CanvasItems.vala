@@ -98,7 +98,7 @@ public class CanvasItems {
 
   /* Returns the shape of the icon */
   public Image get_shape_icon( int index ) {
-    return( new Image.from_icon_name( _shape_icons.index( index ), IconSize.SMALL_TOOLBAR ) );
+    return( new Image.from_icon_name( _shape_icons.index( index ), IconSize.LARGE_TOOLBAR ) );
   }
 
   /* Adds the given shape to the top of the item stack */
