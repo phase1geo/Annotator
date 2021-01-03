@@ -23,6 +23,15 @@ using Gtk;
 using Gdk;
 using Cairo;
 
+public enum CanvasItemType {
+  RECT_STROKE = 0,
+  RECT_FILL,
+  OVAL_STROKE,
+  OVAL_FILL,
+  ARROW,
+  TEXT
+}
+
 public class CanvasItems {
 
   private Canvas           _canvas;
@@ -31,35 +40,10 @@ public class CanvasItems {
   private int              _selector_index = -1;
   private double           _last_x;
   private double           _last_y;
-  private int              _draw_index     = -1;
   private RGBA             _color          = {1.0, 1.0, 1.0, 1.0};
   private int              _stroke_width   = 5;
   private Array<string>    _shape_icons;
 
-  public int draw_index {
-    get {
-      return( _draw_index );
-    }
-    set {
-      if( _draw_index != value ) {
-        _draw_index = value;
-        if( _draw_index != -1 ) {
-          clear_selection();
-        }
-      }
-    }
-  }
-  public bool draw_text {
-    get {
-      return( _draw_index == 5 );
-    }
-    set {
-      _draw_index = value ? 5 : -1;
-      if( _draw_index != -1 ) {
-        clear_selection();
-      }
-    }
-  }
   public RGBA color {
     get {
       return( _color );
@@ -111,18 +95,53 @@ public class CanvasItems {
     return( new Image.from_icon_name( _shape_icons.index( index ), IconSize.LARGE_TOOLBAR ) );
   }
 
+  /* Returns the box to place a canvas item into */
+  private CanvasRect center_box( double width, double height ) {
+    var canvas_width  = _canvas.get_allocated_width();
+    var canvas_height = _canvas.get_allocated_height();
+    return( new CanvasRect.from_coords( ((canvas_width + width) / 2), ((canvas_height + height) / 2), width, height ) );
+  }
+
+  private CanvasItem create_rectangle( bool fill ) {
+    var item = new CanvasItemRect( fill, color, stroke_width );
+    item.bbox = center_box( 200, 50 );
+    return( item );
+  }
+
+  private CanvasItem create_oval( bool fill ) {
+    var item = new CanvasItemOval( fill, color, stroke_width );
+    item.bbox = center_box( 200, 50 );
+    return( item );
+  }
+
+  private CanvasItem create_arrow() {
+    var item = new CanvasItemArrow( color );
+    item.bbox = center_box( 200, 1 );
+    return( item );
+  }
+
+  private CanvasItem create_text() {
+    var item = new CanvasItemText( _canvas, color );
+    item.bbox = center_box( 200, 1 );
+    return( item );
+  }
+
   /* Adds the given shape to the top of the item stack */
-  private void add_shape_item( double x, double y ) {
-    switch( draw_index ) {
-      case 0  :  _active = new CanvasItemRect(   x, y, false, color, stroke_width );  break;
-      case 1  :  _active = new CanvasItemRect(   x, y, true,  color, stroke_width );  break;
-      case 2  :  _active = new CanvasItemCircle( x, y, false, color, stroke_width );  break;
-      case 3  :  _active = new CanvasItemCircle( x, y, true,  color, stroke_width );  break;
-      case 4  :  _active = new CanvasItemArrow( x, y, color, stroke_width );          break;
-      case 5  :  _active = new CanvasItemText( _canvas, x, y, color );                break;
+  public void add_shape_item( CanvasItemType type ) {
+    CanvasItem? item = null;
+    switch( type ) {
+      case CanvasItemType.RECT_STROKE  :  item = create_rectangle( false );  break;
+      case CanvasItemType.RECT_FILL    :  item = create_rectangle( true );  break;
+      case CanvasItemType.OVAL_STROKE  :  item = create_oval( false );  break;
+      case CanvasItemType.OVAL_FILL    :  item = create_oval( true );  break;
+      case CanvasItemType.ARROW        :  item = create_arrow();  break;
+      case CanvasItemType.TEXT         :  item = create_text();  break;
       default :  assert_not_reached();
     }
-    _items.append( _active );
+    clear_selection();
+    item.mode = CanvasItemMode.SELECTED;
+    _items.append( item );
+    _canvas.queue_draw();
   }
 
   /* Removes all of the canvas items */
@@ -165,6 +184,21 @@ public class CanvasItems {
     _canvas.queue_draw();
   }
 
+  /* Returns true if the shift key is enabled in the given state */
+  private bool shift_state( ModifierType state ) {
+    return( (bool)(state & ModifierType.SHIFT_MASK) );
+  }
+
+  /* Returns true if the control key is enabled in the given state */
+  private bool control_state( ModifierType state ) {
+    return( (bool)(state & ModifierType.CONTROL_MASK) );
+  }
+
+  /* Returns true if the alt key is enabled in the given state */
+  private bool alt_state( ModifierType state ) {
+    return( (bool)(state & ModifierType.MOD1_MASK) );
+  }
+
   /* Handles keypress events */
   public bool key_pressed( uint keyval, ModifierType state ) {
 
@@ -183,35 +217,28 @@ public class CanvasItems {
   */
   public bool cursor_pressed( double x, double y, ModifierType state ) {
 
-    /* If we need to draw a shape, create the shape at the given coordinates */
-    if( draw_index != -1 ) {
+    _active = null;
+
+    foreach( CanvasItem item in _items ) {
+      _selector_index = item.is_within_selector( x, y );
+      if( _selector_index != -1 ) {
+        _active = item;
+        return( false );
+      }
+      if( item.is_within( x, y ) ) {
+        _active = item;
+        if( _active.mode == CanvasItemMode.NONE ) {
+          clear_selection();
+        }
+        _active.mode = CanvasItemMode.SELECTED;
+        _canvas.set_cursor_from_name( "grabbing" );
+        return( true );
+      }
+    }
+
+    /* If we didn't click on anything, clear the selection */
+    if( _active == null ) {
       clear_selection();
-      add_shape_item( x, y );
-
-    /* Otherwise, see if we clicked on an item */
-    } else {
-
-      _active = null;
-
-      foreach( CanvasItem item in _items ) {
-        _selector_index = item.is_within_selector( x, y );
-        if( _selector_index != -1 ) {
-          _active = item;
-          return( false );
-        }
-        if( item.is_within( x, y ) ) {
-          _active      = item;
-          _active.mode = CanvasItemMode.SELECTED;
-          _canvas.set_cursor_from_name( "grabbing" );
-          return( true );
-        }
-      }
-
-      /* If we didn't click on anything, clear the selection */
-      if( _active == null ) {
-        clear_selection();
-      }
-
     }
 
     return( false );
@@ -226,25 +253,21 @@ public class CanvasItems {
 
     var diff_x = x - _last_x;
     var diff_y = y - _last_y;
+    var shift  = shift_state( state );
 
     _last_x = x;
     _last_y = y;
 
-    /* If we are drawing something, resize the item */
-    if( (draw_index != -1) && (_active != null) ) {
-      _active.resize( diff_x, diff_y );
-      return( true );
-
     /* Since we pressed on a selector, move the selector */
-    } else if( _selector_index != -1 ) {
-      _active.move_selector( _selector_index, diff_x, diff_y );
+    if( _selector_index != -1 ) {
+      _active.move_selector( _selector_index, diff_x, diff_y, shift );
       return( true );
 
     /* Otherwise, move any selected items by the given amount */
     } else if( _active != null ) {
       var retval = false;
       foreach( CanvasItem item in _items ) {
-        if( item.mode == CanvasItemMode.SELECTED ) {
+        if( item.mode.can_move() ) {
           item.move_item( diff_x, diff_y );
           retval = true;
         }
@@ -281,18 +304,26 @@ public class CanvasItems {
   */
   public bool cursor_released( double x, double y, ModifierType state ) {
 
-    /* If we were drawing a shape, select the shape */
-    if( draw_index != -1 ) {
-      draw_index = -1;
-      _active.mode = CanvasItemMode.SELECTED;
-      _active      = null;
-      _canvas.grab_focus();
-      return( true );
+    var retval = false;
 
     /* If we are finished dragging the selector, clear it */
-    } else if( _selector_index != -1 ) {
+    if( _selector_index != -1 ) {
       _selector_index = -1;
       _active         = null;
+
+    /* If we were move one or more items, make sure that they stay selected */
+    } else if( _active != null ) {
+      foreach( CanvasItem item in _items ) {
+        if( item.mode == CanvasItemMode.MOVING ) {
+          item.mode = CanvasItemMode.SELECTED;
+          retval = true;
+        }
+      }
+
+    /* If we have not clicked/moved anything important, clear the selection */
+    } else if( _active == null ) {
+      clear_selection();
+      retval = true;
     }
 
     /* Clear the active element */
@@ -304,8 +335,34 @@ public class CanvasItems {
     /* Make sure that the canvas has input focus */
     _canvas.grab_focus();
 
-    return( false );
+    return( retval );
 
+  }
+
+  public Xml.Node* save() {
+    Xml.Node* node = new Xml.Node( null, "items" );
+    foreach( CanvasItem item in _items ) {
+      node->add_child( item.save() );
+    }
+    return( node );
+  }
+
+  public void load( Xml.Node* node ) {
+    for( Xml.Node* it=node->children; it!=null; it=it->next ) {
+      if( it->type == Xml.ElementType.ELEMENT_NODE ) {
+        CanvasItem? item = null;
+        switch( it->name ) {
+          case "rectangle" :  item = create_rectangle( true );  break;
+          case "oval"      :  item = create_oval( true );  break;
+          case "arrow"     :  item = create_arrow();  break;
+          case "text"      :  item = create_text();  break;
+        }
+        if( item != null ) {
+          item.load( it );
+          _items.append( item );
+        }
+      }
+    }
   }
 
   /* Draws all of the canvas items on the given context */

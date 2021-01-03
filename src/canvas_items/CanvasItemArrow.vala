@@ -48,21 +48,31 @@ public class CanvasItemArrow : CanvasItem {
   private ArrowHeadDirection _dir      = ArrowHeadDirection.UPPER_LEFT;
 
   /* Constructor */
-  public CanvasItemArrow( double x, double y, RGBA color, int stroke_width ) {
+  public CanvasItemArrow( RGBA color ) {
+    base( "arrow", color, 1 );
+    create_points();
+  }
 
-    base( "arrow", x, y, color, stroke_width );
-
+  /* Creates the selection points */
+  private void create_points() {
     points.append_val( new CanvasPoint( true ) );
     points.append_val( new CanvasPoint( true ) );
     points.append_val( new CanvasPoint( true ) );
     points.append_val( new CanvasPoint( true ) );
     points.append_val( new CanvasPoint( false ) );
     points.append_val( new CanvasPoint( false ) );
+  }
 
-    /* Initialize ourselves */
-    points.index( PType.HD ).copy_coords( x, y );
-    points.index( PType.TL ).copy_coords( x, y );
-
+  /* Copies the given arrow item properties to this one */
+  public override void copy( CanvasItem item ) {
+    base.copy( item );
+    var arrow_item = (CanvasItemArrow)item;
+    if( arrow_item != null ) {
+      _peak_a   = arrow_item._peak_a;
+      _peak_c   = arrow_item._peak_c;
+      _valley_a = arrow_item._valley_a;
+      _valley_c = arrow_item._valley_c;
+    }
   }
 
   /* Updates the selection boxes whenever the bounding box changes */
@@ -152,7 +162,7 @@ public class CanvasItemArrow : CanvasItem {
   }
 
   /* Adjusts the bounding box */
-  public override void move_selector( int index, double diffx, double diffy ) {
+  public override void move_selector( int index, double diffx, double diffy, bool shift ) {
 
     double w = 0, h = 0;
 
@@ -223,11 +233,6 @@ public class CanvasItemArrow : CanvasItem {
 
   }
 
-  /* Performs resize operation */
-  public override void resize( double diffx, double diffy ) {
-    move_selector( PType.TL, diffx, diffy );
-  }
-
   /* Provides cursor to display when mouse cursor is hovering over the given selector */
   public override CursorType? get_selector_cursor( int index ) {
     return( CursorType.TCROSS );
@@ -237,10 +242,41 @@ public class CanvasItemArrow : CanvasItem {
     return( Utils.is_within_polygon( x, y, points ) );
   }
 
+  /* Saves this item as XML */
+  public override Xml.Node* save() {
+    Xml.Node* node = base.save();
+    node->set_prop( "peak-angle",    _peak_a.to_string() );
+    node->set_prop( "peak-length",   _peak_c.to_string() );
+    node->set_prop( "valley-angle",  _valley_a.to_string() );
+    node->set_prop( "valley-length", _valley_c.to_string() );
+    return( node );
+  }
+
+  /* Loads this item from XML */
+  public override void load( Xml.Node* node ) {
+    base.load( node );
+    var pa = node->get_prop( "peak-angle" );
+    if( pa != null ) {
+      _peak_a = double.parse( pa );
+    }
+    var pc = node->get_prop( "peak-length" );
+    if( pc != null ) {
+      _peak_c = double.parse( pc );
+    }
+    var va = node->get_prop( "valley-angle" );
+    if( va != null ) {
+      _valley_a = double.parse( va );
+    }
+    var vc = node->get_prop( "valley-length" );
+    if( vc != null ) {
+      _valley_c = double.parse( vc );
+    }
+  }
+
   /* Draw the rectangle */
   public override void draw_item( Context ctx ) {
 
-    Utils.set_context_color( ctx, color );
+    Utils.set_context_color_with_alpha( ctx, color, mode.alpha() );
 
     ctx.set_line_width( 1 );
     ctx.new_path();

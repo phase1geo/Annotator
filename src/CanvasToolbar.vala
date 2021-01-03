@@ -52,11 +52,11 @@ public class CanvasToolbar : Toolbar {
     mb.popup  = new Gtk.Menu();
 
     for( int i=0; i<_items.num_shapes(); i++ ) {
-      var menu_item   = new Gtk.MenuItem();
-      var shape_index = i;
+      var menu_item  = new Gtk.MenuItem();
+      var shape_type = (CanvasItemType)i;
       menu_item.activate.connect(() => {
-        _items.draw_index = shape_index;
-        mb.image = _items.get_shape_icon( shape_index );
+        _items.add_shape_item( shape_type );
+        mb.image = _items.get_shape_icon( shape_type );
       });
       menu_item.add( _items.get_shape_icon( i ) );
       mb.popup.add( menu_item );
@@ -80,7 +80,7 @@ public class CanvasToolbar : Toolbar {
     var btn = new ToolButton( null, null );
     btn.icon_name = "insert-text-symbolic";
     btn.clicked.connect(() => {
-      _items.draw_text = true;
+      _items.add_shape_item( CanvasItemType.TEXT );
     });
 
     add( btn );

@@ -97,10 +97,14 @@ public class CanvasItemText : CanvasItem {
   }
 
   /* Default constructor */
-  public CanvasItemText( Canvas canvas, double x, double y, RGBA color ) {
+  public CanvasItemText( Canvas canvas, RGBA color ) {
+    base( "text", color, 1 );
+    initialize( canvas );
+    update_size( false );
+  }
 
-    base( "text", x, y, color, 1 );
-
+  /* Initializes this contents of this item */
+  private void initialize( Canvas canvas ) {
     _text = new FormattedText();
     _text.changed.connect( text_changed );
     _line_layout  = canvas.create_pango_layout( "M" );
@@ -108,15 +112,16 @@ public class CanvasItemText : CanvasItem {
     _pango_layout.set_wrap( Pango.WrapMode.WORD_CHAR );
     _pango_layout.set_width( (int)_max_width * Pango.SCALE );
     initialize_font_description();
-    update_size( false );
+    create_points();
+  }
 
-    /* Create the selection points */
+  /* Creates the items points */
+  private void create_points() {
     points.append_val( new CanvasPoint( false ) );  // Upper left corner
     points.append_val( new CanvasPoint( false ) );  // Lower left corner
     points.append_val( new CanvasPoint( false ) );  // Upper right corner
     points.append_val( new CanvasPoint( false ) );  // Upper left corner
     points.append_val( new CanvasPoint( true ) );   // Drag handle to right of text
-
   }
 
   /* Allocates and initializes the font description for the layouts */
@@ -166,7 +171,7 @@ public class CanvasItemText : CanvasItem {
   }
 
     /* Adjusts the bounding box */
-  public override void move_selector( int index, double diffx, double diffy ) {
+  public override void move_selector( int index, double diffx, double diffy, bool shift ) {
     points.index( 4 ).x += diffx;
     max_width = diffx;
   }
@@ -799,6 +804,8 @@ public class CanvasItemText : CanvasItem {
 
   /* Draws the node font to the screen */
   public void draw_item( Cairo.Context ctx ) {
+
+    stdout.printf( "Drawing text item, edit: %s\n", edit.to_string() );
 
     var layout = _pango_layout;
 

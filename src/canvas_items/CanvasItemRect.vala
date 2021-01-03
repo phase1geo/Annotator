@@ -28,22 +28,22 @@ public class CanvasItemRect : CanvasItem {
   private bool _fill;
 
   /* Constructor */
-  public CanvasItemRect( double x, double y, bool fill, RGBA color, int stroke_width ) {
-
-    base( "rectangle", x, y, color, stroke_width );
-
+  public CanvasItemRect( bool fill, RGBA color, int stroke_width ) {
+    base( "rectangle", color, stroke_width );
     _fill = fill;
+    create_points();
+  }
 
+  /* Create the points */
+  private void create_points() {
     points.append_val( new CanvasPoint( true ) );  // upper-left
     points.append_val( new CanvasPoint( true ) );  // upper-right
     points.append_val( new CanvasPoint( true ) );  // lower-left
     points.append_val( new CanvasPoint( true ) );  // lower-right
-
     points.append_val( new CanvasPoint( true ) );  // top
     points.append_val( new CanvasPoint( true ) );  // right
     points.append_val( new CanvasPoint( true ) );  // bottom
     points.append_val( new CanvasPoint( true ) );  // left
-
   }
 
   /* Updates the selection boxes whenever the bounding box changes */
@@ -62,9 +62,11 @@ public class CanvasItemRect : CanvasItem {
   }
 
   /* Adjusts the bounding box */
-  public override void move_selector( int index, double diffx, double diffy ) {
+  public override void move_selector( int index, double diffx, double diffy, bool shift ) {
 
     var box = new CanvasRect.from_rect( bbox );
+
+    adjust_diffs( shift, box, ref diffx, ref diffy );
 
     switch( index ) {
       case 0 :  box.x += diffx;  box.y += diffy;  box.width -= diffx;  box.height -= diffy;  break;
@@ -77,7 +79,7 @@ public class CanvasItemRect : CanvasItem {
       case 7 :  box.x += diffx;                   box.width -= diffx;                        break;
     }
 
-    if( (box.width >= (select_offset * 2)) && (box.height >= (select_offset * 2)) ) {
+    if( (box.width >= (selector_size * 3)) && (box.height >= (selector_size * 3)) ) {
       bbox = box;
     }
 
@@ -109,6 +111,22 @@ public class CanvasItemRect : CanvasItem {
     }
   }
 
+  /* Saves this item as XML */
+  public override Xml.Node* save() {
+    Xml.Node* node = base.save();
+    node->set_prop( "fill", _fill.to_string() );
+    return( node );
+  }
+
+  /* Loads this item from XML */
+  public override void load( Xml.Node* node ) {
+    base.load( node );
+    var f = node->get_prop( "fill" );
+    if( f != null ) {
+      _fill = bool.parse( f );
+    }
+  }
+
   /* Draw the rectangle */
   public override void draw_item( Context ctx ) {
 
@@ -118,7 +136,7 @@ public class CanvasItemRect : CanvasItem {
 
     if( _fill ) {
 
-      Utils.set_context_color( ctx, color );
+      Utils.set_context_color_with_alpha( ctx, color, mode.alpha() );
       ctx.fill_preserve();
 
       Utils.set_context_color_with_alpha( ctx, outline, 0.5 );

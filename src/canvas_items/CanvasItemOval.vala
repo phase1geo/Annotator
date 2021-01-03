@@ -23,27 +23,27 @@ using Gtk;
 using Gdk;
 using Cairo;
 
-public class CanvasItemCircle : CanvasItem {
+public class CanvasItemOval : CanvasItem {
 
   private bool _fill;
 
   /* Constructor */
-  public CanvasItemCircle( double x, double y, bool fill, RGBA color, int stroke_width ) {
-
-    base( "circle", x, y, color, stroke_width );
-
+  public CanvasItemOval( bool fill, RGBA color, int stroke_width ) {
+    base( "oval", color, stroke_width );
     _fill = fill;
+    create_points();
+  }
 
+  /* Creates the item points */
+  private void create_points() {
     points.append_val( new CanvasPoint( true ) );  // upper-left
     points.append_val( new CanvasPoint( true ) );  // upper-right
     points.append_val( new CanvasPoint( true ) );  // lower-left
     points.append_val( new CanvasPoint( true ) );  // lower-right
-
     points.append_val( new CanvasPoint( true ) );  // top
     points.append_val( new CanvasPoint( true ) );  // right
     points.append_val( new CanvasPoint( true ) );  // bottom
     points.append_val( new CanvasPoint( true ) );  // left
-
   }
 
   /* Updates the selection boxes whenever the bounding box changes */
@@ -61,9 +61,11 @@ public class CanvasItemCircle : CanvasItem {
   }
 
   /* Adjusts the bounding box */
-  public override void move_selector( int index, double diffx, double diffy ) {
+  public override void move_selector( int index, double diffx, double diffy, bool shift ) {
 
     var box = new CanvasRect.from_rect( bbox );
+
+    adjust_diffs( shift, box, ref diffx, ref diffy );
 
     switch( index ) {
       case 0 :  box.x += diffx;  box.y += diffy;  box.width -= diffx;  box.height -= diffy;  break;
@@ -76,7 +78,7 @@ public class CanvasItemCircle : CanvasItem {
       case 7 :  box.x += diffx;                   box.width -= diffx;                        break;
     }
 
-    if( (box.width >= (select_offset * 3)) && (box.height >= (select_offset * 3)) ) {
+    if( (box.width >= (selector_size * 3)) && (box.height >= (selector_size * 3)) ) {
       bbox = box;
     }
 
@@ -113,6 +115,22 @@ public class CanvasItemCircle : CanvasItem {
     }
   }
 
+  /* Saves this item as XML */
+  public override Xml.Node* save() {
+    Xml.Node* node = base.save();
+    node->set_prop( "fill", _fill.to_string() );
+    return( node );
+  }
+
+  /* Loads this item from XML */
+  public override void load( Xml.Node* node ) {
+    base.load( node );
+    var f = node->get_prop( "fill" );
+    if( f != null ) {
+      _fill = bool.parse( f );
+    }
+  }
+
   /* Draw the rectangle */
   public override void draw_item( Context ctx ) {
 
@@ -121,7 +139,7 @@ public class CanvasItemCircle : CanvasItem {
     var radius       = (bbox.width < bbox.height) ? (bbox.height / 2.0) : (bbox.width / 2.0);
     var outline      = Granite.contrasting_foreground_color( color );
 
-    Utils.set_context_color( ctx, color );
+    Utils.set_context_color_with_alpha( ctx, color, (_fill ? mode.alpha() : 1.0) );
 
     var save_matrix = ctx.get_matrix();
     ctx.translate( bbox.mid_x(), bbox.mid_y() );

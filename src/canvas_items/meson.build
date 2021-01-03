@@ -1,7 +1,7 @@
 sources += files(
 
     'CanvasItemArrow.vala',
-    'CanvasItemCircle.vala',
+    'CanvasItemOval.vala',
     'CanvasItemRect.vala',
     'CanvasItemText.vala',
 
