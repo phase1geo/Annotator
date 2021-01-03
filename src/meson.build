@@ -7,9 +7,12 @@ sources += files(
     'CanvasToolbar.vala',
     'Clipboard.vala',
     'Editor.vala',
+    'FormattedText.vala',
     'MainWindow.vala',
     'UndoBuffer.vala',
     'UndoItem.vala',
+    'UndoTextBuffer.vala',
+    'UndoTextItem.vala',
     'Utils.vala',
 )
 

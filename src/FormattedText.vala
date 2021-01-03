@@ -35,10 +35,6 @@ public enum FormatTag {
   HEADER,
   COLOR,
   HILITE,
-  URL,
-  SYNTAX,
-  TAG,
-  MATCH,
   SELECT,
   LENGTH;
 
@@ -54,10 +50,6 @@ public enum FormatTag {
       case HEADER     :  return( "header" );
       case COLOR      :  return( "color" );
       case HILITE     :  return( "hilite" );
-      case URL        :  return( "url" );
-      case TAG        :  return( "tag" );
-      case SYNTAX     :  return( "syntax" );
-      case MATCH      :  return( "match" );
     }
     return( "bold" );
   }
@@ -74,10 +66,6 @@ public enum FormatTag {
       case "header"      :  return( HEADER );
       case "color"       :  return( COLOR );
       case "hilite"      :  return( HILITE );
-      case "url"         :  return( URL );
-      case "tag"         :  return( TAG );
-      case "syntax"      :  return( SYNTAX );
-      case "match"       :  return( MATCH );
     }
     return( LENGTH );
   }
@@ -459,7 +447,7 @@ public class FormattedText {
   }
 
   private class CodeInfo : TagAttr {
-    public CodeInfo( OutlineTable table ) {
+    public CodeInfo() {
       attrs.append_val( attr_family_new( "Monospace" ) );
     }
     public override TextTag text_tag( string? extra ) {
@@ -642,8 +630,8 @@ public class FormattedText {
   }
 
   private class SelectInfo : TagAttr {
-    public SelectInfo( RGBA f, RGBA b ) {
-      set_color( f, b );
+    public SelectInfo() {
+      set_color( Utils.color_from_string( "white" ), Utils.color_from_string( "light blue" ) );
     }
     private void set_color( RGBA f, RGBA b ) {
       attrs.append_val( attr_foreground_new( (uint16)(f.red * 65535), (uint16)(f.green * 65535), (uint16)(f.blue * 65535) ) );
@@ -658,7 +646,6 @@ public class FormattedText {
   private static TagAttr[]  _attr_tags = null;
   private TagInfo[]         _formats   = new TagInfo[FormatTag.LENGTH];
   private string            _text      = "";
-  private Array<TextParser> _parsers   = new Array<TextParser>();
 
   public signal void changed();
 
@@ -669,19 +656,19 @@ public class FormattedText {
   }
 
   /* Default copy constructor */
-  public FormattedText( OutlineTable table ) {
-    initialize( table );
+  public FormattedText() {
+    initialize();
   }
 
   /* Copy contructor with a string */
-  public FormattedText.with_text( OutlineTable table, string txt ) {
-    initialize( table );
+  public FormattedText.with_text( string txt ) {
+    initialize();
     _text = txt;
   }
 
   /* Copies the selected portion of the given FormattedText instance to this instance */
-  public FormattedText.copy_range( OutlineTable table, FormattedText text, int start, int end ) {
-    initialize( table );
+  public FormattedText.copy_range( FormattedText text, int start, int end ) {
+    initialize();
     _text = text.text.slice( start, end );
     var tags = text.get_tags_in_range( start, end );
     for( int i=0; i<tags.length; i++ ) {
@@ -691,71 +678,32 @@ public class FormattedText {
   }
 
   /* Creates a copy of the given text and removes all of the syntax characters */
-  public FormattedText.copy_clean( OutlineTable table, FormattedText other ) {
-    initialize( table );
+  public FormattedText.copy_clean( FormattedText other ) {
+    initialize();
     _text = other._text;
     for( int i=0; i<FormatTag.LENGTH-3; i++ ) {
       _formats[i].copy( other._formats[i] );
     }
-    var ranges = other._formats[FormatTag.SYNTAX].info;
-    for( int i=(int)(ranges.length - 1); i>=0; i-- ) {
-      var range = ranges.index( i );
-      remove_text( range.start, (range.end - range.start) );
-    }
   }
 
   /* Initializes this instance */
-  private void initialize( OutlineTable table ) {
+  private void initialize() {
     if( _attr_tags == null ) {
-      var theme = table.get_theme();
       _attr_tags = new TagAttr[FormatTag.LENGTH];
       _attr_tags[FormatTag.BOLD]       = new BoldInfo();
       _attr_tags[FormatTag.ITALICS]    = new ItalicsInfo();
       _attr_tags[FormatTag.UNDERLINE]  = new UnderlineInfo();
       _attr_tags[FormatTag.STRIKETHRU] = new StrikeThruInfo();
-      _attr_tags[FormatTag.CODE]       = new CodeInfo( table );
+      _attr_tags[FormatTag.CODE]       = new CodeInfo();
       _attr_tags[FormatTag.SUB]        = new SubInfo();
       _attr_tags[FormatTag.SUPER]      = new SuperInfo();
       _attr_tags[FormatTag.HEADER]     = new HeaderInfo();
       _attr_tags[FormatTag.COLOR]      = new ColorInfo();
       _attr_tags[FormatTag.HILITE]     = new HighlightInfo();
-      _attr_tags[FormatTag.URL]        = new UrlInfo( theme.url );
-      _attr_tags[FormatTag.TAG]        = new TaggingInfo( theme.tag );
-      _attr_tags[FormatTag.SYNTAX]     = new SyntaxInfo( theme.syntax );
-      _attr_tags[FormatTag.MATCH]      = new MatchInfo( theme.match_foreground, theme.match_background );
-      _attr_tags[FormatTag.SELECT]     = new SelectInfo( theme.textsel_foreground, theme.textsel_background );
+      _attr_tags[FormatTag.SELECT]     = new SelectInfo();
     }
     for( int i=0; i<FormatTag.LENGTH; i++ ) {
       _formats[i] = new TagInfo();
-    }
-  }
-
-  /* Called whenever the theme changes */
-  public static void set_theme( Theme theme ) {
-    if( _attr_tags == null ) return;
-    (_attr_tags[FormatTag.URL] as UrlInfo).update_color( theme.url );
-    (_attr_tags[FormatTag.TAG] as TaggingInfo).update_color( theme.tag );
-    (_attr_tags[FormatTag.SYNTAX] as SyntaxInfo).update_color( theme.syntax );
-    (_attr_tags[FormatTag.MATCH] as MatchInfo).update_color( theme.match_foreground, theme.match_background );
-    (_attr_tags[FormatTag.SELECT] as SelectInfo).update_color( theme.textsel_foreground, theme.textsel_background );
-  }
-
-  /* Adds the given parser */
-  public void add_parser( TextParser parser ) {
-    _parsers.append_val( parser );
-    parse();
-    changed();
-  }
-
-  /* Removes the specified parser */
-  public void remove_parser( TextParser parser ) {
-    for( int i=0; i<_parsers.length; i++ ) {
-      if( _parsers.index( i ) == parser ) {
-        _parsers.remove_index( i );
-        parse( true );
-        changed();
-        return;
-      }
     }
   }
 
@@ -779,7 +727,6 @@ public class FormattedText {
     foreach( TagInfo f in _formats) {
       f.adjust( index, str.length );
     }
-    parse();
     changed();
   }
 
@@ -798,7 +745,6 @@ public class FormattedText {
       f.remove_tag( index, (index + chars) );
       f.adjust( index, ((0 - chars) + str.length) );
     }
-    parse();
     changed();
   }
 
@@ -809,7 +755,6 @@ public class FormattedText {
       f.remove_tag( index, (index + chars) );
       f.adjust( index, (0 - chars) );
     }
-    parse();
     changed();
   }
 
@@ -919,20 +864,6 @@ public class FormattedText {
     return( attrs );
   }
 
-  /*
-   Same as the above method; however, it applies the given theme colors to the
-   returns tags immediately without updating the main components.  This is useful
-   for changing the theme for a temporary context.
-  */
-  public AttrList get_attributes_from_theme( Theme theme ) {
-    var attrs = new AttrList();
-    for( int i=0; i<(FormatTag.LENGTH-4); i++ ) {
-      _formats[i].get_attributes( _attr_tags[i], ref attrs );
-    }
-    _formats[FormatTag.URL].get_attributes( new UrlInfo( theme.url ), ref attrs );
-    return( attrs );
-  }
-
   /* Populate the given text buffer with the text and formatting tags */
   public void to_buffer( TextBuffer buf, int start, int end ) {
     buf.text = text;
@@ -966,86 +897,12 @@ public class FormattedText {
     return( _formats[tag].get_first_extra_in_range( start, end ) );
   }
 
-  /*
-   Performs search of the given string within the text.  If any occurrences
-   are found, highlight them with the match color.
-  */
-  public bool do_search( string pattern ) {
-    remove_tag_all( FormatTag.MATCH );
-    if( (pattern != "") && text.contains( pattern ) ) {
-      var tags  = new Array<UndoTagInfo>();
-      var start = 0;
-      while( (start = text.index_of( pattern, start )) != -1 ) {
-        var end = start + pattern.index_of_nth_char( pattern.length );
-        tags.append_val( new UndoTagInfo( FormatTag.MATCH, start++, end, null ) );
-      }
-      apply_tags( tags );
-      return( true );
-    }
-    return( false );
-  }
-
-  /*
-   Sets the start value of match to the next/previous match if a search match
-   exists in the text.
-  */
-  public void get_search_match( int start, bool get_next, ref SearchMatch match ) {
-    var tags = new Array<UndoTagInfo>();
-    var spos = get_next ? start : 0;
-    var epos = get_next ? text.length : start;
-    _formats[FormatTag.MATCH].get_tags_in_range( FormatTag.MATCH, spos, epos, ref tags );
-    var index = get_next ? (tags.length - 1) : 0;
-    if( tags.length > 0 ) {
-      match.start = tags.index( index ).start;
-      match.end   = tags.index( index ).end;
-    }
-  }
-
-  /* Replaces all matched search text with the given string */
-  public void replace_all( string str, ref UndoTextReplaceAll undo ) {
-    var matches = new Array<UndoTagInfo>();
-    _formats[FormatTag.MATCH].get_tags_in_range( FormatTag.MATCH, 0, _text.char_count(), ref matches );
-    for( int i=0; i<matches.length; i++ ) {
-      var match = matches.index( i );
-      undo.add_tags( match.start, get_tags_in_range( match.start, match.end ) );
-      _text = _text.splice( match.start, match.end, str );
-      foreach( TagInfo f in _formats ) {
-        f.remove_tag( match.start, match.end );
-        f.adjust( match.start, ((0 - (match.end - match.start)) + str.length) );
-      }
-    }
-    changed();
-  }
-
-  /* If there are text parsers associated with this text, run them */
-  private void parse( bool force_clear = false ) {
-    if( (_parsers.length > 0) || force_clear ) {
-      for( int i=0; i<FormatTag.LENGTH-2; i++ ) {
-        if( !save_tag( (FormatTag)i ) ) {
-          _formats[i].remove_tag_all();
-        }
-      }
-    }
-    for( int i=0; i<_parsers.length; i++ ) {
-      _parsers.index( i ).parse( this );
-    }
-  }
-
-  /* Determines if the given tag should be saved */
-  private bool save_tag( FormatTag tag ) {
-    bool save = true;
-    for( int i=0; i<_parsers.length; i++ ) {
-      save &= !_parsers.index( i ).tag_handled( tag );
-    }
-    return( save );
-  }
-
   /* Saves the text as the given XML node */
   public Xml.Node* save() {
     Xml.Node* n = new Xml.Node( null, "text" );
     n->new_prop( "data", text );
     for( int i=0; i<(FormatTag.LENGTH-4); i++ ) {
-      if( !_formats[i].is_empty() && save_tag( (FormatTag)i ) ) {
+      if( !_formats[i].is_empty() ) {
         var tag = (FormatTag)i;
         n->add_child( _formats[i].save( tag.to_string() ) );
       }
@@ -1059,24 +916,14 @@ public class FormattedText {
     if( t != null ) {
       _text = t;
     }
-    string? pa = n->get_prop( "parse-as" );
-    if( pa != null ) {
-      var str = _text;
-      _text = "";  // Clear the text
-      switch( pa ) {
-        case "html"     :  ExportHTML.to_text( "<div>" + str + "</div>", this );              break;
-        case "markdown" :  ExportHTML.to_text( Utils.markdown_to_html( str, "div" ), this );  break;
-      }
-    }
     for( Xml.Node* it = n->children; it != null; it = it->next ) {
       if( it->type == Xml.ElementType.ELEMENT_NODE ) {
         var tag = FormatTag.from_string( it->name );
-        if( (tag != FormatTag.LENGTH) && save_tag( tag ) ) {
+        if( (tag != FormatTag.LENGTH) ) {
           _formats[tag].load( it );
         }
       }
     }
-    parse();
     changed();
   }
 

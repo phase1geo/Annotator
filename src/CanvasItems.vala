@@ -32,7 +32,6 @@ public class CanvasItems {
   private double           _last_x;
   private double           _last_y;
   private int              _draw_index     = -1;
-  private bool             _draw_text      = false;
   private RGBA             _color          = {1.0, 1.0, 1.0, 1.0};
   private int              _stroke_width   = 5;
   private Array<string>    _shape_icons;
@@ -52,14 +51,12 @@ public class CanvasItems {
   }
   public bool draw_text {
     get {
-      return( _draw_text );
+      return( _draw_index == 5 );
     }
     set {
-      if( _draw_text != value ) {
-        _draw_text = value;
-        if( _draw_text ) {
-          clear_selection();
-        }
+      _draw_index = value ? 5 : -1;
+      if( _draw_index != -1 ) {
+        clear_selection();
       }
     }
   }
@@ -122,7 +119,7 @@ public class CanvasItems {
       case 2  :  _active = new CanvasItemCircle( x, y, false, color, stroke_width );  break;
       case 3  :  _active = new CanvasItemCircle( x, y, true,  color, stroke_width );  break;
       case 4  :  _active = new CanvasItemArrow( x, y, color, stroke_width );          break;
-      case 5  :  _active = new CanvasItemText( x, y, color );                         break;
+      case 5  :  _active = new CanvasItemText( _canvas, x, y, color );                break;
       default :  assert_not_reached();
     }
     _items.append( _active );

@@ -93,6 +93,9 @@ public class CanvasItem {
 
   }
 
+  /* Creates a copy of the given canvas item */
+  public virtual void copy( CanvasItem item ) {}
+
   /* Called whenever the bounding box changes */
   protected virtual void bbox_changed() {}
 
