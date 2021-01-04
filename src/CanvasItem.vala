@@ -60,13 +60,13 @@ public enum CanvasItemMode {
 
 public class CanvasItem {
 
-  private string         _name = "unknown";
   private CanvasRect     _bbox = new CanvasRect();
   private CanvasItemMode _mode = CanvasItemMode.NONE;
 
   protected Array<CanvasPoint> points { get; set; default = new Array<CanvasPoint>(); }
   protected double             selector_size = 10;
 
+  public string name { get; private set; default = "unknown"; }
   public CanvasRect bbox {
     get {
       return( _bbox );
@@ -92,7 +92,7 @@ public class CanvasItem {
 
   /* Constructor */
   public CanvasItem( string name, RGBA color, int stroke_width ) {
-    this._name        = name;
+    this.name         = name;
     this.color        = color;
     this.stroke_width = stroke_width;
   }
@@ -221,7 +221,7 @@ public class CanvasItem {
 
   /* Saves the item in XML format */
   public virtual Xml.Node* save() {
-    Xml.Node* node = new Xml.Node( null, _name );
+    Xml.Node* node = new Xml.Node( null, name );
     node->set_prop( "x",     bbox.x.to_string() );
     node->set_prop( "y",     bbox.y.to_string() );
     node->set_prop( "w",     bbox.width.to_string() );

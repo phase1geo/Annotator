@@ -67,6 +67,8 @@ public class CanvasItems {
     }
   }
 
+  public signal void text_item_edit_changed( CanvasItemText item );
+
   /* Constructor */
   public CanvasItems( Canvas canvas ) {
 
@@ -99,7 +101,7 @@ public class CanvasItems {
   private CanvasRect center_box( double width, double height ) {
     var canvas_width  = _canvas.get_allocated_width();
     var canvas_height = _canvas.get_allocated_height();
-    return( new CanvasRect.from_coords( ((canvas_width + width) / 2), ((canvas_height + height) / 2), width, height ) );
+    return( new CanvasRect.from_coords( ((canvas_width - width) / 2), ((canvas_height - height) / 2), width, height ) );
   }
 
   private CanvasItem create_rectangle( bool fill ) {
@@ -123,6 +125,8 @@ public class CanvasItems {
   private CanvasItem create_text() {
     var item = new CanvasItemText( _canvas, color );
     item.bbox = center_box( 200, 1 );
+    _active = item;
+    set_edit_mode( true );
     return( item );
   }
 
@@ -199,12 +203,46 @@ public class CanvasItems {
     return( (bool)(state & ModifierType.MOD1_MASK) );
   }
 
-  /* Handles keypress events */
+  /* Returns the active text item, if it is set; otherwise, returns null */
+  public CanvasItemText? get_active_text() {
+    return( ((_active == null) || (_active.name != "text")) ? null : (_active as CanvasItemText) );
+  }
+
+  /* Returns true if we are currently editing a text item */
+  public bool in_edit_mode() {
+    var text = get_active_text();
+    return( (text != null) ? text.edit : false );
+  }
+
+  /* Sets the edit mode of the active text item to the given value */
+  private void set_edit_mode( bool value ) {
+    var text = get_active_text();
+    if( text != null ) {
+      text.edit = value;
+      text_item_edit_changed( text );
+    }
+  }
+
+  /*****************************/
+  /*  HANDLE KEY PRESS EVENTS  */
+  /*****************************/
+
+  /* Handles keypress events.  Returns true if the canvas should be redrawn. */
   public bool key_pressed( uint keyval, ModifierType state ) {
 
+    var control = control_state( state );
+    var shift   = shift_state( state );
+
     switch( keyval ) {
-      case Key.BackSpace :
-      case Key.Delete    :  return( remove_selected() );
+      case Key.BackSpace :  return( handle_backspace() );
+      case Key.Delete    :  return( handle_delete() );
+      case Key.Return    :  return( handle_return() );
+      case Key.Left      :
+      case Key.Right     :
+      case Key.Home      :
+      case Key.End       :
+      case Key.Up        :
+      case Key.Down      :  return( handle_cursor( control, shift, keyval ) );
     }
 
     return( false );
@@ -212,10 +250,102 @@ public class CanvasItems {
   }
 
   /*
+   If we editing text, handle the backspace character; otherwise, delete the selected
+   items.
+  */
+  private bool handle_backspace() {
+    if( in_edit_mode() ) {
+      var text = get_active_text();
+      text.backspace( _canvas.undo_text );
+    } else {
+      remove_selected();
+    }
+    return( true );
+  }
+
+  /*
+   If we editing text, handle the delete character; otherwise, delete the selected
+   items.
+  */
+  private bool handle_delete() {
+    if( in_edit_mode() ) {
+      var text = get_active_text();
+      text.delete( _canvas.undo_text );
+    } else {
+      remove_selected();
+    }
+    return( true );
+  }
+
+  /* If we are in text editing mode, mark the node as being not in edit mode */
+  private bool handle_return() {
+    if( in_edit_mode() ) {
+      set_edit_mode( false );
+      _active = null;
+      return( true );
+    }
+    return( false );
+  }
+
+  /* If we are in edit mode, moves cursor to the left/right or adds to the selection */
+  private bool handle_cursor( bool control, bool shift, uint keyval ) {
+    if( in_edit_mode() ) {
+      var text = get_active_text();
+      if( control ) {
+        if( shift ) {
+          switch( keyval ) {
+            case Key.Left  :  text.selection_by_word( -1 );  break;
+            case Key.Right :  text.selection_by_word( 1 );   break;
+            case Key.Up    :  text.selection_to_start();     break;
+            case Key.Down  :  text.selection_to_end();       break;
+            default        :  return( false );
+          }
+        } else {
+          switch( keyval ) {
+            case Key.Left  :  text.move_cursor_by_word( -1 );  break;
+            case Key.Right :  text.move_cursor_by_word( 1 );   break;
+            case Key.Up    :  text.move_cursor_to_start();     break;
+            case Key.Down  :  text.move_cursor_to_end();       break;
+            default        :  return( false );
+          }
+        }
+      } else {
+        if( shift ) {
+          switch( keyval ) {
+            case Key.Left  :  text.selection_by_char( -1 );     break;
+            case Key.Right :  text.selection_by_char( 1 );      break;
+            case Key.Up    :  text.selection_vertically( -1 );  break;
+            case Key.Down  :  text.selection_vertically( 1 );   break;
+            case Key.Home  :  text.selection_to_start();        break;
+            case Key.End   :  text.selection_to_end();          break;
+            default        :  return( false );
+          }
+        } else {
+          switch( keyval ) {
+            case Key.Left  :  text.move_cursor( -1 );             break;
+            case Key.Right :  text.move_cursor( 1 );              break;
+            case Key.Up    :  text.move_cursor_vertically( -1 );  break;
+            case Key.Down  :  text.move_cursor_vertically( 1 );   break;
+            case Key.Home  :  text.move_cursor_to_start();        break;
+            case Key.End   :  text.move_cursor_to_end();          break;
+            default        :  return( false );
+          }
+        }
+      }
+      return( true );
+    }
+    return( false );
+  }
+
+  /*****************************/
+  /*  HANDLE MOUSE EVENTS  */
+  /*****************************/
+
+  /*
    Called whenever the cursor is pressed.  Returns true if the canvas should
    draw itself.
   */
-  public bool cursor_pressed( double x, double y, ModifierType state ) {
+  public bool cursor_pressed( double x, double y, ModifierType state, int press_count ) {
 
     _active = null;
 
@@ -230,8 +360,16 @@ public class CanvasItems {
         if( _active.mode == CanvasItemMode.NONE ) {
           clear_selection();
         }
-        _active.mode = CanvasItemMode.SELECTED;
-        _canvas.set_cursor_from_name( "grabbing" );
+        switch( press_count ) {
+          case 1 :
+            _active.mode = CanvasItemMode.SELECTED;
+            _canvas.set_cursor_from_name( "grabbing" );
+            break;
+          case 2 :
+            if( _active.name != "text" ) return( false );
+            set_edit_mode( true );
+            break;
+        }
         return( true );
       }
     }

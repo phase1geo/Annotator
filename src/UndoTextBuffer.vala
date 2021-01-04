@@ -24,11 +24,13 @@ using GLib;
 public class UndoTextBuffer : UndoBuffer {
 
   public CanvasItemText? ct        { set; get; default = null; }
+  public CanvasItemText  orig      { private set; get; }
   public bool            mergeable { set; get; default = true; }
 
   /* Default constructor */
   public UndoTextBuffer( Canvas canvas ) {
     base( canvas );
+    orig = new CanvasItemText( canvas, Utils.color_from_string( "black" ) );
   }
 
   /*

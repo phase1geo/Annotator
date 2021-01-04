@@ -39,11 +39,13 @@ public class Canvas : DrawingArea {
   /* Constructor */
   public Canvas( MainWindow win ) {
 
-    this.win = win;
+    win = win;
 
-    this.items       = new CanvasItems( this );
-    this.undo_buffer = new UndoBuffer( this );
-    this.undo_text   = new UndoTextBuffer( this );
+    items       = new CanvasItems( this );
+    items.text_item_edit_changed.connect( edit_mode_changed );
+
+    undo_buffer = new UndoBuffer( this );
+    undo_text   = new UndoTextBuffer( this );
 
     this.draw.connect( on_draw );
     this.key_press_event.connect( on_keypress );
@@ -96,7 +98,7 @@ public class Canvas : DrawingArea {
 
   /* Sets the cursor from the given name */
   public void set_cursor_from_name( string name ) {
-    var win    = get_window();
+    var win = get_window();
     win.set_cursor( new Cursor.from_name( get_display(), name ) );
   }
 
@@ -129,41 +131,68 @@ public class Canvas : DrawingArea {
 
   /* Pastes a text from the given string to the canvas (only valid when editing a text item */
   public void paste_text( string txt ) {
-    /* TBD */
-    queue_draw();
-    grab_focus();
+    if( _items.in_edit_mode() ) {
+      var item = _items.get_active_text();
+      item.insert( txt, undo_text );
+      queue_draw();
+      grab_focus();
+    }
+  }
+
+  /* Called whenever the user changes the edit mode of an active text item */
+  private void edit_mode_changed( CanvasItemText item ) {
+    if( item.edit ) {
+      update_im_cursor( item );
+      _im_context.focus_in();
+      undo_text.orig.copy( item );
+      undo_text.ct = item;
+    } else {
+      _im_context.reset();
+      _im_context.focus_out();
+      undo_buffer.add_item( new UndoTextCommit( this, item, undo_text.orig ) );
+      undo_text.ct = null;
+    }
+  }
+
+  /* Updates the input method cursor location */
+  private void update_im_cursor( CanvasItemText item ) {
+    Gdk.Rectangle rect = {(int)item.bbox.x, (int)item.bbox.y, 0, (int)item.bbox.height};
+    _im_context.set_cursor_location( rect );
   }
 
   /* Called by the input method manager when the user has a string to commit */
   private void handle_im_commit( string str ) {
-    // insert_user_text( str );
+    if( _items.in_edit_mode() ) {
+      var item = _items.get_active_text();
+      item.insert( str, undo_text );
+      queue_draw();
+    }
   }
 
   /* Called in IMContext callback of the same name */
   private bool handle_im_retrieve_surrounding() {
-    /*
-    if( is_node_editable() ) {
-      retrieve_surrounding_in_text( selected.name );
-      return( true );
-    } else if( is_note_editable() ) {
-      retrieve_surrounding_in_text( selected.note );
+    if( _items.in_edit_mode() ) {
+      int cursor, selstart, selend;
+      var item = _items.get_active_text();
+      var text = item.text.text;
+      item.get_cursor_info( out cursor, out selstart, out selend );
+      _im_context.set_surrounding( text, text.length, text.index_of_nth_char( cursor ) );
       return( true );
     }
-    */
     return( false );
   }
 
   /* Called in IMContext callback of the same name */
   private bool handle_im_delete_surrounding( int offset, int nchars ) {
-    /*
-    if( is_node_editable() ) {
-      delete_surrounding_in_text( selected.name, offset, nchars );
-      return( true );
-    } else if( is_note_editable() ) {
-      delete_surrounding_in_text( selected.note, offset, nchars );
+    if( _items.in_edit_mode() ) {
+      int cursor, selstart, selend;
+      var item = _items.get_active_text();
+      item.get_cursor_info( out cursor, out selstart, out selend );
+      var startpos = cursor - offset;
+      var endpos   = startpos + nchars;
+      item.delete_range( startpos, endpos, undo_text );
       return( true );
     }
-    */
     return( false );
   }
 
@@ -175,7 +204,13 @@ public class Canvas : DrawingArea {
   /* Handles keypress events */
   private bool on_keypress( EventKey e ) {
 
-    if( _items.key_pressed( e.keyval, e.state ) ) {
+    /* If the character is printable, pass the value through the input method filter */
+    if( e.str.get_char( 0 ).isprint() ) {
+      _im_context.filter_keypress( e );
+
+    /* Otherwise, allow the canvas item handler to deal with it immediately */
+    } else if( _items.key_pressed( e.keyval, e.state ) ) {
+      _im_context.reset();
       queue_draw();
     }
 
@@ -186,12 +221,14 @@ public class Canvas : DrawingArea {
   /* Handles a mouse cursor button press event */
   private bool on_press( EventButton e ) {
 
-    var x = scale_value( e.x );
-    var y = scale_value( e.y );
+    var x           = scale_value( e.x );
+    var y           = scale_value( e.y );
+    var press_count = (e.type == EventType.BUTTON_PRESS) ? 1 :
+                      (e.type == EventType.DOUBLE_BUTTON_PRESS) ? 2 : 3;
 
     grab_focus();
 
-    if( _items.cursor_pressed( x, y, e.state ) ) {
+    if( _items.cursor_pressed( x, y, e.state, press_count ) ) {
       queue_draw();
     }
 

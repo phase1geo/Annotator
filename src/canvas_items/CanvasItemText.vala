@@ -13,8 +13,7 @@
 *
 * You should have received a copy of the GNU General Public
 * License along with this program; if not, write to the
-* Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-* Boston, MA 02110-1301 USA
+* Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, * Boston, MA 02110-1301 USA
 *
 * Authored by: Trevor Williams <phase1geo@gmail.com>
 */
@@ -105,7 +104,7 @@ public class CanvasItemText : CanvasItem {
 
   /* Initializes this contents of this item */
   private void initialize( Canvas canvas ) {
-    _text = new FormattedText();
+    _text = new FormattedText.with_text( _( "Text" ) );
     _text.changed.connect( text_changed );
     _line_layout  = canvas.create_pango_layout( "M" );
     _pango_layout = canvas.create_pango_layout( null );
@@ -803,9 +802,7 @@ public class CanvasItemText : CanvasItem {
   }
 
   /* Draws the node font to the screen */
-  public void draw_item( Cairo.Context ctx ) {
-
-    stdout.printf( "Drawing text item, edit: %s\n", edit.to_string() );
+  public override void draw_item( Cairo.Context ctx ) {
 
     var layout = _pango_layout;
 
