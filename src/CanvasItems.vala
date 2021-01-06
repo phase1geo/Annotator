@@ -43,6 +43,7 @@ public class CanvasItems {
   private RGBA             _color          = {1.0, 1.0, 1.0, 1.0};
   private int              _stroke_width   = 5;
   private Array<string>    _shape_icons;
+  private int              _press_count    = -1;
 
   public RGBA color {
     get {
@@ -215,12 +216,21 @@ public class CanvasItems {
   }
 
   /* Sets the edit mode of the active text item to the given value */
-  private void set_edit_mode( bool value ) {
+  private bool set_edit_mode( bool value ) {
     var text = get_active_text();
     if( text != null ) {
-      text.edit = value;
-      text_item_edit_changed( text );
+      if( text.edit != value ) {
+        text.edit = value;
+        if( value ) {
+          text.set_cursor_all( false );
+        } else {
+          text.clear_selection();
+        }
+        text_item_edit_changed( text );
+        return( true );
+      }
     }
+    return( false );
   }
 
   /*****************************/
@@ -281,6 +291,7 @@ public class CanvasItems {
   private bool handle_return() {
     if( in_edit_mode() ) {
       set_edit_mode( false );
+      _active.mode = CanvasItemMode.NONE;
       _active = null;
       return( true );
     }
@@ -347,7 +358,10 @@ public class CanvasItems {
   */
   public bool cursor_pressed( double x, double y, ModifierType state, int press_count ) {
 
-    _active = null;
+    var retval = false;
+
+    /* Keep track of the press count */
+    _press_count = press_count;
 
     foreach( CanvasItem item in _items ) {
       _selector_index = item.is_within_selector( x, y );
@@ -360,26 +374,39 @@ public class CanvasItems {
         if( _active.mode == CanvasItemMode.NONE ) {
           clear_selection();
         }
-        switch( press_count ) {
-          case 1 :
-            _active.mode = CanvasItemMode.SELECTED;
-            _canvas.set_cursor_from_name( "grabbing" );
-            break;
-          case 2 :
-            if( _active.name != "text" ) return( false );
-            set_edit_mode( true );
-            break;
+        if( in_edit_mode() ) {
+          var text = get_active_text();
+          switch( press_count ) {
+            case 1 :  text.set_cursor_at_char( x, y, false );  break;
+            case 2 :  text.set_cursor_at_word( x, y, false );  break;
+            case 3 :  text.set_cursor_all( false );            break;
+          }
+        } else {
+          switch( press_count ) {
+            case 1 :
+              _active.mode = CanvasItemMode.SELECTED;
+              _canvas.set_cursor_from_name( "grabbing" );
+              break;
+            case 2 :
+              if( _active.name != "text" ) return( false );
+              set_edit_mode( true );
+              break;
+          }
         }
         return( true );
       }
     }
 
     /* If we didn't click on anything, clear the selection */
-    if( _active == null ) {
-      clear_selection();
-    }
+    clear_selection();
 
-    return( false );
+    /* Clear the edit mode, if we are in it */
+    retval = set_edit_mode( false );
+
+    /* Clear the active indicator */
+    _active = null;
+
+    return( retval );
 
   }
 
@@ -401,8 +428,18 @@ public class CanvasItems {
       _active.move_selector( _selector_index, diff_x, diff_y, shift );
       return( true );
 
+    /* If we are in edit mode, drag out the selection */
+    } else if( in_edit_mode() ) {
+      var text = get_active_text();
+      switch( _press_count ) {
+        case 1  :  text.set_cursor_at_char( x, y, true );  break;
+        case 2  :  text.set_cursor_at_word( x, y, true );  break;
+        default :  return( false );
+      }
+      return( true );
+
     /* Otherwise, move any selected items by the given amount */
-    } else if( _active != null ) {
+    } else if( (_active != null) && !in_edit_mode() ) {
       var retval = false;
       foreach( CanvasItem item in _items ) {
         if( item.mode.can_move() ) {
@@ -444,10 +481,16 @@ public class CanvasItems {
 
     var retval = false;
 
+    _press_count = -1;
+
     /* If we are finished dragging the selector, clear it */
     if( _selector_index != -1 ) {
       _selector_index = -1;
       _active         = null;
+
+    /* If we are editing text, do nothing */
+    } else if( in_edit_mode() ) {
+      return( true );
 
     /* If we were move one or more items, make sure that they stay selected */
     } else if( _active != null ) {
