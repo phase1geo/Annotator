@@ -26,6 +26,8 @@ using Pango;
 
 public class CanvasItemText : CanvasItem {
 
+  private const double _padding = 10;
+
   /* Member variables */
   private FormattedText  _text;
   private bool           _edit         = false;
@@ -36,11 +38,11 @@ public class CanvasItemText : CanvasItem {
   private int            _selstart     = 0;
   private int            _selend       = 0;
   private int            _selanchor    = 0;
-  private double         _max_width    = 200;
+  private double         _max_width    = 400;
   private double         _width        = 0;
   private double         _height       = 0;
   private bool           _debug        = false;
-  private int            _font_size    = 12;
+  private int            _font_size    = 16;
 
   /* Signals */
   public signal void resized();
@@ -143,6 +145,33 @@ public class CanvasItemText : CanvasItem {
     update_size( true );
   }
 
+  /*
+   Called whenever the bbox for the text changes size.  Updates the drawable
+   selectors
+  */
+  protected override void bbox_changed() {
+    var pad      = _padding;
+    var sel_size = (selector_size / 2);
+    points.index( 0 ).copy_coords( (bbox.x1() - pad), (bbox.y1() - pad) );
+    points.index( 1 ).copy_coords( (bbox.x1() - pad), (bbox.y2() + pad) );
+    points.index( 2 ).copy_coords( (bbox.x2() + pad), (bbox.y1() - pad) );
+    points.index( 3 ).copy_coords( (bbox.x2() + pad), (bbox.y2() + pad) );
+    points.index( 4 ).copy_coords( (bbox.x2() + pad + sel_size + 8), (bbox.mid_y() - (sel_size / 2)) );
+  }
+
+  public override void move_selector( int index, double diffx, double diffy, bool shift ) {
+    if( index == 4 ) {
+      max_width += diffx;
+    }
+  }
+
+  public override CursorType? get_selector_cursor( int index ) {
+    if( index == 4 ) {
+      return( CursorType.RIGHT_SIDE );
+    }
+    return( null );
+  }
+
   /* Returns the font description set for this text */
   public FontDescription get_font_fd() {
     return( _line_layout.get_font_description() );
@@ -167,12 +196,6 @@ public class CanvasItemText : CanvasItem {
   /* Returns true if the text is currently wrapped */
   public bool is_wrapped() {
     return( _pango_layout.is_wrapped() );
-  }
-
-    /* Adjusts the bounding box */
-  public override void move_selector( int index, double diffx, double diffy, bool shift ) {
-    points.index( 4 ).x += diffx;
-    max_width = diffx;
   }
 
   /* Returns true if text is currently selected */
@@ -811,6 +834,30 @@ public class CanvasItemText : CanvasItem {
     Utils.set_context_color( ctx, color );
     Pango.cairo_show_layout( ctx, layout );
     ctx.new_path();
+
+    /* Draw the text outline */
+    var x = bbox.x - _padding;
+    var y = bbox.y - _padding;
+    var w = bbox.width + (_padding * 2);
+    var h = bbox.height + (_padding * 2);
+
+    if( mode == CanvasItemMode.SELECTED ) {
+
+      Utils.set_context_color( ctx, Granite.contrasting_foreground_color( color ) );
+      ctx.set_dash( {14, 6}, 0 );
+      ctx.set_line_width( 8 );
+      ctx.rectangle( x, y, w, h );
+      ctx.stroke();
+
+      Utils.set_context_color( ctx, color );
+      ctx.set_dash( {10, 10}, -2 );
+      ctx.set_line_width( 4 );
+      ctx.rectangle( x, y, w, h );
+      ctx.stroke();
+
+      ctx.set_dash( {}, 0 );
+
+    }
 
     /* Draw the insertion cursor if we are in the 'editable' state */
     if( edit ) {
