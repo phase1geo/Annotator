@@ -28,6 +28,7 @@ public enum CanvasItemType {
   RECT_FILL,
   OVAL_STROKE,
   OVAL_FILL,
+  LINE,
   ARROW,
   TEXT
 }
@@ -84,6 +85,7 @@ public class CanvasItems {
     _shape_icons.append_val( "rect-fill-symbolic" );
     _shape_icons.append_val( "circle-stroke-symbolic" );
     _shape_icons.append_val( "circle-fill-symbolic" );
+    _shape_icons.append_val( "line-symbolic" );
     _shape_icons.append_val( "arrow-symbolic" );
 
   }
@@ -117,6 +119,12 @@ public class CanvasItems {
     return( item );
   }
 
+  private CanvasItem create_line() {
+    var item = new CanvasItemLine( color, stroke_width );
+    item.bbox = center_box( 200, 1 );
+    return( item );
+  }
+
   private CanvasItem create_arrow() {
     var item = new CanvasItemArrow( color );
     item.bbox = center_box( 200, 1 );
@@ -139,6 +147,7 @@ public class CanvasItems {
       case CanvasItemType.RECT_FILL    :  item = create_rectangle( true );  break;
       case CanvasItemType.OVAL_STROKE  :  item = create_oval( false );  break;
       case CanvasItemType.OVAL_FILL    :  item = create_oval( true );  break;
+      case CanvasItemType.LINE         :  item = create_line();  break;
       case CanvasItemType.ARROW        :  item = create_arrow();  break;
       case CanvasItemType.TEXT         :  item = create_text();  break;
       default :  assert_not_reached();
