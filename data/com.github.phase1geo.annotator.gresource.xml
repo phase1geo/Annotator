@@ -16,5 +16,6 @@
         <file alias="circle-fill-symbolic.svg">images/icons/scalable/circle-fill-symbolic.svg</file>
         <file alias="circle-stroke-symbolic.svg">images/icons/scalable/circle-stroke-symbolic.svg</file>
         <file alias="arrow-symbolic.svg">images/icons/scalable/arrow-symbolic.svg</file>
+        <file alias="line-symbolic.svg">images/icons/scalable/line-symbolic.svg</file>
     </gresource>
 </gresources>
