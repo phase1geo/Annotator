@@ -30,7 +30,8 @@ public enum CanvasItemType {
   OVAL_FILL,
   LINE,
   ARROW,
-  TEXT
+  TEXT,
+  BLUR
 }
 
 public class CanvasItems {
@@ -125,6 +126,12 @@ public class CanvasItems {
     return( item );
   }
 
+  private CanvasItem create_blur() {
+    var item = new CanvasItemBlur( _canvas, props );
+    item.bbox = center_box( 200, 50 );
+    return( item );
+  }
+
   /* Adds the given shape to the top of the item stack */
   public void add_shape_item( CanvasItemType type ) {
     CanvasItem? item = null;
@@ -136,6 +143,7 @@ public class CanvasItems {
       case CanvasItemType.LINE         :  item = create_line();  break;
       case CanvasItemType.ARROW        :  item = create_arrow();  break;
       case CanvasItemType.TEXT         :  item = create_text();  break;
+      case CanvasItemType.BLUR         :  item = create_blur();  break;
       default :  assert_not_reached();
     }
     clear_selection();
@@ -361,6 +369,7 @@ public class CanvasItems {
       _selector_index = item.is_within_selector( x, y );
       if( _selector_index != -1 ) {
         _active = item;
+        _active.mode = CanvasItemMode.RESIZING;
         return( false );
       }
       if( item.is_within( x, y ) ) {
@@ -480,7 +489,9 @@ public class CanvasItems {
     /* If we are finished dragging the selector, clear it */
     if( _selector_index != -1 ) {
       _selector_index = -1;
+      _active.mode    = CanvasItemMode.SELECTED;
       _active         = null;
+      retval = true;
 
     /* If we are editing text, do nothing */
     } else if( in_edit_mode() ) {

@@ -26,13 +26,15 @@ using Cairo;
 public enum CanvasItemMode {
   NONE,
   SELECTED,
-  MOVING;
+  MOVING,
+  RESIZING;
 
   public string to_string() {
     switch( this ) {
       case NONE     :  return( "none" );
       case SELECTED :  return( "selected" );
       case MOVING   :  return( "moving" );
+      case RESIZING :  return( "resizing" );
       default       :  assert_not_reached();
     }
   }
@@ -42,6 +44,7 @@ public enum CanvasItemMode {
       case "none"     :  return( NONE );
       case "selected" :  return( SELECTED );
       case "moving"   :  return( MOVING );
+      case "resizing" :  return( RESIZING );
       default         :  assert_not_reached();
     }
   }
@@ -51,9 +54,19 @@ public enum CanvasItemMode {
     return( (this == SELECTED) || (this == MOVING) );
   }
 
+  /* Returns true if the item is being moved/resized */
+  public bool moving() {
+    return( (this == MOVING) || (this == RESIZING) );
+  }
+
   /* Returns the alpha value to use for drawing an item based on the current mode */
   public double alpha() {
-    return( (this == MOVING) ? 0.5 : 1.0 );
+    return( ((this == MOVING) || (this == RESIZING)) ? 0.5 : 1.0 );
+  }
+
+  /* Returns true if the canvas item should display the selectors */
+  public bool draw_selectors() {
+    return( (this == SELECTED) || (this == RESIZING) );
   }
 
 }
@@ -109,15 +122,17 @@ public class CanvasItemProperties {
   public RGBA                  color        = Utils.color_from_string( "black" );
   public int                   stroke_width = 4;
   public CanvasItemDashPattern dash         = CanvasItemDashPattern.NONE;
+  public int                   blur_radius  = 10;
 
   /* Default constructor */
   public CanvasItemProperties() {}
 
   /* Constructor */
-  public CanvasItemProperties.initialize( RGBA c, int sw, CanvasItemDashPattern d ) {
+  public CanvasItemProperties.initialize( RGBA c, int sw, CanvasItemDashPattern d, int br ) {
     color        = c;
     stroke_width = sw;
     dash         = d;
+    blur_radius  = br;
   }
 
   /* Copies the properties to this class */
@@ -125,6 +140,7 @@ public class CanvasItemProperties {
     color        = props.color;
     stroke_width = props.stroke_width;
     dash         = props.dash;
+    blur_radius  = props.blur_radius;
   }
 
   /* Saves the contents of this properties class as XML */
@@ -133,6 +149,7 @@ public class CanvasItemProperties {
     node->set_prop( "color",        Utils.color_to_string( color ) );
     node->set_prop( "stroke-width", stroke_width.to_string() );
     node->set_prop( "dash",         dash.to_string() );
+    node->set_prop( "blur-radius",  blur_radius.to_string() );
     return( node );
   }
 
@@ -149,6 +166,10 @@ public class CanvasItemProperties {
     var d = node->get_prop( "dash" );
     if( d != null ) {
       dash = CanvasItemDashPattern.parse( d );
+    }
+    var br = node->get_prop( "blur-radius" );
+    if( br != null ) {
+      blur_radius = int.parse( br );
     }
   }
 
@@ -264,7 +285,7 @@ public class CanvasItem {
 
   /* Returns the selector index that is below the current pointer coordinate */
   public int is_within_selector( double x, double y ) {
-    if( mode != CanvasItemMode.SELECTED ) return( -1 );
+    if( !mode.draw_selectors() ) return( -1 );
     var box = new CanvasRect();
     for( int i=0; i<points.length; i++ ) {
       if( points.index( i ).draw ) {
@@ -283,7 +304,7 @@ public class CanvasItem {
   /* Draw the selection boxes */
   public void draw_selectors( Context ctx ) {
 
-    if( mode != CanvasItemMode.SELECTED ) return;
+    if( !mode.draw_selectors() ) return;
 
     var blue  = Utils.color_from_string( "light blue" );
     var black = Utils.color_from_string( "black" );

@@ -25,6 +25,7 @@ using Cairo;
 
 public class Canvas : DrawingArea {
 
+  private Pixbuf?        _buf     = null;
   private ImageSurface?  _surface = null;
   private IMMulticontext _im_context;
 
@@ -98,17 +99,56 @@ public class Canvas : DrawingArea {
 
   /* Sets the cursor from the given name */
   public void set_cursor_from_name( string name ) {
-    var win = get_window();
+    var win   = get_window();
     win.set_cursor( new Cursor.from_name( get_display(), name ) );
+  }
+
+  /* Draws a blur in the given rectangle onto the provided context */
+  public void draw_blur_rectangle( Cairo.Context ctx, CanvasRect rect, int blur_radius = 10 ) {
+
+    var x       = (rect.x < 0) ? 0 : (int)rect.x;
+    var y       = (rect.y < 0) ? 0 : (int)rect.y;
+    var w       = ((rect.x + rect.width)  >= _buf.width)  ? (_buf.width  - (int)rect.x) : (int)rect.width;
+    var h       = ((rect.y + rect.height) >= _buf.height) ? (_buf.height - (int)rect.y) : (int)rect.height;
+    var sub     = new Pixbuf.subpixbuf( _buf, x, y, w, h );
+    var surface = cairo_surface_create_from_pixbuf( sub, 1, null );
+    var buffer  = new Granite.Drawing.BufferSurface.with_surface( w, h, surface );
+
+    /* Copy the surface contents over */
+    buffer.context.set_source_surface( surface, 0, 0 );
+    buffer.context.paint();
+
+    /* Perform the blur */
+    buffer.exponential_blur( blur_radius );
+
+    /* Draw the blurred pixbuf onto the context */
+    ctx.set_source_surface( buffer.surface, x, y );
+    ctx.paint();
+
+  }
+
+  /* Returns the RGBA color value that averages the colors in the given rectangle */
+  public RGBA get_average_color( CanvasRect rect ) {
+
+    var x     = (rect.x < 0) ? 0 : (int)rect.x;
+    var y     = (rect.y < 0) ? 0 : (int)rect.y;
+    var w     = ((rect.x + rect.width)  >= _buf.width)  ? (_buf.width  - (int)rect.x) : (int)rect.width;
+    var h     = ((rect.y + rect.height) >= _buf.height) ? (_buf.height - (int)rect.y) : (int)rect.height;
+    var sub   = new Pixbuf.subpixbuf( _buf, x, y, w, h );
+    var color = Granite.Drawing.Utilities.average_color( sub );
+
+    RGBA rgba = {color.R, color.G, color.B, color.A};
+    return( rgba );
+
   }
 
   /* Opens a new image and displays it in the drawing area */
   public bool open_image( string filename ) {
 
     try {
-      var buf = new Pixbuf.from_file( filename );
-      _surface = (ImageSurface)cairo_surface_create_from_pixbuf( buf, 1, null );
-      set_size_request( buf.width, buf.height );
+      _buf = new Pixbuf.from_file( filename );
+      _surface = (ImageSurface)cairo_surface_create_from_pixbuf( _buf, 1, null );
+      set_size_request( _buf.width, _buf.height );
       queue_draw();
       image_loaded();
       grab_focus();
@@ -122,8 +162,9 @@ public class Canvas : DrawingArea {
 
   /* Pastes an image from the given pixbuf to the canvas */
   public void paste_image( Pixbuf buf ) {
-    _surface = (ImageSurface)cairo_surface_create_from_pixbuf( buf, 1, null );
-    set_size_request( buf.width, buf.height );
+    _buf     = buf.copy();
+    _surface = (ImageSurface)cairo_surface_create_from_pixbuf( _buf, 1, null );
+    set_size_request( _buf.width, _buf.height );
     queue_draw();
     image_loaded();
     grab_focus();

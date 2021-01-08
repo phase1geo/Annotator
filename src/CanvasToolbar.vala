@@ -34,6 +34,7 @@ public class CanvasToolbar : Toolbar {
 
     create_shapes();
     create_text();
+    create_blur();
     create_separator();
     create_color();
     create_stroke();
@@ -78,9 +79,24 @@ public class CanvasToolbar : Toolbar {
   private void create_text() {
 
     var btn = new ToolButton( null, null );
+    btn.set_tooltip_text( _( "Add Text" ) );
     btn.icon_name = "insert-text-symbolic";
     btn.clicked.connect(() => {
       _items.add_shape_item( CanvasItemType.TEXT );
+    });
+
+    add( btn );
+
+  }
+
+  /* Create the blur button */
+  private void create_blur() {
+
+    var btn = new ToolButton( null, null );
+    btn.set_tooltip_text( _( "Add Blur Box" ) );
+    btn.icon_name = "call-start-symbolic";
+    btn.clicked.connect(() => {
+      _items.add_shape_item( CanvasItemType.BLUR );
     });
 
     add( btn );
