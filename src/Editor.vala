@@ -54,8 +54,8 @@ public class Editor : Box {
     sw.add( overlay );
 
     /* Create the toolbar */
-    _toolbar = new CanvasToolbar( _canvas.items );
-    _toolbar.halign = Align.CENTER;
+    _toolbar = new CanvasToolbar( _canvas );
+    _toolbar.halign = Align.FILL;
 
     /* Pack the box */
     pack_start( _toolbar, false, true, 0 );

@@ -23,18 +23,19 @@ using Gtk;
 
 public class CanvasToolbar : Toolbar {
 
-  private const int margin = 10;
+  private const int margin = 5;
 
-  private CanvasItems _items;
+  private Canvas _canvas;
 
   /* Constructor */
-  public CanvasToolbar( CanvasItems items ) {
+  public CanvasToolbar( Canvas canvas ) {
 
-    _items = items;
+    _canvas = canvas;
 
     create_shapes();
     create_text();
     create_blur();
+    create_crop();
     create_separator();
     create_color();
     create_stroke();
@@ -48,18 +49,18 @@ public class CanvasToolbar : Toolbar {
 
     var mb    = new MenuButton();
     mb.set_tooltip_text( _( "Shapes" ) );
-    mb.image  = _items.get_shape_icon( 0 );
+    mb.image  = _canvas.items.get_shape_icon( 0 );
     mb.relief = ReliefStyle.NONE;
     mb.popup  = new Gtk.Menu();
 
-    for( int i=0; i<_items.num_shapes(); i++ ) {
+    for( int i=0; i<_canvas.items.num_shapes(); i++ ) {
       var menu_item  = new Gtk.MenuItem();
       var shape_type = (CanvasItemType)i;
       menu_item.activate.connect(() => {
-        _items.add_shape_item( shape_type );
-        mb.image = _items.get_shape_icon( shape_type );
+        _canvas.items.add_shape_item( shape_type );
+        mb.image = _canvas.items.get_shape_icon( shape_type );
       });
-      menu_item.add( _items.get_shape_icon( i ) );
+      menu_item.add( _canvas.items.get_shape_icon( i ) );
       mb.popup.add( menu_item );
     }
 
@@ -80,9 +81,11 @@ public class CanvasToolbar : Toolbar {
 
     var btn = new ToolButton( null, null );
     btn.set_tooltip_text( _( "Add Text" ) );
-    btn.icon_name = "insert-text-symbolic";
+    btn.icon_name    = "insert-text-symbolic";
+    btn.margin_left  = margin;
+    btn.margin_right = margin;
     btn.clicked.connect(() => {
-      _items.add_shape_item( CanvasItemType.TEXT );
+      _canvas.items.add_shape_item( CanvasItemType.TEXT );
     });
 
     add( btn );
@@ -94,15 +97,34 @@ public class CanvasToolbar : Toolbar {
 
     var btn = new ToolButton( null, null );
     btn.set_tooltip_text( _( "Add Blur Box" ) );
-    btn.icon_name = "call-start-symbolic";
+    btn.icon_name    = "blur-symbolic";
+    btn.margin_left  = margin;
+    btn.margin_right = margin;
     btn.clicked.connect(() => {
-      _items.add_shape_item( CanvasItemType.BLUR );
+      _canvas.items.add_shape_item( CanvasItemType.BLUR );
     });
 
     add( btn );
 
   }
 
+  /* Create the crop button */
+  private void create_crop() {
+
+    var btn = new ToolButton( null, null );
+    btn.set_tooltip_text( _( "Crop Image" ) );
+    btn.icon_name    = "image-crop-symbolic";
+    btn.margin_left  = margin;
+    btn.margin_right = margin;
+    btn.clicked.connect(() => {
+      _canvas.image.start_crop();
+    });
+
+    add( btn );
+
+  }
+
+  /* Creates the color dropdown */
   private void create_color() {
 
     var mb = new MenuButton();
@@ -113,9 +135,9 @@ public class CanvasToolbar : Toolbar {
 
     var chooser = new ColorChooserWidget();
     chooser.border_width = 10;
-    chooser.rgba = _items.props.color;
+    chooser.rgba = _canvas.items.props.color;
     chooser.color_activated.connect((c) => {
-      _items.props.color = c;
+      _canvas.items.props.color = c;
       mb.image = new Image.from_surface( make_color_icon() );
       Utils.hide_popover( mb.popover );
     });
@@ -137,7 +159,7 @@ public class CanvasToolbar : Toolbar {
   private void update_css() {
     var provider = new CssProvider();
     try {
-      var color    = Utils.color_to_string( _items.props.color );
+      var color    = Utils.color_to_string( _canvas.items.props.color );
       var css_data = ".color_chooser { background: %s; }".printf( color );
       provider.load_from_data( css_data );
       StyleContext.add_provider_for_screen(
@@ -150,6 +172,7 @@ public class CanvasToolbar : Toolbar {
     }
   }
 
+  /* Adds the stroke dropdown */
   private void create_stroke() {
 
     var mb     = new MenuButton();
@@ -168,13 +191,13 @@ public class CanvasToolbar : Toolbar {
 
     unowned RadioButton? width_group = null;
     for( int i=1; i<=4; i++ ) {
-      var width = i * _items.props.stroke_width;
+      var width = i * _canvas.items.props.stroke_width;
       var btn   = new Gtk.RadioButton.from_widget( width_group );
       btn.margin_left = 20;
       btn.add( new Image.from_surface( make_width_icon( 100, width ) ) );
       btn.toggled.connect(() => {
         if( btn.get_active() ) {
-          _items.props.stroke_width = width;
+          _canvas.items.props.stroke_width = width;
           mb.image = new Image.from_surface( make_stroke_icon() );
         }
       });
@@ -199,7 +222,7 @@ public class CanvasToolbar : Toolbar {
       btn.add( new Image.from_surface( make_dash_icon( 100, dash ) ) );
       btn.toggled.connect(() => {
         if( btn.get_active() ) {
-          _items.props.dash = dash;
+          _canvas.items.props.dash = dash;
           mb.image = new Image.from_surface( make_stroke_icon() );
         }
       });
@@ -227,7 +250,7 @@ public class CanvasToolbar : Toolbar {
     var surface = new Cairo.ImageSurface( Cairo.Format.ARGB32, 30, 24 );
     var ctx     = new Cairo.Context( surface );
 
-    Utils.set_context_color( ctx, _items.props.color );
+    Utils.set_context_color( ctx, _canvas.items.props.color );
     ctx.rectangle( 0, 0, 30, 24 );
     ctx.fill();
 
@@ -272,14 +295,14 @@ public class CanvasToolbar : Toolbar {
   private Cairo.Surface make_stroke_icon() {
 
     var width   = 50;
-    var height  = _items.props.stroke_width;
+    var height  = _canvas.items.props.stroke_width;
     var surface = new Cairo.ImageSurface( Cairo.Format.ARGB32, width, height );
     var ctx     = new Cairo.Context( surface );
 
     /* Draw the stroke */
     Utils.set_context_color( ctx, Utils.color_from_string( "black" ) );
-    ctx.set_line_width( _items.props.stroke_width );
-    _items.props.dash.set_fg_pattern( ctx );
+    ctx.set_line_width( _canvas.items.props.stroke_width );
+    _canvas.items.props.dash.set_fg_pattern( ctx );
     ctx.move_to( 0, (height / 2) );
     ctx.line_to( width, (height / 2) );
     ctx.stroke();
@@ -292,11 +315,10 @@ public class CanvasToolbar : Toolbar {
   private void create_separator() {
 
     var btn = new ToolItem();
-    btn.margin_left  = margin;
-    btn.margin_right = margin;
     btn.add( new Separator( Orientation.VERTICAL ) );
 
     add( btn );
+
   }
 
 }

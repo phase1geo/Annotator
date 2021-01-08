@@ -44,17 +44,8 @@ public class CanvasItems {
   private double               _last_y;
   private Array<string>        _shape_icons;
   private int                  _press_count    = -1;
-  private CanvasItemProperties _props          = new CanvasItemProperties();
 
-  public CanvasItemProperties props {
-    get {
-      return( _props );
-    }
-    set {
-      _props.copy( value );
-      update_selected_attributes();
-    }
-  }
+  public CanvasItemProperties props { get; private set; }
 
   public signal void text_item_edit_changed( CanvasItemText item );
 
@@ -65,6 +56,10 @@ public class CanvasItems {
 
     /* Create storage for the canvas items */
     _items = new List<CanvasItem>();
+
+    /* Create the overall properties structure */
+    props = new CanvasItemProperties();
+    props.changed.connect( update_selected_attributes );
 
     /* Load the shapes */
     _shape_icons = new Array<string>();
@@ -365,11 +360,15 @@ public class CanvasItems {
     /* Keep track of the press count */
     _press_count = press_count;
 
+    /* Reverse the list so that we grab the top-most item */
+    _items.reverse();
+
     foreach( CanvasItem item in _items ) {
       _selector_index = item.is_within_selector( x, y );
       if( _selector_index != -1 ) {
         _active = item;
         _active.mode = CanvasItemMode.RESIZING;
+        _items.reverse();
         return( false );
       }
       if( item.is_within( x, y ) ) {
@@ -396,9 +395,13 @@ public class CanvasItems {
               break;
           }
         }
+        _items.reverse();
         return( true );
       }
     }
+
+    /* Return the list order */
+    _items.reverse();
 
     /* If we didn't click on anything, clear the selection */
     clear_selection();

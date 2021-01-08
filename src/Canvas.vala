@@ -31,6 +31,7 @@ public class Canvas : DrawingArea {
 
   public MainWindow     win         { get; private set; }
   public double         sfactor     { get; set; default = 1.0; }
+  public CanvasImage    image       { get; private set; }
   public CanvasItems    items       { get; private set; }
   public UndoBuffer     undo_buffer { get; private set; }
   public UndoTextBuffer undo_text   { get; private set; }
@@ -42,9 +43,14 @@ public class Canvas : DrawingArea {
 
     win = win;
 
+    /* Create the canvas image */
+    image = new CanvasImage( this );
+
+    /* Create the canvas items */
     items       = new CanvasItems( this );
     items.text_item_edit_changed.connect( edit_mode_changed );
 
+    /* Create the undo buffers */
     undo_buffer = new UndoBuffer( this );
     undo_text   = new UndoTextBuffer( this );
 
@@ -146,9 +152,8 @@ public class Canvas : DrawingArea {
   public bool open_image( string filename ) {
 
     try {
-      _buf = new Pixbuf.from_file( filename );
-      _surface = (ImageSurface)cairo_surface_create_from_pixbuf( _buf, 1, null );
-      set_size_request( _buf.width, _buf.height );
+      var buf = new Pixbuf.from_file( filename );
+      image.set_image( buf );
       queue_draw();
       image_loaded();
       grab_focus();
@@ -162,9 +167,7 @@ public class Canvas : DrawingArea {
 
   /* Pastes an image from the given pixbuf to the canvas */
   public void paste_image( Pixbuf buf ) {
-    _buf     = buf.copy();
-    _surface = (ImageSurface)cairo_surface_create_from_pixbuf( _buf, 1, null );
-    set_size_request( _buf.width, _buf.height );
+    image.set_image( buf );
     queue_draw();
     image_loaded();
     grab_focus();
@@ -172,8 +175,8 @@ public class Canvas : DrawingArea {
 
   /* Pastes a text from the given string to the canvas (only valid when editing a text item */
   public void paste_text( string txt ) {
-    if( _items.in_edit_mode() ) {
-      var item = _items.get_active_text();
+    if( items.in_edit_mode() ) {
+      var item = items.get_active_text();
       item.insert( txt, undo_text );
       queue_draw();
       grab_focus();
@@ -203,8 +206,8 @@ public class Canvas : DrawingArea {
 
   /* Called by the input method manager when the user has a string to commit */
   private void handle_im_commit( string str ) {
-    if( _items.in_edit_mode() ) {
-      var item = _items.get_active_text();
+    if( items.in_edit_mode() ) {
+      var item = items.get_active_text();
       item.insert( str, undo_text );
       queue_draw();
     }
@@ -212,9 +215,9 @@ public class Canvas : DrawingArea {
 
   /* Called in IMContext callback of the same name */
   private bool handle_im_retrieve_surrounding() {
-    if( _items.in_edit_mode() ) {
+    if( items.in_edit_mode() ) {
       int cursor, selstart, selend;
-      var item = _items.get_active_text();
+      var item = items.get_active_text();
       var text = item.text.text;
       item.get_cursor_info( out cursor, out selstart, out selend );
       _im_context.set_surrounding( text, text.length, text.index_of_nth_char( cursor ) );
@@ -225,9 +228,9 @@ public class Canvas : DrawingArea {
 
   /* Called in IMContext callback of the same name */
   private bool handle_im_delete_surrounding( int offset, int nchars ) {
-    if( _items.in_edit_mode() ) {
+    if( items.in_edit_mode() ) {
       int cursor, selstart, selend;
-      var item = _items.get_active_text();
+      var item = items.get_active_text();
       item.get_cursor_info( out cursor, out selstart, out selend );
       var startpos = cursor - offset;
       var endpos   = startpos + nchars;
@@ -250,7 +253,7 @@ public class Canvas : DrawingArea {
       _im_context.filter_keypress( e );
 
     /* Otherwise, allow the canvas item handler to deal with it immediately */
-    } else if( _items.key_pressed( e.keyval, e.state ) ) {
+    } else if( items.key_pressed( e.keyval, e.state ) ) {
       _im_context.reset();
       queue_draw();
     }
@@ -269,7 +272,11 @@ public class Canvas : DrawingArea {
 
     grab_focus();
 
-    if( _items.cursor_pressed( x, y, e.state, press_count ) ) {
+    if( image.cropping ) {
+      if( image.cursor_pressed( x, y, e.state, press_count ) ) {
+        queue_draw();
+      }
+    } else if( items.cursor_pressed( x, y, e.state, press_count ) ) {
       queue_draw();
     }
 
@@ -283,7 +290,11 @@ public class Canvas : DrawingArea {
     var x = scale_value( e.x );
     var y = scale_value( e.y );
 
-    if( _items.cursor_moved( x, y, e.state ) ) {
+    if( image.cropping ) {
+      if( image.cursor_moved( x, y, e.state ) ) {
+        queue_draw();
+      }
+    } else if( items.cursor_moved( x, y, e.state ) ) {
       queue_draw();
     }
 
@@ -297,7 +308,11 @@ public class Canvas : DrawingArea {
     var x = scale_value( e.x );
     var y = scale_value( e.y );
 
-    if( _items.cursor_released( x, y, e.state ) ) {
+    if( image.cropping ) {
+      if( image.cursor_released( x, y, e.state ) ) {
+        queue_draw();
+      }
+    } else if( items.cursor_released( x, y, e.state ) ) {
       queue_draw();
     }
 
@@ -305,23 +320,10 @@ public class Canvas : DrawingArea {
 
   }
 
-  /* Draws the image */
-  private void draw_image( Context ctx ) {
-    if( _surface != null ) {
-      ctx.set_source_surface( _surface, 0, 0 );
-      ctx.paint();
-    }
-  }
-
-  /* Draw all of the items */
-  private void draw_items( Context ctx ) {
-    items.draw( ctx );
-  }
-
   /* Draws all of the items in the canvas */
   private bool on_draw( Context ctx ) {
-    draw_image( ctx );
-    draw_items( ctx );
+    image.draw( ctx );
+    items.draw( ctx );
     return( false );
   }
 

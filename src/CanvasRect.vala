@@ -75,10 +75,7 @@ public class CanvasRect {
 
   /* Constructor */
   public CanvasRect.from_coords( double x, double y, double width, double height ) {
-    this.x      = x;
-    this.y      = y;
-    this.width  = width;
-    this.height = height;
+    copy_coords( x, y, width, height );
   }
 
   /* Copy constructor */
@@ -92,6 +89,14 @@ public class CanvasRect {
     y      = rect.y;
     width  = rect.width;
     height = rect.height;
+  }
+
+  /* Makes a copy of the given rectangle coordinates to this rectangle */
+  public void copy_coords( double x, double y, double width, double height ) {
+    this.x      = x;
+    this.y      = y;
+    this.width  = width;
+    this.height = height;
   }
 
   /* Returns the x1 value */
