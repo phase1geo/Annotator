@@ -35,8 +35,8 @@ public class CanvasItemLine : CanvasItem {
   private LineStartDirection _dir = LineStartDirection.UPPER_LEFT;
 
   /* Constructor */
-  public CanvasItemLine( RGBA color, int stroke_width ) {
-    base( "arrow", color, stroke_width );
+  public CanvasItemLine( CanvasItemProperties props ) {
+    base( "arrow", props );
     create_points();
   }
 
@@ -142,17 +142,19 @@ public class CanvasItemLine : CanvasItem {
   /* Draw the rectangle */
   public override void draw_item( Context ctx ) {
 
-    var outline = Granite.contrasting_foreground_color( color );
+    var outline = Granite.contrasting_foreground_color( props.color );
 
     /* Draw the outline */
     Utils.set_context_color_with_alpha( ctx, outline, 0.5 );
-    ctx.set_line_width( stroke_width + 2 );
+    ctx.set_line_width( props.stroke_width + 2 );
+    props.dash.set_bg_pattern( ctx );
     ctx.move_to( points.index( 0 ).x, points.index( 0 ).y );
     ctx.line_to( points.index( 1 ).x, points.index( 1 ).y );
     ctx.stroke_preserve();
 
-    Utils.set_context_color_with_alpha( ctx, color, mode.alpha() );
-    ctx.set_line_width( stroke_width );
+    Utils.set_context_color_with_alpha( ctx, props.color, mode.alpha() );
+    ctx.set_line_width( props.stroke_width );
+    props.dash.set_fg_pattern( ctx );
     ctx.stroke();
 
   }

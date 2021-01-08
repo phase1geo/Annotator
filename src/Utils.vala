@@ -41,7 +41,7 @@ public class Utils {
    Helper function for converting an RGBA color value to a stringified color
    that can be used by a markup parser.
   */
-  public static string color_from_rgba( RGBA rgba ) {
+  public static string color_to_string( RGBA rgba ) {
     return( "#%02x%02x%02x".printf( (int)(rgba.red * 255), (int)(rgba.green * 255), (int)(rgba.blue * 255) ) );
   }
 

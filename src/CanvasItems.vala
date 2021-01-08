@@ -35,37 +35,23 @@ public enum CanvasItemType {
 
 public class CanvasItems {
 
-  private Canvas           _canvas;
-  private List<CanvasItem> _items;
-  private CanvasItem?      _active         = null;
-  private int              _selector_index = -1;
-  private double           _last_x;
-  private double           _last_y;
-  private RGBA             _color          = {1.0, 1.0, 1.0, 1.0};
-  private int              _stroke_width   = 5;
-  private Array<string>    _shape_icons;
-  private int              _press_count    = -1;
+  private Canvas               _canvas;
+  private List<CanvasItem>     _items;
+  private CanvasItem?          _active         = null;
+  private int                  _selector_index = -1;
+  private double               _last_x;
+  private double               _last_y;
+  private Array<string>        _shape_icons;
+  private int                  _press_count    = -1;
+  private CanvasItemProperties _props          = new CanvasItemProperties();
 
-  public RGBA color {
+  public CanvasItemProperties props {
     get {
-      return( _color );
+      return( _props );
     }
     set {
-      if( !_color.equal( value ) ) {
-        _color = value;
-        update_selected_attributes();
-      }
-    }
-  }
-  public int stroke_width {
-    get {
-      return( _stroke_width );
-    }
-    set {
-      if( _stroke_width != value ) {
-        _stroke_width = value;
-        update_selected_attributes();
-      }
+      _props.copy( value );
+      update_selected_attributes();
     }
   }
 
@@ -108,31 +94,31 @@ public class CanvasItems {
   }
 
   private CanvasItem create_rectangle( bool fill ) {
-    var item = new CanvasItemRect( fill, color, stroke_width );
+    var item = new CanvasItemRect( fill, props );
     item.bbox = center_box( 200, 50 );
     return( item );
   }
 
   private CanvasItem create_oval( bool fill ) {
-    var item = new CanvasItemOval( fill, color, stroke_width );
+    var item = new CanvasItemOval( fill, props );
     item.bbox = center_box( 200, 50 );
     return( item );
   }
 
   private CanvasItem create_line() {
-    var item = new CanvasItemLine( color, stroke_width );
+    var item = new CanvasItemLine( props );
     item.bbox = center_box( 200, 1 );
     return( item );
   }
 
   private CanvasItem create_arrow() {
-    var item = new CanvasItemArrow( color );
+    var item = new CanvasItemArrow( props );
     item.bbox = center_box( 200, 1 );
     return( item );
   }
 
   private CanvasItem create_text() {
-    var item = new CanvasItemText( _canvas, color );
+    var item = new CanvasItemText( _canvas, props );
     item.bbox = center_box( 200, 1 );
     _active = item;
     set_edit_mode( true );
@@ -191,8 +177,7 @@ public class CanvasItems {
   private void update_selected_attributes() {
     foreach( CanvasItem item in _items ) {
       if( item.mode == CanvasItemMode.SELECTED ) {
-        item.color        = color;
-        item.stroke_width = stroke_width;
+        item.props = props;
       }
     }
     _canvas.queue_draw();

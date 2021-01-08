@@ -48,8 +48,8 @@ public class CanvasItemArrow : CanvasItem {
   private ArrowHeadDirection _dir      = ArrowHeadDirection.UPPER_LEFT;
 
   /* Constructor */
-  public CanvasItemArrow( RGBA color ) {
-    base( "arrow", color, 1 );
+  public CanvasItemArrow( CanvasItemProperties props ) {
+    base( "arrow", props );
     create_points();
   }
 
@@ -276,7 +276,7 @@ public class CanvasItemArrow : CanvasItem {
   /* Draw the rectangle */
   public override void draw_item( Context ctx ) {
 
-    Utils.set_context_color_with_alpha( ctx, color, mode.alpha() );
+    Utils.set_context_color_with_alpha( ctx, props.color, mode.alpha() );
 
     ctx.set_line_width( 1 );
     ctx.new_path();
@@ -287,7 +287,7 @@ public class CanvasItemArrow : CanvasItem {
     ctx.close_path();
     ctx.fill_preserve();
 
-    var outline = Granite.contrasting_foreground_color( color );
+    var outline = Granite.contrasting_foreground_color( props.color );
     Utils.set_context_color_with_alpha( ctx, outline, 0.5 );
     ctx.stroke();
 

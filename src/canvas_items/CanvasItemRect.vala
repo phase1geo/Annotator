@@ -28,8 +28,8 @@ public class CanvasItemRect : CanvasItem {
   private bool _fill;
 
   /* Constructor */
-  public CanvasItemRect( bool fill, RGBA color, int stroke_width ) {
-    base( "rectangle", color, stroke_width );
+  public CanvasItemRect( bool fill, CanvasItemProperties props ) {
+    base( "rectangle", props );
     _fill = fill;
     create_points();
   }
@@ -104,7 +104,7 @@ public class CanvasItemRect : CanvasItem {
     if( _fill ) {
       return( base.is_within( x, y ) );
     } else {
-      var half_width = stroke_width / 2;
+      var half_width = props.stroke_width / 2;
       var outer      = new CanvasRect.from_rect( bbox );  outer.resize( half_width );
       var inner      = new CanvasRect.from_rect( bbox );  inner.resize( 0 - half_width );
       return( outer.contains( x, y ) && !inner.contains( x, y ) );
@@ -130,13 +130,13 @@ public class CanvasItemRect : CanvasItem {
   /* Draw the rectangle */
   public override void draw_item( Context ctx ) {
 
-    var outline = Granite.contrasting_foreground_color( color );
+    var outline = Granite.contrasting_foreground_color( props.color );
 
     ctx.rectangle( bbox.x, bbox.y, bbox.width, bbox.height );
 
     if( _fill ) {
 
-      Utils.set_context_color_with_alpha( ctx, color, mode.alpha() );
+      Utils.set_context_color_with_alpha( ctx, props.color, mode.alpha() );
       ctx.fill_preserve();
 
       Utils.set_context_color_with_alpha( ctx, outline, 0.5 );
@@ -146,11 +146,13 @@ public class CanvasItemRect : CanvasItem {
     } else {
 
       Utils.set_context_color_with_alpha( ctx, outline, 0.5 );
-      ctx.set_line_width( stroke_width + 2 );
+      ctx.set_line_width( props.stroke_width + 2 );
+      props.dash.set_bg_pattern( ctx );
       ctx.stroke_preserve();
 
-      Utils.set_context_color( ctx, color );
-      ctx.set_line_width( stroke_width );
+      Utils.set_context_color( ctx, props.color );
+      ctx.set_line_width( props.stroke_width );
+      props.dash.set_fg_pattern( ctx );
       ctx.stroke();
 
     }

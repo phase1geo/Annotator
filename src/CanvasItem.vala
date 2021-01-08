@@ -58,6 +58,102 @@ public enum CanvasItemMode {
 
 }
 
+public enum CanvasItemDashPattern {
+  NONE,
+  SHORT,
+  LONG,
+  NUM;
+
+  /* Converts this value to a string */
+  public string to_string() {
+    switch( this ) {
+      case NONE  :  return( "none" );
+      case SHORT :  return( "short" );
+      case LONG  :  return( "long" );
+      default    :  assert_not_reached();
+    }
+  }
+
+  /* Converts a string to this value type */
+  public static CanvasItemDashPattern parse( string value ) {
+    switch( value ) {
+      case "none"  :  return( NONE );
+      case "short" :  return( SHORT );
+      case "long"  :  return( LONG );
+      default      :  assert_not_reached();
+    }
+  }
+
+  /* Sets the background dash pattern based on the current value */
+  public void set_bg_pattern( Context ctx ) {
+    switch( this ) {
+      case NONE  :  ctx.set_dash( {},      0 );  break;
+      case SHORT :  ctx.set_dash( { 9, 3}, 0 );  break;
+      case LONG  :  ctx.set_dash( {14, 6}, 0 );  break;
+    }
+  }
+
+  /* Sets the foreground dash pattern based on the current value */
+  public void set_fg_pattern( Context ctx ) {
+    switch( this ) {
+      case NONE  :  ctx.set_dash( {},        0 );  break;
+      case SHORT :  ctx.set_dash( { 5,  5}, -2 );  break;
+      case LONG  :  ctx.set_dash( {10, 10}, -2 );  break;
+    }
+  }
+}
+
+/* Structure containing formatting properties used by canvas items */
+public class CanvasItemProperties {
+
+  public RGBA                  color        = Utils.color_from_string( "black" );
+  public int                   stroke_width = 4;
+  public CanvasItemDashPattern dash         = CanvasItemDashPattern.NONE;
+
+  /* Default constructor */
+  public CanvasItemProperties() {}
+
+  /* Constructor */
+  public CanvasItemProperties.initialize( RGBA c, int sw, CanvasItemDashPattern d ) {
+    color        = c;
+    stroke_width = sw;
+    dash         = d;
+  }
+
+  /* Copies the properties to this class */
+  public void copy( CanvasItemProperties props ) {
+    color        = props.color;
+    stroke_width = props.stroke_width;
+    dash         = props.dash;
+  }
+
+  /* Saves the contents of this properties class as XML */
+  public Xml.Node* save() {
+    Xml.Node* node = new Xml.Node( null, "properties" );
+    node->set_prop( "color",        Utils.color_to_string( color ) );
+    node->set_prop( "stroke-width", stroke_width.to_string() );
+    node->set_prop( "dash",         dash.to_string() );
+    return( node );
+  }
+
+  /* Loads the contents of this properties class from XML */
+  public void load( Xml.Node* node ) {
+    var c = node->get_prop( "color" );
+    if( c != null ) {
+      color.parse( c );
+    }
+    var sw = node->get_prop( "stroke-width" );
+    if( sw != null ) {
+      stroke_width = int.parse( sw );
+    }
+    var d = node->get_prop( "dash" );
+    if( d != null ) {
+      dash = CanvasItemDashPattern.parse( d );
+    }
+  }
+
+}
+
 public class CanvasItem {
 
   private CanvasRect     _bbox = new CanvasRect();
@@ -87,23 +183,20 @@ public class CanvasItem {
       }
     }
   }
-  public RGBA color        { get; set; default = {1.0, 1.0, 1.0, 1.0}; }
-  public int  stroke_width { get; set; default = 6; }
+  public CanvasItemProperties props { get; set; default = new CanvasItemProperties(); }
 
   /* Constructor */
-  public CanvasItem( string name, RGBA color, int stroke_width ) {
-    this.name         = name;
-    this.color        = color;
-    this.stroke_width = stroke_width;
+  public CanvasItem( string name, CanvasItemProperties props ) {
+    this.name  = name;
+    this.props.copy( props );
   }
 
   /* Creates a copy of the given canvas item */
   public virtual void copy( CanvasItem item ) {
 
     _bbox.copy( item.bbox );
-    _mode        = item.mode;
-    color        = item.color;
-    stroke_width = item.stroke_width;
+    _mode = item.mode;
+    props.copy( item.props );
 
     for( int i=0; i<item.points.length; i++ ) {
       points.index( i ).copy( item.points.index( i ) );
@@ -222,13 +315,12 @@ public class CanvasItem {
   /* Saves the item in XML format */
   public virtual Xml.Node* save() {
     Xml.Node* node = new Xml.Node( null, name );
-    node->set_prop( "x",     bbox.x.to_string() );
-    node->set_prop( "y",     bbox.y.to_string() );
-    node->set_prop( "w",     bbox.width.to_string() );
-    node->set_prop( "h",     bbox.height.to_string() );
-    node->set_prop( "mode",  mode.to_string() );
-    node->set_prop( "color", Utils.color_from_rgba( color ) );
-    node->set_prop( "width", stroke_width.to_string() );
+    node->set_prop( "x",    bbox.x.to_string() );
+    node->set_prop( "y",    bbox.y.to_string() );
+    node->set_prop( "w",    bbox.width.to_string() );
+    node->set_prop( "h",    bbox.height.to_string() );
+    node->set_prop( "mode", mode.to_string() );
+    node->add_child( props.save() );
     return( node );
   }
 
@@ -255,13 +347,11 @@ public class CanvasItem {
     if( m != null ) {
       mode = CanvasItemMode.parse( m );
     }
-    var c = node->get_prop( "color" );
-    if( c != null ) {
-      color.parse( c );
-    }
-    var s = node->get_prop( "width" );
-    if( s != null ) {
-      stroke_width = int.parse( s );
+
+    for( Xml.Node* it=node->children; it!=null; it=it->next ) {
+      if( (it->type == Xml.ElementType.ELEMENT_NODE) && (it->name == "properties") ) {
+        props.load( it );
+      }
     }
 
   }

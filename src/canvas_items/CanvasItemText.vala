@@ -98,8 +98,8 @@ public class CanvasItemText : CanvasItem {
   }
 
   /* Default constructor */
-  public CanvasItemText( Canvas canvas, RGBA color ) {
-    base( "text", color, 1 );
+  public CanvasItemText( Canvas canvas, CanvasItemProperties props ) {
+    base( "text", props );
     initialize( canvas );
     update_size( false );
   }
@@ -831,7 +831,7 @@ public class CanvasItemText : CanvasItem {
 
     /* Output the text */
     ctx.move_to( bbox.x, bbox.y );
-    Utils.set_context_color( ctx, color );
+    Utils.set_context_color( ctx, props.color );
     Pango.cairo_show_layout( ctx, layout );
     ctx.new_path();
 
@@ -843,14 +843,14 @@ public class CanvasItemText : CanvasItem {
 
     if( mode == CanvasItemMode.SELECTED ) {
 
-      Utils.set_context_color( ctx, Granite.contrasting_foreground_color( color ) );
-      ctx.set_dash( {14, 6}, 0 );
+      Utils.set_context_color( ctx, Granite.contrasting_foreground_color( props.color ) );
+      props.dash.set_bg_pattern( ctx );
       ctx.set_line_width( 8 );
       ctx.rectangle( x, y, w, h );
       ctx.stroke();
 
-      Utils.set_context_color( ctx, color );
-      ctx.set_dash( {10, 10}, -2 );
+      Utils.set_context_color( ctx, props.color );
+      props.dash.set_fg_pattern( ctx );
       ctx.set_line_width( 4 );
       ctx.rectangle( x, y, w, h );
       ctx.stroke();
@@ -863,7 +863,7 @@ public class CanvasItemText : CanvasItem {
     if( edit ) {
       var cpos = text.text.index_of_nth_char( _cursor );
       var rect = layout.index_to_pos( cpos );
-      Utils.set_context_color( ctx, color );
+      Utils.set_context_color( ctx, props.color );
       double ix, iy;
       ix = bbox.x + (rect.x / Pango.SCALE) - 1;
       iy = bbox.y + (rect.y / Pango.SCALE);

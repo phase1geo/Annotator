@@ -28,8 +28,8 @@ public class CanvasItemOval : CanvasItem {
   private bool _fill;
 
   /* Constructor */
-  public CanvasItemOval( bool fill, RGBA color, int stroke_width ) {
-    base( "oval", color, stroke_width );
+  public CanvasItemOval( bool fill, CanvasItemProperties props ) {
+    base( "oval", props );
     _fill = fill;
     create_points();
   }
@@ -108,9 +108,9 @@ public class CanvasItemOval : CanvasItem {
     } else {
       var a     = (bbox.width < bbox.height) ? bbox.height : bbox.width;
       var b     = (bbox.width < bbox.height) ? bbox.width  : bbox.height;
-      var adj   = stroke_width / 2;
-      var outer = Utils.is_within_oval( x, y, bbox.mid_x(), bbox.mid_y(), ((a + stroke_width) / 2), ((b + stroke_width) / 2) );
-      var inner = Utils.is_within_oval( x, y, bbox.mid_x(), bbox.mid_y(), ((a - stroke_width) / 2), ((b - stroke_width) / 2) );
+      var adj   = props.stroke_width / 2;
+      var outer = Utils.is_within_oval( x, y, bbox.mid_x(), bbox.mid_y(), ((a + props.stroke_width) / 2), ((b + props.stroke_width) / 2) );
+      var inner = Utils.is_within_oval( x, y, bbox.mid_x(), bbox.mid_y(), ((a - props.stroke_width) / 2), ((b - props.stroke_width) / 2) );
       return( outer && !inner );
     }
   }
@@ -137,9 +137,9 @@ public class CanvasItemOval : CanvasItem {
     var scale_width  = (bbox.width < bbox.height) ? (bbox.width / bbox.height) : 1.0;
     var scale_height = (bbox.width < bbox.height) ? 1.0 : (bbox.height / bbox.width);
     var radius       = (bbox.width < bbox.height) ? (bbox.height / 2.0) : (bbox.width / 2.0);
-    var outline      = Granite.contrasting_foreground_color( color );
+    var outline      = Granite.contrasting_foreground_color( props.color );
 
-    Utils.set_context_color_with_alpha( ctx, color, (_fill ? mode.alpha() : 1.0) );
+    Utils.set_context_color_with_alpha( ctx, props.color, (_fill ? mode.alpha() : 1.0) );
 
     var save_matrix = ctx.get_matrix();
     ctx.translate( bbox.mid_x(), bbox.mid_y() );
@@ -160,11 +160,13 @@ public class CanvasItemOval : CanvasItem {
     } else {
 
       Utils.set_context_color_with_alpha( ctx, outline, 0.5 );
-      ctx.set_line_width( stroke_width + 2 );
+      ctx.set_line_width( props.stroke_width + 2 );
+      props.dash.set_bg_pattern( ctx );
       ctx.stroke_preserve();
 
-      Utils.set_context_color( ctx, color );
-      ctx.set_line_width( stroke_width );
+      Utils.set_context_color( ctx, props.color );
+      ctx.set_line_width( props.stroke_width );
+      props.dash.set_fg_pattern( ctx );
       ctx.stroke();
 
     }

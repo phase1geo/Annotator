@@ -30,10 +30,10 @@ public class UndoTextCommit : UndoItem {
   /* Constructor for a text item commit */
   public UndoTextCommit( Canvas canvas, CanvasItemText item, CanvasItemText orig_item ) {
     base( _( "text changed" ) );
-    var black = Utils.color_from_string( "black" );
-    _item     = new CanvasItemText( canvas, black );
-    _old_item = new CanvasItemText( canvas, black );
-    _new_item = new CanvasItemText( canvas, black );
+    var props = new CanvasItemProperties();
+    _item     = new CanvasItemText( canvas, props );
+    _old_item = new CanvasItemText( canvas, props );
+    _new_item = new CanvasItemText( canvas, props );
     _new_item.copy( item );
     _old_item.copy( orig_item );
   }

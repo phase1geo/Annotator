@@ -588,7 +588,7 @@ public class FormattedText {
     }
     public override TextTag text_tag( string? extra ) {
       var ttag = new TextTag( "tag" );
-      ttag.foreground     = Utils.color_from_rgba( _color );
+      ttag.foreground     = Utils.color_to_string( _color );
       ttag.foreground_set = true;
       return( ttag );
     }
@@ -609,7 +609,7 @@ public class FormattedText {
     }
     public override TextTag text_tag( string? extra ) {
       var ttag = new TextTag( "syntax" );
-      ttag.foreground     = Utils.color_from_rgba( _color );
+      ttag.foreground     = Utils.color_to_string( _color );
       ttag.foreground_set = true;
       return( ttag );
     }
