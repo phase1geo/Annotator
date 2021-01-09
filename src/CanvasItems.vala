@@ -122,7 +122,7 @@ public class CanvasItems {
   }
 
   private CanvasItem create_blur() {
-    var item = new CanvasItemBlur( _canvas, props );
+    var item = new CanvasItemBlur( _canvas.image, props );
     item.bbox = center_box( 200, 50 );
     return( item );
   }
@@ -184,6 +184,12 @@ public class CanvasItems {
       }
     }
     _canvas.queue_draw();
+  }
+
+  public void adjust_items( double diffx, double diffy ) {
+    foreach( CanvasItem item in _items ) {
+      item.move_item( (0 - diffx), (0 - diffy) );
+    }
   }
 
   /* Returns true if the shift key is enabled in the given state */

@@ -23,9 +23,8 @@ using Gtk;
 
 public class Editor : Box {
 
-  private CanvasToolbar _toolbar;
-  private Canvas        _canvas;
-  private string        _filename;
+  private Canvas _canvas;
+  private string _filename;
 
   public signal void image_loaded();
 
@@ -54,12 +53,15 @@ public class Editor : Box {
     sw.add( overlay );
 
     /* Create the toolbar */
-    _toolbar = new CanvasToolbar( _canvas );
-    _toolbar.halign = Align.FILL;
+    var toolbar = new CanvasToolbar( _canvas );
+    toolbar.halign = Align.CENTER;
+
+    var box = new Box( Orientation.HORIZONTAL, 0 );
+    box.pack_start( toolbar, true, true );
 
     /* Pack the box */
-    pack_start( _toolbar, false, true, 0 );
-    pack_start( sw,       true,  true, 0 );
+    pack_start( box, false, true, 0 );
+    pack_start( sw,  true,  true, 0 );
 
     show_all();
 

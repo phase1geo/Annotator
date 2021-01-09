@@ -93,6 +93,18 @@ public class CanvasImage {
     _canvas.set_size_request( _buf.width, _buf.height );
   }
 
+  /* Handles a keypress event */
+  public bool key_pressed( uint keyval, ModifierType state ) {
+
+    switch( keyval ) {
+      case Key.Return :  return( end_crop() );
+      case Key.Escape :  return( cancel_crop() );
+    }
+
+    return( false );
+
+  }
+
   /* Handles a cursor press event */
   public bool cursor_pressed( double x, double y, ModifierType state, int press_count ) {
 
@@ -154,21 +166,23 @@ public class CanvasImage {
   public void start_crop() {
     cropping = true;
     _crop_rect.copy_coords( 0, 0, _buf.width, _buf.height );
-    _canvas.queue_draw();
   }
 
   /* Cancels the crop operation */
-  public void cancel_crop() {
+  public bool cancel_crop() {
     cropping = false;
     _canvas.queue_draw();
+    return( true );
   }
 
   /* Completes the cropping operation */
-  public void end_crop() {
+  public bool end_crop() {
     cropping = false;
     var buf = new Pixbuf.subpixbuf( _buf, (int)_crop_rect.x, (int)_crop_rect.y, (int)_crop_rect.width, (int)_crop_rect.height );
     set_image( buf );
+    _canvas.items.adjust_items( _crop_rect.x, _crop_rect.y );
     _canvas.queue_draw();
+    return( true );
   }
 
   /* Calculates the box for the given selector */

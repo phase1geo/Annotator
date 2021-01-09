@@ -118,6 +118,7 @@ public class CanvasToolbar : Toolbar {
     btn.margin_right = margin;
     btn.clicked.connect(() => {
       _canvas.image.start_crop();
+      _canvas.queue_draw();
     });
 
     add( btn );
@@ -314,10 +315,10 @@ public class CanvasToolbar : Toolbar {
   /* Adds a separator to the toolbar */
   private void create_separator() {
 
-    var btn = new ToolItem();
-    btn.add( new Separator( Orientation.VERTICAL ) );
+    var sep = new SeparatorToolItem();
+    sep.draw = true;
 
-    add( btn );
+    add( sep );
 
   }
 

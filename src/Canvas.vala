@@ -109,45 +109,6 @@ public class Canvas : DrawingArea {
     win.set_cursor( new Cursor.from_name( get_display(), name ) );
   }
 
-  /* Draws a blur in the given rectangle onto the provided context */
-  public void draw_blur_rectangle( Cairo.Context ctx, CanvasRect rect, int blur_radius = 10 ) {
-
-    var x       = (rect.x < 0) ? 0 : (int)rect.x;
-    var y       = (rect.y < 0) ? 0 : (int)rect.y;
-    var w       = ((rect.x + rect.width)  >= _buf.width)  ? (_buf.width  - (int)rect.x) : (int)rect.width;
-    var h       = ((rect.y + rect.height) >= _buf.height) ? (_buf.height - (int)rect.y) : (int)rect.height;
-    var sub     = new Pixbuf.subpixbuf( _buf, x, y, w, h );
-    var surface = cairo_surface_create_from_pixbuf( sub, 1, null );
-    var buffer  = new Granite.Drawing.BufferSurface.with_surface( w, h, surface );
-
-    /* Copy the surface contents over */
-    buffer.context.set_source_surface( surface, 0, 0 );
-    buffer.context.paint();
-
-    /* Perform the blur */
-    buffer.exponential_blur( blur_radius );
-
-    /* Draw the blurred pixbuf onto the context */
-    ctx.set_source_surface( buffer.surface, x, y );
-    ctx.paint();
-
-  }
-
-  /* Returns the RGBA color value that averages the colors in the given rectangle */
-  public RGBA get_average_color( CanvasRect rect ) {
-
-    var x     = (rect.x < 0) ? 0 : (int)rect.x;
-    var y     = (rect.y < 0) ? 0 : (int)rect.y;
-    var w     = ((rect.x + rect.width)  >= _buf.width)  ? (_buf.width  - (int)rect.x) : (int)rect.width;
-    var h     = ((rect.y + rect.height) >= _buf.height) ? (_buf.height - (int)rect.y) : (int)rect.height;
-    var sub   = new Pixbuf.subpixbuf( _buf, x, y, w, h );
-    var color = Granite.Drawing.Utilities.average_color( sub );
-
-    RGBA rgba = {color.R, color.G, color.B, color.A};
-    return( rgba );
-
-  }
-
   /* Opens a new image and displays it in the drawing area */
   public bool open_image( string filename ) {
 
@@ -251,6 +212,12 @@ public class Canvas : DrawingArea {
     /* If the character is printable, pass the value through the input method filter */
     if( e.str.get_char( 0 ).isprint() ) {
       _im_context.filter_keypress( e );
+
+    /* If we are cropping the image, pass key presses to the image */
+    } else if( image.cropping ) {
+      if( image.key_pressed( e.keyval, e.state ) ) {
+        queue_draw();
+      }
 
     /* Otherwise, allow the canvas item handler to deal with it immediately */
     } else if( items.key_pressed( e.keyval, e.state ) ) {

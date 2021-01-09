@@ -25,12 +25,12 @@ using Cairo;
 
 public class CanvasItemBlur : CanvasItem {
 
-  private Canvas _canvas;
+  private CanvasImage _image;
 
   /* Constructor */
-  public CanvasItemBlur( Canvas canvas, CanvasItemProperties props ) {
+  public CanvasItemBlur( CanvasImage image, CanvasItemProperties props ) {
     base( "blur", props );
-    _canvas = canvas;
+    _image = image;
     create_points();
   }
 
@@ -109,14 +109,14 @@ public class CanvasItemBlur : CanvasItem {
 
     /* If we are moving the node or resizing it, just draw an alpha box */
     if( mode.moving() ) {
-      var blur_color = _canvas.get_average_color( bbox );
+      var blur_color = _image.get_average_color( bbox );
       Utils.set_context_color_with_alpha( ctx, blur_color, mode.alpha() );
       ctx.rectangle( bbox.x, bbox.y, bbox.width, bbox.height );
       ctx.fill();
 
     /* Otherwise, calculate and apply the blur */
     } else {
-      _canvas.draw_blur_rectangle( ctx, bbox, props.blur_radius );
+      _image.draw_blur_rectangle( ctx, bbox, props.blur_radius );
     }
 
   }
