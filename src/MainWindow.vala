@@ -29,8 +29,8 @@ public class MainWindow : ApplicationWindow {
 
   private HeaderBar         _header;
   private FontButton        _font;
-  private Canvas            _canvas;
   private Button            _open_btn;
+  private MenuButton        _export_btn;
   private Box               _box;
   private Editor            _editor;
   private Stack             _stack;
@@ -155,7 +155,7 @@ public class MainWindow : ApplicationWindow {
     _save_btn.clicked.connect( do_save );
     _header.pack_start( _save_btn );
 
-    _paste_btn = new Button.from_icon_name( "edit-paste", IconSize.LARGE_TOOLBAR );
+    _paste_btn = new Button.from_icon_name( "edit-paste", IconSize.LARGE_TjOOLBAR );
     _paste_btn.set_tooltip_markup( Utils.tooltip_with_accel( _( "Paste Over" ), "<Shift><Control>v" ) );
     _paste_btn.clicked.connect( do_paste_over );
     _header.pack_start( _paste_btn );
@@ -178,8 +178,58 @@ public class MainWindow : ApplicationWindow {
     _header.pack_start( _redo_btn );
     */
 
+    _export_btn = create_exports();
+    _header.pack_end( _export_btn );
+
     set_titlebar( _header );
     set_title( _( "Annotator" ) );
+
+  }
+
+  private MenuButton create_exports() {
+
+    var export_btn = new MenuButton();
+    export_btn.image   = new Image.from_icon_name( "document-export", IconSize.LARGE_TOOLBAR );
+    export_btn.set_tooltip_text( _( "Export Image" ) );
+    export_btn.popover = new Popover( null );
+
+    var box = new Box( Orientation.VERTICAL, 0 );
+
+    for( int i=0; i<ExportType.NUM; i++ ) {
+      var type = (ExportType)i;
+      var btn  = new ModelButton();
+      btn.halign = Align.START;
+      btn.text   = type.label();
+      btn.clicked.connect(() => {
+        _editor.canvas.image.export_file( type );
+      });
+      box.pack_start( btn );
+    }
+
+    box.pack_start( new Separator( Orientation.HORIZONTAL ) );
+
+    var clip_btn = new ModelButton();
+    clip_btn.halign = Align.START;
+    clip_btn.text   = _( "Copy To Clipboard" );
+    clip_btn.clicked.connect(() => {
+      _editor.canvas.image.export_clipboard();
+    });
+    box.pack_start( clip_btn );
+
+    box.pack_start( new Separator( Orientation.HORIZONTAL ) );
+
+    var print_btn = new ModelButton();
+    print_btn.halign = Align.START;
+    print_btn.text   = _( "Print…" );
+    print_btn.clicked.connect(() => {
+      _editor.canvas.image.export_print();
+    });
+    box.pack_start( print_btn );
+
+    box.show_all();
+    export_btn.popover.add( box );
+
+    return( export_btn );
 
   }
 

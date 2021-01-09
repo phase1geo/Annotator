@@ -34,17 +34,25 @@ public class CanvasImage {
   private Canvas        _canvas;
   private double        _last_x     = 0;
   private double        _last_y     = 0;
+  private Exporter      _exporter;
 
   public bool cropping { get; private set; default = false; }
 
   /* Constructor */
   public CanvasImage( Canvas canvas ) {
-    _canvas = canvas;
+    _canvas   = canvas;
+    _exporter = new Exporter( canvas );
   }
 
   /* Returns true if the surface image has been set */
   public bool is_surface_set() {
     return( _surface != null );
+  }
+
+  /* Returns the dimensions of the stored image */
+  public void get_dimensions( out int width, out int height ) {
+    width  = _buf.width;
+    height = _buf.height;
   }
 
   /* Draws a blur in the given rectangle onto the provided context */
@@ -191,6 +199,31 @@ public class CanvasImage {
     _canvas.items.adjust_items( _crop_rect.x, _crop_rect.y );
     _canvas.queue_draw();
     return( true );
+  }
+
+  /* Make sure that everything is cleared from the image */
+  private void clean_image() {
+    cropping = false;
+    _canvas.items.clear_selection();
+    _canvas.queue_draw();
+  }
+
+  /* Exports to the given image type */
+  public void export_file( ExportType type ) {
+    clean_image();
+    _exporter.export_file( _surface, type );
+  }
+
+  /* Exports the image to the clipboard */
+  public void export_clipboard() {
+    clean_image();
+    _exporter.export_clipboard( _surface );
+  }
+
+  /* Exports the image to the printer */
+  public void export_print() {
+    clean_image();
+    _exporter.export_print( _surface );
   }
 
   /* Calculates the box for the given selector */

@@ -23,8 +23,9 @@ using Gtk;
 
 public class Editor : Box {
 
-  private Canvas _canvas;
   private string _filename;
+
+  public Canvas canvas { get; private set; }
 
   public signal void image_loaded();
 
@@ -34,16 +35,16 @@ public class Editor : Box {
     Object( orientation: Orientation.VERTICAL, spacing: 0 );
 
     /* Create the canvas */
-    _canvas = new Canvas( win );
-    _canvas.halign = Align.CENTER;
-    _canvas.valign = Align.CENTER;
-    _canvas.image_loaded.connect(() => {
+    canvas = new Canvas( win );
+    canvas.halign = Align.CENTER;
+    canvas.valign = Align.CENTER;
+    canvas.image_loaded.connect(() => {
       image_loaded();
     });
 
     /* Create the overlay that will hold the canvas so that we can add emoji support */
     var overlay = new Overlay();
-    overlay.add( _canvas );
+    overlay.add( canvas );
 
     var sw = new ScrolledWindow( null, null );
     sw.min_content_width  = 600;
@@ -53,7 +54,7 @@ public class Editor : Box {
     sw.add( overlay );
 
     /* Create the toolbar */
-    var toolbar = new CanvasToolbar( _canvas );
+    var toolbar = new CanvasToolbar( canvas );
     toolbar.halign = Align.CENTER;
 
     var box = new Box( Orientation.HORIZONTAL, 0 );
@@ -70,22 +71,22 @@ public class Editor : Box {
   /* Opens the given image */
   public void open_image( string filename ) {
     _filename = filename;
-    _canvas.open_image( filename );
+    canvas.open_image( filename );
   }
 
   /* Pastes the given image pixbuf to the canvas */
   public void paste_image( Gdk.Pixbuf buf ) {
-    _canvas.paste_image( buf );
+    canvas.paste_image( buf );
   }
 
   /* Pastes the given text to the canvas */
   public void paste_text( string txt ) {
-    _canvas.paste_text( txt );
+    canvas.paste_text( txt );
   }
 
   /* Returns true if the image has been successfully set */
   public bool is_image_set() {
-    return( _canvas.is_surface_set() );
+    return( canvas.is_surface_set() );
   }
 
 }

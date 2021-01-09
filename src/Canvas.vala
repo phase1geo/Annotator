@@ -288,7 +288,7 @@ public class Canvas : DrawingArea {
   }
 
   /* Draws all of the items in the canvas */
-  private bool on_draw( Context ctx ) {
+  public bool on_draw( Context ctx ) {
     image.draw( ctx );
     items.draw( ctx );
     return( false );
