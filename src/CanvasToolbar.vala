@@ -117,6 +117,7 @@ public class CanvasToolbar : Toolbar {
     btn.margin_left  = margin;
     btn.margin_right = margin;
     btn.clicked.connect(() => {
+      _canvas.items.clear_selection();
       _canvas.image.start_crop();
       _canvas.queue_draw();
     });

@@ -88,9 +88,11 @@ public class CanvasImage {
 
   /* Pastes an image from the given pixbuf to the canvas */
   public void set_image( Pixbuf buf ) {
+
     _buf     = buf.copy();
     _surface = (ImageSurface)cairo_surface_create_from_pixbuf( _buf, 1, null );
     _canvas.set_size_request( _buf.width, _buf.height );
+
   }
 
   /* Handles a keypress event */
@@ -146,7 +148,10 @@ public class CanvasImage {
         case 3 :                                    box.width += diffx;  box.height += diffy;  break;
         default :  assert_not_reached();
       }
-      if( (box.width >= (selector_size * 3)) && (box.height >= (selector_size * 3)) ) {
+      if( (box.width  >= (selector_size * 3)) &&
+          (box.height >= (selector_size * 3)) &&
+          (box.width  < _buf.width) &&
+          (box.height < _buf.height) ) {
         _crop_rect.copy( box );
         return( true );
       }
@@ -158,8 +163,11 @@ public class CanvasImage {
 
   /* Handles a cursor release event */
   public bool cursor_released( double x, double y, ModifierType state ) {
+
     _crop_index = -1;
+
     return( false );
+
   }
 
   /* Start the cropping function */
