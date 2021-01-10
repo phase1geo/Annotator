@@ -51,6 +51,11 @@
       <summary>Last used blur radius</summary>
       <description>Last used blur radius displayed in toolbar.</description>
     </key>
+    <key name="font" type="s">
+      <default>"Sans 18"</default>
+      <summary>Last used font</summary>
+      <description>Last used font displayed in toolbar.</description>
+    </key>
     <key name="last-directory" type="s">
       <default>""</default>
       <summary>Last opened/saved directory.</summary>

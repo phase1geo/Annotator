@@ -22,6 +22,7 @@
 using Gtk;
 using Gdk;
 using Cairo;
+using Pango;
 
 public enum CanvasItemStrokeWidth {
   WIDTH1,
@@ -88,7 +89,7 @@ public enum CanvasItemDashPattern {
   }
 
   /* Sets the background dash pattern based on the current value */
-  public void set_bg_pattern( Context ctx ) {
+  public void set_bg_pattern( Cairo.Context ctx ) {
     switch( this ) {
       case NONE  :  ctx.set_dash( {},      0 );  break;
       case SHORT :  ctx.set_dash( { 7, 3}, 0 );  break;
@@ -98,7 +99,7 @@ public enum CanvasItemDashPattern {
   }
 
   /* Sets the foreground dash pattern based on the current value */
-  public void set_fg_pattern( Context ctx ) {
+  public void set_fg_pattern( Cairo.Context ctx ) {
     switch( this ) {
       case NONE  :  ctx.set_dash( {},        0 );  break;
       case SHORT :  ctx.set_dash( { 5,  5}, -1 );  break;
@@ -116,6 +117,7 @@ public class CanvasItemProperties {
   private CanvasItemStrokeWidth _stroke_width = CanvasItemStrokeWidth.WIDTH1;
   private CanvasItemDashPattern _dash         = CanvasItemDashPattern.NONE;
   private int                   _blur_radius  = 10;
+  private FontDescription       _font;
 
   public RGBA color {
     get {
@@ -173,6 +175,20 @@ public class CanvasItemProperties {
       }
     }
   }
+  public FontDescription font {
+    get {
+      return( _font );
+    }
+    set {
+      if( !font.equal( value ) ) {
+        _font = value.copy();
+        if( _use_settings ) {
+          Annotator.settings.set_string( "font", _font.to_string() );
+        }
+        changed();
+      }
+    }
+  }
 
   public signal void changed();
 
@@ -184,6 +200,9 @@ public class CanvasItemProperties {
       _stroke_width = CanvasItemStrokeWidth.parse( Annotator.settings.get_string( "stroke-width" ) );
       _dash         = CanvasItemDashPattern.parse( Annotator.settings.get_string( "dash-pattern" ) );
       _blur_radius  = Annotator.settings.get_int( "blur-radius" );
+      _font         = FontDescription.from_string( Annotator.settings.get_string( "font" ) );
+    } else {
+      _font = new FontDescription();
     }
   }
 
@@ -194,6 +213,7 @@ public class CanvasItemProperties {
     stroke_width  = props.stroke_width;
     dash          = props.dash;
     blur_radius   = props.blur_radius;
+    font          = props.font.copy();
   }
 
   /* Saves the contents of this properties class as XML */
@@ -203,6 +223,7 @@ public class CanvasItemProperties {
     node->set_prop( "stroke-width", stroke_width.to_string() );
     node->set_prop( "dash",         dash.to_string() );
     node->set_prop( "blur-radius",  blur_radius.to_string() );
+    node->set_prop( "font",         font.to_string() );
     return( node );
   }
 
@@ -223,6 +244,10 @@ public class CanvasItemProperties {
     var br = node->get_prop( "blur-radius" );
     if( br != null ) {
       blur_radius = int.parse( br );
+    }
+    var f = node->get_prop( "font" );
+    if( f != null ) {
+      font = FontDescription.from_string( f );
     }
   }
 

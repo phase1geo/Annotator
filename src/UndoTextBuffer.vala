@@ -30,8 +30,7 @@ public class UndoTextBuffer : UndoBuffer {
   /* Default constructor */
   public UndoTextBuffer( Canvas canvas ) {
     base( canvas );
-    var props = new CanvasItemProperties();
-    orig = new CanvasItemText( canvas, props );
+    orig = new CanvasItemText( canvas, canvas.items.props );
   }
 
   /*

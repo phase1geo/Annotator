@@ -114,6 +114,7 @@ public class CanvasItemText : CanvasItem {
     _pango_layout.set_width( (int)_max_width * Pango.SCALE );
     initialize_font_description();
     create_points();
+    props.changed.connect( update_font );
   }
 
   /* Creates the items points */
@@ -127,10 +128,8 @@ public class CanvasItemText : CanvasItem {
 
   /* Allocates and initializes the font description for the layouts */
   private void initialize_font_description() {
-    var fd = new Pango.FontDescription();
-    fd.set_size( _font_size * Pango.SCALE );
-    _line_layout.set_font_description( fd );
-    _pango_layout.set_font_description( fd );
+    _line_layout.set_font_description( props.font );
+    _pango_layout.set_font_description( props.font );
   }
 
   /* Copies an existing CanvasText to this CanvasText */
@@ -178,18 +177,9 @@ public class CanvasItemText : CanvasItem {
   }
 
   /* Sets the font size to the given size */
-  public void set_font( string? family = null, int? size = null, double zoom_factor = 1.0 ) {
-    var fd = _line_layout.get_font_description();
-    if( family != null ) {
-      fd.set_family( family );
-    }
-    if( size != null ) {
-      _font_size = size;
-    }
-    var fsize = _font_size * zoom_factor;
-    fd.set_size( (int)(fsize * Pango.SCALE) );
-    _line_layout.set_font_description( fd );
-    _pango_layout.set_font_description( fd );
+  public void update_font() {
+    _line_layout.set_font_description( props.font );
+    _pango_layout.set_font_description( props.font );
     update_size( true );
   }
 
@@ -828,6 +818,8 @@ public class CanvasItemText : CanvasItem {
   public override void draw_item( Cairo.Context ctx ) {
 
     var layout = _pango_layout;
+
+    var fd = _pango_layout.get_font_description();
 
     /* Output the text */
     ctx.move_to( bbox.x, bbox.y );

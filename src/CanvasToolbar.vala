@@ -39,6 +39,7 @@ public class CanvasToolbar : Toolbar {
     create_separator();
     create_color();
     create_stroke();
+    create_fonts();
 
     show_all();
 
@@ -138,10 +139,9 @@ public class CanvasToolbar : Toolbar {
     var chooser = new ColorChooserWidget();
     chooser.border_width = 10;
     chooser.rgba = _canvas.items.props.color;
-    chooser.color_activated.connect((c) => {
-      _canvas.items.props.color = c;
+    chooser.notify.connect((p) => {
+      _canvas.items.props.color = chooser.rgba;
       mb.image = new Image.from_surface( make_color_icon() );
-      Utils.hide_popover( mb.popover );
     });
     mb.image = new Image.from_surface( make_color_icon() );
     chooser.show_all();
@@ -241,6 +241,42 @@ public class CanvasToolbar : Toolbar {
     btn.margin_left  = margin;
     btn.margin_right = margin;
     btn.set_tooltip_text( _( "Stroke Properties" ) );
+    btn.add( mb );
+
+    add( btn );
+
+  }
+
+  /* Adds the font menubutton */
+  private void create_fonts() {
+
+    var mb = new MenuButton();
+    mb.set_tooltip_text( _( "Font Properties" ) );
+    mb.image  = new Image.from_icon_name( "font-x-generic-symbolic", IconSize.SMALL_TOOLBAR );
+    mb.relief = ReliefStyle.NONE;
+    mb.get_style_context().add_class( "color_chooser" );
+    mb.popover = new Popover( null );
+
+    var chooser = new FontChooserWidget();
+    chooser.border_width = 10;
+    chooser.font_desc    = _canvas.items.props.font;
+    chooser.set_filter_func( (family, face) => {
+      var fd     = face.describe();
+      var weight = fd.get_weight();
+      var style  = fd.get_style();
+      return( (weight == Pango.Weight.NORMAL) && (style == Pango.Style.NORMAL) );
+    });
+    chooser.notify.connect((p) => {
+      _canvas.items.props.font = Pango.FontDescription.from_string( chooser.get_font() );
+    });
+    chooser.show_all();
+
+    mb.popover.add( chooser );
+
+    var btn = new ToolItem();
+    btn.margin_left  = margin;
+    btn.margin_right = margin;
+    btn.set_tooltip_text( _( "Font Properties" ) );
     btn.add( mb );
 
     add( btn );
