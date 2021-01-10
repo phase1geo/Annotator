@@ -186,12 +186,14 @@ public class MainWindow : ApplicationWindow {
 
   }
 
+  /* Create the exports menubutton and associated menu */
   private MenuButton create_exports() {
 
     var export_btn = new MenuButton();
     export_btn.image   = new Image.from_icon_name( "document-export", IconSize.LARGE_TOOLBAR );
     export_btn.set_tooltip_text( _( "Export Image" ) );
     export_btn.popover = new Popover( null );
+    export_btn.set_sensitive( false );
 
     var box = new Box( Orientation.VERTICAL, 0 );
 
@@ -201,7 +203,7 @@ public class MainWindow : ApplicationWindow {
       btn.halign = Align.START;
       btn.text   = type.label();
       btn.clicked.connect(() => {
-        _editor.canvas.image.export_file( type );
+        _editor.canvas.image.export_image( type );
       });
       box.pack_start( btn );
     }
@@ -216,8 +218,6 @@ public class MainWindow : ApplicationWindow {
     });
     box.pack_start( clip_btn );
 
-    box.pack_start( new Separator( Orientation.HORIZONTAL ) );
-
     var print_btn = new ModelButton();
     print_btn.halign = Align.START;
     print_btn.text   = _( "Print…" );
@@ -226,10 +226,57 @@ public class MainWindow : ApplicationWindow {
     });
     box.pack_start( print_btn );
 
+    add_contracts( box );
+
     box.show_all();
     export_btn.popover.add( box );
 
     return( export_btn );
+
+  }
+
+  /* Adds the Contractor items that can operate on pixbufs */
+  private void add_contracts( Box box ) {
+
+    var contracts = Granite.Services.ContractorProxy.get_contracts_by_mime( "image/png" );
+
+    if( contracts.size > 0 ) {
+      box.pack_start( new Separator( Orientation.HORIZONTAL ) );
+    }
+
+    foreach( Granite.Services.Contract contract in contracts ) {
+      var name = contract.get_display_name();
+      if( (name != _( "Send by Email")) && (name != _( "Send files via Bluetooth" )) ) continue;
+      var ct  = contract;
+      var btn = new ModelButton();
+      btn.halign = Align.START;
+      btn.text   = contract.get_display_name();
+      btn.clicked.connect(() => {
+        run_contract( ct );
+      });
+      box.pack_start( btn );
+    }
+
+  }
+
+  /* Runs the given contract with a generated PNG file */
+  private void run_contract( Granite.Services.Contract contract ) {
+
+    try {
+
+      /* Create a filename to store the PNG image data */
+      FileIOStream iostream;
+      var file = File.new_tmp( "annotator-XXXXXX.png", out iostream );
+
+      /* Create a PNG file */
+      _editor.canvas.image.export_image( ExportType.PNG, file.get_path() );
+
+      /* Run the contract with the generated file */
+      contract.execute_with_file( file );
+
+    } catch( Error e ) {
+      stdout.printf( e.message );
+    }
 
   }
 
@@ -355,11 +402,13 @@ public class MainWindow : ApplicationWindow {
   */
   public void open_file( string filename ) {
     _editor.open_image( filename );
+    _export_btn.set_sensitive( true );
   }
 
   /* Pastes text or images to the editor */
   public void do_paste() {
     AnnotatorClipboard.paste( _editor );
+    _export_btn.set_sensitive( true );
   }
 
   private void do_save() {

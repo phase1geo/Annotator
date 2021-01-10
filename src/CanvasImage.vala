@@ -34,14 +34,14 @@ public class CanvasImage {
   private Canvas        _canvas;
   private double        _last_x     = 0;
   private double        _last_y     = 0;
-  private Exporter      _exporter;
 
-  public bool cropping { get; private set; default = false; }
+  public bool     cropping { get; private set; default = false; }
+  public Exporter exporter { get; private set; }
 
   /* Constructor */
   public CanvasImage( Canvas canvas ) {
-    _canvas   = canvas;
-    _exporter = new Exporter( canvas );
+    _canvas  = canvas;
+    exporter = new Exporter( canvas );
   }
 
   /* Returns true if the surface image has been set */
@@ -209,21 +209,21 @@ public class CanvasImage {
   }
 
   /* Exports to the given image type */
-  public void export_file( ExportType type ) {
+  public void export_image( ExportType type, string? filename = null ) {
     clean_image();
-    _exporter.export_file( _surface, type );
+    exporter.export_image( _surface, type, filename );
   }
 
   /* Exports the image to the clipboard */
   public void export_clipboard() {
     clean_image();
-    _exporter.export_clipboard( _surface );
+    exporter.export_clipboard( _surface );
   }
 
   /* Exports the image to the printer */
   public void export_print() {
     clean_image();
-    _exporter.export_print( _surface );
+    exporter.export_print( _surface );
   }
 
   /* Calculates the box for the given selector */

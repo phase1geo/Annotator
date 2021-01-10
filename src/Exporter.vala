@@ -93,10 +93,27 @@ public class Exporter {
   }
 
   /* Exports to a user chosen file */
-  public void export_file( ImageSurface source, ExportType type ) {
+  public void export_image( ImageSurface source, ExportType type, string? filename = null ) {
+
+    var fname = (filename == null) ? get_filename( type ) : filename;
+
+    /* If the user cancelled the export, return now */
+    if( fname == null ) return;
+
+    /* Perform the export */
+    switch( type ) {
+      case ExportType.PDF :  export_pdf( filename, source );  break;
+      case ExportType.SVG :  export_svg( filename, source );  break;
+      default             :  export_other( filename, source, type );  break;
+    }
+
+  }
+
+  /* Returns a filename from the user through a save dialog */
+  private string? get_filename( ExportType type ) {
 
     /* Get the file to open from the user */
-    var dialog   = new FileChooserNative( _( "Open File" ), _canvas.win, FileChooserAction.SAVE, _( "Export" ), _( "Cancel" ) );
+    var dialog   = new FileChooserNative( _( "Export Image" ), _canvas.win, FileChooserAction.SAVE, _( "Export" ), _( "Cancel" ) );
     Utils.set_chooser_folder( dialog );
 
     /* Create file filters */
@@ -106,28 +123,20 @@ public class Exporter {
     dialog.add_filter( filter );
 
     if( dialog.run() == ResponseType.ACCEPT ) {
-
       var filename = dialog.get_filename();
-
-      /* Add the extension if it is missing */
       if( !filename.has_suffix( type.extension() ) ) {
         filename += type.extension();
       }
-
-      switch( type ) {
-        case ExportType.PDF :  export_pdf( filename, source );  break;
-        case ExportType.SVG :  export_svg( filename, source );  break;
-        default             :  export_image( filename, source, type );  break;
-      }
-
       Utils.store_chooser_folder( filename );
-
+      return( filename );
     }
+
+    return( null );
 
   }
 
   /* Exports the given image type to file */
-  private void export_image( string filename, ImageSurface source, ExportType type ) {
+  private void export_other( string filename, ImageSurface source, ExportType type ) {
 
     string[] opt_keys   = {};
     string[] opt_values = {};
