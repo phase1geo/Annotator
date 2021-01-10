@@ -169,8 +169,8 @@ public class CanvasImage {
       }
       if( (box.width  >= (selector_size * 3)) &&
           (box.height >= (selector_size * 3)) &&
-          (box.width  < _buf.width) &&
-          (box.height < _buf.height) ) {
+          (box.width  <= _buf.width) &&
+          (box.height <= _buf.height) ) {
         _crop_rect.copy( box );
         return( true );
       }

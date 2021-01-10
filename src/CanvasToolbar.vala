@@ -223,22 +223,6 @@ public class CanvasToolbar : Toolbar {
 
   }
 
-  private void update_css() {
-    var provider = new CssProvider();
-    try {
-      var color    = Utils.color_to_string( _canvas.items.props.color );
-      var css_data = ".color_chooser { background: %s; }".printf( color );
-      provider.load_from_data( css_data );
-      StyleContext.add_provider_for_screen(
-        Gdk.Screen.get_default(),
-        provider,
-        STYLE_PROVIDER_PRIORITY_APPLICATION
-      );
-    } catch( GLib.Error e ) {
-      stdout.printf( "Unable to update css: %s\n", e.message );
-    }
-  }
-
   /* Adds the stroke dropdown */
   private void create_stroke() {
 
@@ -352,12 +336,28 @@ public class CanvasToolbar : Toolbar {
 
     var surface = new Cairo.ImageSurface( Cairo.Format.ARGB32, 30, 24 );
     var ctx     = new Cairo.Context( surface );
+    var stroke  = Granite.contrasting_foreground_color( _canvas.items.props.color );
 
     Utils.set_context_color_with_alpha( ctx, _canvas.items.props.color, _canvas.items.props.alpha );
     ctx.rectangle( 0, 0, 30, 24 );
-    ctx.fill();
+    ctx.fill_preserve();
+
+    Utils.set_context_color_with_alpha( ctx, stroke, 0.5 );
+    ctx.stroke();
 
     return( surface );
+
+  }
+
+  /* Returns true if the current mode is dark mode */
+  private bool is_dark_mode() {
+
+    var settings = Gtk.Settings.get_default();
+    if( settings != null ) {
+      return( settings.gtk_application_prefer_dark_theme );
+    }
+
+    return( false );
 
   }
 
@@ -368,7 +368,7 @@ public class CanvasToolbar : Toolbar {
     var ctx     = new Cairo.Context( surface );
 
     /* Draw the stroke */
-    Utils.set_context_color( ctx, Utils.color_from_string( "black" ) );
+    Utils.set_context_color( ctx, Utils.color_from_string( is_dark_mode() ? "white" : "black" ) );
     ctx.set_line_width( stroke_width );
     ctx.move_to( 0, (height / 2) );
     ctx.line_to( width, (height / 2) );
@@ -384,7 +384,7 @@ public class CanvasToolbar : Toolbar {
     var surface = new Cairo.ImageSurface( Cairo.Format.ARGB32, width, height );
     var ctx     = new Cairo.Context( surface );
 
-    Utils.set_context_color( ctx, Utils.color_from_string( "black" ) );
+    Utils.set_context_color( ctx, Utils.color_from_string( is_dark_mode() ? "white" : "black" ) );
     ctx.set_line_width( height );
     dash.set_fg_pattern( ctx );
     ctx.move_to( 0, (height / 2) );
@@ -403,7 +403,7 @@ public class CanvasToolbar : Toolbar {
     var ctx     = new Cairo.Context( surface );
 
     /* Draw the stroke */
-    Utils.set_context_color( ctx, Utils.color_from_string( "black" ) );
+    Utils.set_context_color( ctx, Utils.color_from_string( is_dark_mode() ? "white" : "black" ) );
     ctx.set_line_width( height );
     _canvas.items.props.dash.set_fg_pattern( ctx );
     ctx.move_to( 0, (height / 2) );
