@@ -56,6 +56,9 @@ public class Editor : Box {
     /* Create the toolbar */
     var toolbar = new CanvasToolbar( canvas );
     toolbar.halign = Align.CENTER;
+    canvas.image.crop_ended.connect(() => {
+      toolbar.crop_ended();
+    });
 
     var box = new Box( Orientation.HORIZONTAL, 0 );
     box.pack_start( toolbar, true, true );

@@ -25,7 +25,8 @@ public class CanvasToolbar : Toolbar {
 
   private const int margin = 5;
 
-  private Canvas _canvas;
+  private Canvas       _canvas;
+  private ToggleButton _crop_btn;
 
   /* Constructor */
   public CanvasToolbar( Canvas canvas ) {
@@ -112,18 +113,27 @@ public class CanvasToolbar : Toolbar {
   /* Create the crop button */
   private void create_crop() {
 
-    var btn = new ToolButton( null, null );
-    btn.set_tooltip_text( _( "Crop Image" ) );
-    btn.icon_name    = "image-crop-symbolic";
-    btn.margin_left  = margin;
-    btn.margin_right = margin;
-    btn.clicked.connect(() => {
-      _canvas.items.clear_selection();
-      _canvas.image.start_crop();
+    _crop_btn = new ToggleButton();
+    _crop_btn.set_tooltip_text( _( "Crop Image" ) );
+    _crop_btn.relief       = ReliefStyle.NONE;
+    _crop_btn.image        = new Image.from_icon_name( "image-crop-symbolic", IconSize.SMALL_TOOLBAR );
+    _crop_btn.margin_left  = margin;
+    _crop_btn.margin_right = margin;
+    _crop_btn.toggled.connect(() => {
+      if( !_crop_btn.active ) {
+        _canvas.image.cancel_crop();
+      } else {
+        _canvas.items.clear_selection();
+        _canvas.image.start_crop();
+      }
       _canvas.queue_draw();
+      _canvas.grab_focus();
     });
 
-    add( btn );
+    var ti = new ToolItem();
+    ti.add( _crop_btn );
+
+    add( ti );
 
   }
 
@@ -147,6 +157,23 @@ public class CanvasToolbar : Toolbar {
     });
     mb.image = new Image.from_surface( make_color_icon() );
     box.pack_start( chooser, false, false );
+
+    create_color_alpha( mb, box );
+
+    box.show_all();
+    mb.popover.add( box );
+
+    var btn = new ToolItem();
+    btn.margin_left  = margin;
+    btn.margin_right = margin;
+    btn.set_tooltip_text( _( "Item Color" ) );
+    btn.add( mb );
+
+    add( btn );
+
+  }
+
+  private void create_color_alpha( MenuButton mb, Box box ) {
 
     var ascale = new Scale.with_range( Orientation.HORIZONTAL, 0.0, 1.0, 0.1 );
     ascale.margin_left  = 20;
@@ -191,18 +218,8 @@ public class CanvasToolbar : Toolbar {
     abox.margin_top = 20;
     abox.pack_start( albox,   false, false );
     abox.pack_start( areveal, true,  true );
+
     box.pack_start( abox, true, true );
-
-    box.show_all();
-    mb.popover.add( box );
-
-    var btn = new ToolItem();
-    btn.margin_left  = margin;
-    btn.margin_right = margin;
-    btn.set_tooltip_text( _( "Item Color" ) );
-    btn.add( mb );
-
-    add( btn );
 
   }
 
@@ -405,6 +422,11 @@ public class CanvasToolbar : Toolbar {
 
     add( sep );
 
+  }
+
+  /* Called when the canvas image crop ends */
+  public void crop_ended() {
+    _crop_btn.active = false;
   }
 
 }

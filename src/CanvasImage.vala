@@ -38,6 +38,8 @@ public class CanvasImage {
   public bool     cropping { get; private set; default = false; }
   public Exporter exporter { get; private set; }
 
+  public signal void crop_ended();
+
   /* Constructor */
   public CanvasImage( Canvas canvas ) {
     _canvas  = canvas;
@@ -103,6 +105,10 @@ public class CanvasImage {
 
   }
 
+  /****************************************************************************/
+  //  EVENT HANDLERS
+  /****************************************************************************/
+
   /* Handles a keypress event */
   public bool key_pressed( uint keyval, ModifierType state ) {
 
@@ -125,7 +131,7 @@ public class CanvasImage {
     _crop_index = -1;
 
     if( cropping ) {
-      for( int i=0; i<4; i++ ) {
+      for( int i=0; i<8; i++ ) {
         selector_bbox( i, rect );
         if( rect.contains( x, y ) ) {
           _crop_index = i;
@@ -148,12 +154,17 @@ public class CanvasImage {
     _last_x = x;
     _last_y = y;
 
+    /* If we are dragging a selector box, handle the move and resize */
     if( _crop_index != -1 ) {
       switch( _crop_index ) {
-        case 0 :  box.x += diffx;  box.y += diffy;  box.width -= diffx;  box.height -= diffy;  break;
-        case 1 :                   box.y += diffy;  box.width += diffx;  box.height -= diffy;  break;
-        case 2 :  box.x += diffx;                   box.width -= diffx;  box.height += diffy;  break;
-        case 3 :                                    box.width += diffx;  box.height += diffy;  break;
+        case 0  :  box.x += diffx;  box.y += diffy;  box.width -= diffx;  box.height -= diffy;  break;
+        case 1  :                   box.y += diffy;  box.width += diffx;  box.height -= diffy;  break;
+        case 2  :  box.x += diffx;                   box.width -= diffx;  box.height += diffy;  break;
+        case 3  :                                    box.width += diffx;  box.height += diffy;  break;
+        case 4  :                   box.y += diffy;                       box.height -= diffy;  break;
+        case 5  :                                                         box.height += diffy;  break;
+        case 6  :  box.x += diffx;                   box.width -= diffx;                        break;
+        case 7  :                                    box.width += diffx;                        break;
         default :  assert_not_reached();
       }
       if( (box.width  >= (selector_size * 3)) &&
@@ -163,6 +174,26 @@ public class CanvasImage {
         _crop_rect.copy( box );
         return( true );
       }
+
+    /* If we are hovering over a crop selector, change the cursor */
+    } else {
+      var rect = new CanvasRect();
+      for( int i=0; i<8; i++ ) {
+        selector_bbox( i, rect );
+        if( rect.contains( x, y ) ) {
+          switch( i ) {
+            case 0 :  _canvas.set_cursor( CursorType.UL_ANGLE );     return( false );
+            case 1 :  _canvas.set_cursor( CursorType.UR_ANGLE );     return( false );
+            case 2 :  _canvas.set_cursor( CursorType.LL_ANGLE );     return( false );
+            case 3 :  _canvas.set_cursor( CursorType.LR_ANGLE );     return( false );
+            case 4 :  _canvas.set_cursor( CursorType.TOP_SIDE );     return( false );
+            case 5 :  _canvas.set_cursor( CursorType.BOTTOM_SIDE );  return( false );
+            case 6 :  _canvas.set_cursor( CursorType.LEFT_SIDE );    return( false );
+            case 7 :  _canvas.set_cursor( CursorType.RIGHT_SIDE );   return( false );
+          }
+        }
+      }
+      _canvas.set_cursor( null );
     }
 
     return( false );
@@ -173,6 +204,7 @@ public class CanvasImage {
   public bool cursor_released( double x, double y, ModifierType state ) {
 
     _crop_index = -1;
+    _canvas.set_cursor( null );
 
     return( false );
 
@@ -188,6 +220,7 @@ public class CanvasImage {
   public bool cancel_crop() {
     cropping = false;
     _canvas.queue_draw();
+    crop_ended();
     return( true );
   }
 
@@ -198,6 +231,7 @@ public class CanvasImage {
     set_image( buf );
     _canvas.items.adjust_items( _crop_rect.x, _crop_rect.y );
     _canvas.queue_draw();
+    crop_ended();
     return( true );
   }
 
@@ -228,10 +262,30 @@ public class CanvasImage {
 
   /* Calculates the box for the given selector */
   private void selector_bbox( int index, CanvasRect rect ) {
-    rect.x      = ((index & 1) == 0) ? _crop_rect.x1() : (_crop_rect.x2() - selector_size);
-    rect.y      = ((index & 2) == 0) ? _crop_rect.y1() : (_crop_rect.y2() - selector_size);
+
+    switch( index ) {
+      case 0 :  // UL
+      case 1 :  // UR
+      case 2 :  // LL
+      case 3 :  // LR
+        rect.x = ((index & 1) == 0) ? _crop_rect.x1() : (_crop_rect.x2() - selector_size);
+        rect.y = ((index & 2) == 0) ? _crop_rect.y1() : (_crop_rect.y2() - selector_size);
+        break;
+      case 4 :  // TOP
+      case 5 :  // BOTTOM
+        rect.x = _crop_rect.mid_x() - (selector_size / 2);
+        rect.y = (index == 4) ? _crop_rect.y1() : (_crop_rect.y2() - selector_size);
+        break;
+      case 6 :  // LEFT
+      case 7 :  // RIGHT
+        rect.x = (index == 6) ? _crop_rect.x1() : (_crop_rect.x2() - selector_size);
+        rect.y = _crop_rect.mid_y() - (selector_size / 2);
+        break;
+    }
+
     rect.width  = selector_size;
     rect.height = selector_size;
+
   }
 
   /* Draw the image being annotated */
@@ -270,7 +324,7 @@ public class CanvasImage {
     var black = Utils.color_from_string( "black" );
     var rect  = new CanvasRect();
 
-    for( int i=0; i<4; i++ ) {
+    for( int i=0; i<8; i++ ) {
 
       selector_bbox( i, rect );
 
