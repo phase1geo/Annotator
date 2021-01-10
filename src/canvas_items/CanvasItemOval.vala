@@ -108,9 +108,10 @@ public class CanvasItemOval : CanvasItem {
     } else {
       var a     = (bbox.width < bbox.height) ? bbox.height : bbox.width;
       var b     = (bbox.width < bbox.height) ? bbox.width  : bbox.height;
-      var adj   = props.stroke_width / 2;
-      var outer = Utils.is_within_oval( x, y, bbox.mid_x(), bbox.mid_y(), ((a + props.stroke_width) / 2), ((b + props.stroke_width) / 2) );
-      var inner = Utils.is_within_oval( x, y, bbox.mid_x(), bbox.mid_y(), ((a - props.stroke_width) / 2), ((b - props.stroke_width) / 2) );
+      var sw    = props.stroke_width.width();
+      var adj   = sw / 2;
+      var outer = Utils.is_within_oval( x, y, bbox.mid_x(), bbox.mid_y(), ((a + sw) / 2), ((b + sw) / 2) );
+      var inner = Utils.is_within_oval( x, y, bbox.mid_x(), bbox.mid_y(), ((a - sw) / 2), ((b - sw) / 2) );
       return( outer && !inner );
     }
   }
@@ -159,18 +160,19 @@ public class CanvasItemOval : CanvasItem {
 
     } else {
 
+      var sw = props.stroke_width.width();
+
       Utils.set_context_color_with_alpha( ctx, outline, 0.5 );
-      ctx.set_line_width( props.stroke_width + 2 );
+      ctx.set_line_width( sw + 2 );
       props.dash.set_bg_pattern( ctx );
       ctx.stroke_preserve();
 
       Utils.set_context_color( ctx, props.color );
-      ctx.set_line_width( props.stroke_width );
+      ctx.set_line_width( sw );
       props.dash.set_fg_pattern( ctx );
       ctx.stroke();
 
     }
-
 
   }
 

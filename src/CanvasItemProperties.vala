@@ -23,6 +23,44 @@ using Gtk;
 using Gdk;
 using Cairo;
 
+public enum CanvasItemStrokeWidth {
+  WIDTH1,
+  WIDTH2,
+  WIDTH3,
+  WIDTH4,
+  NUM;
+
+  public int width() {
+    switch( this ) {
+      case WIDTH1 :  return( 6 );
+      case WIDTH2 :  return( 10 );
+      case WIDTH3 :  return( 14 );
+      case WIDTH4 :  return( 18 );
+      default     :  assert_not_reached();
+    }
+  }
+
+  public string to_string() {
+    switch( this ) {
+      case WIDTH1 :  return( "width1" );
+      case WIDTH2 :  return( "width2" );
+      case WIDTH3 :  return( "width3" );
+      case WIDTH4 :  return( "width4" );
+      default     :  assert_not_reached();
+    }
+  }
+
+  public static CanvasItemStrokeWidth parse( string value ) {
+    switch( value ) {
+      case "width1" :  return( WIDTH1 );
+      case "width2" :  return( WIDTH2 );
+      case "width3" :  return( WIDTH3 );
+      case "width4" :  return( WIDTH4 );
+      default       :  return( WIDTH1 );
+    }
+  }
+}
+
 public enum CanvasItemDashPattern {
   NONE,
   SHORT,
@@ -45,7 +83,7 @@ public enum CanvasItemDashPattern {
       case "none"  :  return( NONE );
       case "short" :  return( SHORT );
       case "long"  :  return( LONG );
-      default      :  assert_not_reached();
+      default      :  return( NONE );
     }
   }
 
@@ -55,6 +93,7 @@ public enum CanvasItemDashPattern {
       case NONE  :  ctx.set_dash( {},      0 );  break;
       case SHORT :  ctx.set_dash( { 7, 3}, 0 );  break;
       case LONG  :  ctx.set_dash( {12, 8}, 0 );  break;
+      default    :  assert_not_reached();
     }
   }
 
@@ -64,6 +103,7 @@ public enum CanvasItemDashPattern {
       case NONE  :  ctx.set_dash( {},        0 );  break;
       case SHORT :  ctx.set_dash( { 5,  5}, -1 );  break;
       case LONG  :  ctx.set_dash( {10, 10}, -1 );  break;
+      default    :  assert_not_reached();
     }
   }
 }
@@ -71,8 +111,9 @@ public enum CanvasItemDashPattern {
 /* Structure containing formatting properties used by canvas items */
 public class CanvasItemProperties {
 
+  private bool                  _use_settings = false;
   private RGBA                  _color        = Utils.color_from_string( "black" );
-  private int                   _stroke_width = 4;
+  private CanvasItemStrokeWidth _stroke_width = CanvasItemStrokeWidth.WIDTH1;
   private CanvasItemDashPattern _dash         = CanvasItemDashPattern.NONE;
   private int                   _blur_radius  = 10;
 
@@ -83,17 +124,23 @@ public class CanvasItemProperties {
     set {
       if( !_color.equal( value ) ) {
         _color = value;
+        if( _use_settings ) {
+          Annotator.settings.set_string( "item-color", Utils.color_to_string( _color ) );
+        }
         changed();
       }
     }
   }
-  public int stroke_width {
+  public CanvasItemStrokeWidth stroke_width {
     get {
       return( _stroke_width );
     }
     set {
       if( _stroke_width != value ) {
         _stroke_width = value;
+        if( _use_settings ) {
+          Annotator.settings.set_string( "stroke-width", _stroke_width.to_string() );
+        }
         changed();
       }
     }
@@ -105,6 +152,9 @@ public class CanvasItemProperties {
     set {
       if( _dash != value ) {
         _dash = value;
+        if( _use_settings ) {
+          Annotator.settings.set_string( "dash-pattern", dash.to_string() );
+        }
         changed();
       }
     }
@@ -116,6 +166,9 @@ public class CanvasItemProperties {
     set {
       if( _blur_radius != value ) {
         _blur_radius = value;
+        if( _use_settings ) {
+          Annotator.settings.set_int( "blur-radius", _blur_radius );
+        }
         changed();
       }
     }
@@ -124,22 +177,23 @@ public class CanvasItemProperties {
   public signal void changed();
 
   /* Default constructor */
-  public CanvasItemProperties() {}
-
-  /* Constructor */
-  public CanvasItemProperties.initialize( RGBA c, int sw, CanvasItemDashPattern d, int br ) {
-    color        = c;
-    stroke_width = sw;
-    dash         = d;
-    blur_radius  = br;
+  public CanvasItemProperties( bool use_settings = false ) {
+    _use_settings = use_settings;
+    if( _use_settings ) {
+      _color        = Utils.color_from_string( Annotator.settings.get_string( "item-color" ) );
+      _stroke_width = CanvasItemStrokeWidth.parse( Annotator.settings.get_string( "stroke-width" ) );
+      _dash         = CanvasItemDashPattern.parse( Annotator.settings.get_string( "dash-pattern" ) );
+      _blur_radius  = Annotator.settings.get_int( "blur-radius" );
+    }
   }
 
   /* Copies the properties to this class */
   public void copy( CanvasItemProperties props ) {
-    color        = props.color;
-    stroke_width = props.stroke_width;
-    dash         = props.dash;
-    blur_radius  = props.blur_radius;
+    _use_settings = props._use_settings;
+    color         = props.color;
+    stroke_width  = props.stroke_width;
+    dash          = props.dash;
+    blur_radius   = props.blur_radius;
   }
 
   /* Saves the contents of this properties class as XML */
@@ -160,7 +214,7 @@ public class CanvasItemProperties {
     }
     var sw = node->get_prop( "stroke-width" );
     if( sw != null ) {
-      stroke_width = int.parse( sw );
+      stroke_width = CanvasItemStrokeWidth.parse( sw );
     }
     var d = node->get_prop( "dash" );
     if( d != null ) {

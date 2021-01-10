@@ -31,6 +31,26 @@
       <summary>Default font size</summary>
       <description>Default font size to use for the editor.</description>
     </key>
+    <key name="item-color" type="s">
+      <default>"#000000"</default>
+      <summary>Last used item color</summary>
+      <description>Last used item color displayed in toolbar.</description>
+    </key>
+    <key name="stroke-width" type="s">
+      <default>"width1"</default>
+      <summary>Last used stroke width</summary>
+      <description>Last used stroke width displayed in toolbar.  Valid values are "width1", "width2", "width3", "width4".</description>
+    </key>
+    <key name="dash-pattern" type="s">
+      <default>"none"</default>
+      <summary>Last used stroke dash pattern</summary>
+      <description>Last used stroke dash pattern displayed in toolbar.  Valid values are "none", "short", "long".</description>
+    </key>
+    <key name="blur-radius" type="i">
+      <default>20</default>
+      <summary>Last used blur radius</summary>
+      <description>Last used blur radius displayed in toolbar.</description>
+    </key>
     <key name="last-directory" type="s">
       <default>""</default>
       <summary>Last opened/saved directory.</summary>

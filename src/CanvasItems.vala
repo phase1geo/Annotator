@@ -58,7 +58,7 @@ public class CanvasItems {
     _items = new List<CanvasItem>();
 
     /* Create the overall properties structure */
-    props = new CanvasItemProperties();
+    props = new CanvasItemProperties( true );
     props.changed.connect( update_selected_attributes );
 
     /* Load the shapes */

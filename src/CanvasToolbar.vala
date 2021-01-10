@@ -192,14 +192,14 @@ public class CanvasToolbar : Toolbar {
     box.pack_start( width_title, false, false, 5 );
 
     unowned RadioButton? width_group = null;
-    for( int i=1; i<=4; i++ ) {
-      var width = i * _canvas.items.props.stroke_width;
-      var btn   = new Gtk.RadioButton.from_widget( width_group );
+    for( int i=0; i<CanvasItemStrokeWidth.NUM; i++ ) {
+      var sw  = (CanvasItemStrokeWidth)i;
+      var btn = new Gtk.RadioButton.from_widget( width_group );
       btn.margin_left = 20;
-      btn.add( new Image.from_surface( make_width_icon( 100, width ) ) );
+      btn.add( new Image.from_surface( make_width_icon( 100, sw.width() ) ) );
       btn.toggled.connect(() => {
         if( btn.get_active() ) {
-          _canvas.items.props.stroke_width = width;
+          _canvas.items.props.stroke_width = sw;
           mb.image = new Image.from_surface( make_stroke_icon() );
         }
       });
@@ -297,13 +297,13 @@ public class CanvasToolbar : Toolbar {
   private Cairo.Surface make_stroke_icon() {
 
     var width   = 50;
-    var height  = _canvas.items.props.stroke_width;
+    var height  = _canvas.items.props.stroke_width.width();
     var surface = new Cairo.ImageSurface( Cairo.Format.ARGB32, width, height );
     var ctx     = new Cairo.Context( surface );
 
     /* Draw the stroke */
     Utils.set_context_color( ctx, Utils.color_from_string( "black" ) );
-    ctx.set_line_width( _canvas.items.props.stroke_width );
+    ctx.set_line_width( height );
     _canvas.items.props.dash.set_fg_pattern( ctx );
     ctx.move_to( 0, (height / 2) );
     ctx.line_to( width, (height / 2) );

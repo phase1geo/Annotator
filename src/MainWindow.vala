@@ -210,6 +210,7 @@ public class MainWindow : ApplicationWindow {
 
     box.pack_start( new Separator( Orientation.HORIZONTAL ) );
 
+    /* Copy to clipboard option */
     var clip_btn = new ModelButton();
     clip_btn.halign = Align.START;
     clip_btn.text   = _( "Copy To Clipboard" );
@@ -218,6 +219,7 @@ public class MainWindow : ApplicationWindow {
     });
     box.pack_start( clip_btn );
 
+    /* Print option */
     var print_btn = new ModelButton();
     print_btn.halign = Align.START;
     print_btn.text   = _( "Print…" );
@@ -226,6 +228,7 @@ public class MainWindow : ApplicationWindow {
     });
     box.pack_start( print_btn );
 
+    /* Add contracts */
     add_contracts( box );
 
     box.show_all();
