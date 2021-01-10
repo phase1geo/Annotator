@@ -818,12 +818,12 @@ public class CanvasItemText : CanvasItem {
   public override void draw_item( Cairo.Context ctx ) {
 
     var layout = _pango_layout;
-
-    var fd = _pango_layout.get_font_description();
+    var fd     = _pango_layout.get_font_description();
+    var alpha  = mode.alpha( props.alpha );
 
     /* Output the text */
     ctx.move_to( bbox.x, bbox.y );
-    Utils.set_context_color( ctx, props.color );
+    Utils.set_context_color_with_alpha( ctx, props.color, alpha );
     Pango.cairo_show_layout( ctx, layout );
     ctx.new_path();
 
@@ -835,14 +835,16 @@ public class CanvasItemText : CanvasItem {
 
     if( mode == CanvasItemMode.SELECTED ) {
 
+      var dash = CanvasItemDashPattern.LONG;
+
       Utils.set_context_color( ctx, Granite.contrasting_foreground_color( props.color ) );
-      props.dash.set_bg_pattern( ctx );
+      dash.set_bg_pattern( ctx );
       ctx.set_line_width( 8 );
       ctx.rectangle( x, y, w, h );
       ctx.stroke();
 
       Utils.set_context_color( ctx, props.color );
-      props.dash.set_fg_pattern( ctx );
+      dash.set_fg_pattern( ctx );
       ctx.set_line_width( 4 );
       ctx.rectangle( x, y, w, h );
       ctx.stroke();

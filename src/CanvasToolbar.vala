@@ -136,17 +136,65 @@ public class CanvasToolbar : Toolbar {
     mb.get_style_context().add_class( "color_chooser" );
     mb.popover = new Popover( null );
 
+    var box = new Box( Orientation.VERTICAL, 0 );
+    box.border_width = 10;
+
     var chooser = new ColorChooserWidget();
-    chooser.border_width = 10;
     chooser.rgba = _canvas.items.props.color;
     chooser.notify.connect((p) => {
       _canvas.items.props.color = chooser.rgba;
       mb.image = new Image.from_surface( make_color_icon() );
     });
     mb.image = new Image.from_surface( make_color_icon() );
-    chooser.show_all();
+    box.pack_start( chooser, false, false );
 
-    mb.popover.add( chooser );
+    var ascale = new Scale.with_range( Orientation.HORIZONTAL, 0.0, 1.0, 0.1 );
+    ascale.margin_left  = 20;
+    ascale.margin_right = 20;
+    ascale.draw_value   = true;
+    ascale.set_value( _canvas.items.props.alpha );
+    ascale.value_changed.connect(() => {
+      _canvas.items.props.alpha = ascale.get_value();
+      mb.image = new Image.from_surface( make_color_icon() );
+    });
+    ascale.format_value.connect((value) => {
+      return( "%d%%".printf( (int)(value * 100) ) );
+    });
+    for( int i=0; i<=10; i++ ) {
+      ascale.add_mark( (i / 10.0), PositionType.BOTTOM, null );
+    }
+
+    var areveal = new Revealer();
+    areveal.reveal_child = (_canvas.items.props.alpha < 1.0);
+    areveal.add( ascale );
+
+    var asw = new Switch();
+    asw.halign = Align.START;
+    asw.set_active( _canvas.items.props.alpha < 1.0 );
+    asw.button_release_event.connect((e) => {
+      _canvas.items.props.alpha = areveal.reveal_child ? 1.0 : ascale.get_value();
+      mb.image = new Image.from_surface( make_color_icon() );
+      areveal.reveal_child = !areveal.reveal_child;
+      return( false );
+    });
+
+    var albl = new Label( Utils.make_title( _( "Add Transparency" ) ) );
+    albl.halign       = Align.START;
+    albl.use_markup   = true;
+    albl.margin_right = 10;
+
+    var albox = new Box( Orientation.HORIZONTAL, 10 );
+    albox.pack_start( asw,  false, false );
+    albox.pack_start( albl, false, false );
+
+    var abox = new Box( Orientation.VERTICAL, 0 );
+    abox.margin_top = 20;
+    abox.pack_start( albox,   false, false );
+    abox.pack_start( areveal, true,  true );
+    box.pack_start( abox, true, true );
+
+    box.show_all();
+    mb.popover.add( box );
 
     var btn = new ToolItem();
     btn.margin_left  = margin;
@@ -288,7 +336,7 @@ public class CanvasToolbar : Toolbar {
     var surface = new Cairo.ImageSurface( Cairo.Format.ARGB32, 30, 24 );
     var ctx     = new Cairo.Context( surface );
 
-    Utils.set_context_color( ctx, _canvas.items.props.color );
+    Utils.set_context_color_with_alpha( ctx, _canvas.items.props.color, _canvas.items.props.alpha );
     ctx.rectangle( 0, 0, 30, 24 );
     ctx.fill();
 

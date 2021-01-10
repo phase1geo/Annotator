@@ -139,8 +139,9 @@ public class CanvasItemOval : CanvasItem {
     var scale_height = (bbox.width < bbox.height) ? 1.0 : (bbox.height / bbox.width);
     var radius       = (bbox.width < bbox.height) ? (bbox.height / 2.0) : (bbox.width / 2.0);
     var outline      = Granite.contrasting_foreground_color( props.color );
+    var alpha        = mode.alpha( props.alpha );
 
-    Utils.set_context_color_with_alpha( ctx, props.color, (_fill ? mode.alpha() : 1.0) );
+    Utils.set_context_color_with_alpha( ctx, props.color, alpha );
 
     var save_matrix = ctx.get_matrix();
     ctx.translate( bbox.mid_x(), bbox.mid_y() );
@@ -167,7 +168,7 @@ public class CanvasItemOval : CanvasItem {
       props.dash.set_bg_pattern( ctx );
       ctx.stroke_preserve();
 
-      Utils.set_context_color( ctx, props.color );
+      Utils.set_context_color_with_alpha( ctx, props.color, alpha );
       ctx.set_line_width( sw );
       props.dash.set_fg_pattern( ctx );
       ctx.stroke();

@@ -131,12 +131,13 @@ public class CanvasItemRect : CanvasItem {
   public override void draw_item( Context ctx ) {
 
     var outline = Granite.contrasting_foreground_color( props.color );
+    var alpha   = mode.alpha( props.alpha );
 
     ctx.rectangle( bbox.x, bbox.y, bbox.width, bbox.height );
 
     if( _fill ) {
 
-      Utils.set_context_color_with_alpha( ctx, props.color, mode.alpha() );
+      Utils.set_context_color_with_alpha( ctx, props.color, alpha );
       ctx.fill_preserve();
 
       Utils.set_context_color_with_alpha( ctx, outline, 0.5 );
@@ -152,7 +153,7 @@ public class CanvasItemRect : CanvasItem {
       props.dash.set_bg_pattern( ctx );
       ctx.stroke_preserve();
 
-      Utils.set_context_color( ctx, props.color );
+      Utils.set_context_color_with_alpha( ctx, props.color, alpha );
       ctx.set_line_width( sw );
       props.dash.set_fg_pattern( ctx );
       ctx.stroke();

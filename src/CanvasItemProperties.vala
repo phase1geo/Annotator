@@ -114,6 +114,7 @@ public class CanvasItemProperties {
 
   private bool                  _use_settings = false;
   private RGBA                  _color        = Utils.color_from_string( "black" );
+  private double                _alpha        = 1.0;
   private CanvasItemStrokeWidth _stroke_width = CanvasItemStrokeWidth.WIDTH1;
   private CanvasItemDashPattern _dash         = CanvasItemDashPattern.NONE;
   private int                   _blur_radius  = 10;
@@ -128,6 +129,20 @@ public class CanvasItemProperties {
         _color = value;
         if( _use_settings ) {
           Annotator.settings.set_string( "item-color", Utils.color_to_string( _color ) );
+        }
+        changed();
+      }
+    }
+  }
+  public double alpha {
+    get {
+      return( _alpha );
+    }
+    set {
+      if( _alpha != value ) {
+        _alpha = value;
+        if( _use_settings ) {
+          Annotator.settings.set_double( "item-alpha", _alpha );
         }
         changed();
       }
@@ -197,6 +212,7 @@ public class CanvasItemProperties {
     _use_settings = use_settings;
     if( _use_settings ) {
       _color        = Utils.color_from_string( Annotator.settings.get_string( "item-color" ) );
+      _alpha        = Annotator.settings.get_double( "item-alpha" );
       _stroke_width = CanvasItemStrokeWidth.parse( Annotator.settings.get_string( "stroke-width" ) );
       _dash         = CanvasItemDashPattern.parse( Annotator.settings.get_string( "dash-pattern" ) );
       _blur_radius  = Annotator.settings.get_int( "blur-radius" );
@@ -210,6 +226,7 @@ public class CanvasItemProperties {
   public void copy( CanvasItemProperties props ) {
     _use_settings = props._use_settings;
     color         = props.color;
+    alpha         = props.alpha;
     stroke_width  = props.stroke_width;
     dash          = props.dash;
     blur_radius   = props.blur_radius;
@@ -220,6 +237,7 @@ public class CanvasItemProperties {
   public Xml.Node* save() {
     Xml.Node* node = new Xml.Node( null, "properties" );
     node->set_prop( "color",        Utils.color_to_string( color ) );
+    node->set_prop( "alpha",        alpha.to_string() );
     node->set_prop( "stroke-width", stroke_width.to_string() );
     node->set_prop( "dash",         dash.to_string() );
     node->set_prop( "blur-radius",  blur_radius.to_string() );
@@ -232,6 +250,10 @@ public class CanvasItemProperties {
     var c = node->get_prop( "color" );
     if( c != null ) {
       color.parse( c );
+    }
+    var a = node->get_prop( "alpha" );
+    if( a != null ) {
+      alpha = double.parse( a );
     }
     var sw = node->get_prop( "stroke-width" );
     if( sw != null ) {

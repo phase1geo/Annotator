@@ -142,18 +142,19 @@ public class CanvasItemLine : CanvasItem {
   /* Draw the rectangle */
   public override void draw_item( Context ctx ) {
 
+    var alpha   = mode.alpha( props.alpha );
     var outline = Granite.contrasting_foreground_color( props.color );
     var sw      = props.stroke_width.width();
 
     /* Draw the outline */
-    Utils.set_context_color_with_alpha( ctx, outline, 0.5 );
+    Utils.set_context_color_with_alpha( ctx, outline, (alpha / 2) );
     ctx.set_line_width( sw + 2 );
     props.dash.set_bg_pattern( ctx );
     ctx.move_to( points.index( 0 ).x, points.index( 0 ).y );
     ctx.line_to( points.index( 1 ).x, points.index( 1 ).y );
     ctx.stroke_preserve();
 
-    Utils.set_context_color_with_alpha( ctx, props.color, mode.alpha() );
+    Utils.set_context_color_with_alpha( ctx, props.color, alpha );
     ctx.set_line_width( sw );
     props.dash.set_fg_pattern( ctx );
     ctx.stroke();

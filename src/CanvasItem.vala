@@ -60,8 +60,8 @@ public enum CanvasItemMode {
   }
 
   /* Returns the alpha value to use for drawing an item based on the current mode */
-  public double alpha() {
-    return( ((this == MOVING) || (this == RESIZING)) ? 0.5 : 1.0 );
+  public double alpha( double dflt = 1.0 ) {
+    return( ((this == MOVING) || (this == RESIZING)) ? (dflt * 0.5) : dflt );
   }
 
   /* Returns true if the canvas item should display the selectors */

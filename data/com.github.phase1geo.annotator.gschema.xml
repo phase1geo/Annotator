@@ -36,6 +36,11 @@
       <summary>Last used item color</summary>
       <description>Last used item color displayed in toolbar.</description>
     </key>
+    <key name="item-alpha" type="d">
+      <default>1.0</default>
+      <summary>Alpha value to use with item-color</summary>
+      <description>Last used item color alpha value displayed in toolbar.</description>
+    </key>
     <key name="stroke-width" type="s">
       <default>"width1"</default>
       <summary>Last used stroke width</summary>
