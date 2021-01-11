@@ -1,5 +1,8 @@
 sources += files(
 
+    'UndoItemAdd.vala',
+    'UndoItemBoxChange.vala',
+    'UndoItemDelete.vala',
     'UndoTextClearTags.vala',
     'UndoTextCommit.vala',
     'UndoTextDelete.vala',

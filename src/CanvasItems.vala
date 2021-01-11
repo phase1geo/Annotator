@@ -127,6 +127,12 @@ public class CanvasItems {
     return( item );
   }
 
+  public void add_item( CanvasItem item, int position ) {
+    clear_selection();
+    item.mode = CanvasItemMode.SELECTED;
+    _items.insert( item, position );
+  }
+
   /* Adds the given shape to the top of the item stack */
   public void add_shape_item( CanvasItemType type ) {
     CanvasItem? item = null;
@@ -141,9 +147,8 @@ public class CanvasItems {
       case CanvasItemType.BLUR         :  item = create_blur();  break;
       default :  assert_not_reached();
     }
-    clear_selection();
-    item.mode = CanvasItemMode.SELECTED;
-    _items.append( item );
+    add_item( item, -1 );
+    _canvas.undo_buffer.add_item( new UndoItemAdd( item, (int)(_items.length() - 1) ) );
     _canvas.queue_draw();
   }
 
@@ -155,15 +160,27 @@ public class CanvasItems {
     _canvas.queue_draw();
   }
 
+  /* Removes the item at the given position */
+  public void remove_item( CanvasItem item ) {
+    _items.remove( item );
+  }
+
   /* Deletes all of the selected items */
   private bool remove_selected() {
-    var retval = false;
+    var retval    = false;
+    var position  = 0;
+    var undo_item = new UndoItemDelete();
     for( unowned List<CanvasItem> item=_items.first(); item!=null; item=item.next ) {
       if( item.data.mode == CanvasItemMode.SELECTED ) {
+        undo_item.add( item.data, position );
         _items.delete_link( item );
         _canvas.set_cursor( null );
         retval = true;
       }
+      position++;
+    }
+    if( retval ) {
+      _canvas.undo_buffer.add_item( undo_item );
     }
     return( retval );
   }
@@ -452,7 +469,7 @@ public class CanvasItems {
 
     /* Otherwise, move any selected items by the given amount */
     } else if( (_active != null) && !in_edit_mode() ) {
-      var retval = false;
+      var retval    = false;
       foreach( CanvasItem item in _items ) {
         if( item.mode.can_move() ) {
           item.move_item( diff_x, diff_y );
@@ -497,6 +514,7 @@ public class CanvasItems {
 
     /* If we are finished dragging the selector, clear it */
     if( _selector_index != -1 ) {
+      _canvas.undo_buffer.add_item( new UndoItemBoxChange.with_item( _( "resize item" ), _active ) );
       _selector_index = -1;
       _active.mode    = CanvasItemMode.SELECTED;
       _active         = null;
@@ -508,11 +526,16 @@ public class CanvasItems {
 
     /* If we were move one or more items, make sure that they stay selected */
     } else if( _active != null ) {
+      var undo_item = new UndoItemBoxChange( _( "move items" ) );
       foreach( CanvasItem item in _items ) {
         if( item.mode == CanvasItemMode.MOVING ) {
+          undo_item.add( item );
           item.mode = CanvasItemMode.SELECTED;
           retval = true;
         }
+      }
+      if( retval ) {
+        _canvas.undo_buffer.add_item( undo_item );
       }
 
     /* If we have not clicked/moved anything important, clear the selection */

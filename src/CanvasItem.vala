@@ -73,13 +73,14 @@ public enum CanvasItemMode {
 
 public class CanvasItem {
 
-  private CanvasRect     _bbox = new CanvasRect();
-  private CanvasItemMode _mode = CanvasItemMode.NONE;
+  private CanvasRect     _bbox      = new CanvasRect();
+  private CanvasRect     _last_bbox = new CanvasRect();
+  private CanvasItemMode _mode      = CanvasItemMode.NONE;
 
   protected Array<CanvasPoint> points { get; set; default = new Array<CanvasPoint>(); }
   protected double             selector_size = 10;
 
-  public string name { get; private set; default = "unknown"; }
+  public string name    { get; private set; default = "unknown"; }
   public CanvasRect bbox {
     get {
       return( _bbox );
@@ -89,6 +90,11 @@ public class CanvasItem {
       bbox_changed();
     }
   }
+  public CanvasRect last_bbox {
+    get {
+      return( _last_bbox );
+    }
+  }
   public CanvasItemMode mode {
     get {
       return( _mode );
@@ -96,6 +102,9 @@ public class CanvasItem {
     set {
       if( _mode != value ) {
         _mode = value;
+        if( _mode.moving() ) {
+          _last_bbox.copy( bbox );
+        }
         mode_changed();
       }
     }

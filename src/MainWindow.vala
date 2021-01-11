@@ -30,6 +30,8 @@ public class MainWindow : ApplicationWindow {
   private HeaderBar         _header;
   private FontButton        _font;
   private Button            _open_btn;
+  private Button            _undo_btn;
+  private Button            _redo_btn;
   private MenuButton        _export_btn;
   private Box               _box;
   private Editor            _editor;
@@ -91,12 +93,12 @@ public class MainWindow : ApplicationWindow {
 
   /* Adds keyboard shortcuts for the menu actions */
   private void add_keyboard_shortcuts( Gtk.Application app ) {
-    app.set_accels_for_action( "win.action_open",       { "<Control>o" } );
-    app.set_accels_for_action( "win.action_save",       { "<Control>s" } );
-    app.set_accels_for_action( "win.action_quit",       { "<Control>q" } );
-    app.set_accels_for_action( "win.action_undo",       { "<Control>z" } );
-    app.set_accels_for_action( "win.action_redo",       { "<Control><Shift>z" } );
-    app.set_accels_for_action( "win.action_paste",      { "<Control>v" } );
+    app.set_accels_for_action( "win.action_open",  { "<Control>o" } );
+    app.set_accels_for_action( "win.action_save",  { "<Control>s" } );
+    app.set_accels_for_action( "win.action_quit",  { "<Control>q" } );
+    app.set_accels_for_action( "win.action_undo",  { "<Control>z" } );
+    app.set_accels_for_action( "win.action_redo",  { "<Control><Shift>z" } );
+    app.set_accels_for_action( "win.action_paste", { "<Control>v" } );
   }
 
   /* Handles any changes to the dark mode preference gsettings for the desktop */
@@ -164,6 +166,7 @@ public class MainWindow : ApplicationWindow {
     _copy_btn.set_tooltip_markup( Utils.tooltip_with_accel( _( "Copy All" ), "<Shift><Control>c" ) );
     _copy_btn.clicked.connect( do_copy_all );
     _header.pack_start( _copy_btn );
+    */
 
     _undo_btn = new Button.from_icon_name( "edit-undo", IconSize.LARGE_TOOLBAR );
     _undo_btn.set_tooltip_markup( Utils.tooltip_with_accel( _( "Undo" ), "<Control>z" ) );
@@ -176,7 +179,6 @@ public class MainWindow : ApplicationWindow {
     _redo_btn.set_sensitive( false );
     _redo_btn.clicked.connect( do_redo );
     _header.pack_start( _redo_btn );
-    */
 
     _export_btn = create_exports();
     _header.pack_end( _export_btn );
@@ -427,18 +429,14 @@ public class MainWindow : ApplicationWindow {
 
   /* Performs an undo operation */
   private void do_undo() {
-    /* TBD
-    _editor.undo_buffer.undo();
-    _editor.grab_focus();
-    */
+    _editor.canvas.undo_buffer.undo();
+    _editor.canvas.grab_focus();
   }
 
   /* Performs a redo operation */
   private void do_redo() {
-    /* TBD
-    _editor.undo_buffer.redo();
-    _editor.grab_focus();
-    */
+    _editor.canvas.undo_buffer.redo();
+    _editor.canvas.grab_focus();
   }
 
   /* Generate a notification */
