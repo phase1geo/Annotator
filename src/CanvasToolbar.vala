@@ -37,6 +37,7 @@ public class CanvasToolbar : Toolbar {
     create_text();
     create_blur();
     create_crop();
+    create_resize();
     create_separator();
     create_color();
     create_stroke();
@@ -49,24 +50,32 @@ public class CanvasToolbar : Toolbar {
   /* Creates the shape toolbar item */
   private void create_shapes() {
 
-    var mb    = new MenuButton();
+    var mb = new MenuButton();
     mb.set_tooltip_text( _( "Shapes" ) );
-    mb.image  = _canvas.items.get_shape_icon( 0 );
-    mb.relief = ReliefStyle.NONE;
-    mb.popup  = new Gtk.Menu();
+    mb.image   = _canvas.items.get_shape_icon( 0 );
+    mb.relief  = ReliefStyle.NONE;
+
+    var grid = new Grid();
+    grid.border_width = 5;
 
     for( int i=0; i<_canvas.items.num_shapes(); i++ ) {
-      var menu_item  = new Gtk.MenuItem();
+      var btn        = new Button();
       var shape_type = (CanvasItemType)i;
-      menu_item.activate.connect(() => {
+      btn.image  = _canvas.items.get_shape_icon( i );
+      btn.relief = ReliefStyle.NONE;
+      btn.margin = 5;
+      btn.clicked.connect(() => {
         _canvas.items.add_shape_item( shape_type );
         mb.image = _canvas.items.get_shape_icon( shape_type );
+        Utils.hide_popover( mb.popover );
       });
-      menu_item.add( _canvas.items.get_shape_icon( i ) );
-      mb.popup.add( menu_item );
+      grid.attach( btn, (i % 2), (i / 2) );
     }
 
-    mb.popup.show_all();
+    grid.show_all();
+
+    mb.popover = new Popover( null );
+    mb.popover.add( grid );
 
     var btn = new ToolItem();
     btn.margin_left  = margin;
@@ -134,6 +143,22 @@ public class CanvasToolbar : Toolbar {
     ti.add( _crop_btn );
 
     add( ti );
+
+  }
+
+  /* Create the image resizer button */
+  private void create_resize() {
+
+    var btn = new ToolButton( null, null );
+    btn.set_tooltip_text( _( "Resize Image" ) );
+    btn.icon_name    = "view-fullscreen-symbolic";
+    btn.margin_left  = margin;
+    btn.margin_right = margin;
+    btn.clicked.connect(() => {
+      // TBD - Display image resize dialog
+    });
+
+    add( btn );
 
   }
 

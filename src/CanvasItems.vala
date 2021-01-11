@@ -28,10 +28,12 @@ public enum CanvasItemType {
   RECT_FILL,
   OVAL_STROKE,
   OVAL_FILL,
+  STAR_STROKE,
+  STAR_FILL,
   LINE,
   ARROW,
   TEXT,
-  BLUR
+  BLUR,
 }
 
 public class CanvasItems {
@@ -67,6 +69,8 @@ public class CanvasItems {
     _shape_icons.append_val( "rect-fill-symbolic" );
     _shape_icons.append_val( "circle-stroke-symbolic" );
     _shape_icons.append_val( "circle-fill-symbolic" );
+    _shape_icons.append_val( "star-stroke-symbolic" );
+    _shape_icons.append_val( "star-fill-symbolic" );
     _shape_icons.append_val( "line-symbolic" );
     _shape_icons.append_val( "arrow-symbolic" );
 
@@ -98,6 +102,12 @@ public class CanvasItems {
   private CanvasItem create_oval( bool fill ) {
     var item = new CanvasItemOval( fill, props );
     item.bbox = center_box( 200, 50 );
+    return( item );
+  }
+
+  private CanvasItem create_star( bool fill ) {
+    var item = new CanvasItemStar( fill, 4, 25, props );
+    item.bbox = center_box( 100, 100 );
     return( item );
   }
 
@@ -141,6 +151,8 @@ public class CanvasItems {
       case CanvasItemType.RECT_FILL    :  item = create_rectangle( true );  break;
       case CanvasItemType.OVAL_STROKE  :  item = create_oval( false );  break;
       case CanvasItemType.OVAL_FILL    :  item = create_oval( true );  break;
+      case CanvasItemType.STAR_STROKE  :  item = create_star( false );  break;
+      case CanvasItemType.STAR_FILL    :  item = create_star( true );  break;
       case CanvasItemType.LINE         :  item = create_line();  break;
       case CanvasItemType.ARROW        :  item = create_arrow();  break;
       case CanvasItemType.TEXT         :  item = create_text();  break;
@@ -572,6 +584,8 @@ public class CanvasItems {
         switch( it->name ) {
           case "rectangle" :  item = create_rectangle( true );  break;
           case "oval"      :  item = create_oval( true );  break;
+          case "star"      :  item = create_star( true );  break;
+          case "line"      :  item = create_line();  break;
           case "arrow"     :  item = create_arrow();  break;
           case "text"      :  item = create_text();  break;
         }
