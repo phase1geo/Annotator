@@ -106,7 +106,7 @@ public class CanvasItems {
   }
 
   private CanvasItem create_star( bool fill ) {
-    var item = new CanvasItemStar( fill, 4, 25, props );
+    var item = new CanvasItemStar( fill, 5, 25, props );
     item.bbox = center_box( 100, 100 );
     return( item );
   }

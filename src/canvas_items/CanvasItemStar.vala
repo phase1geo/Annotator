@@ -41,8 +41,14 @@ public class CanvasItemStar : CanvasItem {
 
   /* Creates the item points */
   private void create_points() {
+    if( points.length > 0 ) {
+      points.remove_range( 0, points.length );
+    }
     for( int i=0; i<(_num_points * 2); i++ ) {
       points.append_val( new CanvasPoint( (i == 0) || (i == ((_num_points * 2) - 1)) ) );
+    }
+    for( int i=0; i<4; i++ ) {
+      points.append_val( new CanvasPoint( true ) );
     }
   }
 
@@ -84,26 +90,52 @@ public class CanvasItemStar : CanvasItem {
 
     }
 
+    /* Update the selector positions for changing the bondary */
+    var b = _num_points * 2;
+    points.index( b + 0 ).copy_coords( bbox.x1(), bbox.y1() );
+    points.index( b + 1 ).copy_coords( bbox.x2(), bbox.y1() );
+    points.index( b + 2 ).copy_coords( bbox.x1(), bbox.y2() );
+    points.index( b + 3 ).copy_coords( bbox.x2(), bbox.y2() );
+
   }
 
   /* Adjusts the bounding box */
   public override void move_selector( int index, double diffx, double diffy, bool shift ) {
 
-    var box = new CanvasRect.from_rect( bbox );
+    var box          = new CanvasRect.from_rect( bbox );
+    var inner_radius = _inner_radius;
 
-    if( index != 0 ) {
-      box.y += diffy;
-      box.height -= (diffy * 2);
+    /* If we are moving the selector representing the outer radius, update the box */
+    if( index == ((_num_points * 2) - 1) ) {
+      box.x += diffy;  box.y += diffy;  box.width -= (diffy * 2);  box.height -= (diffy * 2);
+
+    /*
+     Otherwise, if we are manipulating the inner radius or moving the four border
+     selectors, update the inner radius to match the diffy value.  If we are manipulating
+     the border selectors, adjust the bbox.
+    */
+    } else {
+      var inner_ratio = inner_radius / (box.height * 0.5);
+      switch( index - (_num_points * 2) ) {
+        case 0 :  box.x += diffy;  box.y += diffy;  box.width -= diffy;  box.height -= diffy;  break;
+        case 1 :                   box.y += diffy;  box.width -= diffy;  box.height -= diffy;  break;
+        case 2 :  box.x -= diffy;                   box.width += diffy;  box.height += diffy;  break;
+        case 3 :                                    box.width += diffy;  box.height += diffy;  break;
+      }
+      if( index == 0 ) {
+        inner_radius -= diffy;
+      } else {
+        inner_radius = (box.height / 2) * inner_ratio;
+      }
     }
-
-    _inner_radius -= diffy;
 
     /*
      If the inner radius value is greater than zero and hte inner radius is less than
      the outer radius.
     */
-    if( (_inner_radius > 5) && ((box.height / 2) > _inner_radius) ) {
-      bbox = box;
+    if( (inner_radius > 5) && ((box.height / 2) > inner_radius) ) {
+      _inner_radius = inner_radius;
+      bbox          = box;
     }
 
   }
@@ -115,7 +147,7 @@ public class CanvasItemStar : CanvasItem {
 
   /* Returns true if the given point is within this circle */
   public override bool is_within( double x, double y ) {
-    return( Utils.is_within_polygon( x, y, points ) );
+    return( Utils.is_within_polygon( x, y, points, (_num_points * 2) ) );
   }
 
   /* Saves this item as XML */
@@ -147,7 +179,7 @@ public class CanvasItemStar : CanvasItem {
 
     Utils.set_context_color_with_alpha( ctx, props.color, alpha );
     ctx.move_to( points.index( 0 ).x, points.index( 0 ).y );
-    for( int i=1; i<points.length; i++ ) {
+    for( int i=1; i<(_num_points * 2); i++ ) {
       ctx.line_to( points.index( i ).x, points.index( i ).y );
     }
     ctx.close_path();

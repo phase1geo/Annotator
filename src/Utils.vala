@@ -95,9 +95,9 @@ public class Utils {
   }
 
   /* Returns true if the given set of coordinates is within the given polygon */
-  public static bool is_within_polygon( double x, double y, Array<CanvasPoint> points ) {
+  public static bool is_within_polygon( double x, double y, Array<CanvasPoint> points, int length = -1 ) {
 
-    var corners   = (int)points.length;
+    var corners   = (length == -1) ? (int)points.length : length;
     var j         = corners - 1;
     var odd_nodes = false;
 
