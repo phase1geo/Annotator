@@ -34,6 +34,7 @@ public class CanvasToolbar : Toolbar {
     _canvas = canvas;
 
     create_shapes();
+    create_sequence();
     create_text();
     create_blur();
     create_crop();
@@ -51,7 +52,7 @@ public class CanvasToolbar : Toolbar {
   private void create_shapes() {
 
     var mb = new MenuButton();
-    mb.set_tooltip_text( _( "Shapes" ) );
+    mb.set_tooltip_text( _( "Add Shape" ) );
     mb.image   = _canvas.items.get_shape_icon( 0 );
     mb.relief  = ReliefStyle.NONE;
 
@@ -80,8 +81,23 @@ public class CanvasToolbar : Toolbar {
     var btn = new ToolItem();
     btn.margin_left  = margin;
     btn.margin_right = margin;
-    btn.set_tooltip_text( _( "Add Shape" ) );
     btn.add( mb );
+
+    add( btn );
+
+  }
+
+  /* Adds the sequence button */
+  private void create_sequence() {
+
+    var btn = new ToolButton( null, null );
+    btn.set_tooltip_text( _( "Add Sequence Number" ) );
+    btn.icon_name    = "sequence-symbolic";
+    btn.margin_left  = margin;
+    btn.margin_right = margin;
+    btn.clicked.connect(() => {
+      /* TBD */
+    });
 
     add( btn );
 
@@ -166,7 +182,7 @@ public class CanvasToolbar : Toolbar {
   private void create_color() {
 
     var mb = new MenuButton();
-    mb.set_tooltip_text( _( "Item Color" ) );
+    mb.set_tooltip_text( _( "Shape Color" ) );
     mb.relief = ReliefStyle.NONE;
     mb.get_style_context().add_class( "color_chooser" );
     mb.popover = new Popover( null );
@@ -252,6 +268,7 @@ public class CanvasToolbar : Toolbar {
   private void create_stroke() {
 
     var mb     = new MenuButton();
+    mb.set_tooltip_text( _( "Shape Border" ) );
     mb.relief  = ReliefStyle.NONE;
     mb.image   = new Image.from_surface( make_stroke_icon() );
     mb.popover = new Gtk.Popover( null );
@@ -260,7 +277,7 @@ public class CanvasToolbar : Toolbar {
     box.border_width = 10;
 
     /* Add stroke width */
-    var width_title = new Label( Utils.make_title( _( "Stroke Width" ) ) );
+    var width_title = new Label( Utils.make_title( _( "Border Width" ) ) );
     width_title.halign     = Align.START;
     width_title.use_markup = true;
     box.pack_start( width_title, false, false, 5 );
@@ -314,7 +331,6 @@ public class CanvasToolbar : Toolbar {
     var btn = new ToolItem();
     btn.margin_left  = margin;
     btn.margin_right = margin;
-    btn.set_tooltip_text( _( "Stroke Properties" ) );
     btn.add( mb );
 
     add( btn );
@@ -350,7 +366,6 @@ public class CanvasToolbar : Toolbar {
     var btn = new ToolItem();
     btn.margin_left  = margin;
     btn.margin_right = margin;
-    btn.set_tooltip_text( _( "Font Properties" ) );
     btn.add( mb );
 
     add( btn );

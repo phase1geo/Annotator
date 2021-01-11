@@ -44,6 +44,7 @@ public class Editor : Box {
 
     /* Create the overlay that will hold the canvas so that we can add emoji support */
     var overlay = new Overlay();
+    overlay.border_width = 10;
     overlay.add( canvas );
 
     var sw = new ScrolledWindow( null, null );

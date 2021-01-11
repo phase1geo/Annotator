@@ -295,13 +295,12 @@ public class CanvasImage {
   }
 
   /* Draws the drop_outline */
-  private void draw_crop_outline( Context ctx ) {
+  private void draw_crop_outline( Context ctx, RGBA color ) {
 
-    var black  = Utils.color_from_string( "black" );
     var width  = _buf.width;
     var height = _buf.height;
 
-    Utils.set_context_color_with_alpha( ctx, black, 0.5 );
+    Utils.set_context_color_with_alpha( ctx, color, 0.5 );
 
     ctx.rectangle( 0, 0, _crop_rect.x1(), height );
     ctx.fill();
@@ -314,6 +313,35 @@ public class CanvasImage {
 
     ctx.rectangle( _crop_rect.x2(), 0, (width - _crop_rect.x2()), height );
     ctx.fill();
+
+  }
+
+  /* Draws the thirds dividers when cropping */
+  private void draw_crop_dividers( Context ctx, RGBA color ) {
+
+    var third_width  = _crop_rect.width  / 3;
+    var third_height = _crop_rect.height / 3;
+
+    Utils.set_context_color_with_alpha( ctx, color, 0.5 );
+    ctx.set_line_width( 1 );
+
+    /* Draw vertical lines */
+    ctx.move_to( (_crop_rect.x1() + third_width), _crop_rect.y1() );
+    ctx.line_to( (_crop_rect.x1() + third_width), _crop_rect.y2() );
+    ctx.stroke();
+
+    ctx.move_to( (_crop_rect.x2() - third_width), _crop_rect.y1() );
+    ctx.line_to( (_crop_rect.x2() - third_width), _crop_rect.y2() );
+    ctx.stroke();
+
+    /* Draw horizontal lines */
+    ctx.move_to( _crop_rect.x1(), (_crop_rect.y1() + third_height) );
+    ctx.line_to( _crop_rect.x2(), (_crop_rect.y1() + third_height) );
+    ctx.stroke();
+
+    ctx.move_to( _crop_rect.x1(), (_crop_rect.y2() - third_height) );
+    ctx.line_to( _crop_rect.x2(), (_crop_rect.y2() - third_height) );
+    ctx.stroke();
 
   }
 
@@ -343,7 +371,9 @@ public class CanvasImage {
   /* Draw the cropping area if we are in that mode */
   private void draw_cropping( Context ctx ) {
     if( !cropping ) return;
-    draw_crop_outline( ctx );
+    var color = get_average_color( _crop_rect );
+    draw_crop_outline( ctx, color );
+    draw_crop_dividers( ctx, color );
     draw_crop_selectors( ctx );
   }
 
