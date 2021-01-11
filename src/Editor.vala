@@ -28,6 +28,7 @@ public class Editor : Box {
   public Canvas canvas { get; private set; }
 
   public signal void image_loaded();
+  public signal void undo_changed( UndoBuffer buf );
 
   /* Constructor */
   public Editor( MainWindow win ) {

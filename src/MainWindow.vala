@@ -304,6 +304,8 @@ public class MainWindow : ApplicationWindow {
     _editor.image_loaded.connect(() => {
       _stack.visible_child_name = "editor";
     });
+    _editor.canvas.undo_buffer.buffer_changed.connect( do_undo_changed );
+    _editor.canvas.undo_text.buffer_changed.connect( do_undo_changed );
 
     /* Add the elements to the stack */
     _stack = new Stack();
@@ -437,6 +439,14 @@ public class MainWindow : ApplicationWindow {
   private void do_redo() {
     _editor.canvas.undo_buffer.redo();
     _editor.canvas.grab_focus();
+  }
+
+  /* Called whenever the undo buffer changes */
+  private void do_undo_changed( UndoBuffer buffer ) {
+    _undo_btn.set_sensitive( buffer.undoable() );
+    _undo_btn.set_tooltip_markup( Utils.tooltip_with_accel( buffer.undo_tooltip(), "<Control>z" ) );
+    _redo_btn.set_sensitive( buffer.redoable() );
+    _redo_btn.set_tooltip_markup( Utils.tooltip_with_accel( buffer.redo_tooltip(), "<Control><Shift>z" ) );
   }
 
   /* Generate a notification */
