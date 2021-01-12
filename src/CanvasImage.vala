@@ -27,16 +27,16 @@ public class CanvasImage {
 
   private const int selector_size = 10;
 
-  private Pixbuf?       _buf        = null;
-  private ImageSurface? _surface    = null;
-  private CanvasRect?   _crop_rect  = new CanvasRect();
-  private int           _crop_index = -1;
-  private Canvas        _canvas;
-  private double        _last_x     = 0;
-  private double        _last_y     = 0;
+  private Canvas         _canvas;
+  private Pixbuf?        _buf        = null;
+  private ImageSurface?  _surface    = null;
+  private int            _crop_index = -1;
+  private double         _last_x     = 0;
+  private double         _last_y     = 0;
 
-  public bool     cropping { get; private set; default = false; }
-  public Exporter exporter { get; private set; }
+  public bool       cropping  { get; private set; default = false; }
+  public Exporter   exporter  { get; private set; }
+  public CanvasRect crop_rect { get; private set; default = new CanvasRect(); }
 
   public signal void crop_ended();
 
@@ -97,7 +97,11 @@ public class CanvasImage {
   }
 
   /* Pastes an image from the given pixbuf to the canvas */
-  public void set_image( Pixbuf buf ) {
+  public void set_image( Pixbuf buf, string? undo_name = _( "change image" ) ) {
+
+    if( (undo_name != null) && (_buf != null) ) {
+      _canvas.undo_buffer.add_item( new UndoImageChange( undo_name, _buf, buf ) );
+    }
 
     _buf     = buf.copy();
     _surface = (ImageSurface)cairo_surface_create_from_pixbuf( _buf, 1, null );
@@ -106,7 +110,7 @@ public class CanvasImage {
   }
 
   /****************************************************************************/
-  //  EVENT HANDLERS
+  //  KEY EVENT HANDLER
   /****************************************************************************/
 
   /* Handles a keypress event */
@@ -120,6 +124,10 @@ public class CanvasImage {
     return( false );
 
   }
+
+  /****************************************************************************/
+  //  MOUSE EVENT HANDLER
+  /****************************************************************************/
 
   /* Handles a cursor press event */
   public bool cursor_pressed( double x, double y, ModifierType state, int press_count ) {
@@ -138,7 +146,7 @@ public class CanvasImage {
           return( true );
         }
       }
-      if( _crop_rect.contains( x, y ) ) {
+      if( crop_rect.contains( x, y ) ) {
         _crop_index = -1;
         _canvas.set_cursor_from_name( "grabbing" );
       }
@@ -153,7 +161,7 @@ public class CanvasImage {
 
     var diffx = x - _last_x;
     var diffy = y - _last_y;
-    var box   = new CanvasRect.from_rect( _crop_rect );
+    var box   = new CanvasRect.from_rect( crop_rect );
 
     _last_x = x;
     _last_y = y;
@@ -166,7 +174,7 @@ public class CanvasImage {
           (box.y >= 0) &&
           ((box.x + box.width) <= _buf.width) &&
           ((box.y + box.height) <= _buf.height) ) {
-        _crop_rect.copy( box );
+        crop_rect.copy( box );
         return( true );
       }
 
@@ -187,7 +195,7 @@ public class CanvasImage {
           (box.height >= (selector_size * 3)) &&
           (box.width  <= _buf.width) &&
           (box.height <= _buf.height) ) {
-        _crop_rect.copy( box );
+        crop_rect.copy( box );
         return( true );
       }
 
@@ -233,7 +241,7 @@ public class CanvasImage {
   /* Start the cropping function */
   public void start_crop() {
     cropping = true;
-    _crop_rect.copy_coords( 0, 0, _buf.width, _buf.height );
+    crop_rect.copy_coords( 0, 0, _buf.width, _buf.height );
   }
 
   /* Cancels the crop operation */
@@ -247,13 +255,17 @@ public class CanvasImage {
   /* Completes the cropping operation */
   public bool end_crop() {
     cropping = false;
-    var buf = new Pixbuf.subpixbuf( _buf, (int)_crop_rect.x, (int)_crop_rect.y, (int)_crop_rect.width, (int)_crop_rect.height );
-    set_image( buf );
-    _canvas.items.adjust_items( _crop_rect.x, _crop_rect.y );
+    var buf = new Pixbuf.subpixbuf( _buf, (int)crop_rect.x, (int)crop_rect.y, (int)crop_rect.width, (int)crop_rect.height );
+    set_image( buf, _( "image crop" ) );
+    _canvas.items.adjust_items( crop_rect.x, crop_rect.y );
     _canvas.queue_draw();
     crop_ended();
     return( true );
   }
+
+  /****************************************************************************/
+  //  EXPORTING
+  /****************************************************************************/
 
   /* Make sure that everything is cleared from the image */
   private void clean_image() {
@@ -280,6 +292,10 @@ public class CanvasImage {
     exporter.export_print( _surface );
   }
 
+  /****************************************************************************/
+  //  DRAWING
+  /****************************************************************************/
+
   /* Calculates the box for the given selector */
   private void selector_bbox( int index, CanvasRect rect ) {
 
@@ -288,18 +304,18 @@ public class CanvasImage {
       case 1 :  // UR
       case 2 :  // LL
       case 3 :  // LR
-        rect.x = ((index & 1) == 0) ? _crop_rect.x1() : (_crop_rect.x2() - selector_size);
-        rect.y = ((index & 2) == 0) ? _crop_rect.y1() : (_crop_rect.y2() - selector_size);
+        rect.x = ((index & 1) == 0) ? crop_rect.x1() : (crop_rect.x2() - selector_size);
+        rect.y = ((index & 2) == 0) ? crop_rect.y1() : (crop_rect.y2() - selector_size);
         break;
       case 4 :  // TOP
       case 5 :  // BOTTOM
-        rect.x = _crop_rect.mid_x() - (selector_size / 2);
-        rect.y = (index == 4) ? _crop_rect.y1() : (_crop_rect.y2() - selector_size);
+        rect.x = crop_rect.mid_x() - (selector_size / 2);
+        rect.y = (index == 4) ? crop_rect.y1() : (crop_rect.y2() - selector_size);
         break;
       case 6 :  // LEFT
       case 7 :  // RIGHT
-        rect.x = (index == 6) ? _crop_rect.x1() : (_crop_rect.x2() - selector_size);
-        rect.y = _crop_rect.mid_y() - (selector_size / 2);
+        rect.x = (index == 6) ? crop_rect.x1() : (crop_rect.x2() - selector_size);
+        rect.y = crop_rect.mid_y() - (selector_size / 2);
         break;
     }
 
@@ -322,16 +338,16 @@ public class CanvasImage {
 
     Utils.set_context_color_with_alpha( ctx, color, 0.5 );
 
-    ctx.rectangle( 0, 0, _crop_rect.x1(), height );
+    ctx.rectangle( 0, 0, crop_rect.x1(), height );
     ctx.fill();
 
-    ctx.rectangle( _crop_rect.x1(), 0, _crop_rect.width, _crop_rect.y1() );
+    ctx.rectangle( crop_rect.x1(), 0, crop_rect.width, crop_rect.y1() );
     ctx.fill();
 
-    ctx.rectangle( _crop_rect.x1(), _crop_rect.y2(), _crop_rect.width, (height - _crop_rect.y2()) );
+    ctx.rectangle( crop_rect.x1(), crop_rect.y2(), crop_rect.width, (height - crop_rect.y2()) );
     ctx.fill();
 
-    ctx.rectangle( _crop_rect.x2(), 0, (width - _crop_rect.x2()), height );
+    ctx.rectangle( crop_rect.x2(), 0, (width - crop_rect.x2()), height );
     ctx.fill();
 
   }
@@ -339,28 +355,28 @@ public class CanvasImage {
   /* Draws the thirds dividers when cropping */
   private void draw_crop_dividers( Context ctx, RGBA color ) {
 
-    var third_width  = _crop_rect.width  / 3;
-    var third_height = _crop_rect.height / 3;
+    var third_width  = crop_rect.width  / 3;
+    var third_height = crop_rect.height / 3;
 
     Utils.set_context_color_with_alpha( ctx, color, 0.5 );
     ctx.set_line_width( 1 );
 
     /* Draw vertical lines */
-    ctx.move_to( (_crop_rect.x1() + third_width), _crop_rect.y1() );
-    ctx.line_to( (_crop_rect.x1() + third_width), _crop_rect.y2() );
+    ctx.move_to( (crop_rect.x1() + third_width), crop_rect.y1() );
+    ctx.line_to( (crop_rect.x1() + third_width), crop_rect.y2() );
     ctx.stroke();
 
-    ctx.move_to( (_crop_rect.x2() - third_width), _crop_rect.y1() );
-    ctx.line_to( (_crop_rect.x2() - third_width), _crop_rect.y2() );
+    ctx.move_to( (crop_rect.x2() - third_width), crop_rect.y1() );
+    ctx.line_to( (crop_rect.x2() - third_width), crop_rect.y2() );
     ctx.stroke();
 
     /* Draw horizontal lines */
-    ctx.move_to( _crop_rect.x1(), (_crop_rect.y1() + third_height) );
-    ctx.line_to( _crop_rect.x2(), (_crop_rect.y1() + third_height) );
+    ctx.move_to( crop_rect.x1(), (crop_rect.y1() + third_height) );
+    ctx.line_to( crop_rect.x2(), (crop_rect.y1() + third_height) );
     ctx.stroke();
 
-    ctx.move_to( _crop_rect.x1(), (_crop_rect.y2() - third_height) );
-    ctx.line_to( _crop_rect.x2(), (_crop_rect.y2() - third_height) );
+    ctx.move_to( crop_rect.x1(), (crop_rect.y2() - third_height) );
+    ctx.line_to( crop_rect.x2(), (crop_rect.y2() - third_height) );
     ctx.stroke();
 
   }
@@ -391,7 +407,7 @@ public class CanvasImage {
   /* Draw the cropping area if we are in that mode */
   private void draw_cropping( Context ctx ) {
     if( !cropping ) return;
-    var color = get_average_color( _crop_rect );
+    var color = get_average_color( crop_rect );
     draw_crop_outline( ctx, color );
     draw_crop_dividers( ctx, color );
     draw_crop_selectors( ctx );

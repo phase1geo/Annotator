@@ -19,49 +19,29 @@
 * Authored by: Trevor Williams <phase1geo@gmail.com>
 */
 
-public class UndoItemPropChange : UndoItem {
+using Gdk;
 
-  private struct UndoItemChangeElem {
-    CanvasItemProperties props;
-    CanvasItemProperties old_props;
-    CanvasItemProperties new_props;
-    public UndoItemChangeElem( CanvasItem item ) {
-      props = item.props;
-      old_props = new CanvasItemProperties();
-      old_props.copy( item.last_props );
-      new_props = new CanvasItemProperties();
-      new_props.copy( item.props );
-    }
-  }
+public class UndoImageChange : UndoItem {
 
-  private Array<UndoItemChangeElem?> _list;
+  private Pixbuf _old_pixbuf;
+  private Pixbuf _new_pixbuf;
 
   /* Default constructor */
-  public UndoItemPropChange( string name ) {
+  public UndoImageChange( string name, Pixbuf old_pixbuf, Pixbuf new_pixbuf ) {
     base( name );
-    _list = new Array<UndoItemChangeElem?>();
-  }
-
-  /* Adds a canvas item to this undo list */
-  public void add( CanvasItem item ) {
-    _list.append_val( UndoItemChangeElem( item ) );
+    _old_pixbuf = old_pixbuf.copy();
+    _new_pixbuf = new_pixbuf.copy();
   }
 
   /* Causes the stored item to be put into the before state */
   public override void undo( Canvas canvas ) {
-    for( int i=0; i<_list.length; i++ ) {
-      var elem = _list.index( i );
-      elem.props.copy( elem.old_props );
-    }
+    canvas.image.set_image( _old_pixbuf, null );
     canvas.queue_draw();
   }
 
   /* Causes the stored item to be put into the after state */
   public override void redo( Canvas canvas ) {
-    for( int i=0; i<_list.length; i++ ) {
-      var elem = _list.index( i );
-      elem.props.copy( elem.new_props );
-    }
+    canvas.image.set_image( _new_pixbuf, null );
     canvas.queue_draw();
   }
 

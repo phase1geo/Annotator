@@ -137,6 +137,11 @@ public class CanvasRect {
     height += (amount * 2);
   }
 
+  /* Returns true if the given rectangle matches this rectangle */
+  public bool equals( CanvasRect rect ) {
+    return( (x == rect.x) && (y == rect.y) && (width == rect.width) && (height == rect.height) );
+  }
+
   /* Returns true if the given rectangle intersects with this rectangle */
   public bool intersects( CanvasRect rect ) {
     var x5 = (x1() < rect.x1()) ? rect.x1() : x1();

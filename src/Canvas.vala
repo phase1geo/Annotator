@@ -25,7 +25,6 @@ using Cairo;
 
 public class Canvas : DrawingArea {
 
-  private Pixbuf?        _buf     = null;
   private ImageSurface?  _surface = null;
   private IMMulticontext _im_context;
 
