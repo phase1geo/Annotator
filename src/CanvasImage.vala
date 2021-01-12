@@ -128,7 +128,7 @@ public class CanvasImage {
 
     _last_x     = x;
     _last_y     = y;
-    _crop_index = -1;
+    _crop_index = -2;
 
     if( cropping ) {
       for( int i=0; i<8; i++ ) {
@@ -137,6 +137,10 @@ public class CanvasImage {
           _crop_index = i;
           return( true );
         }
+      }
+      if( _crop_rect.contains( x, y ) ) {
+        _crop_index = -1;
+        _canvas.set_cursor_from_name( "grabbing" );
       }
     }
 
@@ -154,8 +158,20 @@ public class CanvasImage {
     _last_x = x;
     _last_y = y;
 
+    /* If we clicked into the crop rectangle, move the rectangle */
+    if( _crop_index == -1 ) {
+      box.x += diffx;
+      box.y += diffy;
+      if( (box.x >= 0) &&
+          (box.y >= 0) &&
+          ((box.x + box.width) <= _buf.width) &&
+          ((box.y + box.height) <= _buf.height) ) {
+        _crop_rect.copy( box );
+        return( true );
+      }
+
     /* If we are dragging a selector box, handle the move and resize */
-    if( _crop_index != -1 ) {
+    } else if( _crop_index >= 0 ) {
       switch( _crop_index ) {
         case 0  :  box.x += diffx;  box.y += diffy;  box.width -= diffx;  box.height -= diffy;  break;
         case 1  :                   box.y += diffy;  box.width += diffx;  box.height -= diffy;  break;
@@ -203,12 +219,16 @@ public class CanvasImage {
   /* Handles a cursor release event */
   public bool cursor_released( double x, double y, ModifierType state ) {
 
-    _crop_index = -1;
+    _crop_index = -2;
     _canvas.set_cursor( null );
 
     return( false );
 
   }
+
+  /****************************************************************************/
+  //  CROP HANDLING CODE
+  /****************************************************************************/
 
   /* Start the cropping function */
   public void start_crop() {
