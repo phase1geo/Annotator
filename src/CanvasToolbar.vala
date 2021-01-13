@@ -35,9 +35,11 @@ public class CanvasToolbar : Toolbar {
 
     create_shapes();
     create_sequence();
+    create_pencil();
     create_text();
     create_magnifier();
     create_blur();
+    create_separator();
     create_crop();
     create_resize();
     create_separator();
@@ -98,6 +100,22 @@ public class CanvasToolbar : Toolbar {
     btn.margin_right = margin;
     btn.clicked.connect(() => {
       /* TBD */
+    });
+
+    add( btn );
+
+  }
+
+  /* Starts a drawing operation with the pencil tool */
+  private void create_pencil() {
+
+    var btn = new ToolButton( null, null );
+    btn.set_tooltip_text( _( "Pencil Tool" ) );
+    btn.icon_name = "edit-symbolic";
+    btn.margin_left  = margin;
+    btn.margin_right = margin;
+    btn.clicked.connect(() => {
+      _canvas.items.add_shape_item( CanvasItemType.PENCIL );
     });
 
     add( btn );

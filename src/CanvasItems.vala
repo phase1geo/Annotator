@@ -34,7 +34,8 @@ public enum CanvasItemType {
   ARROW,
   TEXT,
   BLUR,
-  MAGNIFIER
+  MAGNIFIER,
+  PENCIL
 }
 
 public class CanvasItems {
@@ -144,6 +145,11 @@ public class CanvasItems {
     return( item );
   }
 
+  private CanvasItem create_pencil() {
+    var item = new CanvasItemPencil( props );
+    return( item );
+  }
+
   public void add_item( CanvasItem item, int position ) {
     clear_selection();
     item.mode = CanvasItemMode.SELECTED;
@@ -165,6 +171,7 @@ public class CanvasItems {
       case CanvasItemType.TEXT         :  item = create_text();  break;
       case CanvasItemType.BLUR         :  item = create_blur();  break;
       case CanvasItemType.MAGNIFIER    :  item = create_magnifier();  break;
+      case CanvasItemType.PENCIL       :  item = create_pencil();  break;
       default :  assert_not_reached();
     }
     add_item( item, -1 );
@@ -228,6 +235,7 @@ public class CanvasItems {
     _canvas.queue_draw();
   }
 
+  /* Adjusts all items by the given diff amounts */
   public void adjust_items( double diffx, double diffy ) {
     foreach( CanvasItem item in _items ) {
       item.move_item( (0 - diffx), (0 - diffy) );
