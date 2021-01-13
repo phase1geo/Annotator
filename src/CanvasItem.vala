@@ -27,7 +27,8 @@ public enum CanvasItemMode {
   NONE,
   SELECTED,
   MOVING,
-  RESIZING;
+  RESIZING,
+  DRAWING;
 
   public string to_string() {
     switch( this ) {
@@ -35,6 +36,7 @@ public enum CanvasItemMode {
       case SELECTED :  return( "selected" );
       case MOVING   :  return( "moving" );
       case RESIZING :  return( "resizing" );
+      case DRAWING  :  return( "drawing" );
       default       :  assert_not_reached();
     }
   }
@@ -45,6 +47,7 @@ public enum CanvasItemMode {
       case "selected" :  return( SELECTED );
       case "moving"   :  return( MOVING );
       case "resizing" :  return( RESIZING );
+      case "drawing"  :  return( DRAWING );
       default         :  assert_not_reached();
     }
   }
@@ -170,6 +173,9 @@ public class CanvasItem {
 
   /* Adjusts the specified selector by the given amount */
   public virtual void move_selector( int index, double diffx, double diffy, bool shift ) {}
+
+  /* If we need to draw something, update the item with the given cursor location */
+  public virtual void draw( double x, double y ) {}
 
   /* Returns the type of cursor to use for the given selection cursor */
   public virtual CursorType? get_selector_cursor( int index ) {

@@ -147,12 +147,15 @@ public class CanvasItems {
 
   private CanvasItem create_pencil() {
     var item = new CanvasItemPencil( props );
+    _active = item;
     return( item );
   }
 
   public void add_item( CanvasItem item, int position ) {
     clear_selection();
-    item.mode = CanvasItemMode.SELECTED;
+    if( _active == null ) {
+      item.mode = CanvasItemMode.SELECTED;
+    }
     _items.insert( item, position );
   }
 
@@ -266,6 +269,11 @@ public class CanvasItems {
   public bool in_edit_mode() {
     var text = get_active_text();
     return( (text != null) ? text.edit : false );
+  }
+
+  /* Returns true if we are currently drawing something */
+  public bool in_draw_mode() {
+    return( (_active != null) && (_active.mode == CanvasItemMode.DRAWING) );
   }
 
   /* Sets the edit mode of the active text item to the given value */
@@ -433,6 +441,13 @@ public class CanvasItems {
     /* Keep track of the press count */
     _press_count = press_count;
 
+    /* If the active item is a pencil, indicate that we are drawing */
+    if( (_active != null) && (_active.name == "pencil") ) {
+      _active.mode = CanvasItemMode.DRAWING;
+      _canvas.set_cursor( CursorType.PENCIL );
+      return( false );
+    }
+
     /* Reverse the list so that we grab the top-most item */
     _items.reverse();
 
@@ -517,6 +532,11 @@ public class CanvasItems {
       }
       return( true );
 
+    /* If we are in drawing mode, indicate that the cursor has moved */
+    } else if( in_draw_mode() ) {
+      _active.draw( x, y );
+      return( true );
+
     /* Otherwise, move any selected items by the given amount */
     } else if( (_active != null) && !in_edit_mode() ) {
       var retval    = false;
@@ -574,6 +594,10 @@ public class CanvasItems {
     } else if( in_edit_mode() ) {
       return( true );
 
+    /* Indicate that we are done editing */
+    } else if( in_draw_mode() ) {
+      _active.mode = CanvasItemMode.NONE;
+
     /* If we were move one or more items, make sure that they stay selected */
     } else if( _active != null ) {
       var undo_item = new UndoItemBoxChange( _( "move items" ) );
@@ -621,11 +645,14 @@ public class CanvasItems {
         CanvasItem? item = null;
         switch( it->name ) {
           case "rectangle" :  item = create_rectangle( true );  break;
-          case "oval"      :  item = create_oval( true );  break;
-          case "star"      :  item = create_star( true );  break;
-          case "line"      :  item = create_line();  break;
-          case "arrow"     :  item = create_arrow();  break;
-          case "text"      :  item = create_text();  break;
+          case "oval"      :  item = create_oval( true );       break;
+          case "star"      :  item = create_star( true );       break;
+          case "line"      :  item = create_line();             break;
+          case "arrow"     :  item = create_arrow();            break;
+          case "text"      :  item = create_text();             break;
+          case "blue"      :  item = create_blur();             break;
+          case "magnifier" :  item = create_magnifier();        break;
+          case "pencil"    :  item = create_pencil();           break;
         }
         if( item != null ) {
           item.load( it );

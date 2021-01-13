@@ -29,7 +29,7 @@ public class CanvasItemPencil : CanvasItem {
 
   /* Constructor */
   public CanvasItemPencil( CanvasItemProperties props ) {
-    base( "arrow", props );
+    base( "pencil", props );
     create_points();
   }
 
@@ -51,12 +51,17 @@ public class CanvasItemPencil : CanvasItem {
   }
 
   public override bool is_within( double x, double y ) {
-    /* TBD */
-    return( Utils.is_within_polygon( x, y, points ) );
+    return( false );
+  }
+
+  public override void draw( double x, double y ) {
+    _edit_points.append_val( new CanvasPoint.from_coords( x, y ) );
   }
 
   /* Draw the rectangle */
   public override void draw_item( Context ctx ) {
+
+    if( _edit_points.length == 0 ) return;
 
     var alpha   = mode.alpha( props.alpha );
     var outline = Granite.contrasting_foreground_color( props.color );

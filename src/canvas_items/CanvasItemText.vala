@@ -839,7 +839,7 @@ public class CanvasItemText : CanvasItem {
 
       Utils.set_context_color( ctx, Granite.contrasting_foreground_color( props.color ) );
       dash.set_bg_pattern( ctx );
-      ctx.set_line_width( 8 );
+      ctx.set_line_width( 6 );
       ctx.rectangle( x, y, w, h );
       ctx.stroke();
 
