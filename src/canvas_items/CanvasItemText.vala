@@ -99,7 +99,7 @@ public class CanvasItemText : CanvasItem {
 
   /* Default constructor */
   public CanvasItemText( Canvas canvas, CanvasItemProperties props ) {
-    base( "text", props );
+    base( "text", canvas, props );
     initialize( canvas );
     update_size( false );
   }
@@ -812,6 +812,10 @@ public class CanvasItemText : CanvasItem {
       select_mode( true );
     }
 
+  }
+
+  public bool is_within( double x, double y ) {
+    return( bbox.contains( x, y ) );
   }
 
   /* Draws the node font to the screen */

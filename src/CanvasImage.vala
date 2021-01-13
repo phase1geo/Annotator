@@ -54,49 +54,14 @@ public class CanvasImage {
 
   /* Returns the dimensions of the stored image */
   public void get_dimensions( out int width, out int height ) {
-    width  = _buf.width;
-    height = _buf.height;
+    width  = (_buf != null) ? _buf.width  : 1;
+    height = (_buf != null) ? _buf.height : 1;
   }
 
   /* Returns a surface which contains the given rectangle area of the base image */
   public Cairo.Surface get_surface_for_rect( CanvasRect rect ) {
     var sub = new Pixbuf.subpixbuf( _buf, (int)rect.x, (int)rect.y, (int)rect.width, (int)rect.height );
     return( cairo_surface_create_from_pixbuf( sub, 1, null ) );
-  }
-
-  /* Draws a blur in the given rectangle onto the provided context */
-  public void draw_blur_rectangle( Cairo.Context ctx, CanvasRect rect, int blur_radius = 10 ) {
-
-    var surface = get_surface_for_rect( rect );
-    var buffer  = new Granite.Drawing.BufferSurface.with_surface( (int)rect.width, (int)rect.height, surface );
-
-    /* Copy the surface contents over */
-    buffer.context.set_source_surface( surface, 0, 0 );
-    buffer.context.paint();
-
-    /* Perform the blur */
-    buffer.exponential_blur( blur_radius );
-
-    /* Draw the blurred pixbuf onto the context */
-    ctx.set_source_surface( buffer.surface, rect.x, rect.y );
-    ctx.paint();
-
-  }
-
-  /* Draws a magnified area within the boundary box, cropped into a circle. */
-  public void draw_magnifier( Cairo.Context ctx, double x, double y, CanvasRect rect, double zoom_factor ) {
-
-    var sub     = new Pixbuf.subpixbuf( _buf, (int)rect.x, (int)rect.y, (int)rect.width, (int)rect.height );
-    var surface = (ImageSurface)cairo_surface_create_from_pixbuf( sub, 1, null );
-
-    ctx.save();
-    ctx.clip();
-    ctx.new_path();
-   	ctx.scale( zoom_factor, zoom_factor );
-   	ctx.set_source_surface( surface, x, y );
-   	ctx.paint();
-   	ctx.restore();
-   	
   }
 
   /* Returns the RGBA color value that averages the colors in the given rectangle */
@@ -127,6 +92,9 @@ public class CanvasImage {
 
     /* Store the average color value for faster lookups */
     average_color = average_color_of_rect( new CanvasRect.from_coords( 0, 0, _buf.width, _buf.height ) );
+
+    /* Delete the canvas items */
+    _canvas.items.clear();
 
   }
 

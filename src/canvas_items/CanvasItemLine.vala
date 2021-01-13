@@ -35,8 +35,8 @@ public class CanvasItemLine : CanvasItem {
   private LineStartDirection _dir = LineStartDirection.UPPER_LEFT;
 
   /* Constructor */
-  public CanvasItemLine( CanvasItemProperties props ) {
-    base( "arrow", props );
+  public CanvasItemLine( Canvas canvas, CanvasItemProperties props ) {
+    base( "line", canvas, props );
     create_points();
   }
 
@@ -135,10 +135,6 @@ public class CanvasItemLine : CanvasItem {
     return( CursorType.TCROSS );
   }
 
-  public override bool is_within( double x, double y ) {
-    return( Utils.is_within_polygon( x, y, points ) );
-  }
-
   /* Draw the rectangle */
   public override void draw_item( Context ctx ) {
 
@@ -152,6 +148,7 @@ public class CanvasItemLine : CanvasItem {
     props.dash.set_bg_pattern( ctx );
     ctx.move_to( points.index( 0 ).x, points.index( 0 ).y );
     ctx.line_to( points.index( 1 ).x, points.index( 1 ).y );
+    save_path( ctx, CanvasItemPathType.STROKE );
     ctx.stroke_preserve();
 
     Utils.set_context_color_with_alpha( ctx, props.color, alpha );

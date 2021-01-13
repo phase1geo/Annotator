@@ -79,6 +79,7 @@ public enum CanvasItemPathType {
   FILL,
   CLIP;
 
+  /* Returns true when the given coordinates are within the given path */
   public bool is_within( Context ctx, double x, double y ) {
     switch( this ) {
       case FILL   :  return( ctx.in_fill( x, y ) );
@@ -94,9 +95,10 @@ public class CanvasItem {
   private CanvasRect           _bbox      = new CanvasRect();
   private CanvasItemMode       _mode      = CanvasItemMode.NONE;
   private CanvasItemProperties _props     = new CanvasItemProperties();
-  private Cairo.Context?       _context   = null;
   private Cairo.Path?          _path      = null;
   private CanvasItemPathType   _path_type = CanvasItemPathType.FILL;
+  private int                  _width;
+  private int                  _height;
 
   protected Array<CanvasPoint> points { get; set; default = new Array<CanvasPoint>(); }
   protected double             selector_size = 12;
@@ -140,9 +142,14 @@ public class CanvasItem {
   public CanvasRect           last_bbox  { get; private set; default = new CanvasRect(); }
 
   /* Constructor */
-  public CanvasItem( string name, CanvasItemProperties props ) {
-    this.name  = name;
+  public CanvasItem( string name, Canvas canvas, CanvasItemProperties props ) {
+
+    this.name = name;
     this.props.copy( props );
+
+    /* Create the surface */
+    canvas.image.get_dimensions( out _width, out _height );
+
   }
 
   /* Creates a copy of the given canvas item */
@@ -209,15 +216,12 @@ public class CanvasItem {
     rect.height = selector_size;
   }
 
-  /* Returns true if this item is within the selection box (calculated with an intersection function */
-  public virtual bool is_within_box( CanvasRect box ) {
-    return( bbox.intersects( box ) );
-  }
-
   /* Returns true if the given coordinates are within this item */
   public virtual bool is_within( double x, double y ) {
-    _context.append_path( _path );
-    return( _path_type.is_within( _context, x, y ) );
+    var surface = new ImageSurface( Cairo.Format.ARGB32, _width, _height );
+    var context = new Context( surface );
+    context.append_path( _path );
+    return( _path_type.is_within( context, x, y ) );
   }
 
   /* Returns the selector index that is below the current pointer coordinate */
@@ -237,7 +241,6 @@ public class CanvasItem {
 
   /* Saves the current path so that we can calculate is_within */
   protected void save_path( Context ctx, CanvasItemPathType type ) {
-    _context   = ctx;
     _path      = ctx.copy_path_flat();
     _path_type = type;
   }

@@ -28,8 +28,8 @@ public class CanvasItemPencil : CanvasItem {
   private Array<CanvasPoint> _edit_points = new Array<CanvasPoint>();
 
   /* Constructor */
-  public CanvasItemPencil( CanvasItemProperties props ) {
-    base( "pencil", props );
+  public CanvasItemPencil( Canvas canvas, CanvasItemProperties props ) {
+    base( "pencil", canvas, props );
     create_points();
   }
 
@@ -60,6 +60,8 @@ public class CanvasItemPencil : CanvasItem {
   /* Add an edit point */
   public override void draw( double x, double y ) {
     _edit_points.append_val( new CanvasPoint.from_coords( x, y ) );
+    points.index( 0 ).copy( _edit_points.index( 0 ) );
+    points.index( 1 ).copy( _edit_points.index( _edit_points.length - 1 ) );
   }
 
   /* Draw the rectangle */

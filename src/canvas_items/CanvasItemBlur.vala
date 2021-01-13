@@ -32,9 +32,9 @@ public class CanvasItemBlur : CanvasItem {
   private int         _blur_radius;
 
   /* Constructor */
-  public CanvasItemBlur( CanvasImage image, CanvasItemProperties props ) {
-    base( "blur", props );
-    _image = image;
+  public CanvasItemBlur( Canvas canvas, CanvasItemProperties props ) {
+    base( "blur", canvas, props );
+    _image = canvas.image;
     create_points();
   }
 
@@ -104,10 +104,6 @@ public class CanvasItemBlur : CanvasItem {
     }
   }
 
-  public override bool is_within( double x, double y ) {
-    return( base.is_within( x, y ) );
-  }
-
   /* Draw the rectangle */
   public override void draw_item( Context ctx ) {
 
@@ -115,11 +111,26 @@ public class CanvasItemBlur : CanvasItem {
     if( mode.moving() ) {
       Utils.set_context_color_with_alpha( ctx, _image.average_color, mode.alpha() );
       ctx.rectangle( bbox.x, bbox.y, bbox.width, bbox.height );
+      save_path( ctx, CanvasItemPathType.FILL );
       ctx.fill();
 
     /* Otherwise, calculate and apply the blur */
     } else {
-      _image.draw_blur_rectangle( ctx, bbox, props.blur_radius );
+
+      var surface = _image.get_surface_for_rect( bbox );
+      var buffer  = new Granite.Drawing.BufferSurface.with_surface( (int)bbox.width, (int)bbox.height, surface );
+
+      /* Copy the surface contents over */
+      buffer.context.set_source_surface( surface, 0, 0 );
+      buffer.context.paint();
+
+      /* Perform the blur */
+      buffer.exponential_blur( _blur_radius );
+
+      /* Draw the blurred pixbuf onto the context */
+      ctx.set_source_surface( buffer.surface, bbox.x, bbox.y );
+      ctx.paint();
+
     }
 
   }

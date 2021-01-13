@@ -102,9 +102,9 @@ public class Exporter {
 
     /* Perform the export */
     switch( type ) {
-      case ExportType.PDF :  export_pdf( filename, source );  break;
-      case ExportType.SVG :  export_svg( filename, source );  break;
-      default             :  export_other( filename, source, type );  break;
+      case ExportType.PDF :  export_pdf( fname, source );  break;
+      case ExportType.SVG :  export_svg( fname, source );  break;
+      default             :  export_other( fname, source, type );  break;
     }
 
   }

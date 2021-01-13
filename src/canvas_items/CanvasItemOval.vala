@@ -28,8 +28,8 @@ public class CanvasItemOval : CanvasItem {
   private bool _fill;
 
   /* Constructor */
-  public CanvasItemOval( bool fill, CanvasItemProperties props ) {
-    base( "oval", props );
+  public CanvasItemOval( Canvas canvas, bool fill, CanvasItemProperties props ) {
+    base( "oval", canvas, props );
     _fill = fill;
     create_points();
   }
@@ -99,23 +99,6 @@ public class CanvasItemOval : CanvasItem {
     }
   }
 
-  /* Returns true if the given point is within this circle */
-  public override bool is_within( double x, double y ) {
-    if( _fill ) {
-      var a = (bbox.width < bbox.height) ? bbox.height : bbox.width;
-      var b = (bbox.width < bbox.height) ? bbox.width  : bbox.height;
-      return( Utils.is_within_oval( x, y, bbox.mid_x(), bbox.mid_y(), (a / 2), (b / 2) ) );
-    } else {
-      var a     = (bbox.width < bbox.height) ? bbox.height : bbox.width;
-      var b     = (bbox.width < bbox.height) ? bbox.width  : bbox.height;
-      var sw    = props.stroke_width.width();
-      var adj   = sw / 2;
-      var outer = Utils.is_within_oval( x, y, bbox.mid_x(), bbox.mid_y(), ((a + sw) / 2), ((b + sw) / 2) );
-      var inner = Utils.is_within_oval( x, y, bbox.mid_x(), bbox.mid_y(), ((a - sw) / 2), ((b - sw) / 2) );
-      return( outer && !inner );
-    }
-  }
-
   /* Saves this item as XML */
   public override Xml.Node* save() {
     Xml.Node* node = base.save();
@@ -150,6 +133,8 @@ public class CanvasItemOval : CanvasItem {
     ctx.new_path();
     ctx.arc( bbox.mid_x(), bbox.mid_y(), radius, 0, (2 * Math.PI) );
     ctx.set_matrix( save_matrix );
+
+    save_path( ctx, CanvasItemPathType.FILL );
 
     if( _fill ) {
 

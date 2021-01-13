@@ -34,9 +34,9 @@ public class CanvasItemMagnifier : CanvasItem {
   private CanvasPoint _press       = new CanvasPoint();
 
   /* Constructor */
-  public CanvasItemMagnifier( CanvasImage image, double zoom_factor, CanvasItemProperties props ) {
-    base( "oval", props );
-    _image       = image;
+  public CanvasItemMagnifier( Canvas canvas, double zoom_factor, CanvasItemProperties props ) {
+    base( "magnifier", canvas, props );
+    _image       = canvas.image;
     _zoom_factor = zoom_factor;
     create_points();
   }
@@ -117,11 +117,6 @@ public class CanvasItemMagnifier : CanvasItem {
     return( (index == 0) ? CursorType.HAND2 : CursorType.BOTTOM_RIGHT_CORNER );
   }
 
-  /* Returns true if the given point is within this circle */
-  public override bool is_within( double x, double y ) {
-    return( Utils.is_within_oval( x, y, bbox.mid_x(), bbox.mid_y(), (bbox.width / 2), (bbox.width / 2) ) );
-  }
-
   /* Saves this item as XML */
   public override Xml.Node* save() {
     Xml.Node* node = base.save();
@@ -147,6 +142,7 @@ public class CanvasItemMagnifier : CanvasItem {
 
     ctx.set_line_width( 5 );
     ctx.arc( bbox.mid_x(), bbox.mid_y(), (bbox.width / 2), 0, (2 * Math.PI) );
+    save_path( ctx, CanvasItemPathType.FILL );
     ctx.stroke_preserve();
 
     ctx.save();

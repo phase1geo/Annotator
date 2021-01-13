@@ -28,8 +28,8 @@ public class CanvasItemRect : CanvasItem {
   private bool _fill;
 
   /* Constructor */
-  public CanvasItemRect( bool fill, CanvasItemProperties props ) {
-    base( "rectangle", props );
+  public CanvasItemRect( Canvas canvas, bool fill, CanvasItemProperties props ) {
+    base( "rectangle", canvas, props );
     _fill = fill;
     create_points();
   }
@@ -100,17 +100,6 @@ public class CanvasItemRect : CanvasItem {
     }
   }
 
-  public override bool is_within( double x, double y ) {
-    if( _fill ) {
-      return( base.is_within( x, y ) );
-    } else {
-      var half_width = props.stroke_width.width() / 2;
-      var outer      = new CanvasRect.from_rect( bbox );  outer.resize( half_width );
-      var inner      = new CanvasRect.from_rect( bbox );  inner.resize( 0 - half_width );
-      return( outer.contains( x, y ) && !inner.contains( x, y ) );
-    }
-  }
-
   /* Saves this item as XML */
   public override Xml.Node* save() {
     Xml.Node* node = base.save();
@@ -134,6 +123,8 @@ public class CanvasItemRect : CanvasItem {
     var alpha   = mode.alpha( props.alpha );
 
     ctx.rectangle( bbox.x, bbox.y, bbox.width, bbox.height );
+
+    save_path( ctx, CanvasItemPathType.FILL );
 
     if( _fill ) {
 

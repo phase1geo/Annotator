@@ -48,8 +48,8 @@ public class CanvasItemArrow : CanvasItem {
   private ArrowHeadDirection _dir      = ArrowHeadDirection.UPPER_LEFT;
 
   /* Constructor */
-  public CanvasItemArrow( CanvasItemProperties props ) {
-    base( "arrow", props );
+  public CanvasItemArrow( Canvas canvas, CanvasItemProperties props ) {
+    base( "arrow", canvas, props );
     create_points();
   }
 
@@ -238,10 +238,6 @@ public class CanvasItemArrow : CanvasItem {
     return( CursorType.TCROSS );
   }
 
-  public override bool is_within( double x, double y ) {
-    return( Utils.is_within_polygon( x, y, points ) );
-  }
-
   /* Saves this item as XML */
   public override Xml.Node* save() {
     Xml.Node* node = base.save();
@@ -287,6 +283,7 @@ public class CanvasItemArrow : CanvasItem {
       ctx.line_to( points.index( i ).x, points.index( i ).y );
     }
     ctx.close_path();
+    save_path( ctx, CanvasItemPathType.FILL );
     ctx.fill_preserve();
 
     var outline = Granite.contrasting_foreground_color( props.color );

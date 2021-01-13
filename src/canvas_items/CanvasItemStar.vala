@@ -31,8 +31,8 @@ public class CanvasItemStar : CanvasItem {
   private double _inner_angle  = 0;
 
   /* Constructor */
-  public CanvasItemStar( bool fill, int num_points, double inner_radius, CanvasItemProperties props ) {
-    base( "star", props );
+  public CanvasItemStar( Canvas canvas, bool fill, int num_points, double inner_radius, CanvasItemProperties props ) {
+    base( "star", canvas, props );
     _fill         = fill;
     _num_points   = num_points;
     _inner_radius = inner_radius;
@@ -146,11 +146,6 @@ public class CanvasItemStar : CanvasItem {
     return( CursorType.TCROSS );
   }
 
-  /* Returns true if the given point is within this circle */
-  public override bool is_within( double x, double y ) {
-    return( Utils.is_within_polygon( x, y, points, (_num_points * 2) ) );
-  }
-
   /* Saves this item as XML */
   public override Xml.Node* save() {
     Xml.Node* node = base.save();
@@ -184,6 +179,8 @@ public class CanvasItemStar : CanvasItem {
       ctx.line_to( points.index( i ).x, points.index( i ).y );
     }
     ctx.close_path();
+
+    save_path( ctx, CanvasItemPathType.FILL );
 
     if( _fill ) {
 

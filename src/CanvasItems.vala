@@ -96,31 +96,31 @@ public class CanvasItems {
   }
 
   private CanvasItem create_rectangle( bool fill ) {
-    var item = new CanvasItemRect( fill, props );
+    var item = new CanvasItemRect( _canvas, fill, props );
     item.bbox = center_box( 200, 50 );
     return( item );
   }
 
   private CanvasItem create_oval( bool fill ) {
-    var item = new CanvasItemOval( fill, props );
+    var item = new CanvasItemOval( _canvas, fill, props );
     item.bbox = center_box( 200, 50 );
     return( item );
   }
 
   private CanvasItem create_star( bool fill ) {
-    var item = new CanvasItemStar( fill, 5, 25, props );
+    var item = new CanvasItemStar( _canvas, fill, 5, 25, props );
     item.bbox = center_box( 100, 100 );
     return( item );
   }
 
   private CanvasItem create_line() {
-    var item = new CanvasItemLine( props );
+    var item = new CanvasItemLine( _canvas, props );
     item.bbox = center_box( 200, 1 );
     return( item );
   }
 
   private CanvasItem create_arrow() {
-    var item = new CanvasItemArrow( props );
+    var item = new CanvasItemArrow( _canvas, props );
     item.bbox = center_box( 200, 1 );
     return( item );
   }
@@ -134,19 +134,19 @@ public class CanvasItems {
   }
 
   private CanvasItem create_blur() {
-    var item = new CanvasItemBlur( _canvas.image, props );
+    var item = new CanvasItemBlur( _canvas, props );
     item.bbox = center_box( 200, 50 );
     return( item );
   }
 
   private CanvasItem create_magnifier() {
-    var item = new CanvasItemMagnifier( _canvas.image, 2.0, props );
+    var item = new CanvasItemMagnifier( _canvas, 2.0, props );
     item.bbox = center_box( 200, 200 );
     return( item );
   }
 
   private CanvasItem create_pencil() {
-    var item = new CanvasItemPencil( props );
+    var item = new CanvasItemPencil( _canvas, props );
     _active = item;
     return( item );
   }
@@ -183,7 +183,7 @@ public class CanvasItems {
   }
 
   /* Removes all of the canvas items */
-  private void clear() {
+  public void clear() {
     while( _items.first() != null ) {
       _items.delete_link( _items.first() );
     }
