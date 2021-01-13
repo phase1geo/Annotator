@@ -207,10 +207,15 @@ public class CanvasItems {
 
   /* Update the selected attributes */
   private void update_selected_attributes() {
+    var undo_item = new UndoItemPropChange();
     foreach( CanvasItem item in _items ) {
       if( item.mode == CanvasItemMode.SELECTED ) {
         item.props = props;
+        undo_item.add( item );
       }
+    }
+    if( !undo_item.empty() ) {
+      _canvas.undo_buffer.replace_item( undo_item );
     }
     _canvas.queue_draw();
   }
@@ -278,7 +283,8 @@ public class CanvasItems {
     switch( keyval ) {
       case Key.BackSpace :  return( handle_backspace() );
       case Key.Delete    :  return( handle_delete() );
-      case Key.Return    :  return( handle_return() );
+      case Key.Return    :  return( handle_return( shift ) );
+      case Key.Escape    :  return( handle_escape() );
       case Key.Left      :
       case Key.Right     :
       case Key.Home      :
@@ -320,7 +326,23 @@ public class CanvasItems {
   }
 
   /* If we are in text editing mode, mark the node as being not in edit mode */
-  private bool handle_return() {
+  private bool handle_return( bool shift ) {
+    if( in_edit_mode() ) {
+      if( shift ) {
+        var text = get_active_text();
+        text.insert( "\n", _canvas.undo_text );
+      } else {
+        set_edit_mode( false );
+        _active.mode = CanvasItemMode.NONE;
+        _active = null;
+      }
+      return( true );
+    }
+    return( false );
+  }
+
+  /* If we are in text editing mode, remove the active node from editing mode */
+  private bool handle_escape() {
     if( in_edit_mode() ) {
       set_edit_mode( false );
       _active.mode = CanvasItemMode.NONE;

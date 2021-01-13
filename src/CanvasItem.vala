@@ -73,14 +73,14 @@ public enum CanvasItemMode {
 
 public class CanvasItem {
 
-  private CanvasRect     _bbox      = new CanvasRect();
-  private CanvasRect     _last_bbox = new CanvasRect();
-  private CanvasItemMode _mode      = CanvasItemMode.NONE;
+  private CanvasRect           _bbox  = new CanvasRect();
+  private CanvasItemMode       _mode  = CanvasItemMode.NONE;
+  private CanvasItemProperties _props = new CanvasItemProperties();
 
   protected Array<CanvasPoint> points { get; set; default = new Array<CanvasPoint>(); }
   protected double             selector_size = 10;
 
-  public string name    { get; private set; default = "unknown"; }
+  public string     name      { get; private set; default = "unknown"; }
   public CanvasRect bbox {
     get {
       return( _bbox );
@@ -88,11 +88,6 @@ public class CanvasItem {
     set {
       _bbox.copy( value );
       bbox_changed();
-    }
-  }
-  public CanvasRect last_bbox {
-    get {
-      return( _last_bbox );
     }
   }
   public CanvasItemMode mode {
@@ -103,13 +98,25 @@ public class CanvasItem {
       if( _mode != value ) {
         _mode = value;
         if( _mode.moving() ) {
-          _last_bbox.copy( bbox );
+          last_bbox.copy( bbox );
         }
         mode_changed();
       }
     }
   }
-  public CanvasItemProperties props { get; set; default = new CanvasItemProperties(); }
+  public CanvasItemProperties props {
+    get {
+      return( _props );
+    }
+    set {
+      if( !_props.equals( value ) ) {
+        last_props.copy( _props );
+        _props.copy( value );
+      }
+    }
+  }
+  public CanvasItemProperties last_props { get; private set; default = new CanvasItemProperties(); }
+  public CanvasRect           last_bbox  { get; private set; default = new CanvasRect(); }
 
   /* Constructor */
   public CanvasItem( string name, CanvasItemProperties props ) {

@@ -233,6 +233,18 @@ public class CanvasItemProperties {
     font          = props.font.copy();
   }
 
+  /* Returns true if the given properties element matches values with us */
+  public bool equals( CanvasItemProperties props ) {
+    return(
+      color.equal( props.color ) &&
+      (alpha == props.alpha) &&
+      (stroke_width == props.stroke_width) &&
+      (dash == props.dash) &&
+      (blur_radius == props.blur_radius) &&
+      font.equal( props.font)
+    );
+  }
+
   /* Saves the contents of this properties class as XML */
   public Xml.Node* save() {
     Xml.Node* node = new Xml.Node( null, "properties" );
