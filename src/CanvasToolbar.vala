@@ -36,6 +36,7 @@ public class CanvasToolbar : Toolbar {
     create_shapes();
     create_sequence();
     create_text();
+    create_magnifier();
     create_blur();
     create_crop();
     create_resize();
@@ -116,6 +117,21 @@ public class CanvasToolbar : Toolbar {
     });
 
     add( btn );
+
+  }
+
+  private void create_magnifier() {
+
+    var btn = new ToolButton( null, null );
+    btn.set_tooltip_text( _( "Add magnifier" ) );
+    btn.icon_name    = "edit-find-symbolic";
+    btn.margin_left  = margin;
+    btn.margin_right = margin;
+    btn.clicked.connect(() => {
+      _canvas.items.add_shape_item( CanvasItemType.MAGNIFIER );
+    });
+
+    add(btn );
 
   }
 

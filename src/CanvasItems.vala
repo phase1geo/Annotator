@@ -34,6 +34,7 @@ public enum CanvasItemType {
   ARROW,
   TEXT,
   BLUR,
+  MAGNIFIER
 }
 
 public class CanvasItems {
@@ -137,6 +138,12 @@ public class CanvasItems {
     return( item );
   }
 
+  private CanvasItem create_magnifier() {
+    var item = new CanvasItemMagnifier( _canvas.image, 2.0, props );
+    item.bbox = center_box( 100, 100 );
+    return( item );
+  }
+
   public void add_item( CanvasItem item, int position ) {
     clear_selection();
     item.mode = CanvasItemMode.SELECTED;
@@ -157,6 +164,7 @@ public class CanvasItems {
       case CanvasItemType.ARROW        :  item = create_arrow();  break;
       case CanvasItemType.TEXT         :  item = create_text();  break;
       case CanvasItemType.BLUR         :  item = create_blur();  break;
+      case CanvasItemType.MAGNIFIER    :  item = create_magnifier();  break;
       default :  assert_not_reached();
     }
     add_item( item, -1 );

@@ -81,6 +81,27 @@ public class CanvasImage {
 
   }
 
+  /* Draws a magnified area within the boundary box, cropped into a circle. */
+  public void draw_magnifier( Cairo.Context ctx, CanvasRect rect, double zoom_factor ) {
+
+    var width   = rect.width / zoom_factor;
+    var adjust  = (rect.width - width) / 2;
+    var sub     = new Pixbuf.subpixbuf( _buf, (int)(rect.x + adjust), (int)(rect.y + adjust), (int)width, (int)width );
+    var surface = (ImageSurface)cairo_surface_create_from_pixbuf( sub, 1, null );
+
+    ctx.save();
+    ctx.set_line_width( 1 );
+    ctx.arc( rect.mid_x(), rect.mid_y(), (rect.width / 2), 0, (2 * Math.PI) );
+    ctx.stroke_preserve();
+    ctx.clip();
+    ctx.new_path();
+   	ctx.scale( zoom_factor, zoom_factor );
+   	ctx.set_source_surface( surface, (rect.x / zoom_factor), (rect.y / zoom_factor) );
+   	ctx.paint();
+   	ctx.restore();
+   	
+  }
+
   /* Returns the RGBA color value that averages the colors in the given rectangle */
   public RGBA get_average_color( CanvasRect rect ) {
 
