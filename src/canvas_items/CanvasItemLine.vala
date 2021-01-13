@@ -42,12 +42,12 @@ public class CanvasItemLine : CanvasItem {
 
   /* Creates the selection points */
   private void create_points() {
-    points.append_val( new CanvasPoint( true ) );  // Start
-    points.append_val( new CanvasPoint( true ) );  // End
-    points.append_val( new CanvasPoint( false ) );  // Above Start
-    points.append_val( new CanvasPoint( false ) );  // Below Start
-    points.append_val( new CanvasPoint( false ) );  // Above End
-    points.append_val( new CanvasPoint( false ) );  // Below End
+    points.append_val( new CanvasPoint( CanvasPointType.RESIZER ) );  // Start
+    points.append_val( new CanvasPoint( CanvasPointType.RESIZER ) );  // End
+    points.append_val( new CanvasPoint() );  // Above Start
+    points.append_val( new CanvasPoint() );  // Below Start
+    points.append_val( new CanvasPoint() );  // Above End
+    points.append_val( new CanvasPoint() );  // Below End
   }
 
   /* Copies the given arrow item properties to this one */

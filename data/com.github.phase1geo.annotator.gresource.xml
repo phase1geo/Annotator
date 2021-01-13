@@ -21,5 +21,6 @@
         <file alias="line-symbolic.svg">images/icons/scalable/line-symbolic.svg</file>
         <file alias="blur-symbolic.svg">images/icons/scalable/blur-symbolic.svg</file>
         <file alias="sequence-symbolic.svg">images/icons/scalable/sequence-symbolic.svg</file>
+        <file alias="magnifier-symbolic.svg">images/icons/scalable/magnifier-symbolic.svg</file>
     </gresource>
 </gresources>

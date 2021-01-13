@@ -55,12 +55,12 @@ public class CanvasItemArrow : CanvasItem {
 
   /* Creates the selection points */
   private void create_points() {
-    points.append_val( new CanvasPoint( true ) );
-    points.append_val( new CanvasPoint( true ) );
-    points.append_val( new CanvasPoint( true ) );
-    points.append_val( new CanvasPoint( true ) );
-    points.append_val( new CanvasPoint( false ) );
-    points.append_val( new CanvasPoint( false ) );
+    points.append_val( new CanvasPoint( CanvasPointType.RESIZER ) );
+    points.append_val( new CanvasPoint( CanvasPointType.RESIZER ) );
+    points.append_val( new CanvasPoint( CanvasPointType.RESIZER ) );
+    points.append_val( new CanvasPoint( CanvasPointType.RESIZER ) );
+    points.append_val( new CanvasPoint() );
+    points.append_val( new CanvasPoint() );
   }
 
   /* Copies the given arrow item properties to this one */

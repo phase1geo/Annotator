@@ -23,7 +23,8 @@ using Gtk;
 
 public class Editor : Box {
 
-  private string _filename;
+  private string         _filename;
+  private ScrolledWindow _sw;
 
   public Canvas canvas { get; private set; }
 
@@ -35,7 +36,7 @@ public class Editor : Box {
     Object( orientation: Orientation.VERTICAL, spacing: 0 );
 
     /* Create the canvas */
-    canvas = new Canvas( win );
+    canvas = new Canvas( win, this );
     canvas.halign = Align.CENTER;
     canvas.valign = Align.CENTER;
     canvas.image_loaded.connect(() => {
@@ -47,12 +48,12 @@ public class Editor : Box {
     overlay.border_width = 10;
     overlay.add( canvas );
 
-    var sw = new ScrolledWindow( null, null );
-    sw.min_content_width  = 600;
-    sw.min_content_height = 400;
-    sw.vscrollbar_policy  = PolicyType.AUTOMATIC;
-    sw.hscrollbar_policy  = PolicyType.AUTOMATIC;
-    sw.add( overlay );
+    _sw = new ScrolledWindow( null, null );
+    _sw.min_content_width  = 600;
+    _sw.min_content_height = 400;
+    _sw.vscrollbar_policy  = PolicyType.AUTOMATIC;
+    _sw.hscrollbar_policy  = PolicyType.AUTOMATIC;
+    _sw.add( overlay );
 
     /* Create the toolbar */
     var toolbar = new CanvasToolbar( canvas );
@@ -66,7 +67,7 @@ public class Editor : Box {
 
     /* Pack the box */
     pack_start( box, false, true, 0 );
-    pack_start( sw,  true,  true, 0 );
+    pack_start( _sw, true,  true, 0 );
 
     show_all();
 
@@ -91,6 +92,15 @@ public class Editor : Box {
   /* Returns true if the image has been successfully set */
   public bool is_image_set() {
     return( canvas.is_surface_set() );
+  }
+
+  /* Returns the width and height of the overlay area of the canvas */
+  public CanvasRect get_displayed_rect() {
+    var x = (int)_sw.hadjustment.value;
+    var y = (int)_sw.vadjustment.value;
+    var w = _sw.get_allocated_width();
+    var h = _sw.get_allocated_height();
+    return( new CanvasRect.from_coords( x, y, w, h ) );
   }
 
 }

@@ -119,11 +119,11 @@ public class CanvasItemText : CanvasItem {
 
   /* Creates the items points */
   private void create_points() {
-    points.append_val( new CanvasPoint( false ) );  // Upper left corner
-    points.append_val( new CanvasPoint( false ) );  // Lower left corner
-    points.append_val( new CanvasPoint( false ) );  // Upper right corner
-    points.append_val( new CanvasPoint( false ) );  // Upper left corner
-    points.append_val( new CanvasPoint( true ) );   // Drag handle to right of text
+    points.append_val( new CanvasPoint() );  // Upper left corner
+    points.append_val( new CanvasPoint() );  // Lower left corner
+    points.append_val( new CanvasPoint() );  // Upper right corner
+    points.append_val( new CanvasPoint() );  // Upper left corner
+    points.append_val( new CanvasPoint( CanvasPointType.RESIZER ) );   // Drag handle to right of text
   }
 
   /* Allocates and initializes the font description for the layouts */

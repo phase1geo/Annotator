@@ -36,14 +36,14 @@ public class CanvasItemRect : CanvasItem {
 
   /* Create the points */
   private void create_points() {
-    points.append_val( new CanvasPoint( true ) );  // upper-left
-    points.append_val( new CanvasPoint( true ) );  // upper-right
-    points.append_val( new CanvasPoint( true ) );  // lower-left
-    points.append_val( new CanvasPoint( true ) );  // lower-right
-    points.append_val( new CanvasPoint( true ) );  // top
-    points.append_val( new CanvasPoint( true ) );  // right
-    points.append_val( new CanvasPoint( true ) );  // bottom
-    points.append_val( new CanvasPoint( true ) );  // left
+    points.append_val( new CanvasPoint( CanvasPointType.RESIZER ) );  // upper-left
+    points.append_val( new CanvasPoint( CanvasPointType.RESIZER ) );  // upper-right
+    points.append_val( new CanvasPoint( CanvasPointType.RESIZER ) );  // lower-left
+    points.append_val( new CanvasPoint( CanvasPointType.RESIZER ) );  // lower-right
+    points.append_val( new CanvasPoint( CanvasPointType.RESIZER ) );  // top
+    points.append_val( new CanvasPoint( CanvasPointType.RESIZER ) );  // right
+    points.append_val( new CanvasPoint( CanvasPointType.RESIZER ) );  // bottom
+    points.append_val( new CanvasPoint( CanvasPointType.RESIZER ) );  // left
   }
 
   /* Updates the selection boxes whenever the bounding box changes */

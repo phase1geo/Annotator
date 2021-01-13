@@ -29,6 +29,7 @@ public class Canvas : DrawingArea {
   private IMMulticontext _im_context;
 
   public MainWindow     win         { get; private set; }
+  public Editor         editor      { get; private set; }
   public double         sfactor     { get; set; default = 1.0; }
   public CanvasImage    image       { get; private set; }
   public CanvasItems    items       { get; private set; }
@@ -38,9 +39,10 @@ public class Canvas : DrawingArea {
   public signal void image_loaded();
 
   /* Constructor */
-  public Canvas( MainWindow win ) {
+  public Canvas( MainWindow win, Editor editor ) {
 
-    win = win;
+    this.win    = win;
+    this.editor = editor;
 
     /* Create the canvas image */
     image = new CanvasImage( this );

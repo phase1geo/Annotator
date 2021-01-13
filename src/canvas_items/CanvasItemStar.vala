@@ -45,10 +45,11 @@ public class CanvasItemStar : CanvasItem {
       points.remove_range( 0, points.length );
     }
     for( int i=0; i<(_num_points * 2); i++ ) {
-      points.append_val( new CanvasPoint( (i == 0) || (i == ((_num_points * 2) - 1)) ) );
+      var point_type = ((i == 0) || (i == ((_num_points * 2) - 1))) ? CanvasPointType.RESIZER : CanvasPointType.NONE;
+      points.append_val( new CanvasPoint( point_type ) );
     }
     for( int i=0; i<4; i++ ) {
-      points.append_val( new CanvasPoint( true ) );
+      points.append_val( new CanvasPoint( CanvasPointType.RESIZER ) );
     }
   }
 

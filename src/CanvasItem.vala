@@ -78,9 +78,9 @@ public class CanvasItem {
   private CanvasItemProperties _props = new CanvasItemProperties();
 
   protected Array<CanvasPoint> points { get; set; default = new Array<CanvasPoint>(); }
-  protected double             selector_size = 10;
+  protected double             selector_size = 12;
 
-  public string     name      { get; private set; default = "unknown"; }
+  public string     name { get; private set; default = "unknown"; }
   public CanvasRect bbox {
     get {
       return( _bbox );
@@ -200,7 +200,7 @@ public class CanvasItem {
     if( !mode.draw_selectors() ) return( -1 );
     var box = new CanvasRect();
     for( int i=0; i<points.length; i++ ) {
-      if( points.index( i ).draw ) {
+      if( points.index( i ).kind.draw() ) {
         selector_bbox( i, box );
         if( box.contains( x, y ) ) {
           return( i );
@@ -218,20 +218,19 @@ public class CanvasItem {
 
     if( !mode.draw_selectors() ) return;
 
-    var blue  = Utils.color_from_string( "light blue" );
     var black = Utils.color_from_string( "black" );
     var box   = new CanvasRect();
 
     for( int i=0; i<points.length; i++ ) {
 
-      if( points.index( i ).draw ) {
+      if( points.index( i ).kind.draw() ) {
 
         selector_bbox( i, box );
 
         ctx.set_line_width( 1 );
 
         /* Draw the selection rectangle */
-        Utils.set_context_color( ctx, blue );
+        Utils.set_context_color( ctx, points.index( i ).kind.color() );
         ctx.rectangle( box.x, box.y, box.width, box.height );
         ctx.fill_preserve();
 

@@ -21,15 +21,44 @@
 
 using Gtk;
 
+public enum CanvasPointType {
+  NONE,
+  RESIZER,
+  CONTROL;
+
+  /* Returns the string version of this type */
+  public string to_string() {
+    switch( this ) {
+      case RESIZER :  return( "resizer" );
+      case CONTROL :  return( "control" );
+      default      :  return( "none" );
+    }
+  }
+
+  /* Returns true if this point should be drawn */
+  public bool draw() {
+    return( this != NONE );
+  }
+
+  /* Returns the color to draw the given point */
+  public Gdk.RGBA color() {
+    switch( this ) {
+      case RESIZER :  return( Utils.color_from_string( "light blue" ) );
+      case CONTROL :  return( Utils.color_from_string( "yellow" ) );
+      default      :  return( Utils.color_from_string( "white" ) );
+    }
+  }
+}
+
 public class CanvasPoint {
 
-  public double x    { get; set; default = 0.0; }
-  public double y    { get; set; default = 0.0; }
-  public bool   draw { get; private set; default = false; }
+  public double          x    { get; set; default = 0.0; }
+  public double          y    { get; set; default = 0.0; }
+  public CanvasPointType kind { get; private set; default = CanvasPointType.NONE; }
 
   /* Constructor */
-  public CanvasPoint( bool draw = false ) {
-    this.draw = draw;
+  public CanvasPoint( CanvasPointType kind = CanvasPointType.NONE ) {
+    this.kind = kind;
   }
 
   /* Copy constructor */
@@ -38,16 +67,16 @@ public class CanvasPoint {
   }
 
   /* Constructor */
-  public CanvasPoint.from_coords( double x, double y, bool draw = false ) {
+  public CanvasPoint.from_coords( double x, double y, CanvasPointType kind = CanvasPointType.NONE ) {
     copy_coords( x, y );
-    this.draw = draw;
+    this.kind = kind;
   }
 
   /* Copies the point information to this instance */
   public void copy( CanvasPoint point ) {
     this.x    = point.x;
     this.y    = point.y;
-    this.draw = point.draw;
+    this.kind = point.kind;
   }
 
   /* Copies the x,y coordinates to this instance */
@@ -58,7 +87,7 @@ public class CanvasPoint {
 
   /* Returns a printable version of this point */
   public string to_string() {
-    return( "x: %g, y: %g, draw: %s".printf( x, y, draw.to_string() ) );
+    return( "x: %g, y: %g, kind: %s".printf( x, y, kind.to_string() ) );
   }
 
 }

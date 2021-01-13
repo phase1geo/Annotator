@@ -89,9 +89,9 @@ public class CanvasItems {
 
   /* Returns the box to place a canvas item into */
   private CanvasRect center_box( double width, double height ) {
-    var canvas_width  = _canvas.get_allocated_width();
-    var canvas_height = _canvas.get_allocated_height();
-    return( new CanvasRect.from_coords( ((canvas_width - width) / 2), ((canvas_height - height) / 2), width, height ) );
+    var rect = _canvas.editor.get_displayed_rect();
+    rect.copy_coords( (rect.x + ((rect.width - width) / 2)), (rect.y + ((rect.height - height) / 2)), width, height );
+    return( rect );
   }
 
   private CanvasItem create_rectangle( bool fill ) {
@@ -140,7 +140,7 @@ public class CanvasItems {
 
   private CanvasItem create_magnifier() {
     var item = new CanvasItemMagnifier( _canvas.image, 2.0, props );
-    item.bbox = center_box( 100, 100 );
+    item.bbox = center_box( 200, 200 );
     return( item );
   }
 
@@ -533,7 +533,7 @@ public class CanvasItems {
       }
       foreach( CanvasItem item in _items ) {
         if( item.is_within( x, y ) ) {
-          _canvas.set_cursor_from_name( "grab" );
+          _canvas.set_cursor( CursorType.HAND1 );
           return( false );
         }
       }

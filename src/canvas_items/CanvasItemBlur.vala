@@ -25,7 +25,11 @@ using Cairo;
 
 public class CanvasItemBlur : CanvasItem {
 
+  private const int min_blur = 5;
+  private const int max_blur = 45;
+
   private CanvasImage _image;
+  private int         _blur_radius;
 
   /* Constructor */
   public CanvasItemBlur( CanvasImage image, CanvasItemProperties props ) {
@@ -36,14 +40,14 @@ public class CanvasItemBlur : CanvasItem {
 
   /* Create the points */
   private void create_points() {
-    points.append_val( new CanvasPoint( true ) );  // upper-left
-    points.append_val( new CanvasPoint( true ) );  // upper-right
-    points.append_val( new CanvasPoint( true ) );  // lower-left
-    points.append_val( new CanvasPoint( true ) );  // lower-right
-    points.append_val( new CanvasPoint( true ) );  // top
-    points.append_val( new CanvasPoint( true ) );  // right
-    points.append_val( new CanvasPoint( true ) );  // bottom
-    points.append_val( new CanvasPoint( true ) );  // left
+    points.append_val( new CanvasPoint( CanvasPointType.RESIZER ) );  // upper-left
+    points.append_val( new CanvasPoint( CanvasPointType.RESIZER ) );  // upper-right
+    points.append_val( new CanvasPoint( CanvasPointType.RESIZER ) );  // lower-left
+    points.append_val( new CanvasPoint( CanvasPointType.RESIZER ) );  // lower-right
+    points.append_val( new CanvasPoint( CanvasPointType.CONTROL ) );  // blur control
+    points.append_val( new CanvasPoint( CanvasPointType.RESIZER ) );  // right
+    points.append_val( new CanvasPoint( CanvasPointType.RESIZER ) );  // bottom
+    points.append_val( new CanvasPoint( CanvasPointType.RESIZER ) );  // left
   }
 
   /* Updates the selection boxes whenever the bounding box changes */
@@ -109,8 +113,7 @@ public class CanvasItemBlur : CanvasItem {
 
     /* If we are moving the node or resizing it, just draw an alpha box */
     if( mode.moving() ) {
-      var blur_color = _image.get_average_color( bbox );
-      Utils.set_context_color_with_alpha( ctx, blur_color, mode.alpha() );
+      Utils.set_context_color_with_alpha( ctx, _image.average_color, mode.alpha() );
       ctx.rectangle( bbox.x, bbox.y, bbox.width, bbox.height );
       ctx.fill();
 

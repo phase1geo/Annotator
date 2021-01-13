@@ -124,7 +124,7 @@ public class CanvasToolbar : Toolbar {
 
     var btn = new ToolButton( null, null );
     btn.set_tooltip_text( _( "Add magnifier" ) );
-    btn.icon_name    = "edit-find-symbolic";
+    btn.icon_name    = "magnifier-symbolic";
     btn.margin_left  = margin;
     btn.margin_right = margin;
     btn.clicked.connect(() => {

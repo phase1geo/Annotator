@@ -34,9 +34,10 @@ public class CanvasImage {
   private double         _last_x     = 0;
   private double         _last_y     = 0;
 
-  public bool       cropping  { get; private set; default = false; }
-  public Exporter   exporter  { get; private set; }
-  public CanvasRect crop_rect { get; private set; default = new CanvasRect(); }
+  public bool       cropping      { get; private set; default = false; }
+  public Exporter   exporter      { get; private set; }
+  public CanvasRect crop_rect     { get; private set; default = new CanvasRect(); }
+  public RGBA       average_color { get; private set; default = {1.0, 1.0, 1.0, 1.0}; }
 
   public signal void crop_ended();
 
@@ -57,16 +58,17 @@ public class CanvasImage {
     height = _buf.height;
   }
 
+  /* Returns a surface which contains the given rectangle area of the base image */
+  public Cairo.Surface get_surface_for_rect( CanvasRect rect ) {
+    var sub = new Pixbuf.subpixbuf( _buf, (int)rect.x, (int)rect.y, (int)rect.width, (int)rect.height );
+    return( cairo_surface_create_from_pixbuf( sub, 1, null ) );
+  }
+
   /* Draws a blur in the given rectangle onto the provided context */
   public void draw_blur_rectangle( Cairo.Context ctx, CanvasRect rect, int blur_radius = 10 ) {
 
-    var x       = (rect.x < 0) ? 0 : (int)rect.x;
-    var y       = (rect.y < 0) ? 0 : (int)rect.y;
-    var w       = ((rect.x + rect.width)  >= _buf.width)  ? (_buf.width  - (int)rect.x) : (int)rect.width;
-    var h       = ((rect.y + rect.height) >= _buf.height) ? (_buf.height - (int)rect.y) : (int)rect.height;
-    var sub     = new Pixbuf.subpixbuf( _buf, x, y, w, h );
-    var surface = cairo_surface_create_from_pixbuf( sub, 1, null );
-    var buffer  = new Granite.Drawing.BufferSurface.with_surface( w, h, surface );
+    var surface = get_surface_for_rect( rect );
+    var buffer  = new Granite.Drawing.BufferSurface.with_surface( (int)rect.width, (int)rect.height, surface );
 
     /* Copy the surface contents over */
     buffer.context.set_source_surface( surface, 0, 0 );
@@ -76,34 +78,29 @@ public class CanvasImage {
     buffer.exponential_blur( blur_radius );
 
     /* Draw the blurred pixbuf onto the context */
-    ctx.set_source_surface( buffer.surface, x, y );
+    ctx.set_source_surface( buffer.surface, rect.x, rect.y );
     ctx.paint();
 
   }
 
   /* Draws a magnified area within the boundary box, cropped into a circle. */
-  public void draw_magnifier( Cairo.Context ctx, CanvasRect rect, double zoom_factor ) {
+  public void draw_magnifier( Cairo.Context ctx, double x, double y, CanvasRect rect, double zoom_factor ) {
 
-    var width   = rect.width / zoom_factor;
-    var adjust  = (rect.width - width) / 2;
-    var sub     = new Pixbuf.subpixbuf( _buf, (int)(rect.x + adjust), (int)(rect.y + adjust), (int)width, (int)width );
+    var sub     = new Pixbuf.subpixbuf( _buf, (int)rect.x, (int)rect.y, (int)rect.width, (int)rect.height );
     var surface = (ImageSurface)cairo_surface_create_from_pixbuf( sub, 1, null );
 
     ctx.save();
-    ctx.set_line_width( 1 );
-    ctx.arc( rect.mid_x(), rect.mid_y(), (rect.width / 2), 0, (2 * Math.PI) );
-    ctx.stroke_preserve();
     ctx.clip();
     ctx.new_path();
    	ctx.scale( zoom_factor, zoom_factor );
-   	ctx.set_source_surface( surface, (rect.x / zoom_factor), (rect.y / zoom_factor) );
+   	ctx.set_source_surface( surface, x, y );
    	ctx.paint();
    	ctx.restore();
    	
   }
 
   /* Returns the RGBA color value that averages the colors in the given rectangle */
-  public RGBA get_average_color( CanvasRect rect ) {
+  public RGBA average_color_of_rect( CanvasRect rect ) {
 
     var x     = (rect.x < 0) ? 0 : (int)rect.x;
     var y     = (rect.y < 0) ? 0 : (int)rect.y;
@@ -127,6 +124,9 @@ public class CanvasImage {
     _buf     = buf.copy();
     _surface = (ImageSurface)cairo_surface_create_from_pixbuf( _buf, 1, null );
     _canvas.set_size_request( _buf.width, _buf.height );
+
+    /* Store the average color value for faster lookups */
+    average_color = average_color_of_rect( new CanvasRect.from_coords( 0, 0, _buf.width, _buf.height ) );
 
   }
 
@@ -428,7 +428,7 @@ public class CanvasImage {
   /* Draw the cropping area if we are in that mode */
   private void draw_cropping( Context ctx ) {
     if( !cropping ) return;
-    var color = get_average_color( crop_rect );
+    var color = average_color_of_rect( crop_rect );
     draw_crop_outline( ctx, color );
     draw_crop_dividers( ctx, color );
     draw_crop_selectors( ctx );
