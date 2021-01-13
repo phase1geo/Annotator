@@ -74,11 +74,29 @@ public enum CanvasItemMode {
 
 }
 
+public enum CanvasItemPathType {
+  STROKE,
+  FILL,
+  CLIP;
+
+  public bool is_within( Context ctx, double x, double y ) {
+    switch( this ) {
+      case FILL   :  return( ctx.in_fill( x, y ) );
+      case STROKE :  return( ctx.in_stroke( x, y ) );
+      case CLIP   :  return( ctx.in_clip( x, y ) );
+      default     :  assert_not_reached();
+    }
+  }
+}
+
 public class CanvasItem {
 
-  private CanvasRect           _bbox  = new CanvasRect();
-  private CanvasItemMode       _mode  = CanvasItemMode.NONE;
-  private CanvasItemProperties _props = new CanvasItemProperties();
+  private CanvasRect           _bbox      = new CanvasRect();
+  private CanvasItemMode       _mode      = CanvasItemMode.NONE;
+  private CanvasItemProperties _props     = new CanvasItemProperties();
+  private Cairo.Context?       _context   = null;
+  private Cairo.Path?          _path      = null;
+  private CanvasItemPathType   _path_type = CanvasItemPathType.FILL;
 
   protected Array<CanvasPoint> points { get; set; default = new Array<CanvasPoint>(); }
   protected double             selector_size = 12;
@@ -147,7 +165,7 @@ public class CanvasItem {
   protected virtual void mode_changed() {}
 
   /* Moves the item by the given amount */
-  public void move_item( double diffx, double diffy ) {
+  public virtual void move_item( double diffx, double diffy ) {
     mode = CanvasItemMode.MOVING;
     bbox.x += diffx;
     bbox.y += diffy;
@@ -198,7 +216,8 @@ public class CanvasItem {
 
   /* Returns true if the given coordinates are within this item */
   public virtual bool is_within( double x, double y ) {
-    return( bbox.contains( x, y ) );
+    _context.append_path( _path );
+    return( _path_type.is_within( _context, x, y ) );
   }
 
   /* Returns the selector index that is below the current pointer coordinate */
@@ -214,6 +233,13 @@ public class CanvasItem {
       }
     }
     return( -1 );
+  }
+
+  /* Saves the current path so that we can calculate is_within */
+  protected void save_path( Context ctx, CanvasItemPathType type ) {
+    _context   = ctx;
+    _path      = ctx.copy_path_flat();
+    _path_type = type;
   }
 
   /* Draw the current item */

@@ -50,10 +50,14 @@ public class CanvasItemPencil : CanvasItem {
     }
   }
 
-  public override bool is_within( double x, double y ) {
-    return( false );
+  /* Move the item */
+  public override void move_item( double diffx, double diffy ) {
+    for( int i=0; i<_edit_points.length; i++ ) {
+      _edit_points.index( i ).adjust( diffx, diffy );
+    }
   }
 
+  /* Add an edit point */
   public override void draw( double x, double y ) {
     _edit_points.append_val( new CanvasPoint.from_coords( x, y ) );
   }
@@ -70,12 +74,15 @@ public class CanvasItemPencil : CanvasItem {
     /* Draw the outline */
     Utils.set_context_color_with_alpha( ctx, outline, (alpha / 2) );
     ctx.set_line_width( sw + 2 );
+    ctx.set_line_cap( LineCap.ROUND );
     props.dash.set_bg_pattern( ctx );
     ctx.move_to( _edit_points.index( 0 ).x, _edit_points.index( 0 ).y );
 
     for( int i=1; i<_edit_points.length; i++ ) {
       ctx.line_to( _edit_points.index( i ).x, _edit_points.index( i ).y );
     }
+
+    save_path( ctx, CanvasItemPathType.STROKE );
 
     ctx.stroke_preserve();
 

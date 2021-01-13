@@ -833,6 +833,7 @@ public class CanvasItemText : CanvasItem {
     var w = bbox.width + (_padding * 2);
     var h = bbox.height + (_padding * 2);
 
+    /* Draw the selection box, if needed */
     if( mode == CanvasItemMode.SELECTED ) {
 
       var dash = CanvasItemDashPattern.LONG;

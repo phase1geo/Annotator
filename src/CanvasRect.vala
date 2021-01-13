@@ -85,6 +85,12 @@ public class CanvasPoint {
     this.y = y;
   }
 
+  /* Adjust the point by the given amounts */
+  public void adjust( double diffx, double diffy ) {
+    this.x += diffx;
+    this.y += diffy;
+  }
+
   /* Returns a printable version of this point */
   public string to_string() {
     return( "x: %g, y: %g, kind: %s".printf( x, y, kind.to_string() ) );
