@@ -46,8 +46,14 @@ public class CanvasItemPencil : CanvasItem {
     base.copy( item );
     _edit_points.remove_range( 0, _edit_points.length );
     for( int i=0; i<cast_item._edit_points.length; i++ ) {
-      _edit_points.append_val( new CanvasPoint.from_point( cast_item._edit_points.index( i ) ) );
+      var point = cast_item._edit_points.index( i );
+      draw( point.x, point.y );
     }
+  }
+
+  /* If a selector is moved, move the entire thing */
+  public override void move_selector( int index, double diffx, double diffy, bool shift ) {
+    move_item( diffx, diffy );
   }
 
   /* Move the item */
@@ -55,11 +61,17 @@ public class CanvasItemPencil : CanvasItem {
     for( int i=0; i<_edit_points.length; i++ ) {
       _edit_points.index( i ).adjust( diffx, diffy );
     }
+    points.index( 0 ).adjust( diffx, diffy );
+    points.index( 1 ).adjust( diffx, diffy );
+  }
+
+  public override CursorType? get_selector_cursor( int index ) {
+    return( CursorType.HAND1 );
   }
 
   /* Add an edit point */
   public override void draw( double x, double y ) {
-    _edit_points.append_val( new CanvasPoint.from_coords( x, y ) );
+    _edit_points.append_val( new CanvasPoint.from_coords( x, y, CanvasPointType.RESIZER ) );
     points.index( 0 ).copy( _edit_points.index( 0 ) );
     points.index( 1 ).copy( _edit_points.index( _edit_points.length - 1 ) );
   }

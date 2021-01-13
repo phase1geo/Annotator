@@ -148,6 +148,7 @@ public class CanvasItems {
   private CanvasItem create_pencil() {
     var item = new CanvasItemPencil( _canvas, props );
     _active = item;
+    _canvas.set_cursor( CursorType.PENCIL );
     return( item );
   }
 
@@ -444,7 +445,6 @@ public class CanvasItems {
     /* If the active item is a pencil, indicate that we are drawing */
     if( (_active != null) && (_active.name == "pencil") ) {
       _active.mode = CanvasItemMode.DRAWING;
-      _canvas.set_cursor( CursorType.PENCIL );
       return( false );
     }
 
@@ -596,7 +596,8 @@ public class CanvasItems {
 
     /* Indicate that we are done editing */
     } else if( in_draw_mode() ) {
-      _active.mode = CanvasItemMode.NONE;
+      _active.mode = CanvasItemMode.SELECTED;
+      retval = true;
 
     /* If we were move one or more items, make sure that they stay selected */
     } else if( _active != null ) {

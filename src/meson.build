@@ -5,6 +5,7 @@ sources += files(
     'CanvasItem.vala',
     'CanvasItemProperties.vala',
     'CanvasItems.vala',
+    'CanvasPoint.vala',
     'CanvasRect.vala',
     'CanvasToolbar.vala',
     'Clipboard.vala',
