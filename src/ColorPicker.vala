@@ -109,7 +109,7 @@ public class ColorPicker : Box {
   private void update_css( RGBA rgba ) {
     var provider = new CssProvider();
     try {
-      var color    = Utils.color_from_rgba( rgba );
+      var color    = Utils.color_to_string( rgba );
       var css_data = ".%s { background: %s; }".printf( _type.get_css_class(), color );
       provider.load_from_data( css_data );
       StyleContext.add_provider_for_screen(

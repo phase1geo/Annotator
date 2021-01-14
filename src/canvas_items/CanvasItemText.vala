@@ -814,7 +814,7 @@ public class CanvasItemText : CanvasItem {
 
   }
 
-  public bool is_within( double x, double y ) {
+  public override bool is_within( double x, double y ) {
     return( bbox.contains( x, y ) );
   }
 

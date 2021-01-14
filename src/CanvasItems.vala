@@ -48,8 +48,12 @@ public class CanvasItems {
   private double               _last_y;
   private Array<string>        _shape_icons;
   private int                  _press_count    = -1;
+  private FormatBar?           _format_bar     = null;
+  private bool?                _show_format    = null;
 
-  public CanvasItemProperties props { get; private set; }
+  public CanvasItemProperties props        { get; private set; }
+  public string               hilite_color { get; set; default = "yellow"; }
+  public string               font_color   { get; set; default = "black"; }
 
   public signal void text_item_edit_changed( CanvasItemText item );
 
@@ -239,6 +243,10 @@ public class CanvasItems {
     _canvas.queue_draw();
   }
 
+  private void select_mode_changed( bool mode ) {
+    _show_format = mode;
+  }
+
   /* Adjusts all items by the given diff amounts */
   public void adjust_items( double diffx, double diffy ) {
     foreach( CanvasItem item in _items ) {
@@ -330,6 +338,7 @@ public class CanvasItems {
     if( in_edit_mode() ) {
       var text = get_active_text();
       text.backspace( _canvas.undo_text );
+      update_format_bar();
     } else {
       remove_selected();
     }
@@ -344,6 +353,7 @@ public class CanvasItems {
     if( in_edit_mode() ) {
       var text = get_active_text();
       text.delete( _canvas.undo_text );
+      update_format_bar();
     } else {
       remove_selected();
     }
@@ -357,8 +367,11 @@ public class CanvasItems {
         var text = get_active_text();
         text.insert( "\n", _canvas.undo_text );
       } else {
+        var text = get_active_text();
         set_edit_mode( false );
-        _active.mode = CanvasItemMode.NONE;
+        update_format_bar();
+        text.mode = CanvasItemMode.NONE;
+        text.select_mode.disconnect( select_mode_changed );
         _active = null;
       }
       return( true );
@@ -369,8 +382,11 @@ public class CanvasItems {
   /* If we are in text editing mode, remove the active node from editing mode */
   private bool handle_escape() {
     if( in_edit_mode() ) {
+      var text = get_active_text();
       set_edit_mode( false );
-      _active.mode = CanvasItemMode.NONE;
+      update_format_bar();
+      text.mode = CanvasItemMode.NONE;
+      text.select_mode.disconnect( select_mode_changed );
       _active = null;
       return( true );
     }
@@ -422,6 +438,7 @@ public class CanvasItems {
           }
         }
       }
+      update_format_bar();
       return( true );
     }
     return( false );
@@ -441,6 +458,9 @@ public class CanvasItems {
 
     /* Keep track of the press count */
     _press_count = press_count;
+
+    /* Update the format bar */
+    update_format_bar();
 
     /* If the active item is a pencil, indicate that we are drawing */
     if( (_active != null) && (_active.name == "pencil") ) {
@@ -480,6 +500,7 @@ public class CanvasItems {
             case 2 :
               if( _active.name != "text" ) return( false );
               set_edit_mode( true );
+              get_active_text().select_mode.connect( select_mode_changed );
               break;
           }
         }
@@ -592,6 +613,7 @@ public class CanvasItems {
 
     /* If we are editing text, do nothing */
     } else if( in_edit_mode() ) {
+      update_format_bar();
       return( true );
 
     /* Indicate that we are done editing */
@@ -629,6 +651,64 @@ public class CanvasItems {
     _canvas.grab_focus();
 
     return( retval );
+
+  }
+
+  /*
+   If the format bar needs to be created, create it.  Place it at the current
+   cursor position and make sure that it is visible.
+  */
+  private void show_format_bar() {
+
+    /* If the format bar is currently displayed, just reposition it */
+    if( _format_bar == null ) {
+      _format_bar = new FormatBar( _canvas );
+    }
+
+    int selstart, selend, cursor;
+    var text = get_active_text();
+
+    text.get_cursor_info( out cursor, out selstart, out selend );
+
+    /* Position the popover */
+    double left, top, bottom;
+    int    line;
+    text.get_char_pos( cursor, out left, out top, out bottom, out line );
+
+    /* If this is the first line of the first row, change the popover point to the bottom of the text */
+    Gdk.Rectangle rect = {(int)left, (int)top, 1, 1};
+    _format_bar.pointing_to = rect;
+    _format_bar.position    = PositionType.TOP;
+
+    Utils.show_popover( _format_bar );
+
+  }
+
+  /* Hides the format bar if it is currently visible and destroys it */
+  private void hide_format_bar() {
+    if( _format_bar != null ) {
+      Utils.hide_popover( _format_bar );
+      _format_bar = null;
+    }
+  }
+
+  /* Shows/Hides the formatting toolbar */
+  private void update_format_bar() {
+
+    stdout.printf( "In update_format_bar, show_format null: %s, %s\n", (_show_format == null).to_string(), ((_show_format != null) && _show_format).to_string() );
+
+    /* If we have nothing to do, just return */
+    if( _show_format == null ) return;
+
+    /* Update the format bar */
+    if( _show_format ) {
+      show_format_bar();
+    } else {
+      hide_format_bar();
+    }
+
+    /* Clear the show format indicator */
+    _show_format = null;
 
   }
 

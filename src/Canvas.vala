@@ -28,13 +28,13 @@ public class Canvas : DrawingArea {
   private ImageSurface?  _surface = null;
   private IMMulticontext _im_context;
 
-  public MainWindow     win         { get; private set; }
-  public Editor         editor      { get; private set; }
-  public double         sfactor     { get; set; default = 1.0; }
-  public CanvasImage    image       { get; private set; }
-  public CanvasItems    items       { get; private set; }
-  public UndoBuffer     undo_buffer { get; private set; }
-  public UndoTextBuffer undo_text   { get; private set; }
+  public MainWindow     win          { get; private set; }
+  public Editor         editor       { get; private set; }
+  public double         sfactor      { get; set; default = 1.0; }
+  public CanvasImage    image        { get; private set; }
+  public CanvasItems    items        { get; private set; }
+  public UndoBuffer     undo_buffer  { get; private set; }
+  public UndoTextBuffer undo_text    { get; private set; }
 
   public signal void image_loaded();
 

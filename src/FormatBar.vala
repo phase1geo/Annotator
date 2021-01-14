@@ -24,7 +24,7 @@ using Gdk;
 
 public class FormatBar : Gtk.Popover {
 
-  private OutlineTable _table;
+  private Canvas       _canvas;
   private Button       _copy;
   private Button       _cut;
   private ToggleButton _bold;
@@ -37,20 +37,16 @@ public class FormatBar : Gtk.Popover {
   private MenuButton   _header;
   private ColorPicker  _hilite;
   private ColorPicker  _color;
-  private ToggleButton _link;
   private bool         _ignore_active = false;
-  private LinkEditor   _link_editor;
   private Button       _clear;
 
   /* Construct the formatting bar */
-  public FormatBar( OutlineTable table ) {
+  public FormatBar( Canvas canvas ) {
 
-    _table = table;
+    _canvas = canvas;
 
-    relative_to = table;
+    relative_to = canvas;
     modal       = false;
-
-    _link_editor = new LinkEditor( table );
 
     var box = new Box( Orientation.HORIZONTAL, 0 );
     box.border_width = 5;
@@ -126,21 +122,15 @@ public class FormatBar : Gtk.Popover {
     }
     _header.popup.show_all();
 
-    _hilite = new ColorPicker( get_hilite_color(), ColorPickerType.HCOLOR );
+    _hilite = new ColorPicker( Utils.color_from_string( _canvas.items.hilite_color ), ColorPickerType.HCOLOR );
     _hilite.set_toggle_tooltip( _( "Apply Highlight Color" ) );
     _hilite.set_select_tooltip( _( "Change Highlight Color" ) );
     _hilite.color_changed.connect( handle_hilite );
 
-    _color = new ColorPicker( get_font_color(), ColorPickerType.FCOLOR );
+    _color = new ColorPicker( Utils.color_from_string( _canvas.items.font_color ), ColorPickerType.FCOLOR );
     _color.set_toggle_tooltip( _( "Apply Font Color" ) );
     _color.set_select_tooltip( _( "Change Font Color" ) );
     _color.color_changed.connect( handle_color );
-
-    _link = new ToggleButton();
-    _link.image = new Image.from_icon_name( "insert-link-symbolic", IconSize.SMALL_TOOLBAR );
-    _link.relief = ReliefStyle.NONE;
-    _link.set_tooltip_text( _( "Link" ) );
-    _link.toggled.connect( handle_link );
 
     _clear = new Button.from_icon_name( "edit-clear-symbolic", IconSize.SMALL_TOOLBAR );
     _clear.relief = ReliefStyle.NONE;
@@ -151,27 +141,24 @@ public class FormatBar : Gtk.Popover {
 
     box.pack_start( _copy,               false, false, 0 );
     box.pack_start( _cut,                false, false, 0 );
-    if( !table.markdown ) {
-      box.pack_start( new Separator( Orientation.VERTICAL ), false, false, 0 );
-      box.pack_start( _bold,               false, false, 0 );
-      box.pack_start( _italics,            false, false, 0 );
-      box.pack_start( _underline,          false, false, 0 );
-      box.pack_start( _strike,             false, false, 0 );
-      box.pack_start( new Separator( Orientation.VERTICAL ), false, false, 0 );
-      box.pack_start( _code,               false, false, 0 );
-      box.pack_start( _header,             false, false, 0 );
-      box.pack_start( _link,               false, false, 0 );
-      box.pack_start( new Separator( Orientation.VERTICAL ), false, false, 0 );
-      box.pack_start( _super,              false, false, 0 );
-      box.pack_start( _sub,                false, false, 0 );
-      box.pack_start( new Separator( Orientation.VERTICAL ), false, false, 0 );
-      box.pack_start( new Label( spacer ), false, false, 0 );
-      box.pack_start( _hilite,             false, false, 0 );
-      box.pack_start( new Label( spacer ), false, false, 0 );
-      box.pack_start( _color,              false, false, 0 );
-      box.pack_start( new Separator( Orientation.VERTICAL ), false, false, 0 );
-      box.pack_start( _clear,              false, false, 0 );
-    }
+    box.pack_start( new Separator( Orientation.VERTICAL ), false, false, 0 );
+    box.pack_start( _bold,               false, false, 0 );
+    box.pack_start( _italics,            false, false, 0 );
+    box.pack_start( _underline,          false, false, 0 );
+    box.pack_start( _strike,             false, false, 0 );
+    box.pack_start( new Separator( Orientation.VERTICAL ), false, false, 0 );
+    box.pack_start( _code,               false, false, 0 );
+    box.pack_start( _header,             false, false, 0 );
+    box.pack_start( new Separator( Orientation.VERTICAL ), false, false, 0 );
+    box.pack_start( _super,              false, false, 0 );
+    box.pack_start( _sub,                false, false, 0 );
+    box.pack_start( new Separator( Orientation.VERTICAL ), false, false, 0 );
+    box.pack_start( new Label( spacer ), false, false, 0 );
+    box.pack_start( _hilite,             false, false, 0 );
+    box.pack_start( new Label( spacer ), false, false, 0 );
+    box.pack_start( _color,              false, false, 0 );
+    box.pack_start( new Separator( Orientation.VERTICAL ), false, false, 0 );
+    box.pack_start( _clear,              false, false, 0 );
 
     add( box );
 
@@ -187,58 +174,33 @@ public class FormatBar : Gtk.Popover {
     btn.image = lbl;
   }
 
-  private RGBA get_hilite_color() {
-    if( _table.hilite_color == null ) {
-      return( _table.get_theme().hilite );
-    } else {
-      RGBA color = {1.0, 1.0, 1.0, 1.0};
-      color.parse( _table.hilite_color );
-      return( color );
-    }
-  }
-
-  private RGBA get_font_color() {
-    if( _table.font_color == null ) {
-      return( _table.get_theme().foreground );
-    } else {
-      RGBA color = {1.0, 1.0, 1.0, 1.0};
-      color.parse( _table.font_color );
-      return( color );
-    }
-  }
-
   private void close() {
     Utils.hide_popover( this );
   }
 
   private void format_text( FormatTag tag, string? extra=null ) {
-    var ct = (_table.selected.mode == NodeMode.EDITABLE) ? _table.selected.name : _table.selected.note;
-    ct.add_tag( tag, extra, _table.undo_text );
-    _table.queue_draw();
-    _table.changed();
-    _table.grab_focus();
+    var text = _canvas.items.get_active_text();
+    text.add_tag( tag, extra, _canvas.undo_text );
+    _canvas.queue_draw();
+    _canvas.grab_focus();
   }
 
   private void unformat_text( FormatTag tag ) {
-    if( _table.selected.mode == NodeMode.EDITABLE ) {
-      _table.selected.name.remove_tag( tag, _table.undo_text );
-    } else {
-      _table.selected.note.remove_tag( tag, _table.undo_text );
-    }
-    _table.queue_draw();
-    _table.changed();
-    _table.grab_focus();
+    var text = _canvas.items.get_active_text();
+    text.remove_tag( tag, _canvas.undo_text );
+    _canvas.queue_draw();
+    _canvas.grab_focus();
   }
 
   /* Copies the selected text to the clipboard */
   private void handle_copy() {
-    _table.do_copy();
+    // TBD - _canvas.do_copy();
     close();
   }
 
   /* Cuts the selected text to the clipboard */
   private void handle_cut() {
-    _table.do_cut();
+    // TBD - _canvas.do_cut();
     close();
   }
 
@@ -334,8 +296,8 @@ public class FormatBar : Gtk.Popover {
   private void handle_hilite( RGBA? rgba ) {
     if( !_ignore_active ) {
       if( rgba != null ) {
-        _table.hilite_color = Utils.color_from_rgba( rgba );
-        format_text( FormatTag.HILITE, _table.hilite_color );
+        _canvas.items.hilite_color = Utils.color_to_string( rgba );
+        format_text( FormatTag.HILITE, _canvas.items.hilite_color );
       } else {
         unformat_text( FormatTag.HILITE );
       }
@@ -346,35 +308,18 @@ public class FormatBar : Gtk.Popover {
   private void handle_color( RGBA? rgba ) {
     if( !_ignore_active ) {
       if( rgba != null ) {
-        _table.font_color = Utils.color_from_rgba( rgba );
-        format_text( FormatTag.COLOR, _table.font_color );
+        _canvas.items.font_color = Utils.color_to_string( rgba );
+        format_text( FormatTag.COLOR, _canvas.items.font_color );
       } else {
         unformat_text( FormatTag.COLOR );
       }
     }
   }
 
-  /* Creates a link out of the currently selected text */
-  private void handle_link() {
-    if( !_ignore_active ) {
-      if( _link.active ) {
-        if( _table.selected.mode == NodeMode.EDITABLE ) {
-          _link_editor.add_url( _table.selected.name );
-        } else {
-          _link_editor.add_url( _table.selected.note );
-        }
-        _table.queue_draw();
-        _table.changed();
-      } else {
-        unformat_text( FormatTag.URL );
-      }
-    }
-  }
-
   /* Clears all tags from selected text */
   private void handle_clear() {
-    var ct = (_table.selected.mode == NodeMode.EDITABLE) ? _table.selected.name : _table.selected.note;
-    ct.remove_all_tags( _table.undo_text );
+    var text = _canvas.items.get_active_text();
+    text.remove_all_tags( _canvas.undo_text );
     _ignore_active = true;
     _bold.set_active( false );
     _italics.set_active( false );
@@ -385,21 +330,19 @@ public class FormatBar : Gtk.Popover {
     _sub.set_active( false );
     _hilite.set_active( false );
     _color.set_active( false );
-    _link.set_active( false );
     activate_header( 0 );
     _ignore_active = false;
-    _table.queue_draw();
-    _table.changed();
-    _table.grab_focus();
+    _canvas.queue_draw();
+    _canvas.grab_focus();
   }
 
   /* Sets the active status of the given toggle button */
-  private void set_toggle_button( CanvasText text, FormatTag tag, ToggleButton btn ) {
+  private void set_toggle_button( CanvasItemText text, FormatTag tag, ToggleButton btn ) {
     btn.set_active( text.text.is_tag_applied_in_range( tag, text.selstart, text.selend ) );
   }
 
   /* Sets the active status of the given color picker */
-  private void set_color_picker( CanvasText text, FormatTag tag, ColorPicker cp ) {
+  private void set_color_picker( CanvasItemText text, FormatTag tag, ColorPicker cp ) {
     cp.set_active( text.text.is_tag_applied_in_range( tag, text.selstart, text.selend ) );
   }
 
@@ -411,7 +354,7 @@ public class FormatBar : Gtk.Popover {
   }
 
   /* Sets the active status of the correct header radio menu item */
-  private void set_header( CanvasText text ) {
+  private void set_header( CanvasItemText text ) {
     var header  = text.text.get_first_extra_in_range( FormatTag.HEADER, text.selstart, text.selend );
     if( header == null ) {
       activate_header( 0 );
@@ -431,7 +374,7 @@ public class FormatBar : Gtk.Popover {
    Updates the state of the format bar based on the state of the current
    text.
   */
-  private void update_from_text( CanvasText? text ) {
+  private void update_from_text( CanvasItemText? text ) {
     _ignore_active = true;
     set_toggle_button( text, FormatTag.BOLD,       _bold );
     set_toggle_button( text, FormatTag.ITALICS,    _italics );
@@ -442,7 +385,6 @@ public class FormatBar : Gtk.Popover {
     set_toggle_button( text, FormatTag.SUB,        _sub );
     set_color_picker(  text, FormatTag.HILITE,     _hilite );
     set_color_picker(  text, FormatTag.COLOR,      _color );
-    set_toggle_button( text, FormatTag.URL,        _link );
     set_header( text );
     _ignore_active = false;
   }
@@ -452,11 +394,7 @@ public class FormatBar : Gtk.Popover {
    current cursor position.
   */
   public void initialize() {
-    if( _table.selected.mode == NodeMode.EDITABLE ) {
-      update_from_text( _table.selected.name );
-    } else {
-      update_from_text( _table.selected.note );
-    }
+    update_from_text( _canvas.items.get_active_text() );
   }
 
 }
