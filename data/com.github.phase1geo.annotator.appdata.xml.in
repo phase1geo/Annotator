@@ -57,8 +57,8 @@
     <url type="help">https://github.com/phase1geo/Annotator/wiki</url>
     <update_contact>phase1geo@gmail.com</update_contact>
     <custom>
-      <value key="x-appcenter-color-primary">#fff394</value>
-      <value key="x-appcenter-color-primary-text">#000000</value>
+      <value key="x-appcenter-color-primary">#007367</value>
+      <value key="x-appcenter-color-primary-text">#ffffff</value>
       <value key="x-appcenter-suggested-price">5</value>
     </custom>
     <releases>
