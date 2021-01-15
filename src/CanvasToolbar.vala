@@ -205,7 +205,7 @@ public class CanvasToolbar : Toolbar {
     btn.margin_left  = margin;
     btn.margin_right = margin;
     btn.clicked.connect(() => {
-      // TBD - Display image resize dialog
+      _canvas.image.resize_image();
     });
 
     add( btn );

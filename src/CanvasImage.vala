@@ -28,22 +28,29 @@ public class CanvasImage {
   private const int selector_size = 10;
 
   private Canvas         _canvas;
-  private Pixbuf?        _buf        = null;
-  private ImageSurface?  _surface    = null;
-  private int            _crop_index = -2;
-  private double         _last_x     = 0;
-  private double         _last_y     = 0;
+  private Pixbuf?        _buf          = null;
+  private ImageSurface?  _surface      = null;
+  private int            _crop_index   = -2;
+  private double         _last_x       = 0;
+  private double         _last_y       = 0;
+  private int            _left_margin  = 0;
+  private int            _top_margin   = 0;
+  private Resizer        _resizer;
 
   public bool       cropping      { get; private set; default = false; }
   public Exporter   exporter      { get; private set; }
   public CanvasRect crop_rect     { get; private set; default = new CanvasRect(); }
   public RGBA       average_color { get; private set; default = {1.0, 1.0, 1.0, 1.0}; }
+  public double     width_scale   { get; private set; default = 1.0; }
+  public double     height_scale  { get; private set; default = 1.0; }
 
   public signal void crop_ended();
+  public signal void image_changed();
 
   /* Constructor */
   public CanvasImage( Canvas canvas ) {
     _canvas  = canvas;
+    _resizer = new Resizer( this );
     exporter = new Exporter( canvas );
   }
 
@@ -95,6 +102,36 @@ public class CanvasImage {
 
     /* Delete the canvas items */
     _canvas.items.clear();
+
+    /* Indicate that the image changed to anyone listening */
+    image_changed();
+
+  }
+
+  /* Resizes the current image */
+  public void resize_image() {
+
+    var dialog = _resizer.make_dialog( _canvas.win );
+
+    if( dialog.run() == ResponseType.ACCEPT ) {
+
+      int total_width, total_height;
+      var image_rect = new CanvasRect();
+
+      /* Get the new dimensions */
+      _resizer.get_dimensions( out total_width, out total_height, image_rect );
+
+      /* Create the surface */
+      _canvas.set_size_request( total_width, total_height );
+
+      _left_margin = (int)image_rect.x;
+      _top_margin  = (int)image_rect.y;
+      width_scale  = image_rect.width  / _buf.width;
+      height_scale = image_rect.height / _buf.height;
+
+    }
+
+    dialog.close();
 
   }
 
@@ -315,7 +352,7 @@ public class CanvasImage {
 
   /* Draw the image being annotated */
   private void draw_image( Context ctx ) {
-    ctx.set_source_surface( _surface, 0, 0 );
+    ctx.set_source_surface( _surface, _left_margin, _top_margin );
     ctx.paint();
   }
 
@@ -404,6 +441,7 @@ public class CanvasImage {
 
   /* Draws the image */
   public void draw( Context ctx ) {
+    ctx.scale( _width_scale, _height_scale );
     draw_image( ctx );
     draw_cropping( ctx );
   }

@@ -15,6 +15,7 @@ sources += files(
     'Exporter.vala',
     'FormattedText.vala',
     'MainWindow.vala',
+    'Resizer.vala',
     'UndoBuffer.vala',
     'UndoItem.vala',
     'UndoTextBuffer.vala',

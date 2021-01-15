@@ -202,9 +202,14 @@ public class Canvas : DrawingArea {
     return( false );
   }
 
-  /* Returns the scaled value */
-  private double scale_value( double value ) {
-    return( value / scale_factor );
+  /* Returns the scaled x-value */
+  private double scale_x( double value ) {
+    return( value / image.width_scale );
+  }
+
+  /* Returns the scaled y-value */
+  private double scale_y( double value ) {
+    return( value / image.height_scale );
   }
 
   /* Handles keypress events */
@@ -233,8 +238,8 @@ public class Canvas : DrawingArea {
   /* Handles a mouse cursor button press event */
   private bool on_press( EventButton e ) {
 
-    var x           = scale_value( e.x );
-    var y           = scale_value( e.y );
+    var x           = scale_x( e.x );
+    var y           = scale_y( e.y );
     var press_count = (e.type == EventType.BUTTON_PRESS) ? 1 :
                       (e.type == EventType.DOUBLE_BUTTON_PRESS) ? 2 : 3;
 
@@ -255,8 +260,8 @@ public class Canvas : DrawingArea {
   /* Handles a mouse cursor motion event */
   private bool on_motion( EventMotion e ) {
 
-    var x = scale_value( e.x );
-    var y = scale_value( e.y );
+    var x = scale_x( e.x );
+    var y = scale_y( e.y );
 
     if( image.cropping ) {
       if( image.cursor_moved( x, y, e.state ) ) {
@@ -273,8 +278,8 @@ public class Canvas : DrawingArea {
   /* Handles a mouse cursor button release event */
   private bool on_release( EventButton e ) {
 
-    var x = scale_value( e.x );
-    var y = scale_value( e.y );
+    var x = scale_x( e.x );
+    var y = scale_y( e.y );
 
     if( image.cropping ) {
       if( image.cursor_released( x, y, e.state ) ) {
