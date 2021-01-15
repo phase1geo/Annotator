@@ -30,7 +30,7 @@ public class CanvasImage {
   private Canvas         _canvas;
   private Pixbuf?        _buf        = null;
   private ImageSurface?  _surface    = null;
-  private int            _crop_index = -1;
+  private int            _crop_index = -2;
   private double         _last_x     = 0;
   private double         _last_y     = 0;
 
