@@ -99,7 +99,7 @@ public class CanvasItemMagnifier : CanvasItem {
       box.height += diffy;
     }
 
-    if( box.width >= (selector_size * 3) ) {
+    if( box.width >= (selector_width * 3) ) {
       bbox = box;
     }
 

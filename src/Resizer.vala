@@ -20,6 +20,7 @@
 */
 
 using Gtk;
+using Cairo;
 
 public enum ResizerValueFormat {
   PIXELS,
@@ -74,6 +75,8 @@ public class ResizerMargin {
     }
   }
 
+  public signal void changed();
+
   public ResizerMargin( Grid grid, int row, string label, int value, ResizerValueFormat fmt ) {
 
     _btn = new CheckButton.with_label( label );
@@ -81,12 +84,17 @@ public class ResizerMargin {
     _btn.toggled.connect(() => {
       _entry.set_sensitive( _btn.active );
       _mb.set_sensitive( _btn.active );
+      changed();
     });
 
     _entry = new Entry();
+    _entry.text   = "200";
     _entry.margin = 5;
     _entry.width_chars = 5;
     _entry.set_sensitive( false );
+    _entry.activate.connect(() => {
+      changed();
+    });
 
     _mb = new MenuButton();
     _mb.margin = 5;
@@ -99,6 +107,7 @@ public class ResizerMargin {
       var mi = new Gtk.MenuItem.with_label( f.label() );
       mi.activate.connect(() => {
         _mb.label = f.label();
+        changed();
       });
       _mb.popup.add( mi );
     }
@@ -123,7 +132,9 @@ public class Resizer {
   private Entry                _width;
   private Entry                _height;
   private ToggleButton         _lock;
+  private Label                _size;
   private Array<ResizerMargin> _margins;
+  private DrawingArea          _preview;
 
   /* Constructor */
   public Resizer( CanvasImage image ) {
@@ -141,9 +152,17 @@ public class Resizer {
         _( "Resize" ), ResponseType.ACCEPT
       );
 
+    var size    = create_size();
+    var margins = create_margins();
+    var preview = create_preview();
+
+    var grid = new Grid();
+    grid.attach( size,    0, 0 );
+    grid.attach( margins, 0, 1 );
+    grid.attach( preview, 1, 0, 1, 2 );
+
     var box = dialog.get_content_area();
-    create_size( box );
-    create_margins( box );
+    box.pack_start( grid, true, true );
     box.show_all();
 
     return( dialog );
@@ -168,10 +187,12 @@ public class Resizer {
   }
 
   /* Create the sizing options */
-  private void create_size( Box box ) {
+  private Widget create_size() {
 
     int width, height;
     _image.get_dimensions( out width, out height );
+
+    double proportion = (double)width / height;
 
     var wlbl = new Label( _( "Width:" ) );
     wlbl.margin = 5;
@@ -184,7 +205,9 @@ public class Resizer {
     _width.input_purpose = InputPurpose.DIGITS;
     _width.activate.connect(() => {
       if( _lock.active ) {
-        _height.text = _width.text;
+        var h = (int)(double.parse( _width.text ) / proportion);
+        _height.text = h.to_string();
+        update_preview();
       }
     });
 
@@ -199,18 +222,19 @@ public class Resizer {
     _height.input_purpose = InputPurpose.DIGITS;
     _height.activate.connect(() => {
       if( _lock.active ) {
-        _width.text = _height.text;
+        var w = (int)(proportion * double.parse( _height.text ));
+        _width.text = w.to_string();
+        update_preview();
       }
     });
 
+    /* Create the proportion control */
     _lock = new ToggleButton();
-    _lock.image = _lock_prevent;
+    _lock.set_tooltip_text( _( "Scale proportionally" ) );
+    _lock.image  = _lock_prevent;
+    _lock.active = true;
     _lock.clicked.connect(() => {
-      if( _lock.active ) {
-        _lock.image = _lock_prevent;
-      } else {
-        _lock.image = _lock_allow;
-      }
+      _lock.image = _lock.active ? _lock_prevent : _lock_allow;
     });
 
     var lock_box = new Box( Orientation.VERTICAL, 0 );
@@ -227,32 +251,103 @@ public class Resizer {
 
     var frame = new Frame( null );
     var lbl   = new Label( Utils.make_title( _( "Image Size" ) ) );
-    lbl.use_markup = true;
+    lbl.use_markup     = true;
     frame.label_widget = lbl;
-    frame.margin_top = 10;
+    frame.margin       = 5;
     frame.add( grid );
 
-    box.pack_start( frame, false, true );
+    return( frame );
 
   }
 
-  private void create_margins( Box box ) {
+  private Widget create_margins() {
+
+    string[] labels = { _( "Top" ), _( "Right" ), _( "Bottom" ), _( "Left" ) };
 
     var grid = new Grid();
 
-    _margins.append_val( new ResizerMargin( grid, 0, _( "Top" ),    0, ResizerValueFormat.PIXELS ) );
-    _margins.append_val( new ResizerMargin( grid, 1, _( "Right" ),  0, ResizerValueFormat.PIXELS ) );
-    _margins.append_val( new ResizerMargin( grid, 2, _( "Bottom" ), 0, ResizerValueFormat.PIXELS ) );
-    _margins.append_val( new ResizerMargin( grid, 3, _( "Left" ),   0, ResizerValueFormat.PIXELS ) );
+    for( int i=0; i<4; i++ ) {
+
+      var margin = new ResizerMargin( grid, i, labels[i], 0, ResizerValueFormat.PIXELS );
+      margin.changed.connect( update_preview );
+
+      _margins.append_val( margin );
+
+    }
 
     var frame = new Frame( null );
     var lbl   = new Label( Utils.make_title( _( "Margins" ) ) );
-    lbl.use_markup = true;
+    lbl.use_markup     = true;
     frame.label_widget = lbl;
-    frame.margin_top = 10;
+    frame.margin       = 5;
     frame.add( grid );
 
-    box.pack_start( frame, false, true );
+    return( frame );
+
+  }
+
+  /* Create the preview panel */
+  private Widget create_preview() {
+
+    _preview = new DrawingArea();
+    _preview.margin = 5;
+    _preview.set_size_request( 200, 200 );
+    _preview.get_style_context().add_class( "preview" );
+    _preview.draw.connect( on_draw );
+
+    _size = new Label( "" );
+    _size.halign = Align.END;
+    _size.margin = 5;
+
+    var box = new Box( Orientation.VERTICAL, 0 );
+    box.pack_start( _preview, false, false );
+    box.pack_end(   _size,    false, false );
+    box.show_all();
+
+    var frame = new Frame( null );
+    var lbl   = new Label( Utils.make_title( _( "Preview" ) ) );
+    lbl.use_markup     = true;
+    frame.label_widget = lbl;
+    frame.margin       = 5;
+    frame.add( box );
+
+    return( frame );
+
+  }
+
+  // The bounds of the preview box will be 200 px (height and width)
+  private void update_preview() {
+    _preview.queue_draw();
+  }
+
+  /* Draw image in the proper location at the correct position */
+  private bool on_draw( Context ctx ) {
+
+    Idle.add(() => {
+
+      int total_width, total_height;
+      var image_rect = new CanvasRect();
+      get_dimensions( out total_width, out total_height, image_rect );
+
+      /* Update the resulting image size */
+      _size.label = _( "%d x %d pixels" ).printf( total_width, total_height );
+
+      /* Create a background color */
+      _preview.get_style_context().render_background( ctx, 0, 0, 200, 200 );
+
+      var scale = 200.0 / ((total_width < total_height) ? total_height : total_width);
+      ctx.scale( scale, scale );
+
+      Utils.set_context_color( ctx, Utils.color_from_string( "blue" ) );
+      ctx.rectangle( 0, 0, 20, 20 );
+      ctx.rectangle( image_rect.x, image_rect.y, image_rect.width, image_rect.height );
+      ctx.fill();
+
+      return( false );
+
+    });
+
+    return( false );
 
   }
 

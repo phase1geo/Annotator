@@ -83,7 +83,7 @@ public class CanvasItemBlur : CanvasItem {
       case 7 :  box.x += diffx;                   box.width -= diffx;                        break;
     }
 
-    if( (box.width >= (selector_size * 3)) && (box.height >= (selector_size * 3)) ) {
+    if( (box.width >= (selector_width * 3)) && (box.height >= (selector_height * 3)) ) {
       bbox = box;
     }
 

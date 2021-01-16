@@ -41,3 +41,7 @@
 list {
   background-color: @bg_color;
 }
+
+.preview {
+  background: #ffffff;
+}

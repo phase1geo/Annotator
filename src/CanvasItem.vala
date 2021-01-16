@@ -92,16 +92,27 @@ public enum CanvasItemPathType {
 
 public class CanvasItem {
 
+  private const double selector_size = 12;
+
+  private Canvas               _canvas;
   private CanvasRect           _bbox      = new CanvasRect();
   private CanvasItemMode       _mode      = CanvasItemMode.NONE;
   private CanvasItemProperties _props     = new CanvasItemProperties();
   private Cairo.Path?          _path      = null;
   private CanvasItemPathType   _path_type = CanvasItemPathType.FILL;
-  private int                  _width;
-  private int                  _height;
 
   protected Array<CanvasPoint> points { get; set; default = new Array<CanvasPoint>(); }
-  protected double             selector_size = 12;
+
+  protected double selector_width {
+    get {
+      return( selector_size * (1 / _canvas.image.width_scale) );
+    }
+  }
+  protected double selector_height {
+    get {
+      return( selector_size * (1 / _canvas.image.height_scale) );
+    }
+  }
 
   public string     name { get; private set; default = "unknown"; }
   public CanvasRect bbox {
@@ -144,11 +155,10 @@ public class CanvasItem {
   /* Constructor */
   public CanvasItem( string name, Canvas canvas, CanvasItemProperties props ) {
 
+    _canvas = canvas;
+
     this.name = name;
     this.props.copy( props );
-
-    /* Create the surface */
-    canvas.image.get_dimensions( out _width, out _height );
 
   }
 
@@ -209,16 +219,19 @@ public class CanvasItem {
 
   /* Returns the bounding box of the given selector */
   private void selector_bbox( int index, CanvasRect rect ) {
+    stdout.printf( "selector_width: %g, selector_height: %g\n", selector_width, selector_height );
     var sel     = points.index( index );
-    rect.x      = sel.x - (selector_size / 2);
-    rect.y      = sel.y - (selector_size / 2);
-    rect.width  = selector_size;
-    rect.height = selector_size;
+    rect.x      = sel.x - (selector_width  / 2);
+    rect.y      = sel.y - (selector_height / 2);
+    rect.width  = selector_width;
+    rect.height = selector_height;
   }
 
   /* Returns true if the given coordinates are within this item */
   public virtual bool is_within( double x, double y ) {
-    var surface = new ImageSurface( Cairo.Format.ARGB32, _width, _height );
+    int width, height;
+    _canvas.image.get_dimensions( out width, out height );
+    var surface = new ImageSurface( Cairo.Format.ARGB32, width, height );
     var context = new Context( surface );
     context.append_path( _path );
     return( _path_type.is_within( context, x, y ) );

@@ -149,13 +149,14 @@ public class CanvasItemText : CanvasItem {
    selectors
   */
   protected override void bbox_changed() {
-    var pad      = _padding;
-    var sel_size = (selector_size / 2);
+    var pad        = _padding;
+    var sel_width  = (selector_width  / 2);
+    var sel_height = (selector_height / 2);
     points.index( 0 ).copy_coords( (bbox.x1() - pad), (bbox.y1() - pad) );
     points.index( 1 ).copy_coords( (bbox.x1() - pad), (bbox.y2() + pad) );
     points.index( 2 ).copy_coords( (bbox.x2() + pad), (bbox.y1() - pad) );
     points.index( 3 ).copy_coords( (bbox.x2() + pad), (bbox.y2() + pad) );
-    points.index( 4 ).copy_coords( (bbox.x2() + pad + sel_size + 8), (bbox.mid_y() - (sel_size / 2)) );
+    points.index( 4 ).copy_coords( (bbox.x2() + pad + sel_width + 8), (bbox.mid_y() - (sel_height / 2)) );
   }
 
   public override void move_selector( int index, double diffx, double diffy, bool shift ) {
