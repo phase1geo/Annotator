@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.annotator\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-01-09 02:09-0600\n"
+"POT-Creation-Date: 2021-01-16 01:05-0600\n"
 "PO-Revision-Date: 2020-12-27 19:30-0600\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -29,66 +29,82 @@ msgstr ""
 msgid "Annotate clipboard image"
 msgstr ""
 
-#: src/MainWindow.vala:148
+#: src/MainWindow.vala:150
 msgid "Open Image"
 msgstr ""
 
-#: src/MainWindow.vala:185
+#: src/MainWindow.vala:172
+msgid "Undo"
+msgstr ""
+
+#: src/MainWindow.vala:178
+msgid "Redo"
+msgstr ""
+
+#: src/MainWindow.vala:187
 msgid "Annotator"
 msgstr ""
 
-#: src/MainWindow.vala:193
+#: src/MainWindow.vala:196
 msgid "Export Image"
 msgstr ""
 
-#: src/MainWindow.vala:213
+#: src/MainWindow.vala:218
 msgid "Copy To Clipboard"
 msgstr ""
 
-#: src/MainWindow.vala:223
+#: src/MainWindow.vala:227
 msgid "Print…"
 msgstr ""
 
-#: src/MainWindow.vala:239
+#: src/MainWindow.vala:254
+msgid "Send by Email"
+msgstr ""
+
+#: src/MainWindow.vala:254
+msgid "Send files via Bluetooth"
+msgstr ""
+
+#: src/MainWindow.vala:291
 msgid "Welcome to Annotator"
 msgstr ""
 
-#: src/MainWindow.vala:239
+#: src/MainWindow.vala:291
 msgid "Let's get started annotating an image"
 msgstr ""
 
-#: src/MainWindow.vala:240
+#: src/MainWindow.vala:292
 msgid "Open Image From File"
 msgstr ""
 
-#: src/MainWindow.vala:240
+#: src/MainWindow.vala:292
 msgid "Open a PNG, JPEG, TIFF or BMP file"
 msgstr ""
 
-#: src/MainWindow.vala:241
+#: src/MainWindow.vala:293
 msgid "Paste Image From Clipboard"
 msgstr ""
 
-#: src/MainWindow.vala:241
+#: src/MainWindow.vala:293
 msgid "Open an image from the clipboard"
 msgstr ""
 
-#: src/MainWindow.vala:273
+#: src/MainWindow.vala:327
 msgid "Font:"
 msgstr ""
 
-#: src/MainWindow.vala:324
+#: src/MainWindow.vala:378
 msgid "All Image Formats  (*)"
 msgstr ""
 
-#: src/MainWindow.vala:336
+#: src/MainWindow.vala:390
 msgid "Open Image File"
 msgstr ""
 
-#: src/MainWindow.vala:336
+#: src/MainWindow.vala:390
 msgid "Open"
 msgstr ""
 
-#: src/MainWindow.vala:336
+#: src/MainWindow.vala:390
 msgid "Cancel"
 msgstr ""
