@@ -207,8 +207,8 @@ public class Resizer {
       if( _lock.active ) {
         var h = (int)(double.parse( _width.text ) / proportion);
         _height.text = h.to_string();
-        update_preview();
       }
+      update_preview();
     });
 
     var hlbl = new Label( _( "Height:" ) );
@@ -224,8 +224,8 @@ public class Resizer {
       if( _lock.active ) {
         var w = (int)(proportion * double.parse( _height.text ));
         _width.text = w.to_string();
-        update_preview();
       }
+      update_preview();
     });
 
     /* Create the proportion control */
@@ -317,6 +317,7 @@ public class Resizer {
 
   // The bounds of the preview box will be 200 px (height and width)
   private void update_preview() {
+    stdout.printf( "In update_preview\n" );
     _preview.queue_draw();
   }
 
@@ -339,7 +340,6 @@ public class Resizer {
       ctx.scale( scale, scale );
 
       Utils.set_context_color( ctx, Utils.color_from_string( "blue" ) );
-      ctx.rectangle( 0, 0, 20, 20 );
       ctx.rectangle( image_rect.x, image_rect.y, image_rect.width, image_rect.height );
       ctx.fill();
 
