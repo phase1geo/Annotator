@@ -1,6 +1,7 @@
 sources += files(
 
     'UndoImageChange.vala',
+    'UndoImageResize.vala',
 
     'UndoItemAdd.vala',
     'UndoItemBoxChange.vala',

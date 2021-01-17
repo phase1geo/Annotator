@@ -33,8 +33,7 @@ public class CanvasImage {
   private int            _crop_index   = -2;
   private double         _last_x       = 0;
   private double         _last_y       = 0;
-  private int            _left_margin  = 0;
-  private int            _top_margin   = 0;
+  private CanvasRect     _image_rect   = new CanvasRect();
   private Resizer        _resizer;
 
   public bool       cropping      { get; private set; default = false; }
@@ -96,6 +95,7 @@ public class CanvasImage {
     _buf     = buf.copy();
     _surface = (ImageSurface)cairo_surface_create_from_pixbuf( _buf, 1, null );
     _canvas.set_size_request( _buf.width, _buf.height );
+    _image_rect.copy_coords( 0, 0, _buf.width, _buf.height );
 
     /* Store the average color value for faster lookups */
     average_color = average_color_of_rect( new CanvasRect.from_coords( 0, 0, _buf.width, _buf.height ) );
@@ -121,17 +121,34 @@ public class CanvasImage {
       /* Get the new dimensions */
       _resizer.get_dimensions( out total_width, out total_height, image_rect );
 
-      /* Create the surface */
-      _canvas.set_size_request( total_width, total_height );
+      /* Get the previous size request */
+      int orig_width, orig_height;
+      _canvas.get_size_request( out orig_width, out orig_height );
 
-      _left_margin = (int)image_rect.x;
-      _top_margin  = (int)image_rect.y;
-      width_scale  = image_rect.width  / _buf.width;
-      height_scale = image_rect.height / _buf.height;
+      /* Add the resize to the undo buffer */
+      _canvas.undo_buffer.add_item( new UndoImageResize( orig_width, orig_height, _image_rect, total_width, total_height, image_rect ) );
+
+      /* Perform resize */
+      do_resize( total_width, total_height, image_rect );
 
     }
 
     dialog.close();
+
+  }
+
+  /* This is the function that performs the actual resize */
+  public void do_resize( int total_width, int total_height, CanvasRect image_rect ) {
+
+    /* Create the surface */
+    _canvas.set_size_request( total_width, total_height );
+
+    /* Copy the image rectangle to ourselves */
+    _image_rect.copy( image_rect );
+
+    /* Calculate the scaling factors */
+    width_scale  = image_rect.width  / _buf.width;
+    height_scale = image_rect.height / _buf.height;
 
   }
 
@@ -352,7 +369,7 @@ public class CanvasImage {
 
   /* Draw the image being annotated */
   private void draw_image( Context ctx ) {
-    ctx.set_source_surface( _surface, _left_margin, _top_margin );
+    ctx.set_source_surface( _surface, (int)_image_rect.x, (int)_image_rect.y );
     ctx.paint();
   }
 
