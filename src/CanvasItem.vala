@@ -219,7 +219,6 @@ public class CanvasItem {
 
   /* Returns the bounding box of the given selector */
   private void selector_bbox( int index, CanvasRect rect ) {
-    stdout.printf( "selector_width: %g, selector_height: %g\n", selector_width, selector_height );
     var sel     = points.index( index );
     rect.x      = sel.x - (selector_width  / 2);
     rect.y      = sel.y - (selector_height / 2);

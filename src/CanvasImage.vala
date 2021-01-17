@@ -61,8 +61,8 @@ public class CanvasImage {
 
   /* Returns the dimensions of the stored image */
   public void get_dimensions( out int width, out int height ) {
-    width  = (_buf != null) ? _buf.width  : 1;
-    height = (_buf != null) ? _buf.height : 1;
+    width  = (_buf != null) ? (int)(_buf.width  * width_scale)  : 1;
+    height = (_buf != null) ? (int)(_buf.height * height_scale) : 1;
   }
 
   /* Returns a surface which contains the given rectangle area of the base image */
@@ -441,7 +441,7 @@ public class CanvasImage {
 
   /* Draws the image */
   public void draw( Context ctx ) {
-    ctx.scale( _width_scale, _height_scale );
+    ctx.scale( width_scale, height_scale );
     draw_image( ctx );
     draw_cropping( ctx );
   }

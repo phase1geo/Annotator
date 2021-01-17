@@ -132,6 +132,7 @@ public class Resizer {
   private Entry                _width;
   private Entry                _height;
   private ToggleButton         _lock;
+  private MenuButton           _format;
   private Label                _size;
   private Array<ResizerMargin> _margins;
   private DrawingArea          _preview;
@@ -172,8 +173,19 @@ public class Resizer {
   /* Returns the resize dimensions and border space */
   public void get_dimensions( out int total_width, out int total_height, CanvasRect image_rect ) {
 
+    int orig_width, orig_height;
+    _image.get_dimensions( out orig_width, out orig_height );
+
     var width  = int.parse( _width.text );
     var height = int.parse( _height.text );
+
+    switch( ResizerValueFormat.parse( _format.label ) ) {
+      case ResizerValueFormat.PERCENT :
+        width  = (int)((orig_width  * width)  / 100.0);
+        height = (int)((orig_height * height) / 100.0);
+        break;
+    }
+
     var top    = _margins.index( 0 ).format.pixels( height, _margins.index( 0 ).value );
     var right  = _margins.index( 1 ).format.pixels( width,  _margins.index( 1 ).value );
     var bottom = _margins.index( 2 ).format.pixels( height, _margins.index( 2 ).value );
@@ -205,8 +217,13 @@ public class Resizer {
     _width.input_purpose = InputPurpose.DIGITS;
     _width.activate.connect(() => {
       if( _lock.active ) {
-        var h = (int)(double.parse( _width.text ) / proportion);
-        _height.text = h.to_string();
+        var fmt = ResizerValueFormat.parse( _format.label );
+        if( fmt == ResizerValueFormat.PIXELS ) {
+          var h = (int)(double.parse( _width.text ) / proportion);
+          _height.text = h.to_string();
+        } else {
+          _height.text = _width.text;
+        }
       }
       update_preview();
     });
@@ -222,8 +239,13 @@ public class Resizer {
     _height.input_purpose = InputPurpose.DIGITS;
     _height.activate.connect(() => {
       if( _lock.active ) {
-        var w = (int)(proportion * double.parse( _height.text ));
-        _width.text = w.to_string();
+        var fmt = ResizerValueFormat.parse( _format.label );
+        if( fmt == ResizerValueFormat.PIXELS ) {
+          var w = (int)(proportion * double.parse( _height.text ));
+          _width.text = w.to_string();
+        } else {
+          _width.text = _height.text;
+        }
       }
       update_preview();
     });
@@ -242,12 +264,34 @@ public class Resizer {
     lock_box.valign = Align.CENTER;
     lock_box.pack_start( _lock, false, false );
 
+    var dflt_format = ResizerValueFormat.PIXELS;
+    _format = new MenuButton();
+    _format.label = dflt_format.label();
+    _format.popup = new Gtk.Menu();
+
+    for( int i=0; i<ResizerValueFormat.NUM; i++ ) {
+      var f  = (ResizerValueFormat)i;
+      var mi = new Gtk.MenuItem.with_label( f.label() );
+      mi.activate.connect(() => {
+        _format.label = f.label();
+        format_changed( width, height );
+      });
+      _format.popup.add( mi );
+    }
+    _format.popup.show_all();
+
+    var format_box = new Box( Orientation.VERTICAL, 0 );
+    format_box.margin_left = 10;
+    format_box.valign      = Align.CENTER;
+    format_box.pack_start( _format, false, false );
+
     var grid = new Grid();
-    grid.attach( wlbl,     0, 0 );
-    grid.attach( _width,   1, 0 );
-    grid.attach( hlbl,     0, 1 );
-    grid.attach( _height,  1, 1 );
-    grid.attach( lock_box, 2, 0, 1, 2 );
+    grid.attach( wlbl,       0, 0 );
+    grid.attach( _width,     1, 0 );
+    grid.attach( hlbl,       0, 1 );
+    grid.attach( _height,    1, 1 );
+    grid.attach( lock_box,   2, 0, 1, 2 );
+    grid.attach( format_box, 3, 0, 1, 2 );
 
     var frame = new Frame( null );
     var lbl   = new Label( Utils.make_title( _( "Image Size" ) ) );
@@ -257,6 +301,29 @@ public class Resizer {
     frame.add( grid );
 
     return( frame );
+
+  }
+
+  /*
+   Called whenever the format value changes, adjusts the height and width
+   values, respectively.
+  */
+  private void format_changed( int orig_width, int orig_height ) {
+
+    var format = ResizerValueFormat.parse( _format.label );
+    var width  = int.parse( _width.text );
+    var height = int.parse( _height.text );
+
+    switch( format ) {
+      case ResizerValueFormat.PIXELS :
+        _width.text  = ((orig_width  * width)  / 100.0).to_string();
+        _height.text = ((orig_height * height) / 100.0).to_string();
+        break;
+      case ResizerValueFormat.PERCENT :
+        _width.text  = (((double)orig_width  / width)  * 100).to_string();
+        _height.text = (((double)orig_height / height) * 100).to_string();
+        break;
+    }
 
   }
 
@@ -352,5 +419,4 @@ public class Resizer {
   }
 
 }
-
 
