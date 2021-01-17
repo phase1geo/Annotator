@@ -283,8 +283,10 @@ public class CanvasImage {
 
   /* Start the cropping function */
   public void start_crop() {
+    int width, height;
+    _canvas.get_size_request( out width, out height );
     cropping = true;
-    crop_rect.copy_coords( 0, 0, _buf.width, _buf.height );
+    crop_rect.copy_coords( 0, 0, width, height );
   }
 
   /* Cancels the crop operation */
@@ -457,8 +459,8 @@ public class CanvasImage {
   }
 
   /* Draws the image */
-  public void draw( Context ctx ) {
-    ctx.scale( width_scale, height_scale );
+  public void draw( Context ctx, double zoom_factor ) {
+    ctx.scale( (width_scale * zoom_factor), (height_scale * zoom_factor) );
     draw_image( ctx );
     draw_cropping( ctx );
   }

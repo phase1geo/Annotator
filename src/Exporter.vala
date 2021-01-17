@@ -144,7 +144,7 @@ public class Exporter {
     /* Create the drawing surface */
     var surface = new ImageSurface( Format.RGB24, source.get_width(), source.get_height() );
     var context = new Context( surface );
-    _canvas.on_draw( context );
+    _canvas.draw_all( context );
 
     try {
       var pixbuf = pixbuf_get_from_surface( surface, 0, 0, surface.get_width(), surface.get_height() );
@@ -181,7 +181,7 @@ public class Exporter {
     context.translate( ((0 - x) + (margin / sf)), ((0 - y) + (margin / sf)) );
 
     /* Recreate the image */
-    _canvas.on_draw( context );
+    _canvas.draw_all( context );
 
     /* Draw the page to the PDF file */
     context.show_page();
@@ -204,7 +204,7 @@ public class Exporter {
     surface.restrict_to_version( SvgVersion.VERSION_1_1 );
 
     /* Recreate the image */
-    _canvas.on_draw( context );
+    _canvas.draw_all( context );
 
     /* Draw the page to the PDF file */
     context.show_page();
@@ -217,7 +217,7 @@ public class Exporter {
     /* Create the drawing surface */
     var surface = new ImageSurface( Format.RGB24, source.get_width(), source.get_height() );
     var context = new Context( surface );
-    _canvas.on_draw( context );
+    _canvas.draw_all( context );
 
     /* Get the pixbuf */
     var pixbuf = pixbuf_get_from_surface( surface, 0, 0, surface.get_width(), surface.get_height() );
@@ -285,7 +285,7 @@ public class Exporter {
     ctx.translate( ((0 - x) + margin_x), ((0 - y) + margin_y) );
 
     /* Set the source */
-    _canvas.on_draw( ctx );
+    _canvas.draw_all( ctx );
 
   }
 

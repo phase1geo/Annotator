@@ -25,6 +25,10 @@ using Cairo;
 
 public class Canvas : DrawingArea {
 
+  public const double zoom_max  = 4.0;
+  public const double zoom_min  = 0.25;
+  public const double zoom_step = 0.25;
+
   private ImageSurface?  _surface = null;
   private IMMulticontext _im_context;
 
@@ -35,6 +39,7 @@ public class Canvas : DrawingArea {
   public CanvasItems    items        { get; private set; }
   public UndoBuffer     undo_buffer  { get; private set; }
   public UndoTextBuffer undo_text    { get; private set; }
+  public double         zoom_factor  { get; set; default = 1.0; }
 
   public signal void image_loaded();
 
@@ -204,12 +209,12 @@ public class Canvas : DrawingArea {
 
   /* Returns the scaled x-value */
   private double scale_x( double value ) {
-    return( value / image.width_scale );
+    return( value / (image.width_scale * zoom_factor) );
   }
 
   /* Returns the scaled y-value */
   private double scale_y( double value ) {
-    return( value / image.height_scale );
+    return( value / (image.height_scale * zoom_factor) );
   }
 
   /* Handles keypress events */
@@ -293,10 +298,55 @@ public class Canvas : DrawingArea {
 
   }
 
-  /* Draws all of the items in the canvas */
-  public bool on_draw( Context ctx ) {
-    image.draw( ctx );
+  /****************************************************************************/
+  //  ZOOM CONTROLS
+  /****************************************************************************/
+
+  public void zoom_in() {
+    zoom_factor = ((zoom_factor + zoom_step) > zoom_max) ? zoom_max : (zoom_factor + zoom_step);
+    queue_draw();
+  }
+
+  public void zoom_out() {
+    zoom_factor = ((zoom_factor - zoom_step) < zoom_min) ? zoom_min : (zoom_factor - zoom_step);
+    queue_draw();
+  }
+
+  public void zoom_actual() {
+    zoom_factor = 1.0;
+    queue_draw();
+  }
+
+  public void zoom_fit() {
+
+    int img_width, img_height;
+    get_size_request( out img_width, out img_height );
+
+    var rect = editor.get_displayed_rect();
+
+    if( img_width < img_height ) {
+      zoom_factor = rect.height / img_height;
+    } else {
+      zoom_factor = rect.width / img_width;
+    }
+
+    queue_draw();
+
+  }
+
+  /****************************************************************************/
+  //  DRAWING FUNCTIONS
+  /****************************************************************************/
+
+  /* Draws all of the items in the canvas with the given zoom factor */
+  public void draw_all( Context ctx, double zfactor = 1.0 ) {
+    image.draw( ctx, zfactor );
     items.draw( ctx );
+  }
+
+  /* Draws all of the items in the canvas */
+  private bool on_draw( Context ctx ) {
+    draw_all( ctx, zoom_factor );
     return( false );
   }
 
