@@ -2,6 +2,7 @@ sources += files(
     'Application.vala',
     'Canvas.vala',
     'CanvasImage.vala',
+    'CanvasImageInfo.vala',
     'CanvasItem.vala',
     'CanvasItemProperties.vala',
     'CanvasItems.vala',

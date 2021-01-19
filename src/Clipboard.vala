@@ -54,7 +54,6 @@ public class AnnotatorClipboard {
         break;
       case Target.IMAGE:
         if( image != null ) {
-          stdout.printf( "Setting pixbuf...\n" );
           selection_data.set_pixbuf( image );
         }
         break;
@@ -85,8 +84,6 @@ public class AnnotatorClipboard {
 
   public static void copy_image( Pixbuf img ) {
 
-    stdout.printf( "In copy_image, img width: %d, height: %d\n", img.width, img.height );
-
     /* Store the data to copy */
     image          = img;
     set_internally = true;
@@ -94,8 +91,6 @@ public class AnnotatorClipboard {
     /* Inform the clipboard */
     var clipboard = Clipboard.get_default( Gdk.Display.get_default() );
     clipboard.set_with_data( image_target_list, set_with_data, clear_data, null );
-
-    stdout.printf( "In copy_image\n" );
 
   }
 

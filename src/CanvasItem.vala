@@ -228,9 +228,7 @@ public class CanvasItem {
 
   /* Returns true if the given coordinates are within this item */
   public virtual bool is_within( double x, double y ) {
-    int width, height;
-    _canvas.image.get_dimensions( out width, out height );
-    var surface = new ImageSurface( Cairo.Format.ARGB32, width, height );
+    var surface = new ImageSurface( Cairo.Format.ARGB32, _canvas.image.info.width, _canvas.image.info.height );
     var context = new Context( surface );
     context.append_path( _path );
     return( _path_type.is_within( context, x, y ) );

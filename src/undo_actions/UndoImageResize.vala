@@ -23,33 +23,25 @@ using Gdk;
 
 public class UndoImageResize : UndoItem {
 
-  private int        _old_width;
-  private int        _old_height;
-  private CanvasRect _old_rect;
-  private int        _new_width;
-  private int        _new_height;
-  private CanvasRect _new_rect;
+  private CanvasImageInfo _old_info;
+  private CanvasImageInfo _new_info;
 
   /* Default constructor */
-  public UndoImageResize( int old_width, int old_height, CanvasRect old_rect, int new_width, int new_height, CanvasRect new_rect ) {
+  public UndoImageResize( CanvasImageInfo old_info, CanvasImageInfo new_info ) {
     base( _( "image resize" ) );
-    _old_width  = old_width;
-    _old_height = old_height;
-    _old_rect   = new CanvasRect.from_rect( old_rect );
-    _new_width  = new_width;
-    _new_height = new_height;
-    _new_rect   = new CanvasRect.from_rect( new_rect );
+    _old_info = new CanvasImageInfo.from_info( old_info );
+    _new_info = new CanvasImageInfo.from_info( new_info );
   }
 
   /* Causes the stored item to be put into the before state */
   public override void undo( Canvas canvas ) {
-    canvas.image.do_resize( _old_width, _old_height, _old_rect );
+    canvas.image.do_resize( _old_info );
     canvas.queue_draw();
   }
 
   /* Causes the stored item to be put into the after state */
   public override void redo( Canvas canvas ) {
-    canvas.image.do_resize( _new_width, _new_height, _new_rect );
+    canvas.image.do_resize( _new_info );
     canvas.queue_draw();
   }
 

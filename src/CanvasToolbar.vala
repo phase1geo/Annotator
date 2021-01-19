@@ -206,6 +206,8 @@ public class CanvasToolbar : Toolbar {
     btn.margin_right = margin;
     btn.clicked.connect(() => {
       _canvas.image.resize_image();
+      _canvas.queue_draw();
+      _canvas.grab_focus();
     });
 
     add( btn );
