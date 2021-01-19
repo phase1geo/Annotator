@@ -212,8 +212,8 @@ public class CanvasImage {
       box.y += diffy;
       if( (box.x >= 0) &&
           (box.y >= 0) &&
-          ((box.x + box.width)  <= info.width) &&
-          ((box.y + box.height) <= info.height) ) {
+          ((box.x + box.width)  <= (info.width  / width_scale)) &&
+          ((box.y + box.height) <= (info.height / height_scale)) ) {
         crop_rect.copy( box );
         return( true );
       }
@@ -231,10 +231,13 @@ public class CanvasImage {
         case 7  :                                    box.width += diffx;                        break;
         default :  assert_not_reached();
       }
-      if( (box.width  >= (selector_size  * 3)) &&
-          (box.height >= (selector_size * 3)) &&
-          (box.width  <= info.width) &&
-          (box.height <= info.height) ) {
+      stdout.printf( "box: %s, width: %d, height: %d\n", box.to_string(), info.width, info.height );
+      if( (box.x >= 0) &&
+          (box.y >= 0) &&
+          (box.width  >= (selector_width  * 3)) &&
+          (box.height >= (selector_height * 3)) &&
+          ((box.x + box.width)  <= (info.width  / width_scale)) &&
+          ((box.y + box.height) <= (info.height / height_scale)) ) {
         crop_rect.copy( box );
         return( true );
       }
@@ -283,7 +286,7 @@ public class CanvasImage {
     int width, height;
     _canvas.get_size_request( out width, out height );
     cropping = true;
-    crop_rect.copy_coords( 0, 0, width, height );
+    crop_rect.copy_coords( 0, 0, (width / width_scale), (height / height_scale) );
   }
 
   /* Cancels the crop operation */
@@ -346,23 +349,23 @@ public class CanvasImage {
       case 1 :  // UR
       case 2 :  // LL
       case 3 :  // LR
-        rect.x = ((index & 1) == 0) ? crop_rect.x1() : (crop_rect.x2() - selector_size);
-        rect.y = ((index & 2) == 0) ? crop_rect.y1() : (crop_rect.y2() - selector_size);
+        rect.x = ((index & 1) == 0) ? crop_rect.x1() : (crop_rect.x2() - selector_width);
+        rect.y = ((index & 2) == 0) ? crop_rect.y1() : (crop_rect.y2() - selector_height);
         break;
       case 4 :  // TOP
       case 5 :  // BOTTOM
-        rect.x = crop_rect.mid_x() - (selector_size / 2);
-        rect.y = (index == 4) ? crop_rect.y1() : (crop_rect.y2() - selector_size);
+        rect.x = crop_rect.mid_x() - (selector_width / 2);
+        rect.y = (index == 4) ? crop_rect.y1() : (crop_rect.y2() - selector_height);
         break;
       case 6 :  // LEFT
       case 7 :  // RIGHT
-        rect.x = (index == 6) ? crop_rect.x1() : (crop_rect.x2() - selector_size);
-        rect.y = crop_rect.mid_y() - (selector_size / 2);
+        rect.x = (index == 6) ? crop_rect.x1() : (crop_rect.x2() - selector_width);
+        rect.y = crop_rect.mid_y() - (selector_height / 2);
         break;
     }
 
-    rect.width  = selector_size;
-    rect.height = selector_size;
+    rect.width  = selector_width;
+    rect.height = selector_height;
 
   }
 
@@ -373,31 +376,34 @@ public class CanvasImage {
   }
 
   /* Draws the drop_outline */
-  private void draw_crop_outline( Context ctx, RGBA color ) {
+  private void draw_crop_outline( Context ctx ) {
 
-    Utils.set_context_color_with_alpha( ctx, color, 0.5 );
+    var width  = info.width  / width_scale;
+    var height = info.height / height_scale;
 
-    ctx.rectangle( 0, 0, crop_rect.x1(), info.height );
+    Utils.set_context_color_with_alpha( ctx, average_color, 0.5 );
+
+    ctx.rectangle( 0, 0, crop_rect.x1(), height );
     ctx.fill();
 
     ctx.rectangle( crop_rect.x1(), 0, crop_rect.width, crop_rect.y1() );
     ctx.fill();
 
-    ctx.rectangle( crop_rect.x1(), crop_rect.y2(), crop_rect.width, (info.height - crop_rect.y2()) );
+    ctx.rectangle( crop_rect.x1(), crop_rect.y2(), crop_rect.width, (height - crop_rect.y2()) );
     ctx.fill();
 
-    ctx.rectangle( crop_rect.x2(), 0, (info.width - crop_rect.x2()), info.height );
+    ctx.rectangle( crop_rect.x2(), 0, (width - crop_rect.x2()), height );
     ctx.fill();
 
   }
 
   /* Draws the thirds dividers when cropping */
-  private void draw_crop_dividers( Context ctx, RGBA color ) {
+  private void draw_crop_dividers( Context ctx ) {
 
     var third_width  = crop_rect.width  / 3;
     var third_height = crop_rect.height / 3;
 
-    Utils.set_context_color_with_alpha( ctx, color, 0.5 );
+    Utils.set_context_color_with_alpha( ctx, average_color, 0.5 );
     ctx.set_line_width( 1 );
 
     /* Draw vertical lines */
@@ -446,10 +452,8 @@ public class CanvasImage {
   /* Draw the cropping area if we are in that mode */
   private void draw_cropping( Context ctx, double zoom_factor ) {
     if( !cropping ) return;
-    var color = average_color_of_rect( crop_rect );
-    ctx.scale( (1 / (width_scale * zoom_factor)), (1 / (height_scale * zoom_factor)) );
-    draw_crop_outline( ctx, color );
-    draw_crop_dividers( ctx, color );
+    draw_crop_outline( ctx );
+    draw_crop_dividers( ctx );
     draw_crop_selectors( ctx );
   }
 
