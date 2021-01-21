@@ -306,6 +306,7 @@ public class CanvasItem {
     var scale = new Scale.with_range( Orientation.HORIZONTAL, min, max, step );
     scale.set_value( dflt );
     scale.draw_value = false;
+    scale.width_request = 200;
     scale.value_changed.connect(() => {
       action( scale.get_value() );
     });
@@ -330,6 +331,7 @@ public class CanvasItem {
 
     var sb = new SpinButton.with_range( (double)min, (double)max, (double)step );
     sb.set_value( (double)dflt );
+    sb.digits = max.to_string().char_count();
     sb.value_changed.connect(() => {
       action( (int)sb.get_value() );
     });
