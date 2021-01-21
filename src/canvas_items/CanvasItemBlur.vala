@@ -25,16 +25,16 @@ using Cairo;
 
 public class CanvasItemBlur : CanvasItem {
 
-  private const int min_blur = 5;
-  private const int max_blur = 45;
+  private const double min_blur  = 5;
+  private const double max_blur  = 45;
+  private const double step_blur = 5;
 
-  private CanvasImage _image;
-  private int         _blur_radius;
+  private int _blur_radius;
 
   /* Constructor */
   public CanvasItemBlur( Canvas canvas, CanvasItemProperties props ) {
     base( "blur", canvas, props );
-    _image = canvas.image;
+    _blur_radius = 20;
     create_points();
   }
 
@@ -104,20 +104,33 @@ public class CanvasItemBlur : CanvasItem {
     }
   }
 
+  /* Adds the contextual menu item values */
+  protected override void add_contextual_menu_items( Box box ) {
+
+    add_contextual_scale( box, _( "Blur Amount:" ), min_blur, max_blur, step_blur, (double)_blur_radius, (value) => {
+      _blur_radius = (int)value;
+      canvas.queue_draw();
+    });
+
+  }
+
   /* Draw the rectangle */
   public override void draw_item( Context ctx ) {
 
+    Utils.set_context_color_with_alpha( ctx, canvas.image.average_color, mode.alpha() );
+    ctx.set_line_width( 0 );
+    ctx.rectangle( bbox.x, bbox.y, bbox.width, bbox.height );
+    save_path( ctx, CanvasItemPathType.FILL );
+
     /* If we are moving the node or resizing it, just draw an alpha box */
     if( mode.moving() ) {
-      Utils.set_context_color_with_alpha( ctx, _image.average_color, mode.alpha() );
-      ctx.rectangle( bbox.x, bbox.y, bbox.width, bbox.height );
-      save_path( ctx, CanvasItemPathType.FILL );
       ctx.fill();
 
     /* Otherwise, calculate and apply the blur */
     } else {
+      ctx.stroke();
 
-      var surface = _image.get_surface_for_rect( bbox );
+      var surface = canvas.image.get_surface_for_rect( bbox );
       var buffer  = new Granite.Drawing.BufferSurface.with_surface( (int)bbox.width, (int)bbox.height, surface );
 
       /* Copy the surface contents over */

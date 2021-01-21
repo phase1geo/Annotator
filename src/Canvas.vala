@@ -248,14 +248,19 @@ public class Canvas : DrawingArea {
     var press_count = (e.type == EventType.BUTTON_PRESS) ? 1 :
                       (e.type == EventType.DOUBLE_BUTTON_PRESS) ? 2 : 3;
 
-    grab_focus();
-
-    if( image.cropping ) {
-      if( image.cursor_pressed( x, y, e.state, press_count ) ) {
+    if( e.button == Gdk.BUTTON_SECONDARY ) {
+      if( !image.cropping ) {
+        items.show_contextual_menu( x, y );
+      }
+    } else {
+      grab_focus();
+      if( image.cropping ) {
+        if( image.cursor_pressed( x, y, e.state, press_count ) ) {
+          queue_draw();
+        }
+      } else if( items.cursor_pressed( x, y, e.state, press_count ) ) {
         queue_draw();
       }
-    } else if( items.cursor_pressed( x, y, e.state, press_count ) ) {
-      queue_draw();
     }
 
     return( false );

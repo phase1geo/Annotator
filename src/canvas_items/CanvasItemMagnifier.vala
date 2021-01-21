@@ -25,8 +25,9 @@ using Cairo;
 
 public class CanvasItemMagnifier : CanvasItem {
 
-  private const double max_zoom = 5.0;
-  private const double min_zoom = 1.5;
+  private const double max_zoom  = 5.0;
+  private const double min_zoom  = 1.5;
+  private const double step_zoom = 0.5;
 
   private CanvasImage _image;
   private double      _zoom_factor = 2.0;
@@ -115,6 +116,17 @@ public class CanvasItemMagnifier : CanvasItem {
   /* Provides cursor to display when mouse cursor is hovering over the given selector */
   public override CursorType? get_selector_cursor( int index ) {
     return( (index == 0) ? CursorType.HAND2 : CursorType.BOTTOM_RIGHT_CORNER );
+  }
+
+  /* Creates the contextual menu items */
+  protected override void add_contextual_menu_items( Box box ) {
+
+    add_contextual_scale( box, _( "Magnification:" ), min_zoom, max_zoom, step_zoom, _zoom_factor, (value) => {
+      _zoom_factor = value;
+      bbox_changed();
+      canvas.queue_draw();
+    });
+
   }
 
   /* Saves this item as XML */

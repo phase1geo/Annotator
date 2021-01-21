@@ -77,6 +77,15 @@ public class CanvasItemSequence : CanvasItem {
     return( CursorType.BOTTOM_RIGHT_CORNER );
   }
 
+  protected override void add_contextual_menu_items( Box box ) {
+
+    add_contextual_spinner( box, _( "Sequence Number:" ), 1, 100, 1, _seq_num, (value) => {
+      _seq_num = value;
+      canvas.queue_draw();
+    });
+
+  }
+
   /* Saves this item as XML */
   public override Xml.Node* save() {
     Xml.Node* node = base.save();

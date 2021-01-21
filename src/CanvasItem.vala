@@ -90,11 +90,14 @@ public enum CanvasItemPathType {
   }
 }
 
+public delegate void CanvasItemClickAction();
+public delegate void CanvasItemScaleAction( double value );
+public delegate void CanvasItemSpinnerAction( int value );
+
 public class CanvasItem {
 
   private const double selector_size = 12;
 
-  private Canvas               _canvas;
   private CanvasRect           _bbox      = new CanvasRect();
   private CanvasItemMode       _mode      = CanvasItemMode.NONE;
   private CanvasItemProperties _props     = new CanvasItemProperties();
@@ -102,15 +105,16 @@ public class CanvasItem {
   private CanvasItemPathType   _path_type = CanvasItemPathType.FILL;
 
   protected Array<CanvasPoint> points { get; set; default = new Array<CanvasPoint>(); }
+  protected Canvas             canvas { get; private set; }
 
   protected double selector_width {
     get {
-      return( selector_size * (1 / _canvas.image.width_scale) );
+      return( selector_size * (1 / canvas.image.width_scale) );
     }
   }
   protected double selector_height {
     get {
-      return( selector_size * (1 / _canvas.image.height_scale) );
+      return( selector_size * (1 / canvas.image.height_scale) );
     }
   }
 
@@ -155,7 +159,7 @@ public class CanvasItem {
   /* Constructor */
   public CanvasItem( string name, Canvas canvas, CanvasItemProperties props ) {
 
-    _canvas = canvas;
+    this.canvas = canvas;
 
     this.name = name;
     this.props.copy( props );
@@ -228,7 +232,7 @@ public class CanvasItem {
 
   /* Returns true if the given coordinates are within this item */
   public virtual bool is_within( double x, double y ) {
-    var surface = new ImageSurface( Cairo.Format.ARGB32, _canvas.image.info.width, _canvas.image.info.height );
+    var surface = new ImageSurface( Cairo.Format.ARGB32, canvas.image.info.width, canvas.image.info.height );
     var context = new Context( surface );
     context.append_path( _path );
     return( _path_type.is_within( context, x, y ) );
@@ -254,6 +258,147 @@ public class CanvasItem {
     _path      = ctx.copy_path_flat();
     _path_type = type;
   }
+
+  /****************************************************************************/
+  //  CONTEXTUAL MENU
+  /****************************************************************************/
+
+  /* Add contextual menu fields from the associated item */
+  protected virtual void add_contextual_menu_items( Box box ) {}
+
+  /* Returns a menuitem with the given label, action and (optional) keyboard shortcut */
+  protected ModelButton add_contextual_menuitem( Box box, string label, string? shortcut, CanvasItemClickAction action ) {
+
+    var btn = new ModelButton();
+    btn.clicked.connect( action );
+
+    if( shortcut != null ) {
+      btn.get_child().destroy();
+      btn.add( new Granite.AccelLabel( label, shortcut ) );
+    } else {
+      btn.text = label;
+    }
+
+    box.pack_start( btn, false, false );
+
+    return( btn );
+
+  }
+
+  /* Adds a horizontal separator item to the contextual menu */
+  protected Separator add_contextual_separator( Box box ) {
+
+    var sep = new Separator( Orientation.HORIZONTAL );
+
+    box.pack_start( sep, false, true );
+
+    return( sep );
+
+  }
+
+  /* Creates a scale widget for the contextual menu */
+  protected Scale add_contextual_scale( Box box, string label, double min, double max, double step, double dflt, CanvasItemScaleAction action ) {
+
+    var lbl = new Label( Utils.make_title( label ) );
+    lbl.use_markup = true;
+    lbl.halign     = Align.START;
+
+    var scale = new Scale.with_range( Orientation.HORIZONTAL, min, max, step );
+    scale.set_value( dflt );
+    scale.draw_value = false;
+    scale.value_changed.connect(() => {
+      action( scale.get_value() );
+    });
+
+    var scale_box = new Box( Orientation.HORIZONTAL, 10 );
+    scale_box.border_width = 5;
+    scale_box.pack_start( lbl,   false, false );
+    scale_box.pack_start( scale, true, true );
+
+    box.pack_start( scale_box, false, true );
+
+    return( scale );
+
+  }
+
+  /* Creates a scale widget for the contextual menu */
+  protected SpinButton add_contextual_spinner( Box box, string label, int min, int max, int step, int dflt, CanvasItemSpinnerAction action ) {
+
+    var lbl = new Label( Utils.make_title( label ) );
+    lbl.use_markup = true;
+    lbl.halign     = Align.START;
+
+    var sb = new SpinButton.with_range( (double)min, (double)max, (double)step );
+    sb.set_value( (double)dflt );
+    sb.value_changed.connect(() => {
+      action( (int)sb.get_value() );
+    });
+
+    var sb_box = new Box( Orientation.HORIZONTAL, 10 );
+    sb_box.border_width = 5;
+    sb_box.pack_start( lbl, false, false );
+    sb_box.pack_start( sb,  true,  true );
+
+    box.pack_start( sb_box, false, true );
+
+    return( sb );
+
+  }
+
+  /* Returns the contextual menu associated with this item */
+  public Popover create_contextual_menu() {
+
+    var box  = new Box( Orientation.VERTICAL, 5 );
+    box.border_width = 5;
+
+    /* Add the item's contextual menu items */
+    add_contextual_menu_items( box );
+
+    /* Add a separator if there is anything existing in the box */
+    if( box.get_children().length() > 0 ) {
+      add_contextual_separator( box );
+    }
+
+    add_contextual_menuitem( box, _( "Copy" ),   "<Control>c", do_copy );
+    add_contextual_menuitem( box, _( "Cut" ),    "<Control>x", do_cut );
+    add_contextual_menuitem( box, _( "Paste" ),  "<Control>y", do_paste );
+    add_contextual_separator( box );
+    add_contextual_menuitem( box, _( "Delete" ), "Delete",     do_delete );
+
+    box.show_all();
+
+    /* Create the popover */
+    var menu = new Popover( canvas );
+    menu.pointing_to = bbox.to_rectangle();
+    menu.add( box );
+
+    return( menu );
+
+  }
+
+  /* Creates a copy of the item and sends it to the clipboard */
+  private void do_copy() {
+    /* TBD */
+  }
+
+  /* Creates a copy of the item, sends it to the clipboard, and removes the item */
+  private void do_cut() {
+    /* TBD */
+  }
+
+  /* Pastes the given item from the clipboard (if one exists) */
+  private void do_paste() {
+    /* TBD */
+  }
+
+  /* Deletes the item */
+  private void do_delete() {
+    /* TBD */
+  }
+
+  /****************************************************************************/
+  //  DRAW METHODS
+  /****************************************************************************/
 
   /* Draw the current item */
   public virtual void draw_item( Context ctx ) {}
@@ -288,6 +433,10 @@ public class CanvasItem {
     }
 
   }
+
+  /****************************************************************************/
+  //  SAVE/LOAD
+  /****************************************************************************/
 
   /* Saves the item in XML format */
   public virtual Xml.Node* save() {

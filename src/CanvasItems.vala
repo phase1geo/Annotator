@@ -662,6 +662,17 @@ public class CanvasItems {
 
   }
 
+  /* Displays the contextual menu for the currently selected item, if one exists */
+  public void show_contextual_menu( double x, double y ) {
+
+    foreach( CanvasItem item in _items ) {
+      if( item.is_within( x, y ) ) {
+        Utils.show_popover( item.create_contextual_menu() );
+      }
+    }
+
+  }
+
   /*
    If the format bar needs to be created, create it.  Place it at the current
    cursor position and make sure that it is visible.

@@ -146,7 +146,18 @@ public class CanvasItemStar : CanvasItem {
     return( CursorType.TCROSS );
   }
 
-  /* Saves this item as XML */
+  /* Adds the contextual menu items */
+  protected override void add_contextual_menu_items( Box box ) {
+
+    add_contextual_spinner( box, _( "Points:" ), 3, 50, 1, _num_points, (value) => {
+      _num_points = value;
+      create_points();
+      bbox_changed();
+      canvas.queue_draw();
+    });
+
+  }
+
   public override Xml.Node* save() {
     Xml.Node* node = base.save();
     node->set_prop( "points",       _num_points.to_string() );

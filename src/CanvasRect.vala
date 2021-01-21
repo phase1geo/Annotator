@@ -57,6 +57,16 @@ public class CanvasRect {
     this.height = height;
   }
 
+  /* Converts this rectangle into a Gdk.Rectangle and returns the result */
+  public Gdk.Rectangle to_rectangle() {
+    Gdk.Rectangle rect = {0, 0, 0, 0};
+    rect.x      = (int)x;
+    rect.y      = (int)y;
+    rect.width  = (int)width;
+    rect.height = (int)height;
+    return( rect );
+  }
+
   /* Returns the x1 value */
   public double x1() {
     return( x );
