@@ -140,7 +140,13 @@ public class CanvasImage {
     /* Copy the new info into our info */
     info.copy( new_info );
 
-    /* Create the surface */
+    /* Create a new buffer with the added margin */
+    var sbuf = _buf.scale_simple( (int)info.pixbuf_rect.width, (int)info.pixbuf_rect.height, InterpType.BILINEAR );
+    _buf = new Pixbuf( _buf.colorspace, _buf.has_alpha, _buf.bits_per_sample, info.width, info.height );
+    sbuf.copy_area( 0, 0, (int)info.pixbuf_rect.width, (int)info.pixbuf_rect.height, _buf, (int)info.pixbuf_rect.x, (int)info.pixbuf_rect.y );
+
+    /* Set the surface that will be drawn */
+    _surface = (ImageSurface)cairo_surface_create_from_pixbuf( _buf, 1, null );
     _canvas.set_size_request( info.width, info.height );
 
     /* Calculate the scaling factors */
@@ -286,7 +292,8 @@ public class CanvasImage {
     int width, height;
     _canvas.get_size_request( out width, out height );
     cropping = true;
-    crop_rect.copy_coords( 0, 0, (width / width_scale), (height / height_scale) );
+    // crop_rect.copy_coords( 0, 0, (width / width_scale), (height / height_scale) );
+    crop_rect.copy_coords( 0, 0, width, height );
   }
 
   /* Cancels the crop operation */
@@ -349,50 +356,47 @@ public class CanvasImage {
       case 1 :  // UR
       case 2 :  // LL
       case 3 :  // LR
-        rect.x = ((index & 1) == 0) ? crop_rect.x1() : (crop_rect.x2() - selector_width);
-        rect.y = ((index & 2) == 0) ? crop_rect.y1() : (crop_rect.y2() - selector_height);
+        rect.x = ((index & 1) == 0) ? crop_rect.x1() : (crop_rect.x2() - selector_size);
+        rect.y = ((index & 2) == 0) ? crop_rect.y1() : (crop_rect.y2() - selector_size);
         break;
       case 4 :  // TOP
       case 5 :  // BOTTOM
-        rect.x = crop_rect.mid_x() - (selector_width / 2);
-        rect.y = (index == 4) ? crop_rect.y1() : (crop_rect.y2() - selector_height);
+        rect.x = crop_rect.mid_x() - (selector_size / 2);
+        rect.y = (index == 4) ? crop_rect.y1() : (crop_rect.y2() - selector_size);
         break;
       case 6 :  // LEFT
       case 7 :  // RIGHT
-        rect.x = (index == 6) ? crop_rect.x1() : (crop_rect.x2() - selector_width);
-        rect.y = crop_rect.mid_y() - (selector_height / 2);
+        rect.x = (index == 6) ? crop_rect.x1() : (crop_rect.x2() - selector_size);
+        rect.y = crop_rect.mid_y() - (selector_size / 2);
         break;
     }
 
-    rect.width  = selector_width;
-    rect.height = selector_height;
+    rect.width  = selector_size;
+    rect.height = selector_size;
 
   }
 
   /* Draw the image being annotated */
   private void draw_image( Context ctx ) {
-    ctx.set_source_surface( _surface, (int)(info.pixbuf_rect.x / width_scale), (int)(info.pixbuf_rect.y / height_scale) );
+    ctx.set_source_surface( _surface, (int)info.pixbuf_rect.x, (int)info.pixbuf_rect.y );
     ctx.paint();
   }
 
   /* Draws the drop_outline */
   private void draw_crop_outline( Context ctx ) {
 
-    var width  = info.width  / width_scale;
-    var height = info.height / height_scale;
-
     Utils.set_context_color_with_alpha( ctx, average_color, 0.5 );
 
-    ctx.rectangle( 0, 0, crop_rect.x1(), height );
+    ctx.rectangle( 0, 0, crop_rect.x1(), info.height );
     ctx.fill();
 
     ctx.rectangle( crop_rect.x1(), 0, crop_rect.width, crop_rect.y1() );
     ctx.fill();
 
-    ctx.rectangle( crop_rect.x1(), crop_rect.y2(), crop_rect.width, (height - crop_rect.y2()) );
+    ctx.rectangle( crop_rect.x1(), crop_rect.y2(), crop_rect.width, (info.height - crop_rect.y2()) );
     ctx.fill();
 
-    ctx.rectangle( crop_rect.x2(), 0, (width - crop_rect.x2()), height );
+    ctx.rectangle( crop_rect.x2(), 0, (info.width - crop_rect.x2()), info.height );
     ctx.fill();
 
   }
@@ -459,9 +463,9 @@ public class CanvasImage {
 
   /* Draws the image */
   public void draw( Context ctx, double zoom_factor ) {
-    ctx.scale( (width_scale * zoom_factor), (height_scale * zoom_factor) );
     draw_image( ctx );
     draw_cropping( ctx, zoom_factor );
+    ctx.scale( (width_scale * zoom_factor), (height_scale * zoom_factor) );
   }
 
 }

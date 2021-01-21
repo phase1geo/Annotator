@@ -99,7 +99,7 @@ public class CanvasToolbar : Toolbar {
     btn.margin_left  = margin;
     btn.margin_right = margin;
     btn.clicked.connect(() => {
-      /* TBD */
+      _canvas.items.add_shape_item( CanvasItemType.SEQUENCE );
     });
 
     add( btn );

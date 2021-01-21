@@ -7,6 +7,7 @@ sources += files(
     'CanvasItemOval.vala',
     'CanvasItemPencil.vala',
     'CanvasItemRect.vala',
+    'CanvasItemSequence.vala',
     'CanvasItemStar.vala',
     'CanvasItemText.vala',
 

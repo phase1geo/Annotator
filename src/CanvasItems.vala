@@ -35,7 +35,8 @@ public enum CanvasItemType {
   TEXT,
   BLUR,
   MAGNIFIER,
-  PENCIL
+  PENCIL,
+  SEQUENCE
 }
 
 public class CanvasItems {
@@ -156,6 +157,12 @@ public class CanvasItems {
     return( item );
   }
 
+  private CanvasItem create_sequence() {
+    var item = new CanvasItemSequence( _canvas, props );
+    item.bbox = center_box( 50, 50 );
+    return( item );
+  }
+
   public void add_item( CanvasItem item, int position ) {
     clear_selection();
     if( _active == null ) {
@@ -180,6 +187,7 @@ public class CanvasItems {
       case CanvasItemType.BLUR         :  item = create_blur();  break;
       case CanvasItemType.MAGNIFIER    :  item = create_magnifier();  break;
       case CanvasItemType.PENCIL       :  item = create_pencil();  break;
+      case CanvasItemType.SEQUENCE     :  item = create_sequence();  break;
       default :  assert_not_reached();
     }
     add_item( item, -1 );
