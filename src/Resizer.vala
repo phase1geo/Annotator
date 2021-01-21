@@ -347,8 +347,8 @@ public class Resizer : Dialog {
 
   private Widget create_margins() {
 
-    string[4] labels = { _( "Top" ), _( "Right" ), _( "Bottom" ), _( "Left" ) };
-    int[4]    values = { _info.top_margin(), _info.right_margin(), _info.bottom_margin(), _info.left_margin() };
+    string[] labels = { _( "Top" ), _( "Right" ), _( "Bottom" ), _( "Left" ) };
+    int[]    values = { _info.top_margin(), _info.right_margin(), _info.bottom_margin(), _info.left_margin() };
 
     var grid = new Grid();
 
