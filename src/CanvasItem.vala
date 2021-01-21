@@ -299,7 +299,7 @@ public class CanvasItem {
   /* Creates a scale widget for the contextual menu */
   protected Scale add_contextual_scale( Box box, string label, double min, double max, double step, double dflt, CanvasItemScaleAction action ) {
 
-    var lbl = new Label( Utils.make_title( label ) );
+    var lbl = new Label( label );
     lbl.use_markup = true;
     lbl.halign     = Align.START;
 
@@ -312,7 +312,7 @@ public class CanvasItem {
     });
 
     var scale_box = new Box( Orientation.HORIZONTAL, 10 );
-    scale_box.border_width = 5;
+    scale_box.border_width = 10;
     scale_box.pack_start( lbl,   false, false );
     scale_box.pack_start( scale, true, true );
 
@@ -325,7 +325,7 @@ public class CanvasItem {
   /* Creates a scale widget for the contextual menu */
   protected SpinButton add_contextual_spinner( Box box, string label, int min, int max, int step, int dflt, CanvasItemSpinnerAction action ) {
 
-    var lbl = new Label( Utils.make_title( label ) );
+    var lbl = new Label( label );
     lbl.use_markup = true;
     lbl.halign     = Align.START;
 
@@ -337,7 +337,7 @@ public class CanvasItem {
     });
 
     var sb_box = new Box( Orientation.HORIZONTAL, 10 );
-    sb_box.border_width = 5;
+    sb_box.border_width = 10;
     sb_box.pack_start( lbl, false, false );
     sb_box.pack_start( sb,  true,  true );
 
@@ -372,6 +372,7 @@ public class CanvasItem {
     /* Create the popover */
     var menu = new Popover( canvas );
     menu.pointing_to = bbox.to_rectangle();
+    menu.position    = PositionType.RIGHT;
     menu.add( box );
 
     return( menu );
