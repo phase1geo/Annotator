@@ -462,7 +462,8 @@ public class CanvasItems {
   */
   public bool cursor_pressed( double x, double y, ModifierType state, int press_count ) {
 
-    var retval = false;
+    var retval  = false;
+    var control = control_state( state );
 
     /* Keep track of the press count */
     _press_count = press_count;
@@ -499,6 +500,13 @@ public class CanvasItems {
             case 2 :  text.set_cursor_at_word( x, y, false );  break;
             case 3 :  text.set_cursor_all( false );            break;
           }
+        } else if( control && (press_count == 1) ) {  // Make a duplicate of the clicked on item
+          _active = item.duplicate();
+          _active.mode = CanvasItemMode.SELECTED;
+          _canvas.set_cursor_from_name( "grabbing" );
+          add_item( _active, -1 );
+          _canvas.undo_buffer.add_item( new UndoItemAdd( item, (int)(_items.length() - 1) ) );
+          _canvas.queue_draw();
         } else {
           switch( press_count ) {
             case 1 :

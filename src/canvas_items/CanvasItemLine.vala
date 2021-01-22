@@ -59,6 +59,13 @@ public class CanvasItemLine : CanvasItem {
     }
   }
 
+  /* Returns a copy of this item */
+  public override CanvasItem duplicate() {
+    var item = new CanvasItemLine( canvas, props );
+    item.copy( this );
+    return( item );
+  }
+
   /* Updates the selection boxes whenever the bounding box changes */
   protected override void bbox_changed() {
 

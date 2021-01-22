@@ -179,6 +179,14 @@ public class CanvasItem {
 
   }
 
+  /*
+   Creates a duplicate of this canvas item and returns it to the calling
+   function.
+  */
+  public virtual CanvasItem duplicate() {
+    assert_not_reached();
+  }
+
   /* Called whenever the bounding box changes */
   protected virtual void bbox_changed() {}
 

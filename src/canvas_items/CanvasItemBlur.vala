@@ -50,6 +50,22 @@ public class CanvasItemBlur : CanvasItem {
     points.append_val( new CanvasPoint( CanvasPointType.RESIZER ) );  // left
   }
 
+  /* Copies the information from the given item to ourselves */
+  public override void copy( CanvasItem item) {
+    base.copy( item );
+    var blur_item = (CanvasItemBlur)item;
+    if( blur_item != null ) {
+      _blur_radius = blur_item._blur_radius;
+    }
+  }
+
+  /* Returns a copy of this item */
+  public override CanvasItem duplicate() {
+    var item = new CanvasItemBlur( canvas, props );
+    item.copy( this );
+    return( item );
+  }
+
   /* Updates the selection boxes whenever the bounding box changes */
   protected override void bbox_changed() {
 

@@ -48,6 +48,22 @@ public class CanvasItemMagnifier : CanvasItem {
     points.append_val( new CanvasPoint( CanvasPointType.RESIZER ) );  // Resizer
   }
 
+  /* Copies the contents of the given item to ourselves */
+  public override void copy( CanvasItem item ) {
+    base.copy( item );
+    var mag_item = (CanvasItemMagnifier)item;
+    if( mag_item != null ) {
+      _zoom_factor = mag_item._zoom_factor;
+    }
+  }
+
+  /* Returns a copy of this item */
+  public override CanvasItem duplicate() {
+    var item = new CanvasItemMagnifier( canvas, _zoom_factor, props );
+    item.copy( this );
+    return( item );
+  }
+
   /* Updates the selection boxes whenever the bounding box changes */
   protected override void bbox_changed() {
 

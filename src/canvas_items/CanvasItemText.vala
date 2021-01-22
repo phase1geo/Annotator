@@ -133,15 +133,25 @@ public class CanvasItemText : CanvasItem {
   }
 
   /* Copies an existing CanvasText to this CanvasText */
-  public void copy( CanvasItemText ct ) {
-    base.copy( ct );
-    _max_width = ct._max_width;
-    _font_size = ct._font_size;
-    _text.copy( ct.text );
-    _line_layout.set_font_description( ct._pango_layout.get_font_description() );
-    _pango_layout.set_font_description( ct._pango_layout.get_font_description() );
-    _pango_layout.set_width( (int)_max_width * Pango.SCALE );
-    update_size( true );
+  public override void copy( CanvasItem item ) {
+    base.copy( item );
+    var ct = (CanvasItemText)item;
+    if( ct != null ) {
+      _max_width = ct._max_width;
+      _font_size = ct._font_size;
+      _text.copy( ct.text );
+      _line_layout.set_font_description( ct._pango_layout.get_font_description() );
+      _pango_layout.set_font_description( ct._pango_layout.get_font_description() );
+      _pango_layout.set_width( (int)_max_width * Pango.SCALE );
+      update_size( true );
+    }
+  }
+
+  /* Returns a copy of this item */
+  public override CanvasItem duplicate() {
+    var item = new CanvasItemText( canvas, props );
+    item.copy( this );
+    return( item );
   }
 
   /*

@@ -53,6 +53,7 @@ public class CanvasItemStar : CanvasItem {
     }
   }
 
+  /* Copies the contents of the given item to ourselves */
   public override void copy( CanvasItem item ) {
     base.copy( item );
     var star = (CanvasItemStar)item;
@@ -62,6 +63,13 @@ public class CanvasItemStar : CanvasItem {
       _num_points   = star._num_points;
       create_points();
     }
+  }
+
+  /* Returns a duplicate of this item */
+  public override CanvasItem duplicate() {
+    var item = new CanvasItemStar( canvas, _fill, _num_points, _inner_radius, props );
+    item.copy( this );
+    return( item );
   }
 
   /* Updates the selection boxes whenever the bounding box changes */

@@ -43,6 +43,19 @@ public class CanvasItemSequence : CanvasItem {
     points.append_val( new CanvasPoint( CanvasPointType.RESIZER ) );  // Resizer
   }
 
+  /* Copies the contents of the given item to ourselves */
+  public override void copy( CanvasItem item ) {
+    base.copy( item );
+    _recalc_font_size = true;
+  }
+
+  /* Returns a copy of this sequence */
+  public override CanvasItem duplicate() {
+    var item = new CanvasItemSequence( canvas, props );
+    item.copy( this );
+    return( item );
+  }
+
   /* Updates the selection boxes whenever the bounding box changes */
   protected override void bbox_changed() {
 

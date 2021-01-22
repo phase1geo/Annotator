@@ -46,6 +46,22 @@ public class CanvasItemRect : CanvasItem {
     points.append_val( new CanvasPoint( CanvasPointType.RESIZER ) );  // left
   }
 
+  /* Copies the contents of the given item to ourselves */
+  public override void copy( CanvasItem item ) {
+    base.copy( item );
+    var rect_item = (CanvasItemRect)item;
+    if( rect_item != null ) {
+      _fill = rect_item._fill;
+    }
+  }
+
+  /* Returns a duplicate of this item */
+  public override CanvasItem duplicate() {
+    var item = new CanvasItemRect( canvas, _fill, props );
+    item.copy( this );
+    return( item );
+  }
+
   /* Updates the selection boxes whenever the bounding box changes */
   protected override void bbox_changed() {
 

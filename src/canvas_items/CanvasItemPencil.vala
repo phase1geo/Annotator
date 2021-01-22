@@ -51,6 +51,13 @@ public class CanvasItemPencil : CanvasItem {
     }
   }
 
+  /* Returns a copy of this item */
+  public override CanvasItem duplicate() {
+    var item = new CanvasItemPencil( canvas, props );
+    item.copy( this );
+    return( item );
+  }
+
   /* If a selector is moved, move the entire thing */
   public override void move_selector( int index, double diffx, double diffy, bool shift ) {
     move_item( diffx, diffy );

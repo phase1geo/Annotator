@@ -75,6 +75,13 @@ public class CanvasItemArrow : CanvasItem {
     }
   }
 
+  /* Creates a duplicate of this item and returns it */
+  public override CanvasItem duplicate() {
+    var item = new CanvasItemArrow( canvas, props );
+    item.copy( this );
+    return( item );
+  }
+
   /* Updates the selection boxes whenever the bounding box changes */
   protected override void bbox_changed() {
 

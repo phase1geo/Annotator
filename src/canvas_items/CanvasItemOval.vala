@@ -46,6 +46,22 @@ public class CanvasItemOval : CanvasItem {
     points.append_val( new CanvasPoint( CanvasPointType.RESIZER ) );  // left
   }
 
+  /* Copies the contents of the given canvas item to ourselves */
+  public override void copy( CanvasItem item ) {
+    base.copy( item );
+    var oval_item = (CanvasItemOval)item;
+    if( oval_item != null ) {
+      _fill = oval_item._fill;
+    }
+  }
+
+  /* Returns a copy of this item */
+  public override CanvasItem duplicate() {
+    var item = new CanvasItemOval( canvas, _fill, props );
+    item.copy( this );
+    return( item );
+  }
+
   /* Updates the selection boxes whenever the bounding box changes */
   protected override void bbox_changed() {
 
