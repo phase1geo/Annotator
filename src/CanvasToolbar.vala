@@ -109,15 +109,13 @@ public class CanvasToolbar : Toolbar {
   /* Starts a drawing operation with the pencil tool */
   private void create_pencil() {
 
-    var btn = new ToggleToolButton();
+    var btn = new ToolButton( null, null );
     btn.set_tooltip_text( _( "Pencil Tool" ) );
     btn.icon_name = "edit-symbolic";
     btn.margin_left  = margin;
     btn.margin_right = margin;
-    btn.toggled.connect(() => {
-      if( btn.active ) {
-        _canvas.items.add_shape_item( CanvasItemType.PENCIL );
-      }
+    btn.clicked.connect(() => {
+      _canvas.items.add_shape_item( CanvasItemType.PENCIL );
     });
 
     add( btn );

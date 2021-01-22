@@ -506,6 +506,7 @@ public class CanvasItems {
           _canvas.set_cursor_from_name( "grabbing" );
           add_item( _active, -1 );
           _canvas.undo_buffer.add_item( new UndoItemAdd( item, (int)(_items.length() - 1) ) );
+          _canvas.queue_draw();
         } else {
           switch( press_count ) {
             case 1 :
