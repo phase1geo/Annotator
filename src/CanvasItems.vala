@@ -758,8 +758,6 @@ public class CanvasItems {
   /* Shows/Hides the formatting toolbar */
   private void update_format_bar() {
 
-    stdout.printf( "In update_format_bar, show_format null: %s, %s\n", (_show_format == null).to_string(), ((_show_format != null) && _show_format).to_string() );
-
     /* If we have nothing to do, just return */
     if( _show_format == null ) return;
 
