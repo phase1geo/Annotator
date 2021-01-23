@@ -90,9 +90,9 @@ public enum CanvasItemPathType {
   }
 }
 
-public delegate void CanvasItemClickAction();
-public delegate void CanvasItemScaleAction( double value );
-public delegate void CanvasItemSpinnerAction( int value );
+public delegate void CanvasItemClickAction( CanvasItem item );
+public delegate void CanvasItemScaleAction( CanvasItem item, double value );
+public delegate void CanvasItemSpinnerAction( CanvasItem item, int value );
 
 public class CanvasItem {
 
@@ -272,13 +272,15 @@ public class CanvasItem {
   /****************************************************************************/
 
   /* Add contextual menu fields from the associated item */
-  protected virtual void add_contextual_menu_items( Box box ) {}
+  public virtual void add_contextual_menu_items( Box box ) {}
 
   /* Returns a menuitem with the given label, action and (optional) keyboard shortcut */
-  protected ModelButton add_contextual_menuitem( Box box, string label, string? shortcut, CanvasItemClickAction action ) {
+  public ModelButton add_contextual_menuitem( Box box, string label, string? shortcut, CanvasItemClickAction action ) {
 
     var btn = new ModelButton();
-    btn.clicked.connect( action );
+    btn.clicked.connect(() => {
+      action( this );
+    });
 
     if( shortcut != null ) {
       btn.get_child().destroy();
@@ -294,7 +296,7 @@ public class CanvasItem {
   }
 
   /* Adds a horizontal separator item to the contextual menu */
-  protected Separator add_contextual_separator( Box box ) {
+  public Separator add_contextual_separator( Box box ) {
 
     var sep = new Separator( Orientation.HORIZONTAL );
 
@@ -316,7 +318,7 @@ public class CanvasItem {
     scale.draw_value = false;
     scale.width_request = 200;
     scale.value_changed.connect(() => {
-      action( scale.get_value() );
+      action( this, scale.get_value() );
     });
 
     var scale_box = new Box( Orientation.HORIZONTAL, 10 );
@@ -341,7 +343,7 @@ public class CanvasItem {
     sb.set_value( (double)dflt );
     sb.digits = max.to_string().char_count();
     sb.value_changed.connect(() => {
-      action( (int)sb.get_value() );
+      action( this, (int)sb.get_value() );
     });
 
     var sb_box = new Box( Orientation.HORIZONTAL, 10 );
@@ -355,57 +357,6 @@ public class CanvasItem {
 
   }
 
-  /* Returns the contextual menu associated with this item */
-  public Popover create_contextual_menu() {
-
-    var box  = new Box( Orientation.VERTICAL, 5 );
-    box.border_width = 5;
-
-    /* Add the item's contextual menu items */
-    add_contextual_menu_items( box );
-
-    /* Add a separator if there is anything existing in the box */
-    if( box.get_children().length() > 0 ) {
-      add_contextual_separator( box );
-    }
-
-    add_contextual_menuitem( box, _( "Copy" ),   "<Control>c", do_copy );
-    add_contextual_menuitem( box, _( "Cut" ),    "<Control>x", do_cut );
-    add_contextual_menuitem( box, _( "Paste" ),  "<Control>y", do_paste );
-    add_contextual_separator( box );
-    add_contextual_menuitem( box, _( "Delete" ), "Delete",     do_delete );
-
-    box.show_all();
-
-    /* Create the popover */
-    var menu = new Popover( canvas );
-    menu.pointing_to = bbox.to_rectangle();
-    menu.position    = PositionType.RIGHT;
-    menu.add( box );
-
-    return( menu );
-
-  }
-
-  /* Creates a copy of the item and sends it to the clipboard */
-  private void do_copy() {
-    /* TBD */
-  }
-
-  /* Creates a copy of the item, sends it to the clipboard, and removes the item */
-  private void do_cut() {
-    /* TBD */
-  }
-
-  /* Pastes the given item from the clipboard (if one exists) */
-  private void do_paste() {
-    /* TBD */
-  }
-
-  /* Deletes the item */
-  private void do_delete() {
-    /* TBD */
-  }
 
   /****************************************************************************/
   //  DRAW METHODS

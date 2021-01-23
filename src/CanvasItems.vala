@@ -203,7 +203,7 @@ public class CanvasItems {
     _canvas.queue_draw();
   }
 
-  /* Removes the item at the given position */
+  /* Removes the item at the given position without undo addition */
   public void remove_item( CanvasItem item ) {
     _items.remove( item );
   }
@@ -706,16 +706,125 @@ public class CanvasItems {
 
   }
 
+  /****************************************************************************/
+  //  CONTEXTUAL MENU
+  /****************************************************************************/
+
   /* Displays the contextual menu for the currently selected item, if one exists */
   public void show_contextual_menu( double x, double y ) {
 
     foreach( CanvasItem item in _items ) {
       if( item.is_within( x, y ) ) {
-        Utils.show_popover( item.create_contextual_menu() );
+        create_contextual_menu( item );
+        return;
       }
     }
 
   }
+
+  private void create_contextual_menu( CanvasItem item ) {
+
+    var box  = new Box( Orientation.VERTICAL, 5 );
+    box.border_width = 5;
+
+    /* Add the item's contextual menu items */
+    item.add_contextual_menu_items( box );
+
+    /* Add a separator if there is anything existing in the box */
+    if( box.get_children().length() > 0 ) {
+      item.add_contextual_separator( box );
+    }
+
+    item.add_contextual_menuitem( box, _( "Copy" ),   "<Control>c", do_copy );
+    item.add_contextual_menuitem( box, _( "Cut" ),    "<Control>x", do_cut );
+    item.add_contextual_menuitem( box, _( "Paste" ),  "<Control>y", do_paste );
+    item.add_contextual_separator( box );
+    item.add_contextual_menuitem( box, _( "Delete" ), "Delete",     do_delete );
+    item.add_contextual_separator( box );
+    item.add_contextual_menuitem( box, _( "Send to Front" ), null, do_send_to_front );
+    item.add_contextual_menuitem( box, _( "Send to Back" ),  null, do_send_to_back );
+
+    box.show_all();
+
+    /* Create the popover */
+    var menu = new Popover( _canvas );
+    menu.pointing_to = item.bbox.to_rectangle();
+    menu.position    = PositionType.RIGHT;
+    menu.add( box );
+
+    /* Display the popover */
+    Utils.show_popover( menu );
+
+  }
+
+  /* Creates a copy of the item and sends it to the clipboard */
+  private void do_copy( CanvasItem item ) {
+    /* TBD */
+  }
+
+  /* Creates a copy of the item, sends it to the clipboard, and removes the item */
+  private void do_cut( CanvasItem item ) {
+    do_copy( item );
+    do_delete( item );
+  }
+
+  /* Pastes the given item from the clipboard (if one exists) */
+  private void do_paste( CanvasItem item ) {
+    /* TBD */
+  }
+
+  /* Deletes the item */
+  private void do_delete( CanvasItem item ) {
+    var position  = 0;
+    var undo_item = new UndoItemDelete();
+    for( unowned List<CanvasItem> it=_items.first(); it!=null; it=it.next ) {
+      if( it.data == item ) {
+        undo_item.add( item, position );
+        _items.delete_link( it );
+        _canvas.undo_buffer.add_item( undo_item );
+        return;
+      }
+      position++;
+    }
+  }
+
+  private void do_send_to_front( CanvasItem item ) {
+    /* TBD */
+  }
+
+  private void do_send_to_back( CanvasItem item ) {
+    /* TBD */
+  }
+
+  /* Serialize the canvas items for the copy buffer */
+  public string serialize( Array<CanvasItem> items ) {
+    var       serialized = "";
+    Xml.Doc*  doc = new Xml.Doc( "1.0" );
+    Xml.Node* root = new Xml.Node( null, "items" );
+    doc->set_root_element( root );
+    for( int i=0; i<items.length; i++ ) {
+      root->add_child( items.index( i ).save() );
+    }
+    doc->dump_memory( out serialized );
+    delete doc;
+    return( serialized );
+  }
+
+  /* Deserialize the given string and add the elements to the item list */
+  public void deserialize_for_paste( string serialized ) {
+    Xml.Doc* doc = Xml.Parser.parse_doc( serialized );
+    if( doc == null ) return;
+    for( Xml.Node* it=doc->get_root_element()->children; it!=null; it=it->next ) {
+      if( (it->type == Xml.ElementType.ELEMENT_NODE) && (it->name == "item") ) {
+        // TBD - We need to create a canvas item of the correct type but this
+        // code doesn't properly exist yet in CanvasItem
+      }
+    }
+  }
+
+  /****************************************************************************/
+  //  TEXT FORMATTING
+  /****************************************************************************/
 
   /*
    If the format bar needs to be created, create it.  Place it at the current

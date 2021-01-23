@@ -137,7 +137,7 @@ public class CanvasItemMagnifier : CanvasItem {
   /* Creates the contextual menu items */
   protected override void add_contextual_menu_items( Box box ) {
 
-    add_contextual_scale( box, _( "Magnification:" ), min_zoom, max_zoom, step_zoom, _zoom_factor, (value) => {
+    add_contextual_scale( box, _( "Magnification:" ), min_zoom, max_zoom, step_zoom, _zoom_factor, (item, value) => {
       _zoom_factor = value;
       bbox_changed();
       canvas.queue_draw();

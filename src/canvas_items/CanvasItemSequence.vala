@@ -92,7 +92,7 @@ public class CanvasItemSequence : CanvasItem {
 
   protected override void add_contextual_menu_items( Box box ) {
 
-    add_contextual_spinner( box, _( "Sequence Number:" ), 1, 100, 1, _seq_num, (value) => {
+    add_contextual_spinner( box, _( "Sequence Number:" ), 1, 100, 1, _seq_num, (item, value) => {
       _seq_num = value;
       canvas.queue_draw();
     });

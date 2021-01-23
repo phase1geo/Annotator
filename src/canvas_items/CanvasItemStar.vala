@@ -157,7 +157,7 @@ public class CanvasItemStar : CanvasItem {
   /* Adds the contextual menu items */
   protected override void add_contextual_menu_items( Box box ) {
 
-    add_contextual_spinner( box, _( "Points:" ), 3, 50, 1, _num_points, (value) => {
+    add_contextual_spinner( box, _( "Points:" ), 3, 50, 1, _num_points, (item, value) => {
       _num_points = value;
       create_points();
       bbox_changed();
