@@ -62,6 +62,7 @@ public class Canvas : DrawingArea {
 
     this.draw.connect( on_draw );
     this.key_press_event.connect( on_keypress );
+    this.key_release_event.connect( on_keyrelease );
     this.button_press_event.connect( on_press );
     this.button_release_event.connect( on_release );
     this.motion_notify_event.connect( on_motion );
@@ -234,6 +235,20 @@ public class Canvas : DrawingArea {
     } else if( items.key_pressed( e.keyval, e.state ) ) {
       _im_context.reset();
       queue_draw();
+    }
+
+    return( false );
+
+  }
+
+  /* Handles keyrelease events */
+  private bool on_keyrelease( EventKey e ) {
+
+    if( !image.cropping ) {
+      if( items.key_released( e.keyval, e.state ) ) {
+        _im_context.reset();
+        queue_draw();
+      }
     }
 
     return( false );

@@ -332,6 +332,7 @@ public class CanvasItems {
       case Key.End       :
       case Key.Up        :
       case Key.Down      :  return( handle_cursor( control, shift, keyval ) );
+      case Key.Control_L :  return( handle_control() );
     }
 
     return( false );
@@ -452,6 +453,37 @@ public class CanvasItems {
     return( false );
   }
 
+  /* Handles the control key */
+  private bool handle_control() {
+    foreach( CanvasItem item in _items ) {
+      if( item.is_within( _last_x, _last_y ) ) {
+        _canvas.set_cursor_from_name( "copy" );
+        break;
+      }
+    }
+    return( false );
+  }
+
+  /* Handles key release events.  Returns true if the canvas should be redrawn. */
+  public bool key_released( uint keyval, ModifierType state ) {
+    switch( keyval ) {
+      case Key.Control_L :  return( handle_release_control() );
+    }
+    return( false );
+  }
+
+  /* Called when the control key is released */
+  private bool handle_release_control() {
+    foreach( CanvasItem item in _items ) {
+      if( item.is_within( _last_x, _last_y ) ) {
+        _canvas.set_cursor_from_name( "grabbing" );
+        return( false );
+      }
+    }
+    _canvas.set_cursor( null );
+    return( false );
+  }
+
   /*****************************/
   /*  HANDLE MOUSE EVENTS  */
   /*****************************/
@@ -546,9 +578,10 @@ public class CanvasItems {
   */
   public bool cursor_moved( double x, double y, ModifierType state ) {
 
-    var diff_x = x - _last_x;
-    var diff_y = y - _last_y;
-    var shift  = shift_state( state );
+    var diff_x  = x - _last_x;
+    var diff_y  = y - _last_y;
+    var control = control_state( state );
+    var shift   = shift_state( state );
 
     _last_x = x;
     _last_y = y;
@@ -575,7 +608,7 @@ public class CanvasItems {
 
     /* Otherwise, move any selected items by the given amount */
     } else if( (_active != null) && !in_edit_mode() ) {
-      var retval    = false;
+      var retval = false;
       foreach( CanvasItem item in _items ) {
         if( item.mode.can_move() ) {
           item.move_item( diff_x, diff_y );
@@ -597,7 +630,11 @@ public class CanvasItems {
       }
       foreach( CanvasItem item in _items ) {
         if( item.is_within( x, y ) ) {
-          _canvas.set_cursor( CursorType.HAND1 );
+          if( control ) {
+            _canvas.set_cursor_from_name( "copy" );
+          } else {
+            _canvas.set_cursor( CursorType.HAND1 );
+          }
           return( false );
         }
       }
