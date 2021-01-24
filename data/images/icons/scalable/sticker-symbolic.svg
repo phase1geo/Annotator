@@ -56,7 +56,7 @@
      transform="translate(0,-263.13332)"
      style="display:inline">
     <path
-       style="fill:#000000;fill-opacity:1;fill-rule:solid;stroke:none;stroke-width:30;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:30;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
        d="M 28.085938,-0.03710937 C 12.526042,-0.03710937 0,12.488933 0,28.048828 v 72.117192 c 0,15.55989 12.526042,28.08593 28.085938,28.08593 h 71.865234 c 15.559898,0 28.085938,-12.52604 28.085938,-28.08593 V 64.382812 L 64.523438,127.89648 V 92.193359 c 0,-15.559896 12.526042,-28.085937 28.085937,-28.085937 H 128.03711 V 28.048828 c 0,-15.559895 -12.52604,-28.08593737 -28.085938,-28.08593737 z"
        transform="matrix(0.26458333,0,0,0.26458333,0,263.13332)"
        id="rect815"
