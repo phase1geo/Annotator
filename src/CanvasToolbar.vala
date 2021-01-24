@@ -34,6 +34,7 @@ public class CanvasToolbar : Toolbar {
     _canvas = canvas;
 
     create_shapes();
+    create_sticker();
     create_sequence();
     create_pencil();
     create_text();
@@ -80,6 +81,24 @@ public class CanvasToolbar : Toolbar {
 
     mb.popover = new Popover( null );
     mb.popover.add( grid );
+
+    var btn = new ToolItem();
+    btn.margin_left  = margin;
+    btn.margin_right = margin;
+    btn.add( mb );
+
+    add( btn );
+
+  }
+
+  private void create_sticker() {
+
+    var mb = new MenuButton();
+    mb.set_tooltip_text( _( "Add Sticker" ) );
+    mb.image  = new Image.from_icon_name( "sticker-symbolic", IconSize.LARGE_TOOLBAR );
+    mb.relief = ReliefStyle.NONE;
+
+    // TBD - Populate stickers
 
     var btn = new ToolItem();
     btn.margin_left  = margin;
@@ -175,7 +194,7 @@ public class CanvasToolbar : Toolbar {
     _crop_btn = new ToggleButton();
     _crop_btn.set_tooltip_text( _( "Crop Image" ) );
     _crop_btn.relief       = ReliefStyle.NONE;
-    _crop_btn.image        = new Image.from_icon_name( "image-crop-symbolic", IconSize.SMALL_TOOLBAR );
+    _crop_btn.image        = new Image.from_icon_name( "image-crop-symbolic", IconSize.LARGE_TOOLBAR );
     _crop_btn.margin_left  = margin;
     _crop_btn.margin_right = margin;
     _crop_btn.toggled.connect(() => {
@@ -378,7 +397,7 @@ public class CanvasToolbar : Toolbar {
 
     var mb = new MenuButton();
     mb.set_tooltip_text( _( "Font Properties" ) );
-    mb.image  = new Image.from_icon_name( "font-x-generic-symbolic", IconSize.SMALL_TOOLBAR );
+    mb.image  = new Image.from_icon_name( "font-x-generic-symbolic", IconSize.LARGE_TOOLBAR );
     mb.relief = ReliefStyle.NONE;
     mb.get_style_context().add_class( "color_chooser" );
     mb.popover = new Popover( null );
