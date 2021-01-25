@@ -8,6 +8,8 @@ sources += files(
     'UndoItemDelete.vala',
     'UndoItemPaste.vala',
     'UndoItemPropChange.vala',
+    'UndoItemSendBack.vala',
+    'UndoItemSendFront.vala',
 
     'UndoTextClearTags.vala',
     'UndoTextCommit.vala',

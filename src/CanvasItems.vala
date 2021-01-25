@@ -102,6 +102,7 @@ public class CanvasItems {
   public string               font_color   { get; set; default = "black"; }
 
   public signal void text_item_edit_changed( CanvasItemText item );
+  public signal void selection_changed( CanvasItemProperties props );
 
   /* Constructor */
   public CanvasItems( Canvas canvas ) {
@@ -263,9 +264,23 @@ public class CanvasItems {
     _canvas.queue_draw();
   }
 
+  public void insert_item( CanvasItem item, int position ) {
+    _items.insert( item, position );
+  }
+
   /* Removes the item at the given position without undo addition */
   public void remove_item( CanvasItem item ) {
     _items.remove( item );
+  }
+
+  /* Adds the given item at the top of the item stack */
+  public void move_to_top( CanvasItem item ) {
+    _items.append( item );
+  }
+
+  /* Adds the given item at the bottom of the item stack */
+  public void move_to_bottom( CanvasItem item ) {
+    _items.prepend( item );
   }
 
   /* Deletes all of the selected items */
@@ -313,6 +328,18 @@ public class CanvasItems {
 
   private void select_mode_changed( bool mode ) {
     _show_format = mode;
+  }
+
+  /* Returns the position of the given canvas item in the list of items */
+  private int item_position( CanvasItem item ) {
+    var pos = 0;
+    foreach( CanvasItem it in _items ) {
+      if( it == item ) {
+        return( pos );
+      }
+      pos++;
+    }
+    return( -1 );
   }
 
   /* Adjusts all items by the given diff amounts */
@@ -850,12 +877,18 @@ public class CanvasItems {
     }
   }
 
+  /* Moves the item to the top of the item list */
   private void do_send_to_front( CanvasItem item ) {
-    /* TBD */
+    _canvas.undo_buffer.add_item( new UndoItemSendFront( item, item_position( item ) ) );
+    move_to_top( item );
+    _canvas.queue_draw();
   }
 
+  /* Moves the item to the bottom of the item list */
   private void do_send_to_back( CanvasItem item ) {
-    /* TBD */
+    _canvas.undo_buffer.add_item( new UndoItemSendBack( item, item_position( item ) ) );
+    move_to_bottom( item );
+    _canvas.queue_draw();
   }
 
   /* Serialize the canvas items for the copy buffer */
