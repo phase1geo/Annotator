@@ -163,6 +163,12 @@ public class CanvasItems {
     return( item );
   }
 
+  private CanvasItem create_sticker( string name ) {
+    var item = new CanvasItemImage( _canvas, name, false, props );
+    item.bbox = center_box( 50, 50 );
+    return( item );
+  }
+
   public void add_item( CanvasItem item, int position ) {
     clear_selection();
     if( _active == null ) {
@@ -190,6 +196,13 @@ public class CanvasItems {
       case CanvasItemType.SEQUENCE     :  item = create_sequence();  break;
       default :  assert_not_reached();
     }
+    add_item( item, -1 );
+    _canvas.undo_buffer.add_item( new UndoItemAdd( item, (int)(_items.length() - 1) ) );
+    _canvas.queue_draw();
+  }
+
+  public void add_sticker( string name ) {
+    var item = create_sticker( name );
     add_item( item, -1 );
     _canvas.undo_buffer.add_item( new UndoItemAdd( item, (int)(_items.length() - 1) ) );
     _canvas.queue_draw();

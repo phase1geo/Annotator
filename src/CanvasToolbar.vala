@@ -91,14 +91,27 @@ public class CanvasToolbar : Toolbar {
 
   }
 
+  /* Creates the sticker toolbar item */
   private void create_sticker() {
 
     var mb = new MenuButton();
     mb.set_tooltip_text( _( "Add Sticker" ) );
-    mb.image  = new Image.from_icon_name( "sticker-symbolic", IconSize.LARGE_TOOLBAR );
-    mb.relief = ReliefStyle.NONE;
+    mb.image   = new Image.from_icon_name( "sticker-symbolic", IconSize.LARGE_TOOLBAR );
+    mb.relief  = ReliefStyle.NONE;
+    mb.popover = new Popover( null );
 
-    // TBD - Populate stickers
+    var box = new Box( Orientation.VERTICAL, 0 );
+    var sw  = new ScrolledWindow( null, null );
+    var vp  = new Viewport( null, null );
+    vp.set_size_request( 200, 400 );
+    vp.add( box );
+    sw.add( vp );
+
+    create_via_xml( box, mb.popover );
+    sw.set_size_request( 200, 400 );
+    sw.show_all();
+
+    mb.popover.add( sw );
 
     var btn = new ToolItem();
     btn.margin_left  = margin;
@@ -106,6 +119,71 @@ public class CanvasToolbar : Toolbar {
     btn.add( mb );
 
     add( btn );
+
+  }
+
+  /* Creates the rest of the UI from the stickers XML file that is stored in a gresource */
+  private void create_via_xml( Box box, Popover popover ) {
+
+    try {
+      var template = resources_lookup_data( "/com/github/phase1geo/annotator/images/stickers.xml", ResourceLookupFlags.NONE);
+      var contents = (string)template.get_data();
+      Xml.Doc* doc = Xml.Parser.parse_memory( contents, contents.length );
+      if( doc != null ) {
+        for( Xml.Node* it=doc->get_root_element()->children; it!=null; it=it->next ) {
+          if( (it->type == Xml.ElementType.ELEMENT_NODE) && (it->name == "category") ) {
+            var category = create_category( box, it->get_prop( "name" ) );
+            for( Xml.Node* it2=it->children; it2!=null; it2=it2->next ) {
+              if( (it2->type == Xml.ElementType.ELEMENT_NODE) && (it2->name == "img") ) {
+                var name = it2->get_prop( "title" );
+                create_image( category, name, popover );
+              }
+            }
+          }
+        }
+        delete doc;
+      }
+    } catch( Error e ) {
+      warning( "Failed to load sticker XML template: %s", e.message );
+    }
+
+  }
+
+  /* Creates the expander flowbox for the given category name and adds it to the sidebar */
+  private FlowBox create_category( Box box, string name ) {
+
+    /* Create expander */
+    var exp  = new Expander( Utils.make_title( name ) );
+    exp.use_markup = true;
+    exp.expanded   = true;
+
+    /* Create the flowbox which will contain the stickers */
+    var fbox = new FlowBox();
+    fbox.homogeneous = true;
+    fbox.selection_mode = SelectionMode.NONE;
+    exp.add( fbox );
+
+    box.pack_start( exp, false, false, 20 );
+
+    return( fbox );
+
+  }
+
+  /* Creates the image from the given name and adds it to the flow box */
+  private void create_image( FlowBox box, string name, Popover popover ) {
+
+    var resource = "/com/github/phase1geo/annotator/images/sticker_%s".printf( name );
+
+    var btn = new Button();
+    btn.image  = new Image.from_resource( resource );
+    btn.relief = ReliefStyle.NONE;
+    btn.set_tooltip_text( name );
+    btn.clicked.connect((e) => {
+      _canvas.items.add_sticker( resource );
+      Utils.hide_popover( popover );
+    });
+
+    box.add( btn );
 
   }
 

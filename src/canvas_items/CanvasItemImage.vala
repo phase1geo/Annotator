@@ -25,15 +25,16 @@ using Cairo;
 
 public class CanvasItemImage : CanvasItem {
 
-  private string        _filename;
+  private string        _name;
+  private bool          _file;
   private Pixbuf        _buf;
   private ImageSurface? _surface;
 
   /* Constructor */
-  public CanvasItemImage( Canvas canvas, string filename, CanvasItemProperties props ) {
+  public CanvasItemImage( Canvas canvas, string name, bool file, CanvasItemProperties props ) {
     base( "image", canvas, props );
     create_points();
-    create_image( filename );
+    create_image( name, file );
   }
 
   /* Creates the item points */
@@ -41,11 +42,16 @@ public class CanvasItemImage : CanvasItem {
     points.append_val( new CanvasPoint( CanvasPointType.RESIZER ) );  // Resizer
   }
 
-  /* Creates a pixbuf from the given filename at full size */
-  private void create_image( string filename ) {
+  /* Creates a pixbuf from the given filename or resource at full size */
+  private void create_image( string name, bool file ) {
     try {
-      _filename = filename;
-      _buf      = new Pixbuf.from_file_at_size( filename, -1, -1 );
+      _name = name;
+      _file = file;
+      if( file ) {
+        _buf = new Pixbuf.from_file_at_size( name, -1, -1 );
+      } else {
+        _buf = new Pixbuf.from_resource_at_scale( name, 300, 300, true );
+      }
       resize_image();
     } catch( Error e ) {
       _buf = null;
@@ -53,10 +59,10 @@ public class CanvasItemImage : CanvasItem {
   }
 
   /* Creates an image from the specified filename */
-  private void resize_image( int width = -1 ) {
+  private void resize_image( int width = 0 ) {
     if( _buf != null ) {
-      var height = (width / _buf.width) * _buf.height;
-      var buf    = (width == -1) ? _buf : _buf.scale_simple( width, height, InterpType.BILINEAR );
+      var height = (int)(((double)width / _buf.width) * _buf.height);
+      var buf    = (width == 0) ? _buf : _buf.scale_simple( width, height, InterpType.BILINEAR );
       _surface = (ImageSurface)cairo_surface_create_from_pixbuf( buf, 1, null );
     }
   }
@@ -66,15 +72,16 @@ public class CanvasItemImage : CanvasItem {
     base.copy( item );
     var img_item = (CanvasItemImage)item;
     if( img_item != null ) {
-      _filename = img_item._filename;
-      _buf      = img_item._buf.copy();
+      _name = img_item._name;
+      _file = img_item._file;
+      _buf  = img_item._buf.copy();
       resize_image();
     }
   }
 
   /* Returns a copy of this item */
   public override CanvasItem duplicate() {
-    var item = new CanvasItemImage( canvas, _filename, props );
+    var item = new CanvasItemImage( canvas, _name, _file, props );
     item.copy( this );
     return( item );
   }
@@ -94,10 +101,12 @@ public class CanvasItemImage : CanvasItem {
   public override void move_selector( int index, double diffx, double diffy, bool shift ) {
 
     var box = new CanvasRect.from_rect( bbox );
+    var dy  = (diffx / box.width) * box.height;
 
-    box.width += diffx;
+    box.width  += diffx;
+    box.height += dy;
 
-    if( (box.width > 0) && ((int)box.width <= _buf.width) ) {
+    if( box.width > 5 ) {
       bbox = box;
     }
 
@@ -111,24 +120,33 @@ public class CanvasItemImage : CanvasItem {
   /* Saves this item as XML */
   public override Xml.Node* save() {
     Xml.Node* node = base.save();
-    node->set_prop( "filename", _filename.to_string() );
+    node->set_prop( "name", _name );
+    node->set_prop( "file", _file.to_string() );
     return( node );
   }
 
   /* Loads this item from XML */
   public override void load( Xml.Node* node ) {
     base.load( node );
-    var f = node->get_prop( "filename" );
+    var n = node->get_prop( "name" );
+    if( n != null ) {
+      _name = n;
+    }
+    var f = node->get_prop( "file" );
     if( f != null ) {
-      _filename = f;
+      _file = bool.parse( f );
     }
   }
 
   /* Draw the rectangle */
   public override void draw_item( Context ctx ) {
 
-   	ctx.set_source_surface( _surface, bbox.x, bbox.y );
+    ctx.set_line_width( 0 );
+    ctx.rectangle( bbox.x, bbox.y, bbox.width, bbox.height );
     save_path( ctx, CanvasItemPathType.FILL );
+    ctx.stroke();
+
+   	ctx.set_source_surface( _surface, bbox.x, bbox.y );
    	ctx.paint();
 
   }
