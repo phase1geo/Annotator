@@ -118,7 +118,7 @@ public class CanvasItem {
     }
   }
 
-  public string     name { get; private set; default = "unknown"; }
+  public CanvasItemType itype { get; private set; default = CanvasItemType.NONE; }
   public CanvasRect bbox {
     get {
       return( _bbox );
@@ -157,11 +157,11 @@ public class CanvasItem {
   public CanvasRect           last_bbox  { get; private set; default = new CanvasRect(); }
 
   /* Constructor */
-  public CanvasItem( string name, Canvas canvas, CanvasItemProperties props ) {
+  public CanvasItem( CanvasItemType type, Canvas canvas, CanvasItemProperties props ) {
 
     this.canvas = canvas;
 
-    this.name = name;
+    this.itype = type;
     this.props.copy( props );
 
   }
@@ -402,7 +402,8 @@ public class CanvasItem {
 
   /* Saves the item in XML format */
   public virtual Xml.Node* save() {
-    Xml.Node* node = new Xml.Node( null, name );
+    Xml.Node* node = new Xml.Node( null, "item" );
+    node->set_prop( "type", itype.to_string() );
     node->set_prop( "x",    bbox.x.to_string() );
     node->set_prop( "y",    bbox.y.to_string() );
     node->set_prop( "w",    bbox.width.to_string() );
@@ -415,6 +416,10 @@ public class CanvasItem {
   /* Loads the item in XML format */
   public virtual void load( Xml.Node* node ) {
 
+    var t = node->get_prop( "type" );
+    if( t != null ) {
+      itype = CanvasItemType.parse( t );
+    }
     var x = node->get_prop( "x" );
     if( x != null ) {
       bbox.x = int.parse( x );
@@ -442,6 +447,15 @@ public class CanvasItem {
       }
     }
 
+  }
+
+  /* Returns the canvas item type from the given XML node */
+  public static CanvasItemType get_type_from_xml( Xml.Node* node ) {
+    var t = node->get_prop( "type" );
+    if( t != null ) {
+      return( CanvasItemType.parse( t ) );
+    }
+    return( CanvasItemType.NONE );
   }
 
 }

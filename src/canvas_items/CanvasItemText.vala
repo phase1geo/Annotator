@@ -99,7 +99,7 @@ public class CanvasItemText : CanvasItem {
 
   /* Default constructor */
   public CanvasItemText( Canvas canvas, CanvasItemProperties props ) {
-    base( "text", canvas, props );
+    base( CanvasItemType.TEXT, canvas, props );
     initialize( canvas );
     update_size( false );
   }

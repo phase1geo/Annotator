@@ -33,7 +33,7 @@ public class CanvasItemBlur : CanvasItem {
 
   /* Constructor */
   public CanvasItemBlur( Canvas canvas, CanvasItemProperties props ) {
-    base( "blur", canvas, props );
+    base( CanvasItemType.BLUR, canvas, props );
     _blur_radius = 20;
     create_points();
   }

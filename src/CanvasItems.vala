@@ -24,7 +24,8 @@ using Gdk;
 using Cairo;
 
 public enum CanvasItemType {
-  RECT_STROKE = 0,
+  NONE = 0,
+  RECT_STROKE,
   RECT_FILL,
   OVAL_STROKE,
   OVAL_FILL,
@@ -36,7 +37,51 @@ public enum CanvasItemType {
   BLUR,
   MAGNIFIER,
   PENCIL,
-  SEQUENCE
+  SEQUENCE,
+  STICKER,
+  IMAGE;
+
+  public string to_string() {
+    switch( this ) {
+      case RECT_STROKE :  return( "rect-stroke" );
+      case RECT_FILL   :  return( "rect-fill" );
+      case OVAL_STROKE :  return( "oval-stroke" );
+      case OVAL_FILL   :  return( "oval-fill" );
+      case STAR_STROKE :  return( "star-stroke" );
+      case STAR_FILL   :  return( "star-fill" );
+      case LINE        :  return( "line" );
+      case ARROW       :  return( "arrow" );
+      case TEXT        :  return( "text" );
+      case BLUR        :  return( "blur" );
+      case MAGNIFIER   :  return( "magnifier" );
+      case PENCIL      :  return( "pencil" );
+      case SEQUENCE    :  return( "sequence" );
+      case STICKER     :  return( "sticker" );
+      case IMAGE       :  return( "image" );
+      default          :  return( "none" );
+    }
+  }
+
+  public static CanvasItemType parse( string value ) {
+    switch( value ) {
+      case "rect-stroke" :  return( RECT_STROKE );
+      case "rect-fill"   :  return( RECT_FILL );
+      case "oval-stroke" :  return( OVAL_STROKE );
+      case "oval-fill"   :  return( OVAL_FILL );
+      case "star-stroke" :  return( STAR_STROKE );
+      case "star-fill"   :  return( STAR_FILL );
+      case "line"        :  return( LINE );
+      case "arrow"       :  return( ARROW );
+      case "text"        :  return( TEXT );
+      case "blur"        :  return( BLUR );
+      case "magnifier"   :  return( MAGNIFIER );
+      case "pencil"      :  return( PENCIL );
+      case "sequence"    :  return( SEQUENCE );
+      case "sticker"     :  return( STICKER );
+      case "image"       :  return( IMAGE );
+      default            :  return( NONE );
+    }
+  }
 }
 
 public class CanvasItems {
@@ -163,9 +208,11 @@ public class CanvasItems {
     return( item );
   }
 
-  private CanvasItem create_sticker( string name ) {
+  private CanvasItem create_sticker( string? name ) {
     var item = new CanvasItemImage( _canvas, name, false, props );
-    item.bbox = center_box( 50, 50 );
+    if( name != null ) {
+      item.bbox = center_box( 50, 50 );
+    }
     return( item );
   }
 
@@ -292,7 +339,7 @@ public class CanvasItems {
 
   /* Returns the active text item, if it is set; otherwise, returns null */
   public CanvasItemText? get_active_text() {
-    return( ((_active == null) || (_active.name != "text")) ? null : (_active as CanvasItemText) );
+    return( ((_active == null) || (_active.itype != CanvasItemType.TEXT)) ? null : (_active as CanvasItemText) );
   }
 
   /* Returns true if we are currently editing a text item */
@@ -517,7 +564,7 @@ public class CanvasItems {
     update_format_bar();
 
     /* If the active item is a pencil, indicate that we are drawing */
-    if( (_active != null) && (_active.name == "pencil") ) {
+    if( (_active != null) && (_active.itype == CanvasItemType.PENCIL) ) {
       _active.mode = CanvasItemMode.DRAWING;
       return( false );
     }
@@ -558,7 +605,7 @@ public class CanvasItems {
               _canvas.set_cursor_from_name( "grabbing" );
               break;
             case 2 :
-              if( _active.name != "text" ) return( false );
+              if( _active.itype != CanvasItemType.TEXT ) return( false );
               set_edit_mode( true );
               get_active_text().select_mode.connect( select_mode_changed );
               break;
@@ -772,7 +819,9 @@ public class CanvasItems {
 
   /* Creates a copy of the item and sends it to the clipboard */
   private void do_copy( CanvasItem item ) {
-    /* TBD */
+    var items = new Array<CanvasItem>();
+    items.append_val( item );
+    AnnotatorClipboard.copy_items( serialize_for_copy( items ) );
   }
 
   /* Creates a copy of the item, sends it to the clipboard, and removes the item */
@@ -783,7 +832,7 @@ public class CanvasItems {
 
   /* Pastes the given item from the clipboard (if one exists) */
   private void do_paste( CanvasItem item ) {
-    /* TBD */
+    AnnotatorClipboard.paste( _canvas.editor );
   }
 
   /* Deletes the item */
@@ -810,7 +859,7 @@ public class CanvasItems {
   }
 
   /* Serialize the canvas items for the copy buffer */
-  public string serialize( Array<CanvasItem> items ) {
+  public string serialize_for_copy( Array<CanvasItem> items ) {
     var       serialized = "";
     Xml.Doc*  doc = new Xml.Doc( "1.0" );
     Xml.Node* root = new Xml.Node( null, "items" );
@@ -827,12 +876,37 @@ public class CanvasItems {
   public void deserialize_for_paste( string serialized ) {
     Xml.Doc* doc = Xml.Parser.parse_doc( serialized );
     if( doc == null ) return;
+    var undo_item = new UndoItemPaste();
     for( Xml.Node* it=doc->get_root_element()->children; it!=null; it=it->next ) {
       if( (it->type == Xml.ElementType.ELEMENT_NODE) && (it->name == "item") ) {
-        // TBD - We need to create a canvas item of the correct type but this
-        // code doesn't properly exist yet in CanvasItem
+        CanvasItem? item = null;
+        var type = CanvasItem.get_type_from_xml( it );
+        switch( type ) {
+          case CanvasItemType.RECT_STROKE :  item = create_rectangle( false );  break;
+          case CanvasItemType.RECT_FILL   :  item = create_rectangle( true );   break;
+          case CanvasItemType.OVAL_STROKE :  item = create_oval( false );       break;
+          case CanvasItemType.OVAL_FILL   :  item = create_oval( true );        break;
+          case CanvasItemType.STAR_STROKE :  item = create_star( false );       break;
+          case CanvasItemType.STAR_FILL   :  item = create_star( true );        break;
+          case CanvasItemType.LINE        :  item = create_line();              break;
+          case CanvasItemType.ARROW       :  item = create_arrow();             break;
+          case CanvasItemType.TEXT        :  item = create_text();              break;
+          case CanvasItemType.BLUR        :  item = create_blur();              break;
+          case CanvasItemType.MAGNIFIER   :  item = create_magnifier();         break;
+          case CanvasItemType.PENCIL      :  item = create_pencil();            break;
+          case CanvasItemType.SEQUENCE    :  item = create_sequence();          break;
+          case CanvasItemType.STICKER     :  item = create_sticker( null );     break;
+        }
+        if( item != null ) {
+          item.load( it );
+          item.bbox = center_box( item.bbox.width, item.bbox.height );
+          add_item( item, -1 );
+          undo_item.add( item );
+        }
       }
     }
+    _canvas.undo_buffer.add_item( undo_item );
+    _canvas.queue_draw();
   }
 
   /****************************************************************************/
@@ -895,6 +969,10 @@ public class CanvasItems {
 
   }
 
+  /****************************************************************************/
+  //  SAVE/LOAD METHODS
+  /****************************************************************************/
+
   public Xml.Node* save() {
     Xml.Node* node = new Xml.Node( null, "items" );
     foreach( CanvasItem item in _items ) {
@@ -905,18 +983,24 @@ public class CanvasItems {
 
   public void load( Xml.Node* node ) {
     for( Xml.Node* it=node->children; it!=null; it=it->next ) {
-      if( it->type == Xml.ElementType.ELEMENT_NODE ) {
+      if( (it->type == Xml.ElementType.ELEMENT_NODE) && (it->name == "item") ) {
         CanvasItem? item = null;
-        switch( it->name ) {
-          case "rectangle" :  item = create_rectangle( true );  break;
-          case "oval"      :  item = create_oval( true );       break;
-          case "star"      :  item = create_star( true );       break;
-          case "line"      :  item = create_line();             break;
-          case "arrow"     :  item = create_arrow();            break;
-          case "text"      :  item = create_text();             break;
-          case "blue"      :  item = create_blur();             break;
-          case "magnifier" :  item = create_magnifier();        break;
-          case "pencil"    :  item = create_pencil();           break;
+        var type = CanvasItem.get_type_from_xml( it );
+        switch( type ) {
+          case CanvasItemType.RECT_STROKE :  item = create_rectangle( false );  break;
+          case CanvasItemType.RECT_FILL   :  item = create_rectangle( true );   break;
+          case CanvasItemType.OVAL_STROKE :  item = create_oval( false );       break;
+          case CanvasItemType.OVAL_FILL   :  item = create_oval( true );        break;
+          case CanvasItemType.STAR_STROKE :  item = create_star( false );       break;
+          case CanvasItemType.STAR_FILL   :  item = create_star( true );        break;
+          case CanvasItemType.LINE        :  item = create_line();              break;
+          case CanvasItemType.ARROW       :  item = create_arrow();             break;
+          case CanvasItemType.TEXT        :  item = create_text();              break;
+          case CanvasItemType.BLUR        :  item = create_blur();              break;
+          case CanvasItemType.MAGNIFIER   :  item = create_magnifier();         break;
+          case CanvasItemType.PENCIL      :  item = create_pencil();            break;
+          case CanvasItemType.SEQUENCE    :  item = create_sequence();          break;
+          case CanvasItemType.STICKER     :  item = create_sticker( null );     break;
         }
         if( item != null ) {
           item.load( it );

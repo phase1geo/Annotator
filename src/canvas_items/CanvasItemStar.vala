@@ -25,15 +25,13 @@ using Cairo;
 
 public class CanvasItemStar : CanvasItem {
 
-  private bool   _fill         = false;
   private int    _num_points   = 5;
   private double _inner_radius = 15;
   private double _inner_angle  = 0;
 
   /* Constructor */
   public CanvasItemStar( Canvas canvas, bool fill, int num_points, double inner_radius, CanvasItemProperties props ) {
-    base( "star", canvas, props );
-    _fill         = fill;
+    base( (fill ? CanvasItemType.STAR_FILL : CanvasItemType.STAR_STROKE), canvas, props );
     _num_points   = num_points;
     _inner_radius = inner_radius;
     create_points();
@@ -57,7 +55,6 @@ public class CanvasItemStar : CanvasItem {
   public override void copy( CanvasItem item ) {
     base.copy( item );
     var star = (CanvasItemStar)item;
-    _fill         = star._fill;
     _inner_radius = star._inner_radius;
     if( _num_points != star._num_points ) {
       _num_points   = star._num_points;
@@ -67,7 +64,7 @@ public class CanvasItemStar : CanvasItem {
 
   /* Returns a duplicate of this item */
   public override CanvasItem duplicate() {
-    var item = new CanvasItemStar( canvas, _fill, _num_points, _inner_radius, props );
+    var item = new CanvasItemStar( canvas, (itype == CanvasItemType.STAR_FILL), _num_points, _inner_radius, props );
     item.copy( this );
     return( item );
   }
@@ -201,7 +198,7 @@ public class CanvasItemStar : CanvasItem {
 
     save_path( ctx, CanvasItemPathType.FILL );
 
-    if( _fill ) {
+    if( itype == CanvasItemType.STAR_FILL ) {
 
       ctx.fill_preserve();
 

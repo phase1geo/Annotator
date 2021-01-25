@@ -36,7 +36,7 @@ public class CanvasItemMagnifier : CanvasItem {
 
   /* Constructor */
   public CanvasItemMagnifier( Canvas canvas, double zoom_factor, CanvasItemProperties props ) {
-    base( "magnifier", canvas, props );
+    base( CanvasItemType.MAGNIFIER, canvas, props );
     _image       = canvas.image;
     _zoom_factor = zoom_factor;
     create_points();

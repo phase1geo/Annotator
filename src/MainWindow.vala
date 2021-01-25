@@ -46,6 +46,8 @@ public class MainWindow : ApplicationWindow {
     { "action_quit",        do_quit },
     { "action_undo",        do_undo },
     { "action_redo",        do_redo },
+    { "action_copy",        do_copy },
+    { "action_cut",         do_cut },
     { "action_paste",       do_paste },
     { "action_zoom_in",     do_zoom_in },
     { "action_zoom_out",    do_zoom_out },
@@ -470,6 +472,14 @@ public class MainWindow : ApplicationWindow {
     _editor.open_image( filename );
     _zoom_btn.set_sensitive( true );
     _export_btn.set_sensitive( true );
+  }
+
+  public void do_copy() {
+    // TBD - AnnotatorClipboard.copy_
+  }
+
+  public void do_cut() {
+    // TBD
   }
 
   /* Pastes text or images to the editor */

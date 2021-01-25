@@ -25,12 +25,9 @@ using Cairo;
 
 public class CanvasItemRect : CanvasItem {
 
-  private bool _fill;
-
   /* Constructor */
   public CanvasItemRect( Canvas canvas, bool fill, CanvasItemProperties props ) {
-    base( "rectangle", canvas, props );
-    _fill = fill;
+    base( (fill ? CanvasItemType.RECT_FILL : CanvasItemType.RECT_STROKE), canvas, props );
     create_points();
   }
 
@@ -46,18 +43,9 @@ public class CanvasItemRect : CanvasItem {
     points.append_val( new CanvasPoint( CanvasPointType.RESIZER ) );  // left
   }
 
-  /* Copies the contents of the given item to ourselves */
-  public override void copy( CanvasItem item ) {
-    base.copy( item );
-    var rect_item = (CanvasItemRect)item;
-    if( rect_item != null ) {
-      _fill = rect_item._fill;
-    }
-  }
-
   /* Returns a duplicate of this item */
   public override CanvasItem duplicate() {
-    var item = new CanvasItemRect( canvas, _fill, props );
+    var item = new CanvasItemRect( canvas, (itype == CanvasItemType.RECT_FILL), props );
     item.copy( this );
     return( item );
   }
@@ -116,22 +104,6 @@ public class CanvasItemRect : CanvasItem {
     }
   }
 
-  /* Saves this item as XML */
-  public override Xml.Node* save() {
-    Xml.Node* node = base.save();
-    node->set_prop( "fill", _fill.to_string() );
-    return( node );
-  }
-
-  /* Loads this item from XML */
-  public override void load( Xml.Node* node ) {
-    base.load( node );
-    var f = node->get_prop( "fill" );
-    if( f != null ) {
-      _fill = bool.parse( f );
-    }
-  }
-
   /* Draw the rectangle */
   public override void draw_item( Context ctx ) {
 
@@ -142,7 +114,7 @@ public class CanvasItemRect : CanvasItem {
 
     save_path( ctx, CanvasItemPathType.FILL );
 
-    if( _fill ) {
+    if( itype == CanvasItemType.RECT_FILL ) {
 
       Utils.set_context_color_with_alpha( ctx, props.color, alpha );
       ctx.fill_preserve();

@@ -49,7 +49,7 @@ public class CanvasItemArrow : CanvasItem {
 
   /* Constructor */
   public CanvasItemArrow( Canvas canvas, CanvasItemProperties props ) {
-    base( "arrow", canvas, props );
+    base( CanvasItemType.ARROW, canvas, props );
     create_points();
   }
 

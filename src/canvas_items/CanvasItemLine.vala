@@ -36,7 +36,7 @@ public class CanvasItemLine : CanvasItem {
 
   /* Constructor */
   public CanvasItemLine( Canvas canvas, CanvasItemProperties props ) {
-    base( "line", canvas, props );
+    base( CanvasItemType.LINE, canvas, props );
     create_points();
   }
 

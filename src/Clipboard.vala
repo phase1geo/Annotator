@@ -26,13 +26,18 @@ using Gdk;
 
 public class AnnotatorClipboard {
 
-  private static string? text  = null;
-  private static Pixbuf  image = null;
+  const string ITEMS_TARGET_NAME = "x-application/annotator-items";
+  static Atom  ITEMS_ATOM        = Atom.intern_static_string( ITEMS_TARGET_NAME );
+
+  private static string? text   = null;
+  private static Pixbuf? image  = null;
+  private static string? items  = null;
   private static bool    set_internally = false;
 
   enum Target {
     STRING,
-    IMAGE
+    IMAGE,
+    ITEMS
   }
 
   const TargetEntry[] text_target_list = {
@@ -45,16 +50,25 @@ public class AnnotatorClipboard {
     { "image/png", 0, Target.IMAGE }
   };
 
+  const TargetEntry[] item_target_list = {
+    { ITEMS_TARGET_NAME, 0, Target.ITEMS }
+  };
+
   public static void set_with_data( Clipboard clipboard, SelectionData selection_data, uint info, void* user_data_or_owner) {
     switch( info ) {
-      case Target.STRING:
+      case Target.STRING :
         if( text != null ) {
           selection_data.set_text( text, -1 );
         }
         break;
-      case Target.IMAGE:
+      case Target.IMAGE :
         if( image != null ) {
           selection_data.set_pixbuf( image );
+        }
+        break;
+      case Target.ITEMS :
+        if( items != null ) {
+          selection_data.@set( ITEMS_ATOM, 0, items.data );
         }
         break;
     }
@@ -65,6 +79,7 @@ public class AnnotatorClipboard {
     if( !set_internally ) {
       text  = null;
       image = null;
+      items = null;
     }
     set_internally = false;
   }
@@ -94,6 +109,23 @@ public class AnnotatorClipboard {
 
   }
 
+  public static void copy_items( string it ) {
+
+    /* Store the data to copy */
+    items          = it;
+    set_internally = true;
+
+    var clipboard = Gtk.Clipboard.get_default( Gdk.Display.get_default() );
+    clipboard.set_with_data( item_target_list, set_with_data, clear_data, null );
+
+  }
+
+  /* Returns true if CanvasItems are pasteable from the clipboard */
+  public static bool items_pasteable() {
+    var clipboard = Clipboard.get_default( Gdk.Display.get_default() );
+    return( clipboard.wait_is_target_available( ITEMS_ATOM ) );
+  }
+
   /* Called to paste current item in clipboard to the given Canvas */
   public static void paste( Editor editor ) {
 
@@ -105,10 +137,12 @@ public class AnnotatorClipboard {
 
     Atom? text_atom  = null;
     Atom? image_atom = null;
+    Atom? items_atom  = null;
 
     /* Get the list of targets that we will support */
     foreach( var target in targets ) {
       switch( target.name() ) {
+        case ITEMS_TARGET_NAME :  items_atom = items_atom ?? target;  break;
         case "UTF8_STRING"     :
         case "STRING"          :
         case "text/plain"      :  text_atom  = text_atom  ?? target;  break;
@@ -116,8 +150,16 @@ public class AnnotatorClipboard {
       }
     }
 
+    /* If we need to handle a canvas image, do it here */
+    if( items_atom != null ) {
+      clipboard.request_contents( items_atom, (c, raw_data) => {
+        var data = (string)raw_data.get_data();
+        if( data == null ) return;
+        editor.paste_items( data );
+      });
+
     /* If we need to handle pasting text, do it here */
-    if( (image_atom != null) && ((text_atom == null) || !text_needed) ) {
+    } else if( (image_atom != null) && ((text_atom == null) || !text_needed) ) {
       clipboard.request_contents( image_atom, (c, raw_data) => {
         var data = raw_data.get_pixbuf();
         if( data == null ) return;

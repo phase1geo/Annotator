@@ -33,7 +33,7 @@ public class CanvasItemSequence : CanvasItem {
 
   /* Constructor */
   public CanvasItemSequence( Canvas canvas, CanvasItemProperties props ) {
-    base( "sequence", canvas, props );
+    base( CanvasItemType.SEQUENCE, canvas, props );
     _seq_num = _next_seq_num++;
     create_points();
   }

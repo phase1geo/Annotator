@@ -25,12 +25,9 @@ using Cairo;
 
 public class CanvasItemOval : CanvasItem {
 
-  private bool _fill;
-
   /* Constructor */
   public CanvasItemOval( Canvas canvas, bool fill, CanvasItemProperties props ) {
-    base( "oval", canvas, props );
-    _fill = fill;
+    base( (fill ? CanvasItemType.OVAL_FILL : CanvasItemType.OVAL_STROKE), canvas, props );
     create_points();
   }
 
@@ -46,18 +43,9 @@ public class CanvasItemOval : CanvasItem {
     points.append_val( new CanvasPoint( CanvasPointType.RESIZER ) );  // left
   }
 
-  /* Copies the contents of the given canvas item to ourselves */
-  public override void copy( CanvasItem item ) {
-    base.copy( item );
-    var oval_item = (CanvasItemOval)item;
-    if( oval_item != null ) {
-      _fill = oval_item._fill;
-    }
-  }
-
   /* Returns a copy of this item */
   public override CanvasItem duplicate() {
-    var item = new CanvasItemOval( canvas, _fill, props );
+    var item = new CanvasItemOval( canvas, (itype == CanvasItemType.OVAL_FILL), props );
     item.copy( this );
     return( item );
   }
@@ -74,6 +62,7 @@ public class CanvasItemOval : CanvasItem {
     points.index( 5 ).copy_coords( bbox.x2(), bbox.mid_y() );
     points.index( 6 ).copy_coords( bbox.mid_x(), bbox.y2() );
     points.index( 7 ).copy_coords( bbox.x1(), bbox.mid_y() );
+
   }
 
   /* Adjusts the bounding box */
@@ -115,22 +104,6 @@ public class CanvasItemOval : CanvasItem {
     }
   }
 
-  /* Saves this item as XML */
-  public override Xml.Node* save() {
-    Xml.Node* node = base.save();
-    node->set_prop( "fill", _fill.to_string() );
-    return( node );
-  }
-
-  /* Loads this item from XML */
-  public override void load( Xml.Node* node ) {
-    base.load( node );
-    var f = node->get_prop( "fill" );
-    if( f != null ) {
-      _fill = bool.parse( f );
-    }
-  }
-
   /* Draw the rectangle */
   public override void draw_item( Context ctx ) {
 
@@ -152,7 +125,7 @@ public class CanvasItemOval : CanvasItem {
 
     save_path( ctx, CanvasItemPathType.FILL );
 
-    if( _fill ) {
+    if( itype == CanvasItemType.OVAL_FILL ) {
 
       ctx.fill_preserve();
 

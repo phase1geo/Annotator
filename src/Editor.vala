@@ -89,6 +89,11 @@ public class Editor : Box {
     canvas.paste_text( txt );
   }
 
+  /* Pastes the given text as canvas items */
+  public void paste_items( string items ) {
+    canvas.items.deserialize_for_paste( items );
+  }
+
   /* Returns true if the image has been successfully set */
   public bool is_image_set() {
     return( canvas.is_surface_set() );

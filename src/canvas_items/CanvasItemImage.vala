@@ -25,14 +25,14 @@ using Cairo;
 
 public class CanvasItemImage : CanvasItem {
 
-  private string        _name;
-  private bool          _file;
-  private Pixbuf        _buf;
+  private string?       _name = null;
+  private bool          _file = false;
+  private Pixbuf?       _buf  = null;
   private ImageSurface? _surface;
 
   /* Constructor */
-  public CanvasItemImage( Canvas canvas, string name, bool file, CanvasItemProperties props ) {
-    base( "image", canvas, props );
+  public CanvasItemImage( Canvas canvas, string? name, bool file, CanvasItemProperties props ) {
+    base( (file ? CanvasItemType.IMAGE : CanvasItemType.STICKER), canvas, props );
     create_points();
     create_image( name, file );
   }
@@ -43,14 +43,15 @@ public class CanvasItemImage : CanvasItem {
   }
 
   /* Creates a pixbuf from the given filename or resource at full size */
-  private void create_image( string name, bool file ) {
+  private void create_image( string? name, bool file ) {
+    if( name == null ) return;
     try {
       _name = name;
       _file = file;
       if( file ) {
-        _buf = new Pixbuf.from_file_at_size( name, -1, -1 );
+        _buf = new Pixbuf.from_file_at_size( _name, -1, -1 );
       } else {
-        _buf = new Pixbuf.from_resource_at_scale( name, 300, 300, true );
+        _buf = new Pixbuf.from_resource_at_scale( _name, 300, 300, true );
       }
       resize_image();
     } catch( Error e ) {
@@ -136,6 +137,7 @@ public class CanvasItemImage : CanvasItem {
     if( f != null ) {
       _file = bool.parse( f );
     }
+    create_image( _name, _file );
   }
 
   /* Draw the rectangle */

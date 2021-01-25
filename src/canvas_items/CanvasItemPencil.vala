@@ -29,7 +29,7 @@ public class CanvasItemPencil : CanvasItem {
 
   /* Constructor */
   public CanvasItemPencil( Canvas canvas, CanvasItemProperties props ) {
-    base( "pencil", canvas, props );
+    base( CanvasItemType.PENCIL, canvas, props );
     create_points();
   }
 
