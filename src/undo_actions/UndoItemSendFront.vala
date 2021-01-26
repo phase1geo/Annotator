@@ -40,7 +40,7 @@ public class UndoItemSendFront : UndoItem {
 
   /* Causes the stored item to be put into the after state */
   public override void redo( Canvas canvas ) {
-    canvas.items.move_to_top( _item );
+    canvas.items.move_to_front( _item );
     canvas.queue_draw();
   }
 

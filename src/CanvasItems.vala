@@ -274,12 +274,12 @@ public class CanvasItems {
   }
 
   /* Adds the given item at the top of the item stack */
-  public void move_to_top( CanvasItem item ) {
+  public void move_to_front( CanvasItem item ) {
     _items.append( item );
   }
 
   /* Adds the given item at the bottom of the item stack */
-  public void move_to_bottom( CanvasItem item ) {
+  public void move_to_back( CanvasItem item ) {
     _items.prepend( item );
   }
 
@@ -880,14 +880,14 @@ public class CanvasItems {
   /* Moves the item to the top of the item list */
   private void do_send_to_front( CanvasItem item ) {
     _canvas.undo_buffer.add_item( new UndoItemSendFront( item, item_position( item ) ) );
-    move_to_top( item );
+    move_to_front( item );
     _canvas.queue_draw();
   }
 
   /* Moves the item to the bottom of the item list */
   private void do_send_to_back( CanvasItem item ) {
     _canvas.undo_buffer.add_item( new UndoItemSendBack( item, item_position( item ) ) );
-    move_to_bottom( item );
+    move_to_back( item );
     _canvas.queue_draw();
   }
 

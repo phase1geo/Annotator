@@ -420,6 +420,7 @@ public class CanvasToolbar : Toolbar {
       var sw  = (CanvasItemStrokeWidth)i;
       var btn = new Gtk.RadioButton.from_widget( width_group );
       btn.margin_left = 20;
+      btn.active = (_canvas.items.props.stroke_width == sw);
       btn.add( new Image.from_surface( make_width_icon( 100, sw.width() ) ) );
       btn.toggled.connect(() => {
         if( btn.get_active() ) {
@@ -445,6 +446,7 @@ public class CanvasToolbar : Toolbar {
       var dash = (CanvasItemDashPattern)i;
       var btn  = new Gtk.RadioButton.from_widget( dash_group );
       btn.margin_left = 20;
+      btn.active = (_canvas.items.props.dash == dash);
       btn.add( new Image.from_surface( make_dash_icon( 100, dash ) ) );
       btn.toggled.connect(() => {
         if( btn.get_active() ) {

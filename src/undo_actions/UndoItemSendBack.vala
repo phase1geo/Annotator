@@ -40,7 +40,7 @@ public class UndoItemSendBack : UndoItem {
 
   /* Causes the stored item to be put into the after state */
   public override void redo( Canvas canvas ) {
-    canvas.items.move_to_bottom( _item );
+    canvas.items.move_to_back( _item );
     canvas.queue_draw();
   }
 
