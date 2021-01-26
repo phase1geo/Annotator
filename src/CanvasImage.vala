@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2020 (https://github.com/phase1geo/TextShine)
+* Copyright (c) 2020-2021 (https://github.com/phase1geo/Annotator)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -377,7 +377,7 @@ public class CanvasImage {
   }
 
   /* Draw the image being annotated */
-  private void draw_image( Context ctx ) {
+  public void draw_image( Context ctx ) {
     ctx.set_source_surface( _surface, (int)info.pixbuf_rect.x, (int)info.pixbuf_rect.y );
     ctx.paint();
   }
