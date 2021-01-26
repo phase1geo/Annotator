@@ -139,7 +139,7 @@ public class Resizer : Dialog {
   private MenuButton           _format;
   private Label                _size;
   private Array<ResizerMargin> _margins;
-  private DrawingArea          _preview;
+  private Image                _preview;
 
   /* Constructor */
   public Resizer( Window parent, CanvasImageInfo info ) {
@@ -372,11 +372,9 @@ public class Resizer : Dialog {
   /* Create the preview panel */
   private Widget create_preview() {
 
-    _preview = new DrawingArea();
+    _preview = new Image();
     _preview.margin = 5;
     _preview.set_size_request( 200, 200 );
-    _preview.get_style_context().add_class( "preview" );
-    _preview.draw.connect( on_draw );
 
     _size = new Label( "" );
     _size.halign = Align.END;
@@ -398,36 +396,40 @@ public class Resizer : Dialog {
 
   }
 
-  // The bounds of the preview box will be 200 px (height and width)
-  private void update_preview() {
-    _preview.queue_draw();
-  }
-
   /* Draw image in the proper location at the correct position */
-  private bool on_draw( Context ctx ) {
+  private void update_preview() {
 
     Idle.add(() => {
 
       var current = get_image_info();
+      var surface = new ImageSurface( Cairo.Format.ARGB32, 200, 200 );
+      var ctx     = new Context( surface );
 
       /* Update the resulting image size */
       _size.label = _( "%d x %d pixels" ).printf( current.width, current.height );
 
       /* Create a background color */
-      _preview.get_style_context().render_background( ctx, 0, 0, 200, 200 );
-
       var scale = 200.0 / current.largest_side();
       ctx.scale( scale, scale );
+
+      Utils.set_context_color( ctx, Utils.color_from_string( "white" ) );
+      ctx.rectangle( 0, 0, current.width, current.height );
+      ctx.fill_preserve();
+
+      Utils.set_context_color( ctx, Utils.color_from_string( "black" ) );
+      ctx.set_line_width( 1 );
+      ctx.stroke();
 
       Utils.set_context_color( ctx, Utils.color_from_string( "blue" ) );
       ctx.rectangle( current.pixbuf_rect.x, current.pixbuf_rect.y, current.pixbuf_rect.width, current.pixbuf_rect.height );
       ctx.fill();
 
+      /* Update the surface */
+      _preview.set_from_surface( surface );
+
       return( false );
 
     });
-
-    return( false );
 
   }
 
