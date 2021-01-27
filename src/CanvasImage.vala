@@ -38,12 +38,13 @@ public class CanvasImage {
   }
 
   private Canvas        _canvas;
+  private Pixbuf?       _buf        = null;  // Currently displayed pixbuf
   private ImageSurface? _surface    = null;
   private int           _crop_index = -2;
   private double        _last_x     = 0;
   private double        _last_y     = 0;
 
-  public Pixbuf?          pixbuf        { get; private set; default = null; }
+  public Pixbuf?          pixbuf        { get; private set; default = null; }  // Original pixbuf of image
   public bool             cropping      { get; private set; default = false; }
   public Exporter         exporter      { get; private set; }
   public CanvasRect       crop_rect     { get; private set; default = new CanvasRect(); }
@@ -95,14 +96,15 @@ public class CanvasImage {
     }
 
     pixbuf   = buf.copy();
-    _surface = (ImageSurface)cairo_surface_create_from_pixbuf( pixbuf, 1, null );
-    _canvas.set_size_request( pixbuf.width, pixbuf.height );
+    _buf     = buf.copy();
+    _surface = (ImageSurface)cairo_surface_create_from_pixbuf( _buf, 1, null );
+    _canvas.set_size_request( _buf.width, _buf.height );
 
     /* Create the image information */
-    info = new CanvasImageInfo( pixbuf );
+    info = new CanvasImageInfo( _buf );
 
     /* Store the average color value for faster lookups */
-    average_color = average_color_of_rect( new CanvasRect.from_coords( 0, 0, pixbuf.width, pixbuf.height ) );
+    average_color = average_color_of_rect( new CanvasRect.from_coords( 0, 0, _buf.width, _buf.height ) );
 
     /* Delete the canvas items */
     _canvas.items.clear();
@@ -142,16 +144,17 @@ public class CanvasImage {
 
     /* Create a new buffer with the added margin */
     var sbuf = pixbuf.scale_simple( (int)info.pixbuf_rect.width, (int)info.pixbuf_rect.height, InterpType.BILINEAR );
-    pixbuf = new Pixbuf( pixbuf.colorspace, pixbuf.has_alpha, pixbuf.bits_per_sample, info.width, info.height );
-    sbuf.copy_area( 0, 0, (int)info.pixbuf_rect.width, (int)info.pixbuf_rect.height, pixbuf, (int)info.pixbuf_rect.x, (int)info.pixbuf_rect.y );
+    _buf = new Pixbuf( pixbuf.colorspace, pixbuf.has_alpha, pixbuf.bits_per_sample, info.width, info.height );
+    _buf.fill( (uint32)0xffffffff );
+    sbuf.copy_area( 0, 0, (int)info.pixbuf_rect.width, (int)info.pixbuf_rect.height, _buf, (int)info.pixbuf_rect.x, (int)info.pixbuf_rect.y );
 
     /* Set the surface that will be drawn */
-    _surface = (ImageSurface)cairo_surface_create_from_pixbuf( pixbuf, 1, null );
+    _surface = (ImageSurface)cairo_surface_create_from_pixbuf( _buf, 1, null );
     _canvas.set_size_request( info.width, info.height );
 
     /* Calculate the scaling factors */
-    width_scale  = info.pixbuf_rect.width  / pixbuf.width;
-    height_scale = info.pixbuf_rect.height / pixbuf.height;
+    width_scale  = info.pixbuf_rect.width  / _buf.width;
+    height_scale = info.pixbuf_rect.height / _buf.height;
 
   }
 
@@ -307,7 +310,7 @@ public class CanvasImage {
   /* Completes the cropping operation */
   public bool end_crop() {
     cropping = false;
-    var buf = new Pixbuf.subpixbuf( pixbuf, (int)crop_rect.x, (int)crop_rect.y, (int)crop_rect.width, (int)crop_rect.height );
+    var buf = new Pixbuf.subpixbuf( _buf, (int)crop_rect.x, (int)crop_rect.y, (int)crop_rect.width, (int)crop_rect.height );
     set_image( buf, _( "image crop" ) );
     _canvas.items.adjust_items( crop_rect.x, crop_rect.y );
     _canvas.queue_draw();
@@ -378,8 +381,10 @@ public class CanvasImage {
 
   /* Draw the image being annotated */
   private void draw_image( Context ctx ) {
+
     ctx.set_source_surface( _surface, (int)info.pixbuf_rect.x, (int)info.pixbuf_rect.y );
     ctx.paint();
+
   }
 
   /* Draws the drop_outline */
