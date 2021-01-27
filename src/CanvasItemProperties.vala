@@ -245,6 +245,11 @@ public class CanvasItemProperties {
     );
   }
 
+  /* Outputs the contents of the class for debugging purposes in string format */
+  public string to_string() {
+    return( "color: %s, alpha: %g, stroke: %d, dash: %s, blur: %d, font: %s\n".printf( Utils.color_to_string( color ), alpha, stroke_width, dash.to_string(), blur_radius, font.to_string() ) );
+  }
+
   /* Saves the contents of this properties class as XML */
   public Xml.Node* save() {
     Xml.Node* node = new Xml.Node( null, "properties" );

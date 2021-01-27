@@ -92,7 +92,7 @@ public class UndoItemPropChange : UndoItem {
   }
 
   /* Replaces the current item with the new item */
-  public virtual void replace_with_item( UndoItem item ) {
+  public override void replace_with_item( UndoItem item ) {
     var cast_item = (item as UndoItemPropChange);
     for( int i=0; i<_list.length; i++ ) {
       _list.index( i ).merge( cast_item._list.index( i ) );
