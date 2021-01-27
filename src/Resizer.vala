@@ -20,6 +20,7 @@
 */
 
 using Gtk;
+using Gdk;
 using Cairo;
 
 public enum ResizerValueFormat {
@@ -130,6 +131,7 @@ public class ResizerMargin {
 
 public class Resizer : Dialog {
 
+  private Canvas               _canvas;
   private CanvasImageInfo      _info;
   private Image                _lock_prevent = new Image.from_icon_name( "changes-prevent-symbolic", IconSize.SMALL_TOOLBAR );
   private Image                _lock_allow   = new Image.from_icon_name( "changes-allow-symbolic",   IconSize.SMALL_TOOLBAR );
@@ -142,11 +144,13 @@ public class Resizer : Dialog {
   private Image                _preview;
 
   /* Constructor */
-  public Resizer( Window parent, CanvasImageInfo info ) {
+  public Resizer( Canvas canvas, CanvasImageInfo info ) {
+
+    _canvas = canvas;
 
     /* Setup dialog window */
     title         = _( "Resize Image" );
-    transient_for = parent;
+    transient_for = _canvas.win;
     modal         = true;
     destroy_with_parent = true;
     add_buttons(
@@ -420,9 +424,9 @@ public class Resizer : Dialog {
       ctx.set_line_width( 1 );
       ctx.stroke();
 
-      Utils.set_context_color( ctx, Utils.color_from_string( "blue" ) );
-      ctx.rectangle( current.pixbuf_rect.x, current.pixbuf_rect.y, current.pixbuf_rect.width, current.pixbuf_rect.height );
-      ctx.fill();
+      var buf = _canvas.image.pixbuf.scale_simple( (int)current.pixbuf_rect.width, (int)current.pixbuf_rect.height, InterpType.BILINEAR );
+      cairo_set_source_pixbuf( ctx, buf, current.pixbuf_rect.x, current.pixbuf_rect.y );
+      ctx.paint();
 
       /* Update the surface */
       _preview.set_from_surface( surface );

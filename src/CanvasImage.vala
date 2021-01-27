@@ -37,13 +37,13 @@ public class CanvasImage {
     }
   }
 
-  private Canvas         _canvas;
-  private Pixbuf?        _buf          = null;
-  private ImageSurface?  _surface      = null;
-  private int            _crop_index   = -2;
-  private double         _last_x       = 0;
-  private double         _last_y       = 0;
+  private Canvas        _canvas;
+  private ImageSurface? _surface    = null;
+  private int           _crop_index = -2;
+  private double        _last_x     = 0;
+  private double        _last_y     = 0;
 
+  public Pixbuf?          pixbuf        { get; private set; default = null; }
   public bool             cropping      { get; private set; default = false; }
   public Exporter         exporter      { get; private set; }
   public CanvasRect       crop_rect     { get; private set; default = new CanvasRect(); }
@@ -68,7 +68,7 @@ public class CanvasImage {
 
   /* Returns a surface which contains the given rectangle area of the base image */
   public Cairo.Surface get_surface_for_rect( CanvasRect rect ) {
-    var sub = new Pixbuf.subpixbuf( _buf, (int)rect.x, (int)rect.y, (int)rect.width, (int)rect.height );
+    var sub = new Pixbuf.subpixbuf( pixbuf, (int)rect.x, (int)rect.y, (int)rect.width, (int)rect.height );
     return( cairo_surface_create_from_pixbuf( sub, 1, null ) );
   }
 
@@ -77,9 +77,9 @@ public class CanvasImage {
 
     var x     = (rect.x < 0) ? 0 : (int)rect.x;
     var y     = (rect.y < 0) ? 0 : (int)rect.y;
-    var w     = ((rect.x + rect.width)  >= _buf.width)  ? (_buf.width  - (int)rect.x) : (int)rect.width;
-    var h     = ((rect.y + rect.height) >= _buf.height) ? (_buf.height - (int)rect.y) : (int)rect.height;
-    var sub   = new Pixbuf.subpixbuf( _buf, x, y, w, h );
+    var w     = ((rect.x + rect.width)  >= pixbuf.width)  ? (pixbuf.width  - (int)rect.x) : (int)rect.width;
+    var h     = ((rect.y + rect.height) >= pixbuf.height) ? (pixbuf.height - (int)rect.y) : (int)rect.height;
+    var sub   = new Pixbuf.subpixbuf( pixbuf, x, y, w, h );
     var color = Granite.Drawing.Utilities.average_color( sub );
 
     RGBA rgba = {color.R, color.G, color.B, color.A};
@@ -90,19 +90,19 @@ public class CanvasImage {
   /* Pastes an image from the given pixbuf to the canvas */
   public void set_image( Pixbuf buf, string? undo_name = _( "change image" ) ) {
 
-    if( (undo_name != null) && (_buf != null) ) {
-      _canvas.undo_buffer.add_item( new UndoImageChange( undo_name, _buf, buf ) );
+    if( (undo_name != null) && (pixbuf != null) ) {
+      _canvas.undo_buffer.add_item( new UndoImageChange( undo_name, pixbuf, buf ) );
     }
 
-    _buf     = buf.copy();
-    _surface = (ImageSurface)cairo_surface_create_from_pixbuf( _buf, 1, null );
-    _canvas.set_size_request( _buf.width, _buf.height );
+    pixbuf   = buf.copy();
+    _surface = (ImageSurface)cairo_surface_create_from_pixbuf( pixbuf, 1, null );
+    _canvas.set_size_request( pixbuf.width, pixbuf.height );
 
     /* Create the image information */
-    info = new CanvasImageInfo( _buf );
+    info = new CanvasImageInfo( pixbuf );
 
     /* Store the average color value for faster lookups */
-    average_color = average_color_of_rect( new CanvasRect.from_coords( 0, 0, _buf.width, _buf.height ) );
+    average_color = average_color_of_rect( new CanvasRect.from_coords( 0, 0, pixbuf.width, pixbuf.height ) );
 
     /* Delete the canvas items */
     _canvas.items.clear();
@@ -115,7 +115,7 @@ public class CanvasImage {
   /* Resizes the current image */
   public void resize_image() {
 
-    var dialog = new Resizer( _canvas.win, info );
+    var dialog = new Resizer( _canvas, info );
 
     if( dialog.run() == ResponseType.ACCEPT ) {
 
@@ -141,17 +141,17 @@ public class CanvasImage {
     info.copy( new_info );
 
     /* Create a new buffer with the added margin */
-    var sbuf = _buf.scale_simple( (int)info.pixbuf_rect.width, (int)info.pixbuf_rect.height, InterpType.BILINEAR );
-    _buf = new Pixbuf( _buf.colorspace, _buf.has_alpha, _buf.bits_per_sample, info.width, info.height );
-    sbuf.copy_area( 0, 0, (int)info.pixbuf_rect.width, (int)info.pixbuf_rect.height, _buf, (int)info.pixbuf_rect.x, (int)info.pixbuf_rect.y );
+    var sbuf = pixbuf.scale_simple( (int)info.pixbuf_rect.width, (int)info.pixbuf_rect.height, InterpType.BILINEAR );
+    pixbuf = new Pixbuf( pixbuf.colorspace, pixbuf.has_alpha, pixbuf.bits_per_sample, info.width, info.height );
+    sbuf.copy_area( 0, 0, (int)info.pixbuf_rect.width, (int)info.pixbuf_rect.height, pixbuf, (int)info.pixbuf_rect.x, (int)info.pixbuf_rect.y );
 
     /* Set the surface that will be drawn */
-    _surface = (ImageSurface)cairo_surface_create_from_pixbuf( _buf, 1, null );
+    _surface = (ImageSurface)cairo_surface_create_from_pixbuf( pixbuf, 1, null );
     _canvas.set_size_request( info.width, info.height );
 
     /* Calculate the scaling factors */
-    width_scale  = info.pixbuf_rect.width  / _buf.width;
-    height_scale = info.pixbuf_rect.height / _buf.height;
+    width_scale  = info.pixbuf_rect.width  / pixbuf.width;
+    height_scale = info.pixbuf_rect.height / pixbuf.height;
 
   }
 
@@ -307,7 +307,7 @@ public class CanvasImage {
   /* Completes the cropping operation */
   public bool end_crop() {
     cropping = false;
-    var buf = new Pixbuf.subpixbuf( _buf, (int)crop_rect.x, (int)crop_rect.y, (int)crop_rect.width, (int)crop_rect.height );
+    var buf = new Pixbuf.subpixbuf( pixbuf, (int)crop_rect.x, (int)crop_rect.y, (int)crop_rect.width, (int)crop_rect.height );
     set_image( buf, _( "image crop" ) );
     _canvas.items.adjust_items( crop_rect.x, crop_rect.y );
     _canvas.queue_draw();
@@ -377,7 +377,7 @@ public class CanvasImage {
   }
 
   /* Draw the image being annotated */
-  public void draw_image( Context ctx ) {
+  private void draw_image( Context ctx ) {
     ctx.set_source_surface( _surface, (int)info.pixbuf_rect.x, (int)info.pixbuf_rect.y );
     ctx.paint();
   }
