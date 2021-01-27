@@ -69,7 +69,7 @@ public class CanvasImage {
 
   /* Returns a surface which contains the given rectangle area of the base image */
   public Cairo.Surface get_surface_for_rect( CanvasRect rect ) {
-    var sub = new Pixbuf.subpixbuf( pixbuf, (int)rect.x, (int)rect.y, (int)rect.width, (int)rect.height );
+    var sub = new Pixbuf.subpixbuf( _buf, (int)rect.x, (int)rect.y, (int)rect.width, (int)rect.height );
     return( cairo_surface_create_from_pixbuf( sub, 1, null ) );
   }
 
