@@ -91,8 +91,8 @@ public class CanvasImage {
   /* Pastes an image from the given pixbuf to the canvas */
   public void set_image( Pixbuf buf, string? undo_name = _( "change image" ) ) {
 
-    if( (undo_name != null) && (pixbuf != null) ) {
-      _canvas.undo_buffer.add_item( new UndoImageChange( undo_name, pixbuf, buf ) );
+    if( (undo_name != null) && (_buf != null) ) {
+      _canvas.undo_buffer.add_item( new UndoImageChange( undo_name, _buf, buf ) );
     }
 
     pixbuf   = buf.copy();
@@ -240,7 +240,6 @@ public class CanvasImage {
         case 7  :                                    box.width += diffx;                        break;
         default :  assert_not_reached();
       }
-      stdout.printf( "box: %s, width: %d, height: %d\n", box.to_string(), info.width, info.height );
       if( (box.x >= 0) &&
           (box.y >= 0) &&
           (box.width  >= (selector_width  * 3)) &&
