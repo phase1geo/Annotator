@@ -24,7 +24,6 @@ using Gdk;
 using Cairo;
 
 public enum CanvasItemType {
-  NONE = 0,
   RECT_STROKE,
   RECT_FILL,
   OVAL_STROKE,
@@ -39,7 +38,8 @@ public enum CanvasItemType {
   PENCIL,
   SEQUENCE,
   STICKER,
-  IMAGE;
+  IMAGE,
+  NONE;
 
   public string to_string() {
     switch( this ) {
@@ -95,7 +95,6 @@ public class CanvasItems {
   private Array<string>        _shape_icons;
   private int                  _press_count    = -1;
   private FormatBar?           _format_bar     = null;
-  private bool?                _show_format    = null;
 
   public CanvasItemProperties props        { get; private set; }
   public string               hilite_color { get; set; default = "yellow"; }
@@ -179,6 +178,14 @@ public class CanvasItems {
   private CanvasItem create_text() {
     var item = new CanvasItemText( _canvas, props );
     item.bbox = center_box( 200, 1 );
+    item.mode = CanvasItemMode.SELECTED;
+    item.select_mode.connect((value) => {
+      if( value ) {
+        show_format_bar();
+      } else {
+        hide_format_bar();
+      }
+    });
     _active = item;
     set_edit_mode( true );
     return( item );
@@ -219,9 +226,7 @@ public class CanvasItems {
 
   public void add_item( CanvasItem item, int position ) {
     clear_selection();
-    if( _active == null ) {
-      item.mode = CanvasItemMode.SELECTED;
-    }
+    item.mode = CanvasItemMode.SELECTED;
     _items.insert( item, position );
   }
 
@@ -326,10 +331,6 @@ public class CanvasItems {
     _canvas.queue_draw();
   }
 
-  private void select_mode_changed( bool mode ) {
-    _show_format = mode;
-  }
-
   /* Returns the position of the given canvas item in the list of items */
   private int item_position( CanvasItem item ) {
     var pos = 0;
@@ -388,8 +389,10 @@ public class CanvasItems {
         text.edit = value;
         if( value ) {
           text.set_cursor_all( false );
+          _canvas.set_cursor( CursorType.XTERM );
         } else {
           text.clear_selection();
+          _canvas.set_cursor( null );
         }
         text_item_edit_changed( text );
         return( true );
@@ -434,7 +437,6 @@ public class CanvasItems {
     if( in_edit_mode() ) {
       var text = get_active_text();
       text.backspace( _canvas.undo_text );
-      update_format_bar();
     } else {
       remove_selected();
     }
@@ -449,7 +451,6 @@ public class CanvasItems {
     if( in_edit_mode() ) {
       var text = get_active_text();
       text.delete( _canvas.undo_text );
-      update_format_bar();
     } else {
       remove_selected();
     }
@@ -465,9 +466,7 @@ public class CanvasItems {
       } else {
         var text = get_active_text();
         set_edit_mode( false );
-        update_format_bar();
         text.mode = CanvasItemMode.NONE;
-        text.select_mode.disconnect( select_mode_changed );
         _active = null;
       }
       return( true );
@@ -480,9 +479,7 @@ public class CanvasItems {
     if( in_edit_mode() ) {
       var text = get_active_text();
       set_edit_mode( false );
-      update_format_bar();
       text.mode = CanvasItemMode.NONE;
-      text.select_mode.disconnect( select_mode_changed );
       _active = null;
       return( true );
     }
@@ -534,7 +531,6 @@ public class CanvasItems {
           }
         }
       }
-      update_format_bar();
       return( true );
     }
     return( false );
@@ -587,9 +583,6 @@ public class CanvasItems {
     /* Keep track of the press count */
     _press_count = press_count;
 
-    /* Update the format bar */
-    update_format_bar();
-
     /* If the active item is a pencil, indicate that we are drawing */
     if( (_active != null) && (_active.itype == CanvasItemType.PENCIL) ) {
       _active.mode = CanvasItemMode.DRAWING;
@@ -634,7 +627,6 @@ public class CanvasItems {
             case 2 :
               if( _active.itype != CanvasItemType.TEXT ) return( false );
               set_edit_mode( true );
-              get_active_text().select_mode.connect( select_mode_changed );
               break;
           }
         }
@@ -681,10 +673,15 @@ public class CanvasItems {
     /* If we are in edit mode, drag out the selection */
     } else if( in_edit_mode() ) {
       var text = get_active_text();
-      switch( _press_count ) {
-        case 1  :  text.set_cursor_at_char( x, y, true );  break;
-        case 2  :  text.set_cursor_at_word( x, y, true );  break;
-        default :  return( false );
+      if( text.is_within( x, y ) ) {
+        _canvas.set_cursor( CursorType.XTERM );
+        switch( _press_count ) {
+          case 1  :  text.set_cursor_at_char( x, y, true );  break;
+          case 2  :  text.set_cursor_at_word( x, y, true );  break;
+          default :  return( false );
+        }
+      } else {
+        _canvas.set_cursor( null );
       }
       return( true );
 
@@ -752,7 +749,6 @@ public class CanvasItems {
 
     /* If we are editing text, do nothing */
     } else if( in_edit_mode() ) {
-      update_format_bar();
       return( true );
 
     /* Indicate that we are done editing */
@@ -984,24 +980,6 @@ public class CanvasItems {
     }
   }
 
-  /* Shows/Hides the formatting toolbar */
-  private void update_format_bar() {
-
-    /* If we have nothing to do, just return */
-    if( _show_format == null ) return;
-
-    /* Update the format bar */
-    if( _show_format ) {
-      show_format_bar();
-    } else {
-      hide_format_bar();
-    }
-
-    /* Clear the show format indicator */
-    _show_format = null;
-
-  }
-
   /****************************************************************************/
   //  SAVE/LOAD METHODS
   /****************************************************************************/
@@ -1047,6 +1025,7 @@ public class CanvasItems {
   public void draw( Context ctx ) {
     foreach( CanvasItem item in _items ) {
       item.draw_item( ctx );
+      CanvasItemDashPattern.NONE.set_fg_pattern( ctx );
     }
     foreach( CanvasItem item in _items ) {
       item.draw_selectors( ctx );
