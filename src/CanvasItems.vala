@@ -592,6 +592,7 @@ public class CanvasItems {
     /* Reverse the list so that we grab the top-most item */
     _items.reverse();
 
+    /* Handle a click within a selector */
     foreach( CanvasItem item in _items ) {
       _selector_index = item.is_within_selector( x, y );
       if( _selector_index != -1 ) {
@@ -600,6 +601,10 @@ public class CanvasItems {
         _items.reverse();
         return( false );
       }
+    }
+
+    /* Handle a click within an item */
+    foreach( CanvasItem item in _items ) {
       if( item.is_within( x, y ) ) {
         _active = item;
         if( _active.mode == CanvasItemMode.NONE ) {
@@ -799,6 +804,8 @@ public class CanvasItems {
     foreach( CanvasItem item in _items ) {
       if( item.is_within( x, y ) ) {
         create_contextual_menu( item );
+        item.mode = CanvasItemMode.SELECTED;
+        _canvas.queue_draw();
         return;
       }
     }
@@ -806,6 +813,9 @@ public class CanvasItems {
   }
 
   private void create_contextual_menu( CanvasItem item ) {
+
+    var pos  = item_position( item );
+    var last = (int)(_items.length() - 1);
 
     var box  = new Box( Orientation.VERTICAL, 5 );
     box.border_width = 5;
@@ -818,14 +828,13 @@ public class CanvasItems {
       item.add_contextual_separator( box );
     }
 
-    item.add_contextual_menuitem( box, _( "Copy" ),   "<Control>c", do_copy );
-    item.add_contextual_menuitem( box, _( "Cut" ),    "<Control>x", do_cut );
-    item.add_contextual_menuitem( box, _( "Paste" ),  "<Control>y", do_paste );
+    item.add_contextual_menuitem( box, _( "Copy" ), "<Control>c", true, do_copy );
+    item.add_contextual_menuitem( box, _( "Cut" ),  "<Control>x", true, do_cut );
     item.add_contextual_separator( box );
-    item.add_contextual_menuitem( box, _( "Delete" ), "Delete",     do_delete );
+    item.add_contextual_menuitem( box, _( "Delete" ), "Delete", true, do_delete );
     item.add_contextual_separator( box );
-    item.add_contextual_menuitem( box, _( "Send to Front" ), null, do_send_to_front );
-    item.add_contextual_menuitem( box, _( "Send to Back" ),  null, do_send_to_back );
+    item.add_contextual_menuitem( box, _( "Send to Front" ), null, (pos != last), do_send_to_front );
+    item.add_contextual_menuitem( box, _( "Send to Back" ),  null, (pos != 0),    do_send_to_back );
 
     box.show_all();
 
@@ -876,6 +885,7 @@ public class CanvasItems {
   /* Moves the item to the top of the item list */
   private void do_send_to_front( CanvasItem item ) {
     _canvas.undo_buffer.add_item( new UndoItemSendFront( item, item_position( item ) ) );
+    remove_item( item );
     move_to_front( item );
     _canvas.queue_draw();
   }
@@ -883,6 +893,7 @@ public class CanvasItems {
   /* Moves the item to the bottom of the item list */
   private void do_send_to_back( CanvasItem item ) {
     _canvas.undo_buffer.add_item( new UndoItemSendBack( item, item_position( item ) ) );
+    remove_item( item );
     move_to_back( item );
     _canvas.queue_draw();
   }

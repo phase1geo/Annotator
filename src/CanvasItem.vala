@@ -275,9 +275,10 @@ public class CanvasItem {
   public virtual void add_contextual_menu_items( Box box ) {}
 
   /* Returns a menuitem with the given label, action and (optional) keyboard shortcut */
-  public ModelButton add_contextual_menuitem( Box box, string label, string? shortcut, CanvasItemClickAction action ) {
+  public ModelButton add_contextual_menuitem( Box box, string label, string? shortcut, bool sensitive, CanvasItemClickAction action ) {
 
     var btn = new ModelButton();
+    btn.set_sensitive( sensitive );
     btn.clicked.connect(() => {
       action( this );
     });
