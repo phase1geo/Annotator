@@ -103,8 +103,8 @@ public class Editor : Box {
   public CanvasRect get_displayed_rect() {
     var x = (int)_sw.hadjustment.value;
     var y = (int)_sw.vadjustment.value;
-    var w = _sw.get_allocated_width();
-    var h = _sw.get_allocated_height();
+    var w = (canvas.image.info.width  < _sw.get_allocated_width())  ? canvas.image.info.width  : _sw.get_allocated_width();
+    var h = (canvas.image.info.height < _sw.get_allocated_height()) ? canvas.image.info.height : _sw.get_allocated_height();
     return( new CanvasRect.from_coords( x, y, w, h ) );
   }
 
