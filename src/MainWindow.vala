@@ -541,6 +541,7 @@ public class MainWindow : ApplicationWindow {
     _redo_btn.set_tooltip_markup( Utils.tooltip_with_accel( buffer.redo_tooltip(), "<Control><Shift>z" ) );
   }
 
+  /* Called whenever the zoom value changes */
   private void do_zoom_changed( double zoom_factor ) {
     _zoom.value = zoom_factor * 100;
   }
