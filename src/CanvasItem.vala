@@ -109,12 +109,12 @@ public class CanvasItem {
 
   protected double selector_width {
     get {
-      return( selector_size * (1 / canvas.image.width_scale) );
+      return( selector_size * (1 / (canvas.image.width_scale * canvas.zoom_factor)) );
     }
   }
   protected double selector_height {
     get {
-      return( selector_size * (1 / canvas.image.height_scale) );
+      return( selector_size * (1 / (canvas.image.height_scale * canvas.zoom_factor)) );
     }
   }
 

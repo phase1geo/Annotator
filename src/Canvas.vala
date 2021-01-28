@@ -42,6 +42,7 @@ public class Canvas : DrawingArea {
   public double         zoom_factor  { get; set; default = 1.0; }
 
   public signal void image_loaded();
+  public signal void zoom_changed( double zoom_factor );
 
   /* Constructor */
   public Canvas( MainWindow win, Editor editor ) {
@@ -325,16 +326,19 @@ public class Canvas : DrawingArea {
   public void zoom_in() {
     zoom_factor = ((zoom_factor + zoom_step) > zoom_max) ? zoom_max : (zoom_factor + zoom_step);
     queue_draw();
+    zoom_changed( zoom_factor );
   }
 
   public void zoom_out() {
     zoom_factor = ((zoom_factor - zoom_step) < zoom_min) ? zoom_min : (zoom_factor - zoom_step);
     queue_draw();
+    zoom_changed( zoom_factor );
   }
 
   public void zoom_actual() {
     zoom_factor = 1.0;
     queue_draw();
+    zoom_changed( zoom_factor );
   }
 
   public void zoom_fit() {
@@ -352,6 +356,8 @@ public class Canvas : DrawingArea {
 
     queue_draw();
 
+    zoom_changed( zoom_factor );
+
   }
 
   /****************************************************************************/
@@ -359,14 +365,15 @@ public class Canvas : DrawingArea {
   /****************************************************************************/
 
   /* Draws all of the items in the canvas with the given zoom factor */
-  public void draw_all( Context ctx, double zfactor = 1.0 ) {
-    image.draw( ctx, zfactor );
+  public void draw_all( Context ctx ) {
+    image.draw( ctx );
     items.draw( ctx );
   }
 
   /* Draws all of the items in the canvas */
   private bool on_draw( Context ctx ) {
-    draw_all( ctx, zoom_factor );
+    ctx.scale( zoom_factor, zoom_factor );
+    draw_all( ctx );
     return( false );
   }
 

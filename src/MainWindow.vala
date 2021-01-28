@@ -367,6 +367,7 @@ public class MainWindow : ApplicationWindow {
     });
     _editor.canvas.undo_buffer.buffer_changed.connect( do_undo_changed );
     _editor.canvas.undo_text.buffer_changed.connect( do_undo_changed );
+    _editor.canvas.zoom_changed.connect( do_zoom_changed );
 
     /* Add the elements to the stack */
     _stack = new Stack();
@@ -538,6 +539,10 @@ public class MainWindow : ApplicationWindow {
     _undo_btn.set_tooltip_markup( Utils.tooltip_with_accel( buffer.undo_tooltip(), "<Control>z" ) );
     _redo_btn.set_sensitive( buffer.redoable() );
     _redo_btn.set_tooltip_markup( Utils.tooltip_with_accel( buffer.redo_tooltip(), "<Control><Shift>z" ) );
+  }
+
+  private void do_zoom_changed( double zoom_factor ) {
+    _zoom.value = zoom_factor * 100;
   }
 
   /* Generate a notification */

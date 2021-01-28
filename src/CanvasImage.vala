@@ -458,7 +458,7 @@ public class CanvasImage {
   }
 
   /* Draw the cropping area if we are in that mode */
-  private void draw_cropping( Context ctx, double zoom_factor ) {
+  private void draw_cropping( Context ctx ) {
     if( !cropping ) return;
     draw_crop_outline( ctx );
     draw_crop_dividers( ctx );
@@ -466,10 +466,10 @@ public class CanvasImage {
   }
 
   /* Draws the image */
-  public void draw( Context ctx, double zoom_factor ) {
+  public void draw( Context ctx ) {
     draw_image( ctx );
-    draw_cropping( ctx, zoom_factor );
-    ctx.scale( (width_scale * zoom_factor), (height_scale * zoom_factor) );
+    draw_cropping( ctx );
+    ctx.scale( width_scale, height_scale );
   }
 
 }
