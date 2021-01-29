@@ -270,8 +270,7 @@ public class MainWindow : ApplicationWindow {
     _zoom = new SpinButton.with_range( (_editor.canvas.zoom_min * 100), (_editor.canvas.zoom_max * 100), (_editor.canvas.zoom_step * 100) );
     _zoom.set_value( 100 );
     _zoom.value_changed.connect(() => {
-      _editor.canvas.zoom_factor = _zoom.get_value() / 100;
-      _editor.canvas.queue_draw();
+      _editor.canvas.zoom_set( _zoom.get_value() / 100 );
     });
 
     zoom_box.pack_start( zoom_lbl, false, false, 10 );

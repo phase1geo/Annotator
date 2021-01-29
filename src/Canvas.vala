@@ -323,41 +323,35 @@ public class Canvas : DrawingArea {
   //  ZOOM CONTROLS
   /****************************************************************************/
 
-  public void zoom_in() {
-    zoom_factor = ((zoom_factor + zoom_step) > zoom_max) ? zoom_max : (zoom_factor + zoom_step);
+  /* Sets the zoom level to a specific value */
+  public void zoom_set( double value ) {
+    zoom_factor = value;
     queue_draw();
+    zoom_adjust();
     zoom_changed( zoom_factor );
+  }
+
+  public void zoom_in() {
+    zoom_set( ((zoom_factor + zoom_step) > zoom_max) ? zoom_max : (zoom_factor + zoom_step) );
   }
 
   public void zoom_out() {
-    zoom_factor = ((zoom_factor - zoom_step) < zoom_min) ? zoom_min : (zoom_factor - zoom_step);
-    queue_draw();
-    zoom_changed( zoom_factor );
+    zoom_set( ((zoom_factor - zoom_step) < zoom_min) ? zoom_min : (zoom_factor - zoom_step) );
   }
 
   public void zoom_actual() {
-    zoom_factor = 1.0;
-    queue_draw();
-    zoom_changed( zoom_factor );
+    zoom_set( 1.0 );
   }
 
   public void zoom_fit() {
+    var rect       = editor.get_displayed_rect();
+    var img_width  = image.pixbuf.width;
+    var img_height = image.pixbuf.height;
+    zoom_set( (img_width < img_height) ? (rect.height / img_height) : (rect.width / img_width) );
+  }
 
-    int img_width, img_height;
-    get_size_request( out img_width, out img_height );
-
-    var rect = editor.get_displayed_rect();
-
-    if( img_width < img_height ) {
-      zoom_factor = rect.height / img_height;
-    } else {
-      zoom_factor = rect.width / img_width;
-    }
-
-    queue_draw();
-
-    zoom_changed( zoom_factor );
-
+  private void zoom_adjust() {
+    set_size_request( (int)(image.info.width * zoom_factor), (int)(image.info.height * zoom_factor) );
   }
 
   /****************************************************************************/
