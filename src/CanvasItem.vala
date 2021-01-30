@@ -93,6 +93,7 @@ public enum CanvasItemPathType {
 public delegate void CanvasItemClickAction( CanvasItem item );
 public delegate void CanvasItemScaleAction( CanvasItem item, double value );
 public delegate void CanvasItemSpinnerAction( CanvasItem item, int value );
+public delegate void CanvasItemSwitchAction( CanvasItem item, bool value );
 
 public class CanvasItem {
 
@@ -358,6 +359,29 @@ public class CanvasItem {
 
   }
 
+  /* Creates a switch widget for the contextual menu */
+  protected Switch add_contextual_switch( Box box, string label, bool dflt, CanvasItemSwitchAction action ) {
+
+    var lbl = new Label( label );
+    lbl.use_markup = true;
+    lbl.halign     = Align.START;
+
+    var sw = new Switch();
+    sw.set_active( dflt );
+    sw.activate.connect(() => {
+      action( this, sw.get_active() );
+    });
+
+    var sw_box = new Box( Orientation.HORIZONTAL, 10 );
+    sw_box.border_width = 10;
+    sw_box.pack_start( lbl, false, false );
+    sw_box.pack_start( sw,  false, false );
+
+    box.pack_start( sw_box, false, true );
+
+    return( sw );
+
+  }
 
   /****************************************************************************/
   //  DRAW METHODS

@@ -33,6 +33,7 @@ public class CanvasItemMagnifier : CanvasItem {
   private double      _zoom_factor = 2.0;
   private CanvasRect  _zoom_rect   = new CanvasRect();
   private CanvasPoint _press       = new CanvasPoint();
+  private bool        _focus_moved = false;
 
   /* Constructor */
   public CanvasItemMagnifier( Canvas canvas, double zoom_factor, CanvasItemProperties props ) {
@@ -46,6 +47,7 @@ public class CanvasItemMagnifier : CanvasItem {
   private void create_points() {
     points.append_val( new CanvasPoint( CanvasPointType.CONTROL ) );  // Magnification
     points.append_val( new CanvasPoint( CanvasPointType.RESIZER ) );  // Resizer
+    points.append_val( new CanvasPoint( CanvasPointType.CONTROL ) );  // Focus point
   }
 
   /* Copies the contents of the given item to ourselves */
@@ -82,6 +84,10 @@ public class CanvasItemMagnifier : CanvasItem {
     points.index( 0 ).copy_coords( x0, y0 );
     points.index( 1 ).copy_coords( x1, y1 );
 
+    if( !_focus_moved ) {
+      points.index( 2 ).copy_coords( bbox.mid_x(), bbox.mid_y() );
+    }
+
     update_zoom_rect();
 
   }
@@ -111,9 +117,13 @@ public class CanvasItemMagnifier : CanvasItem {
         var angle   = Math.atan( a / b );    // 0 = max zoom (5), PI/2 = min zoom (1)
         _zoom_factor = ((1 - (angle / half_PI)) * (max_zoom - min_zoom)) + min_zoom;
       }
-    } else {
+    } else if( index == 1 ) {
       box.width  += diffy;
       box.height += diffy;
+    } else {
+      points.index( 2 ).x += diffx;
+      points.index( 2 ).y += diffy;
+      _focus_moved = true;
     }
 
     if( box.width >= (selector_width * 3) ) {
@@ -125,13 +135,17 @@ public class CanvasItemMagnifier : CanvasItem {
   /* Returns the zoom rectangle */
   private void update_zoom_rect() {
     var width  = bbox.width / _zoom_factor;
-    var adjust = (bbox.width - width) / 2;
-    _zoom_rect.copy_coords( (bbox.x + adjust), (bbox.y + adjust), width, width );
+    var adjust = width / 2;
+    _zoom_rect.copy_coords( (points.index( 2 ).x - adjust), (points.index( 2 ).y - adjust), width, width );
   }
 
   /* Provides cursor to display when mouse cursor is hovering over the given selector */
   public override CursorType? get_selector_cursor( int index ) {
-    return( (index == 0) ? CursorType.HAND2 : CursorType.BOTTOM_RIGHT_CORNER );
+    switch( index ) {
+      case 0  :  return( CursorType.HAND2 );
+      case 1  :  return( CursorType.BOTTOM_RIGHT_CORNER );
+      default :  return( CursorType.TCROSS );
+    }
   }
 
   /* Creates the contextual menu items */
@@ -139,6 +153,12 @@ public class CanvasItemMagnifier : CanvasItem {
 
     add_contextual_scale( box, _( "Magnification:" ), min_zoom, max_zoom, step_zoom, _zoom_factor, (item, value) => {
       _zoom_factor = value;
+      bbox_changed();
+      canvas.queue_draw();
+    });
+
+    add_contextual_menuitem( box, _( "Reset Focal Point" ), null, _focus_moved, (item) => {
+      _focus_moved = false;
       bbox_changed();
       canvas.queue_draw();
     });
@@ -161,13 +181,69 @@ public class CanvasItemMagnifier : CanvasItem {
     }
   }
 
+  private bool find_tangents( CanvasPoint center, double radius, CanvasPoint external, CanvasPoint pt1, CanvasPoint pt2 ) {
+    var dx  = center.x - external.x;
+    var dy  = center.y - external.y;
+    var dsq = (dx * dx) + (dy * dy);
+    var rsq = radius * radius;
+    if( dsq < rsq ) {
+      return( false );
+    }
+    var l = Math.sqrt( dsq - rsq );
+    return( find_circle_circle_intersections( center, radius, external, l, pt1, pt2 ) );
+  }
+
+  private bool find_circle_circle_intersections( CanvasPoint c0, double r0, CanvasPoint c1, double r1, CanvasPoint pt1, CanvasPoint pt2 ) {
+    var dx   = c0.x - c1.x;
+    var dy   = c0.y - c1.y;
+    var dist = Math.sqrt( (dx * dx) + (dy * dy) );
+    if( (dist > (r0 + r1)) || (dist < Math.fabs( r0 - r1 )) || ((dist == 0) && (r0 == r1)) ) {
+      return( false );
+    }
+    var a = ((r0 * r0) - (r1 * r1) + (dist * dist)) / (2 * dist);
+    var h = Math.sqrt( (r0 * r0) - (a * a) );
+    var cx2 = c0.x + a * (c1.x - c0.x) / dist;
+    var cy2 = c0.y + a * (c1.y - c0.y) / dist;
+    pt1.copy_coords( (cx2 + (h * (c1.y - c0.y) / dist)), (cy2 - (h * (c1.x - c0.x) / dist)) );
+    pt2.copy_coords( (cx2 - (h * (c1.y - c0.y) / dist)), (cy2 + (h * (c1.x - c0.x) / dist)) );
+    return( true );
+  }
+
+  /* Draw the focal point triangle */
+  private void draw_focal_point( Context ctx ) {
+
+    if( !_focus_moved ) return;
+
+    var center = new CanvasPoint.from_coords( bbox.mid_x(), bbox.mid_y() );
+    var pt1    = new CanvasPoint();
+    var pt2    = new CanvasPoint();
+
+    if( !find_tangents( center, (bbox.width / 2), points.index( 2 ), pt1, pt2 ) ) return;
+
+    /* Draw the triangle */
+    Utils.set_context_color_with_alpha( ctx, props.color, 0.2 );
+    ctx.set_line_width( 1 );
+    ctx.move_to( pt1.x, pt1.y );
+    ctx.line_to( points.index( 2 ).x, points.index( 2 ).y );
+    ctx.line_to( pt2.x, pt2.y );
+    ctx.close_path();
+    ctx.fill();
+
+    /*
+    Utils.set_context_color_with_alpha( ctx, _image.average_color, 0.5 );
+    ctx.stroke();
+    */
+
+  }
+
   /* Draw the rectangle */
   public override void draw_item( Context ctx ) {
 
     var surface = _image.get_surface_for_rect( _zoom_rect );
 
-    Utils.set_context_color_with_alpha( ctx, _image.average_color, 0.5 );
+    draw_focal_point( ctx );
 
+    Utils.set_context_color_with_alpha( ctx, _image.average_color, 0.5 );
     ctx.set_line_width( 5 );
     ctx.arc( bbox.mid_x(), bbox.mid_y(), (bbox.width / 2), 0, (2 * Math.PI) );
     save_path( ctx, CanvasItemPathType.FILL );
