@@ -230,6 +230,19 @@ public class CanvasItem {
     return( CursorType.HAND2 );
   }
 
+  /*
+   Returns a tooltip to display for the given selector.  Only control points should
+   return a valid string.  To avoid displaying a tooltip, return a value of null.
+  */
+  public virtual string? get_selector_tooltip( int index ) {
+    return( null );
+  }
+
+  /* Returns the undo item associated with a release of the given selector */
+  public virtual UndoItem? get_undo_item_for_selector( int index ) {
+    return( new UndoItemBoxChange.with_item( _( "resize item" ), this ) );
+  }
+
   /* Returns the bounding box of the given selector */
   private void selector_bbox( int index, CanvasRect rect ) {
     var sel     = points.index( index );

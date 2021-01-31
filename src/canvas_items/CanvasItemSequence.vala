@@ -27,14 +27,14 @@ public class CanvasItemSequence : CanvasItem {
 
   private static int _next_seq_num = 1;
 
-  private int  _seq_num;
   private int  _font_size;
   private bool _recalc_font_size = true;
+
+  public int seq_num { get; set; default = _next_seq_num++; }
 
   /* Constructor */
   public CanvasItemSequence( Canvas canvas, CanvasItemProperties props ) {
     base( CanvasItemType.SEQUENCE, canvas, props );
-    _seq_num = _next_seq_num++;
     create_points();
   }
 
@@ -92,8 +92,9 @@ public class CanvasItemSequence : CanvasItem {
 
   protected override void add_contextual_menu_items( Box box ) {
 
-    add_contextual_spinner( box, _( "Sequence Number:" ), 1, 100, 1, _seq_num, (item, value) => {
-      _seq_num = value;
+    add_contextual_spinner( box, _( "Sequence Number:" ), 1, 100, 1, seq_num, (item, value) => {
+      canvas.undo_buffer.add_item( new UndoItemSequenceNum( this, seq_num, value ) );
+      seq_num = value;
       canvas.queue_draw();
     });
 
@@ -102,7 +103,7 @@ public class CanvasItemSequence : CanvasItem {
   /* Saves this item as XML */
   public override Xml.Node* save() {
     Xml.Node* node = base.save();
-    node->set_prop( "sequence-num", _seq_num.to_string() );
+    node->set_prop( "sequence-num", seq_num.to_string() );
     return( node );
   }
 
@@ -111,7 +112,7 @@ public class CanvasItemSequence : CanvasItem {
     base.load( node );
     var f = node->get_prop( "sequence-num" );
     if( f != null ) {
-      _seq_num = int.parse( f );
+      seq_num = int.parse( f );
     }
   }
 
@@ -120,16 +121,16 @@ public class CanvasItemSequence : CanvasItem {
     if( _recalc_font_size ) {
       _font_size = 20;
       ctx.set_font_size( _font_size );
-      ctx.text_extents( _seq_num.to_string(), out extents );
+      ctx.text_extents( seq_num.to_string(), out extents );
       while( extents.height < (bbox.height / 3) ) {
         _font_size++;
         ctx.set_font_size( _font_size );
-        ctx.text_extents( _seq_num.to_string(), out extents );
+        ctx.text_extents( seq_num.to_string(), out extents );
       }
       _recalc_font_size = false;
     } else {
       ctx.set_font_size( _font_size );
-      ctx.text_extents( _seq_num.to_string(), out extents );
+      ctx.text_extents( seq_num.to_string(), out extents );
     }
 
   }
@@ -157,7 +158,7 @@ public class CanvasItemSequence : CanvasItem {
 
     Utils.set_context_color_with_alpha( ctx, seq_color, alpha );
     ctx.move_to( (bbox.mid_x() - (extents.width / 2)), (bbox.mid_y() + (extents.height / 2)) );
-    ctx.show_text( _seq_num.to_string() );
+    ctx.show_text( seq_num.to_string() );
     ctx.new_path();
 
   }

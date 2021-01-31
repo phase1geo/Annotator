@@ -30,10 +30,29 @@ public class CanvasItemMagnifier : CanvasItem {
   private const double step_zoom = 0.5;
 
   private CanvasImage _image;
+  private double      _orig_zoom   = 2.0;
   private double      _zoom_factor = 2.0;
   private CanvasRect  _zoom_rect   = new CanvasRect();
-  private CanvasPoint _press       = new CanvasPoint();
+  private CanvasPoint _press0      = new CanvasPoint();
+  private CanvasPoint _press2      = new CanvasPoint();
   private bool        _focus_moved = false;
+
+  public double zoom_factor {
+    get {
+      return( _zoom_factor );
+    }
+    set {
+      if( _zoom_factor != value ) {
+        _zoom_factor = value;
+        bbox_changed();
+      }
+    }
+  }
+  public double orig_zoom {
+    get {
+      return( _orig_zoom );
+    }
+  }
 
   /* Constructor */
   public CanvasItemMagnifier( Canvas canvas, double zoom_factor, CanvasItemProperties props ) {
@@ -56,6 +75,7 @@ public class CanvasItemMagnifier : CanvasItem {
     var mag_item = (CanvasItemMagnifier)item;
     if( mag_item != null ) {
       _zoom_factor = mag_item._zoom_factor;
+      _focus_moved = mag_item._focus_moved;
     }
   }
 
@@ -98,7 +118,9 @@ public class CanvasItemMagnifier : CanvasItem {
   */
   protected override void mode_changed() {
     if( mode == CanvasItemMode.RESIZING ) {
-      _press.copy( points.index( 0 ) );
+      _press0.copy( points.index( 0 ) );
+      _press2.copy( points.index( 2 ) );
+      _orig_zoom = _zoom_factor;
     }
   }
 
@@ -108,10 +130,10 @@ public class CanvasItemMagnifier : CanvasItem {
     var box = new CanvasRect.from_rect( bbox );
 
     if( index == 0 ) {
-      _press.x += diffx;
-      _press.y += diffy;
-      var b = (_press.x - bbox.mid_x());
-      var a = (bbox.mid_y() - _press.y);
+      _press0.x += diffx;
+      _press0.y += diffy;
+      var b = (_press0.x - bbox.mid_x());
+      var a = (bbox.mid_y() - _press0.y);
       if( (a >= 0) && (b >= 0) ) {
         var half_PI = Math.PI / 2;
         var angle   = Math.atan( a / b );    // 0 = max zoom (5), PI/2 = min zoom (1)
@@ -148,6 +170,31 @@ public class CanvasItemMagnifier : CanvasItem {
     }
   }
 
+  public override string? get_selector_tooltip( int index ) {
+    switch( index ) {
+      case 0 :  return( _( "Drag to control amount of zoom" ) );
+      case 2 :  return( _( "Drag to change area to magnify" ) );
+    }
+    return( null );
+  }
+
+  public override UndoItem? get_undo_item_for_selector( int index ) {
+    if( index == 0 ) {
+      return( new UndoItemMagnifierZoom( this, _orig_zoom, _zoom_factor ) );
+    } else if( index == 2 ) {
+      return( new UndoItemMagnifierFocus( this, _press2, points.index( 2 ) ) );
+    } else {
+      return( base.get_undo_item_for_selector( index ) );
+    }
+  }
+
+  /* Called to restore the given point */
+  public void set_focus_point( CanvasPoint point ) {
+    points.index( 2 ).copy( point );
+    _focus_moved = (point.x != bbox.mid_x()) || (point.y != bbox.mid_y());
+    bbox_changed();
+  }
+
   /* Creates the contextual menu items */
   protected override void add_contextual_menu_items( Box box ) {
 
@@ -181,7 +228,9 @@ public class CanvasItemMagnifier : CanvasItem {
     }
   }
 
+  /* Helper function that finds the two tangential points on a circle to a given point */
   private bool find_tangents( CanvasPoint center, double radius, CanvasPoint external, CanvasPoint pt1, CanvasPoint pt2 ) {
+
     var dx  = center.x - external.x;
     var dy  = center.y - external.y;
     var dsq = (dx * dx) + (dy * dy);
@@ -190,10 +239,14 @@ public class CanvasItemMagnifier : CanvasItem {
       return( false );
     }
     var l = Math.sqrt( dsq - rsq );
+
     return( find_circle_circle_intersections( center, radius, external, l, pt1, pt2 ) );
+
   }
 
+  /* Helper function that finds the two points where two circles intersect */
   private bool find_circle_circle_intersections( CanvasPoint c0, double r0, CanvasPoint c1, double r1, CanvasPoint pt1, CanvasPoint pt2 ) {
+
     var dx   = c0.x - c1.x;
     var dy   = c0.y - c1.y;
     var dist = Math.sqrt( (dx * dx) + (dy * dy) );
@@ -204,9 +257,12 @@ public class CanvasItemMagnifier : CanvasItem {
     var h = Math.sqrt( (r0 * r0) - (a * a) );
     var cx2 = c0.x + a * (c1.x - c0.x) / dist;
     var cy2 = c0.y + a * (c1.y - c0.y) / dist;
+
     pt1.copy_coords( (cx2 + (h * (c1.y - c0.y) / dist)), (cy2 - (h * (c1.x - c0.x) / dist)) );
     pt2.copy_coords( (cx2 - (h * (c1.y - c0.y) / dist)), (cy2 + (h * (c1.x - c0.x) / dist)) );
+
     return( true );
+
   }
 
   /* Draw the focal point triangle */

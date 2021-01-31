@@ -151,6 +151,12 @@ public class CanvasItemStar : CanvasItem {
     return( CursorType.TCROSS );
   }
 
+  /* Returns a tooltip if the given selector is a control selector */
+  public override string? get_selector_tooltip( int index ) {
+    // TBD
+    return( null );
+  }
+
   /* Adds the contextual menu items */
   protected override void add_contextual_menu_items( Box box ) {
 

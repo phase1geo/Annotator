@@ -6,10 +6,13 @@ sources += files(
     'UndoItemAdd.vala',
     'UndoItemBoxChange.vala',
     'UndoItemDelete.vala',
+    'UndoItemMagnifierFocus.vala',
+    'UndoItemMagnifierZoom.vala',
     'UndoItemPaste.vala',
     'UndoItemPropChange.vala',
     'UndoItemSendBack.vala',
     'UndoItemSendFront.vala',
+    'UndoItemSequenceNum.vala',
 
     'UndoTextClearTags.vala',
     'UndoTextCommit.vala',

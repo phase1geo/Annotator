@@ -713,10 +713,12 @@ public class CanvasItems {
           var sel_index = item.is_within_selector( x, y );
           if( sel_index != -1 ) {
             _canvas.set_cursor( item.get_selector_cursor( sel_index ) );
+            _canvas.set_tooltip_text( item.get_selector_tooltip( sel_index ) );
             return( false );
           }
         }
       }
+      _canvas.set_tooltip_text( null );
       foreach( CanvasItem item in _items ) {
         if( item.is_within( x, y ) ) {
           if( control ) {
@@ -746,7 +748,7 @@ public class CanvasItems {
 
     /* If we are finished dragging the selector, clear it */
     if( _selector_index != -1 ) {
-      _canvas.undo_buffer.add_item( new UndoItemBoxChange.with_item( _( "resize item" ), _active ) );
+      _canvas.undo_buffer.add_item( _active.get_undo_item_for_selector( _selector_index ) );
       _selector_index = -1;
       _active.mode    = CanvasItemMode.SELECTED;
       _active         = null;

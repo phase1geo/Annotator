@@ -92,7 +92,8 @@ public class UndoBuffer : Object {
   }
 
   /* Adds a new undo item to the undo buffer.  Clears the redo buffer. */
-  public void add_item( UndoItem item ) {
+  public void add_item( UndoItem? item ) {
+    if( item == null ) return;
     item.id = _current_id++;
     _undo_buffer.append_val( item );
     _redo_buffer.remove_range( 0, _redo_buffer.length );
@@ -104,7 +105,8 @@ public class UndoBuffer : Object {
    Attempts to replace the last item in the undo buffer with the given item if both items are the same type;
    otherwise, the new item will just be added like any other item.
   */
-  public void replace_item( UndoItem item ) {
+  public void replace_item( UndoItem? item ) {
+    if( item == null ) return;
     item.id = _current_id++;
     if( _undo_buffer.length > 0 ) {
       UndoItem last = _undo_buffer.index( _undo_buffer.length - 1 );
