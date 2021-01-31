@@ -94,6 +94,8 @@ public delegate void CanvasItemClickAction( CanvasItem item );
 public delegate void CanvasItemScaleAction( CanvasItem item, double value );
 public delegate void CanvasItemSpinnerAction( CanvasItem item, int value );
 public delegate void CanvasItemSwitchAction( CanvasItem item, bool value );
+public delegate void CanvasItemScaleComplete( CanvasItem item, double old_value, double new_value );
+public delegate void CanvasItemSpinnerComplete( CanvasItem item, int old_value, int new_value );
 
 public class CanvasItem {
 
@@ -322,7 +324,11 @@ public class CanvasItem {
   }
 
   /* Creates a scale widget for the contextual menu */
-  protected Scale add_contextual_scale( Box box, string label, double min, double max, double step, double dflt, CanvasItemScaleAction action ) {
+  protected Scale add_contextual_scale(
+    Box box, string label, double min, double max, double step, double dflt,
+    CanvasItemScaleAction   action,
+    CanvasItemScaleComplete complete
+  ) {
 
     var lbl = new Label( label );
     lbl.use_markup = true;
@@ -334,6 +340,10 @@ public class CanvasItem {
     scale.width_request = 200;
     scale.value_changed.connect(() => {
       action( this, scale.get_value() );
+    });
+    scale.button_release_event.connect(() => {
+      complete( this, dflt, scale.get_value() );
+      return( false );
     });
 
     var scale_box = new Box( Orientation.HORIZONTAL, 10 );
@@ -348,7 +358,11 @@ public class CanvasItem {
   }
 
   /* Creates a scale widget for the contextual menu */
-  protected SpinButton add_contextual_spinner( Box box, string label, int min, int max, int step, int dflt, CanvasItemSpinnerAction action ) {
+  protected SpinButton add_contextual_spinner(
+    Box box, string label, int min, int max, int step, int dflt,
+    CanvasItemSpinnerAction   action,
+    CanvasItemSpinnerComplete complete
+  ) {
 
     var lbl = new Label( label );
     lbl.use_markup = true;
@@ -359,6 +373,10 @@ public class CanvasItem {
     sb.digits = 0;
     sb.value_changed.connect(() => {
       action( this, (int)sb.get_value() );
+    });
+    sb.button_release_event.connect(() => {
+      complete( this, dflt, (int)sb.get_value() );
+      return( false );
     });
 
     var sb_box = new Box( Orientation.HORIZONTAL, 10 );

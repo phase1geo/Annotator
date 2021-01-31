@@ -29,12 +29,11 @@ public class CanvasItemBlur : CanvasItem {
   private const double max_blur  = 45;
   private const double step_blur = 5;
 
-  private int _blur_radius;
+  public int blur_radius { set; get; default = 20; }
 
   /* Constructor */
   public CanvasItemBlur( Canvas canvas, CanvasItemProperties props ) {
     base( CanvasItemType.BLUR, canvas, props );
-    _blur_radius = 20;
     create_points();
   }
 
@@ -44,7 +43,7 @@ public class CanvasItemBlur : CanvasItem {
     points.append_val( new CanvasPoint( CanvasPointType.RESIZER ) );  // upper-right
     points.append_val( new CanvasPoint( CanvasPointType.RESIZER ) );  // lower-left
     points.append_val( new CanvasPoint( CanvasPointType.RESIZER ) );  // lower-right
-    points.append_val( new CanvasPoint( CanvasPointType.CONTROL ) );  // blur control
+    points.append_val( new CanvasPoint( CanvasPointType.RESIZER ) );  // blur control
     points.append_val( new CanvasPoint( CanvasPointType.RESIZER ) );  // right
     points.append_val( new CanvasPoint( CanvasPointType.RESIZER ) );  // bottom
     points.append_val( new CanvasPoint( CanvasPointType.RESIZER ) );  // left
@@ -55,7 +54,7 @@ public class CanvasItemBlur : CanvasItem {
     base.copy( item );
     var blur_item = (CanvasItemBlur)item;
     if( blur_item != null ) {
-      _blur_radius = blur_item._blur_radius;
+      blur_radius = blur_item.blur_radius;
     }
   }
 
@@ -123,10 +122,17 @@ public class CanvasItemBlur : CanvasItem {
   /* Adds the contextual menu item values */
   protected override void add_contextual_menu_items( Box box ) {
 
-    add_contextual_scale( box, _( "Blur Amount:" ), min_blur, max_blur, step_blur, (double)_blur_radius, (value) => {
-      _blur_radius = (int)value;
-      canvas.queue_draw();
-    });
+    add_contextual_scale( box, _( "Blur Amount:" ), min_blur, max_blur, step_blur, (double)blur_radius,
+      (item, value) => {
+        blur_radius = (int)value;
+        canvas.queue_draw();
+      },
+      (item, old_value, new_value) => {
+        if( (int)old_value != (int)new_value ) {
+          canvas.undo_buffer.add_item( new UndoItemBlur( this, (int)old_value, (int)new_value ) );
+        }
+      }
+    );
 
   }
 
@@ -154,7 +160,7 @@ public class CanvasItemBlur : CanvasItem {
       buffer.context.paint();
 
       /* Perform the blur */
-      buffer.exponential_blur( _blur_radius );
+      buffer.exponential_blur( blur_radius );
 
       /* Draw the blurred pixbuf onto the context */
       ctx.set_source_surface( buffer.surface, bbox.x, bbox.y );

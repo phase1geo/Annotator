@@ -25,30 +25,27 @@ using Cairo;
 
 public class CanvasItemStar : CanvasItem {
 
-  private int    _num_points   = 5;
   private double _inner_radius = 15;
   private double _inner_angle  = 0;
 
+  public int num_points { get; set; default = 5; }
+
   /* Constructor */
-  public CanvasItemStar( Canvas canvas, bool fill, int num_points, double inner_radius, CanvasItemProperties props ) {
+  public CanvasItemStar( Canvas canvas, bool fill, int point_num, double inner_radius, CanvasItemProperties props ) {
     base( (fill ? CanvasItemType.STAR_FILL : CanvasItemType.STAR_STROKE), canvas, props );
-    _num_points   = num_points;
+    num_points    = point_num;
     _inner_radius = inner_radius;
     create_points();
   }
 
   /* Creates the item points */
   private void create_points() {
-    if( points.length > 0 ) {
-      points.remove_range( 0, points.length );
-    }
-    for( int i=0; i<(_num_points * 2); i++ ) {
-      var point_type = ((i == 0) || (i == ((_num_points * 2) - 1))) ? CanvasPointType.RESIZER : CanvasPointType.NONE;
-      points.append_val( new CanvasPoint( point_type ) );
-    }
-    for( int i=0; i<4; i++ ) {
-      points.append_val( new CanvasPoint( CanvasPointType.RESIZER ) );
-    }
+    points.append_val( new CanvasPoint( CanvasPointType.RESIZER ) );  // Outer radius
+    points.append_val( new CanvasPoint( CanvasPointType.RESIZER ) );  // Inner radius
+    points.append_val( new CanvasPoint( CanvasPointType.RESIZER ) );  // Upper left
+    points.append_val( new CanvasPoint( CanvasPointType.RESIZER ) );  // Upper right
+    points.append_val( new CanvasPoint( CanvasPointType.RESIZER ) );  // Lower left
+    points.append_val( new CanvasPoint( CanvasPointType.RESIZER ) );  // Lower right
   }
 
   /* Copies the contents of the given item to ourselves */
@@ -56,52 +53,51 @@ public class CanvasItemStar : CanvasItem {
     base.copy( item );
     var star = (CanvasItemStar)item;
     _inner_radius = star._inner_radius;
-    if( _num_points != star._num_points ) {
-      _num_points   = star._num_points;
-      create_points();
-    }
+    num_points    = star.num_points;
   }
 
   /* Returns a duplicate of this item */
   public override CanvasItem duplicate() {
-    var item = new CanvasItemStar( canvas, (itype == CanvasItemType.STAR_FILL), _num_points, _inner_radius, props );
+    var item = new CanvasItemStar( canvas, (itype == CanvasItemType.STAR_FILL), num_points, _inner_radius, props );
     item.copy( this );
     return( item );
+  }
+
+  private void calculate_point( int point_num, CanvasPoint point ) {
+
+    var start_x      = bbox.mid_x();
+    var start_y      = bbox.mid_y();
+    var RAD_distance = ((2 * Math.PI) / num_points);
+    var RAD_half_PI  = Math.PI /2;
+
+    var new_outer_RAD      = ((point_num / 2) + 1) * RAD_distance;
+    var half_new_outer_RAD = new_outer_RAD - (RAD_distance / 2);
+
+    if( (point_num % 2) == 0 ) {
+      var x = start_x + Math.cos(half_new_outer_RAD - RAD_half_PI) * _inner_radius;
+      var y = start_y + Math.sin(half_new_outer_RAD - RAD_half_PI) * _inner_radius;
+      point.copy_coords( x, y );
+    } else {
+      var outer_radius = bbox.height / 2;
+      var x = start_x + Math.cos(new_outer_RAD - RAD_half_PI) * outer_radius;
+      var y = start_y + Math.sin(new_outer_RAD - RAD_half_PI) * outer_radius;
+      point.copy_coords( x, y );
+    }
+
   }
 
   /* Updates the selection boxes whenever the bounding box changes */
   protected override void bbox_changed() {
 
-    var outer_radius = bbox.height / 2;
-    var start_x      = bbox.mid_x();
-    var start_y      = bbox.mid_y();
-    var RAD_distance = ((2 * Math.PI) / _num_points);
-    var RAD_half_PI  = Math.PI /2;
-
-    /* Adjust the starting point */
-    points.index( 0 ).copy_coords( start_x, start_y );
-
-    for( int i=0; i<_num_points; i++ ) {
-
-      var new_outer_RAD      = (i + 1) * RAD_distance;
-      var half_new_outer_RAD = new_outer_RAD - (RAD_distance / 2);
-
-      var x = start_x + Math.cos(half_new_outer_RAD - RAD_half_PI) * _inner_radius;
-      var y = start_y + Math.sin(half_new_outer_RAD - RAD_half_PI) * _inner_radius;
-      points.index( (i * 2) + 0 ).copy_coords( x, y );
-
-      x = start_x + Math.cos(new_outer_RAD - RAD_half_PI) * outer_radius;
-      y = start_y + Math.sin(new_outer_RAD - RAD_half_PI) * outer_radius;
-      points.index( (i * 2) + 1 ).copy_coords( x, y );
-
-    }
+    /* Calculate the inner and outer control points */
+    calculate_point( 0, points.index( 0 ) );
+    calculate_point( ((num_points * 2) - 1), points.index( 1 ) );
 
     /* Update the selector positions for changing the bondary */
-    var b = _num_points * 2;
-    points.index( b + 0 ).copy_coords( bbox.x1(), bbox.y1() );
-    points.index( b + 1 ).copy_coords( bbox.x2(), bbox.y1() );
-    points.index( b + 2 ).copy_coords( bbox.x1(), bbox.y2() );
-    points.index( b + 3 ).copy_coords( bbox.x2(), bbox.y2() );
+    points.index( 2 ).copy_coords( bbox.x1(), bbox.y1() );
+    points.index( 3 ).copy_coords( bbox.x2(), bbox.y1() );
+    points.index( 4 ).copy_coords( bbox.x1(), bbox.y2() );
+    points.index( 5 ).copy_coords( bbox.x2(), bbox.y2() );
 
   }
 
@@ -112,27 +108,19 @@ public class CanvasItemStar : CanvasItem {
     var inner_radius = _inner_radius;
 
     /* If we are moving the selector representing the outer radius, update the box */
-    if( index == ((_num_points * 2) - 1) ) {
-      box.x += diffy;  box.y += diffy;  box.width -= (diffy * 2);  box.height -= (diffy * 2);
+    switch( index ) {
+      case 0 :  inner_radius -= diffy;  break;
+      case 1 :  box.x += diffy;  box.y += diffy;  box.width -= (diffy * 2);  box.height -= (diffy * 2);  break;
+      case 2 :  box.x += diffy;  box.y += diffy;  box.width -= diffy;        box.height -= diffy;  break;
+      case 3 :                   box.y += diffy;  box.width -= diffy;        box.height -= diffy;  break;
+      case 4 :  box.x -= diffy;                   box.width += diffy;        box.height += diffy;  break;
+      case 5 :                                    box.width += diffy;        box.height += diffy;  break;
+    }
 
-    /*
-     Otherwise, if we are manipulating the inner radius or moving the four border
-     selectors, update the inner radius to match the diffy value.  If we are manipulating
-     the border selectors, adjust the bbox.
-    */
-    } else {
+    /* Adjust the inner radius if the bbox resizers were moved */
+    if( index >= 2 ) {
       var inner_ratio = inner_radius / (box.height * 0.5);
-      switch( index - (_num_points * 2) ) {
-        case 0 :  box.x += diffy;  box.y += diffy;  box.width -= diffy;  box.height -= diffy;  break;
-        case 1 :                   box.y += diffy;  box.width -= diffy;  box.height -= diffy;  break;
-        case 2 :  box.x -= diffy;                   box.width += diffy;  box.height += diffy;  break;
-        case 3 :                                    box.width += diffy;  box.height += diffy;  break;
-      }
-      if( index == 0 ) {
-        inner_radius -= diffy;
-      } else {
-        inner_radius = (box.height / 2) * inner_ratio;
-      }
+      inner_radius = (box.height / 2) * inner_ratio;
     }
 
     /*
@@ -151,21 +139,22 @@ public class CanvasItemStar : CanvasItem {
     return( CursorType.TCROSS );
   }
 
-  /* Returns a tooltip if the given selector is a control selector */
-  public override string? get_selector_tooltip( int index ) {
-    // TBD
-    return( null );
-  }
-
   /* Adds the contextual menu items */
   protected override void add_contextual_menu_items( Box box ) {
 
-    add_contextual_spinner( box, _( "Points:" ), 3, 50, 1, _num_points, (item, value) => {
-      _num_points = value;
-      create_points();
-      bbox_changed();
-      canvas.queue_draw();
-    });
+    add_contextual_spinner( box, _( "Points:" ), 3, 50, 1, _num_points,
+      (item, value) => {
+        _num_points = value;
+        create_points();
+        bbox_changed();
+        canvas.queue_draw();
+      },
+      (item, old_value, new_value) => {
+        if( old_value != new_value ) {
+          canvas.undo_buffer.add_item( new UndoItemStarPoints( this, old_value, new_value ) );
+        }
+      }
+    );
 
   }
 
@@ -194,11 +183,13 @@ public class CanvasItemStar : CanvasItem {
 
     var outline = Granite.contrasting_foreground_color( props.color );
     var alpha   = mode.alpha( props.alpha );
+    var point   = new CanvasPoint();
 
     Utils.set_context_color_with_alpha( ctx, props.color, alpha );
     ctx.move_to( points.index( 0 ).x, points.index( 0 ).y );
     for( int i=1; i<(_num_points * 2); i++ ) {
-      ctx.line_to( points.index( i ).x, points.index( i ).y );
+      calculate_point( i, point );
+      ctx.line_to( point.x, point.y );
     }
     ctx.close_path();
 

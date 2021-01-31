@@ -4,6 +4,7 @@ sources += files(
     'UndoImageResize.vala',
 
     'UndoItemAdd.vala',
+    'UndoItemBlur.vala',
     'UndoItemBoxChange.vala',
     'UndoItemDelete.vala',
     'UndoItemMagnifierFocus.vala',
@@ -13,6 +14,7 @@ sources += files(
     'UndoItemSendBack.vala',
     'UndoItemSendFront.vala',
     'UndoItemSequenceNum.vala',
+    'UndoItemStarPoints.vala',
     'UndoItemTextResize.vala',
 
     'UndoTextClearTags.vala',

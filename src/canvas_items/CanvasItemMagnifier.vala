@@ -198,15 +198,24 @@ public class CanvasItemMagnifier : CanvasItem {
   /* Creates the contextual menu items */
   protected override void add_contextual_menu_items( Box box ) {
 
-    add_contextual_scale( box, _( "Magnification:" ), min_zoom, max_zoom, step_zoom, _zoom_factor, (item, value) => {
-      _zoom_factor = value;
-      bbox_changed();
-      canvas.queue_draw();
-    });
+    add_contextual_scale( box, _( "Magnification:" ), min_zoom, max_zoom, step_zoom, _zoom_factor,
+      (item, value) => {
+        _zoom_factor = value;
+        bbox_changed();
+        canvas.queue_draw();
+      },
+      (item, old_value, new_value) => {
+        if( old_value != new_value ) {
+          canvas.undo_buffer.add_item( new UndoItemMagnifierZoom( this, old_value, new_value ) );
+        }
+      }
+    );
 
     add_contextual_menuitem( box, _( "Reset Focal Point" ), null, _focus_moved, (item) => {
+      var old_point = new CanvasPoint.from_point( points.index( 2 ) );
       _focus_moved = false;
       bbox_changed();
+      canvas.undo_buffer.add_item( new UndoItemMagnifierFocus( this, old_point, points.index( 2 ) ) );
       canvas.queue_draw();
     });
 
