@@ -39,13 +39,13 @@ public class CanvasItemText : CanvasItem {
   private int            _selend       = 0;
   private int            _selanchor    = 0;
   private double         _max_width    = 400;
+  private double         _orig_width   = 400;
   private double         _width        = 0;
   private double         _height       = 0;
   private bool           _debug        = false;
   private int            _font_size    = 16;
 
   /* Signals */
-  public signal void resized();
   public signal void select_mode( bool mode );
   public signal void cursor_changed();
 
@@ -63,7 +63,7 @@ public class CanvasItemText : CanvasItem {
       if( _max_width != value ) {
         _max_width = value;
         _pango_layout.set_width( (int)value * Pango.SCALE );
-        update_size( true );
+        update_size();
       }
     }
   }
@@ -77,7 +77,7 @@ public class CanvasItemText : CanvasItem {
         if( !_edit ) {
           clear_selection( "edit" );
         }
-        update_size( true );
+        update_size();
       }
     }
   }
@@ -101,7 +101,7 @@ public class CanvasItemText : CanvasItem {
   public CanvasItemText( Canvas canvas, CanvasItemProperties props ) {
     base( CanvasItemType.TEXT, canvas, props );
     initialize( canvas );
-    update_size( false );
+    update_size();
   }
 
   /* Initializes this contents of this item */
@@ -119,10 +119,6 @@ public class CanvasItemText : CanvasItem {
 
   /* Creates the items points */
   private void create_points() {
-    points.append_val( new CanvasPoint() );  // Upper left corner
-    points.append_val( new CanvasPoint() );  // Lower left corner
-    points.append_val( new CanvasPoint() );  // Upper right corner
-    points.append_val( new CanvasPoint() );  // Upper left corner
     points.append_val( new CanvasPoint( CanvasPointType.RESIZER ) );   // Drag handle to right of text
   }
 
@@ -143,7 +139,7 @@ public class CanvasItemText : CanvasItem {
       _line_layout.set_font_description( ct._pango_layout.get_font_description() );
       _pango_layout.set_font_description( ct._pango_layout.get_font_description() );
       _pango_layout.set_width( (int)_max_width * Pango.SCALE );
-      update_size( true );
+      update_size();
     }
   }
 
@@ -154,6 +150,13 @@ public class CanvasItemText : CanvasItem {
     return( item );
   }
 
+  /* If we start to resize, capture the original width */
+  public override void mode_changed() {
+    if( mode == CanvasItemMode.RESIZING ) {
+      _orig_width = max_width;
+    }
+  }
+
   /*
    Called whenever the bbox for the text changes size.  Updates the drawable
    selectors
@@ -162,24 +165,19 @@ public class CanvasItemText : CanvasItem {
     var pad        = _padding;
     var sel_width  = (selector_width  / 2);
     var sel_height = (selector_height / 2);
-    points.index( 0 ).copy_coords( (bbox.x1() - pad), (bbox.y1() - pad) );
-    points.index( 1 ).copy_coords( (bbox.x1() - pad), (bbox.y2() + pad) );
-    points.index( 2 ).copy_coords( (bbox.x2() + pad), (bbox.y1() - pad) );
-    points.index( 3 ).copy_coords( (bbox.x2() + pad), (bbox.y2() + pad) );
-    points.index( 4 ).copy_coords( (bbox.x2() + pad + sel_width + 8), (bbox.mid_y() - (sel_height / 2)) );
+    points.index( 0 ).copy_coords( (bbox.x2() + pad + sel_width + 8), (bbox.mid_y() - (sel_height / 2)) );
   }
 
   public override void move_selector( int index, double diffx, double diffy, bool shift ) {
-    if( index == 4 ) {
-      max_width += diffx;
-    }
+    max_width += diffx;
   }
 
   public override CursorType? get_selector_cursor( int index ) {
-    if( index == 4 ) {
-      return( CursorType.RIGHT_SIDE );
-    }
-    return( null );
+    return( CursorType.RIGHT_SIDE );
+  }
+
+  public override UndoItem? get_undo_item_for_selector( int index ) {
+    return( new UndoItemTextResize( this, _orig_width, max_width ) );
   }
 
   /* Returns the font description set for this text */
@@ -191,7 +189,7 @@ public class CanvasItemText : CanvasItem {
   public void update_font() {
     _line_layout.set_font_description( props.font );
     _pango_layout.set_font_description( props.font );
-    update_size( true );
+    update_size();
   }
 
   /* Returns true if the text is currently wrapped */
@@ -217,7 +215,7 @@ public class CanvasItemText : CanvasItem {
     for( Xml.Node* it = node->children; it != null; it = it->next ) {
       if( (it->type == Xml.ElementType.ELEMENT_NODE) && (it->name == "text" ) )  {
         _text.load( it );
-        update_size( false );
+        update_size();
       }
     }
   }
@@ -244,13 +242,13 @@ public class CanvasItemText : CanvasItem {
 
   /* Called whenever the text changes */
   private void text_changed() {
-    update_size( true );
+    update_size();
   }
 
   /*
    Updates the width and height based on the current text.
   */
-  public void update_size( bool call_resized = true ) {
+  public void update_size() {
     if( _pango_layout != null ) {
       CanvasRect box = new CanvasRect.from_rect( bbox );
       int text_width, text_height;
@@ -267,7 +265,7 @@ public class CanvasItemText : CanvasItem {
   public virtual void resize( double diff ) {
     _max_width += diff;
     _pango_layout.set_width( (int)_max_width * Pango.SCALE );
-    update_size( true );
+    update_size();
   }
 
   /* Updates the column value */
