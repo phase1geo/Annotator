@@ -356,7 +356,7 @@ public class CanvasItem {
 
     var sb = new SpinButton.with_range( (double)min, (double)max, (double)step );
     sb.set_value( (double)dflt );
-    sb.digits = max.to_string().char_count();
+    sb.digits = 0;
     sb.value_changed.connect(() => {
       action( this, (int)sb.get_value() );
     });

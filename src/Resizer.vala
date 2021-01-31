@@ -174,6 +174,8 @@ public class Resizer : Dialog {
     box.pack_start( grid, true, true );
     box.show_all();
 
+    update_preview();
+
   }
 
   /* Returns the resize dimensions and border space */
@@ -403,37 +405,31 @@ public class Resizer : Dialog {
   /* Draw image in the proper location at the correct position */
   private void update_preview() {
 
-    Idle.add(() => {
+    var current = get_image_info();
+    var surface = new ImageSurface( Cairo.Format.ARGB32, 200, 200 );
+    var ctx     = new Context( surface );
 
-      var current = get_image_info();
-      var surface = new ImageSurface( Cairo.Format.ARGB32, 200, 200 );
-      var ctx     = new Context( surface );
+    /* Update the resulting image size */
+    _size.label = _( "%d x %d pixels" ).printf( current.width, current.height );
 
-      /* Update the resulting image size */
-      _size.label = _( "%d x %d pixels" ).printf( current.width, current.height );
+    /* Create a background color */
+    var scale = 200.0 / current.largest_side();
+    ctx.scale( scale, scale );
 
-      /* Create a background color */
-      var scale = 200.0 / current.largest_side();
-      ctx.scale( scale, scale );
+    Utils.set_context_color( ctx, Utils.color_from_string( "white" ) );
+    ctx.rectangle( 0, 0, current.width, current.height );
+    ctx.fill_preserve();
 
-      Utils.set_context_color( ctx, Utils.color_from_string( "white" ) );
-      ctx.rectangle( 0, 0, current.width, current.height );
-      ctx.fill_preserve();
+    Utils.set_context_color( ctx, Utils.color_from_string( "black" ) );
+    ctx.set_line_width( 1 );
+    ctx.stroke();
 
-      Utils.set_context_color( ctx, Utils.color_from_string( "black" ) );
-      ctx.set_line_width( 1 );
-      ctx.stroke();
+    var buf = _canvas.image.pixbuf.scale_simple( (int)current.pixbuf_rect.width, (int)current.pixbuf_rect.height, InterpType.BILINEAR );
+    cairo_set_source_pixbuf( ctx, buf, current.pixbuf_rect.x, current.pixbuf_rect.y );
+    ctx.paint();
 
-      var buf = _canvas.image.pixbuf.scale_simple( (int)current.pixbuf_rect.width, (int)current.pixbuf_rect.height, InterpType.BILINEAR );
-      cairo_set_source_pixbuf( ctx, buf, current.pixbuf_rect.x, current.pixbuf_rect.y );
-      ctx.paint();
-
-      /* Update the surface */
-      _preview.set_from_surface( surface );
-
-      return( false );
-
-    });
+    /* Update the surface */
+    _preview.set_from_surface( surface );
 
   }
 
