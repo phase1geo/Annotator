@@ -26,11 +26,12 @@ using GLib;
 public class Annotator : Granite.Application {
 
   private static bool       show_version  = false;
+  public  static bool       screenshot = false;
   private        MainWindow appwin;
 
   public  static GLib.Settings settings;
-  public  static bool          use_clipboard = false;
-  public  static string        version       = "1.0.0";
+  public  static bool          use_clipboard  = false;
+  public  static string        version        = "1.0.0";
 
   public Annotator () {
 
@@ -97,12 +98,13 @@ public class Annotator : Granite.Application {
   private void parse_arguments( ref unowned string[] args ) {
 
     var context = new OptionContext( "- Annotator Options" );
-    var options = new OptionEntry[3];
+    var options = new OptionEntry[4];
 
     /* Create the command-line options */
     options[0] = {"version",       0, 0, OptionArg.NONE, ref show_version, _( "Display version number" ), null};
     options[1] = {"use-clipboard", 0, 0, OptionArg.NONE, ref use_clipboard, _( "Annotate clipboard image" ), null};
-    options[2] = {null};
+    options[2] = {"screenshot", 0, 0, OptionArg.NONE, ref screenshot, _( "Annotate screenshot image" ), null};
+    options[3] = {null};
 
     /* Parse the arguments */
     try {
@@ -113,6 +115,11 @@ public class Annotator : Granite.Application {
       stdout.printf( "ERROR: %s\n", e.message );
       stdout.printf( "Run '%s --help' to see valid options\n", args[0] );
       Process.exit( 1 );
+    }
+
+    /* If screenshot was specified capture the screen */
+    if( screenshot ) {
+      stdout.printf( "Here we should have the screenshot logic\n" );
     }
 
     /* If the version was specified, output it and then exit */

@@ -489,6 +489,10 @@ public class MainWindow : ApplicationWindow {
     _export_btn.set_sensitive( true );
   }
 
+  /* Populate the editor with a screenshot */
+  public void do_screenshot() {
+
+  }
   private void do_save() {
 
     /* TBD */
