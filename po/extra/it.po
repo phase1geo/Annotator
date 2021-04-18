@@ -1,5 +1,5 @@
 # ITALIAN TRANSLATION FOR ANNOTATOR.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# Copyright (C) 2021
 # This file is distributed under the same license as the extra package.
 # ALBANO BATTISTELLA <albano_battistellaòhotmail.com>, 2021.
 #
@@ -13,7 +13,7 @@ msgstr ""
 "Language-Team: ITALIAN <LL@li.org>\n"
 "Language: It\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #: data/com.github.phase1geo.annotator.desktop.in:3
