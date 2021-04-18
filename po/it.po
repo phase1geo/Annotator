@@ -1,0 +1,109 @@
+# ITALIAN TRANSLATION FOR ANNOTATION.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the com.github.phase1geo.annotator package.
+# ALBANO BATTISTELLA <albano_battistella@hotmail.com>, 2021.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: com.github.phase1geo.annotator\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-01-16 01:05-0600\n"
+"PO-Revision-Date: 2021-04-18 10:59+0100\n"
+"Last-Translator: Albano Battistella <albano_battistella@hotmail.com>\n"
+"Language-Team: ITALIAN <LL@li.org>\n"
+"Language: It\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: src/Application.vala:82
+msgid "Opening file"
+msgstr "File di apertura"
+
+#: src/Application.vala:103
+msgid "Display version number"
+msgstr "Visualizza il numero di versione"
+
+#: src/Application.vala:104
+msgid "Annotate clipboard image"
+msgstr "Annota l'immagine negli appunti"
+
+#: src/MainWindow.vala:150
+msgid "Open Image"
+msgstr "Apri Immagine"
+
+#: src/MainWindow.vala:172
+msgid "Undo"
+msgstr "Annulla"
+
+#: src/MainWindow.vala:178
+msgid "Redo"
+msgstr "Rifai"
+
+#: src/MainWindow.vala:187
+msgid "Annotator"
+msgstr "Annotator"
+
+#: src/MainWindow.vala:196
+msgid "Export Image"
+msgstr "Esporta Immagine"
+
+#: src/MainWindow.vala:218
+msgid "Copy To Clipboard"
+msgstr "Copia negli appunti"
+
+#: src/MainWindow.vala:227
+msgid "Print…"
+msgstr "Print…"
+
+#: src/MainWindow.vala:254
+msgid "Send by Email"
+msgstr "Inviare per Email"
+
+#: src/MainWindow.vala:254
+msgid "Send files via Bluetooth"
+msgstr "Invia file tramite Bluetooth"
+
+#: src/MainWindow.vala:291
+msgid "Welcome to Annotator"
+msgstr "Benvenuto in Annotator"
+
+#: src/MainWindow.vala:291
+msgid "Let's get started annotating an image"
+msgstr "Cominciamo ad annotare un'immagine"
+
+#: src/MainWindow.vala:292
+msgid "Open Image From File"
+msgstr "Apri Immagine da File"
+
+#: src/MainWindow.vala:292
+msgid "Open a PNG, JPEG, TIFF or BMP file"
+msgstr "Apri un file PNG, JPEG, TIFF o BMP"
+
+#: src/MainWindow.vala:293
+msgid "Paste Image From Clipboard"
+msgstr "Incolla Immagine dagli Appunti"
+
+#: src/MainWindow.vala:293
+msgid "Open an image from the clipboard"
+msgstr "Apri un'immagine dagli appunti"
+
+#: src/MainWindow.vala:327
+msgid "Font:"
+msgstr "Font:"
+
+#: src/MainWindow.vala:378
+msgid "All Image Formats  (*)"
+msgstr "Tutti i formati immagine (*)"
+
+#: src/MainWindow.vala:390
+msgid "Open Image File"
+msgstr "Apri File Immagine"
+
+#: src/MainWindow.vala:390
+msgid "Open"
+msgstr "Apri"
+
+#: src/MainWindow.vala:390
+msgid "Cancel"
+msgstr "Cancella"
