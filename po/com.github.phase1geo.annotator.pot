@@ -1,5 +1,5 @@
 # SOME DESCRIPTIVE TITLE.
-# Copyright (C) 2021
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the com.github.phase1geo.annotator package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.annotator\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-01-16 01:05-0600\n"
+"POT-Creation-Date: 2021-04-18 13:16-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -29,82 +29,98 @@ msgstr ""
 msgid "Annotate clipboard image"
 msgstr ""
 
-#: src/MainWindow.vala:150
+#: src/MainWindow.vala:162
 msgid "Open Image"
 msgstr ""
 
-#: src/MainWindow.vala:172
+#: src/MainWindow.vala:184
 msgid "Undo"
 msgstr ""
 
-#: src/MainWindow.vala:178
+#: src/MainWindow.vala:190
 msgid "Redo"
 msgstr ""
 
-#: src/MainWindow.vala:187
+#: src/MainWindow.vala:202
 msgid "Annotator"
 msgstr ""
 
-#: src/MainWindow.vala:196
+#: src/MainWindow.vala:211
 msgid "Export Image"
 msgstr ""
 
-#: src/MainWindow.vala:218
+#: src/MainWindow.vala:233
 msgid "Copy To Clipboard"
 msgstr ""
 
-#: src/MainWindow.vala:227
+#: src/MainWindow.vala:242
 msgid "Print…"
 msgstr ""
 
-#: src/MainWindow.vala:254
+#: src/MainWindow.vala:264
+msgid "Zoom"
+msgstr ""
+
+#: src/MainWindow.vala:268
+msgid "Zoom (%):"
+msgstr ""
+
+#: src/MainWindow.vala:281
+msgid "Zoom to Actual Size"
+msgstr ""
+
+#: src/MainWindow.vala:286
+msgid "Zoom to Fit Window"
+msgstr ""
+
+#: src/MainWindow.vala:314
 msgid "Send by Email"
 msgstr ""
 
-#: src/MainWindow.vala:254
+#: src/MainWindow.vala:314
 msgid "Send files via Bluetooth"
 msgstr ""
 
-#: src/MainWindow.vala:291
+#: src/MainWindow.vala:351
 msgid "Welcome to Annotator"
 msgstr ""
 
-#: src/MainWindow.vala:291
+#: src/MainWindow.vala:351
 msgid "Let's get started annotating an image"
 msgstr ""
 
-#: src/MainWindow.vala:292
+#: src/MainWindow.vala:352
 msgid "Open Image From File"
 msgstr ""
 
-#: src/MainWindow.vala:292
+#: src/MainWindow.vala:352
 msgid "Open a PNG, JPEG, TIFF or BMP file"
 msgstr ""
 
-#: src/MainWindow.vala:293
+#: src/MainWindow.vala:353
 msgid "Paste Image From Clipboard"
 msgstr ""
 
-#: src/MainWindow.vala:293
+#: src/MainWindow.vala:353
 msgid "Open an image from the clipboard"
 msgstr ""
 
-#: src/MainWindow.vala:327
+#: src/MainWindow.vala:388
 msgid "Font:"
 msgstr ""
 
-#: src/MainWindow.vala:378
+#: src/MainWindow.vala:439
 msgid "All Image Formats  (*)"
 msgstr ""
 
-#: src/MainWindow.vala:390
+#: src/MainWindow.vala:451
 msgid "Open Image File"
 msgstr ""
 
-#: src/MainWindow.vala:390
+#: src/MainWindow.vala:451
 msgid "Open"
 msgstr ""
 
-#: src/MainWindow.vala:390
+#: src/MainWindow.vala:451
 msgid "Cancel"
 msgstr ""
