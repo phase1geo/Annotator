@@ -24,9 +24,6 @@ using Gee;
 
 public class MainWindow : ApplicationWindow {
 
-  private const string DESKTOP_SCHEMA = "io.elementary.desktop";
-  private const string DARK_KEY       = "prefer-dark";
-
   private HeaderBar         _header;
   private FontButton        _font;
   private Button            _open_btn;
@@ -115,22 +112,12 @@ public class MainWindow : ApplicationWindow {
 
   /* Handles any changes to the dark mode preference gsettings for the desktop */
   private void handle_prefer_dark_changes() {
-    var lookup = SettingsSchemaSource.get_default().lookup( DESKTOP_SCHEMA, false );
-    if( lookup != null ) {
-      var desktop_settings = new GLib.Settings( DESKTOP_SCHEMA );
-      change_dark_mode( desktop_settings.get_boolean( DARK_KEY ) );
-      desktop_settings.changed.connect(() => {
-        change_dark_mode( desktop_settings.get_boolean( DARK_KEY ) );
-      });
-    }
-  }
-
-  /* Sets the dark mode to the preferred scheme */
-  private void change_dark_mode( bool dark ) {
-    Gtk.Settings? settings = Gtk.Settings.get_default();
-    if( settings != null ) {
-      settings.gtk_application_prefer_dark_theme = dark;
-    }
+    var granite_settings = Granite.Settings.get_default();
+    var gtk_settings     = Gtk.Settings.get_default();
+    gtk_settings.gtk_application_prefer_dark_theme = granite_settings.prefers_color_scheme == Granite.Settings.ColorScheme.DARK;
+    granite_settings.notify["prefers-color-scheme"].connect (() => {
+      gtk_settings.gtk_application_prefer_dark_theme = granite_settings.prefers_color_scheme == Granite.Settings.ColorScheme.DARK;
+    });
   }
 
   /* Positions the window based on the settings */
