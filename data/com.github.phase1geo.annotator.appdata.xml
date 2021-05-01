@@ -5,8 +5,11 @@
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>GPL-3.0+</project_license>
   <name>Annotator</name>
+  <name xml:lang="it">Annotator</name>
   <summary>Communicate with images better</summary>
+  <summary xml:lang="it">Comunica meglio con le immagini</summary>
   <developer_name>Trevor Williams</developer_name>
+  <developer_name xml:lang="it">Trevor Williams</developer_name>
   <provides>
     <binary>com.github.phase1geo.annotator</binary>
   </provides>
@@ -22,6 +25,7 @@
     <p>
         TBD
       </p>
+    <p xml:lang="it">TBD</p>
   </description>
   <content_rating type="oars-1.1">
     <content_attribute id="violence-cartoon">none</content_attribute>
@@ -57,10 +61,15 @@
   <url type="help">https://github.com/phase1geo/Annotator/wiki</url>
   <update_contact>phase1geo@gmail.com</update_contact>
   <custom>
-    <value key="x-appcenter-color-primary">#fff394</value>
-    <value key="x-appcenter-color-primary-text">#000000</value>
+    <value key="x-appcenter-color-primary">#007367</value>
+    <value key="x-appcenter-color-primary-text">#ffffff</value>
     <value key="x-appcenter-suggested-price">5</value>
   </custom>
   <releases>
-    </releases>
+    <release version="1.0.0" date="2021-05-01">
+      <description>
+          Initial release
+	</description>
+    </release>
+  </releases>
 </component>

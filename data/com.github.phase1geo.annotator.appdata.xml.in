@@ -62,5 +62,10 @@
       <value key="x-appcenter-suggested-price">5</value>
     </custom>
     <releases>
+      <release version="1.0.0" date="2021-05-01">
+	<description>
+          Initial release
+	</description>
+      </release>
     </releases>
 </component>
