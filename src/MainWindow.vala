@@ -22,9 +22,9 @@
 using Gtk;
 using Gee;
 
-public class MainWindow : ApplicationWindow {
+public class MainWindow : Hdy.ApplicationWindow {
 
-  private HeaderBar         _header;
+  private Hdy.HeaderBar     _header;
   private FontButton        _font;
   private Button            _open_btn;
   private Button            _undo_btn;
@@ -76,7 +76,11 @@ public class MainWindow : ApplicationWindow {
     /* Create editor */
     create_editor( box );
 
-    add( box );
+    var top_box = new Box( Orientation.VERTICAL, 0 );
+    top_box.pack_start( _header, false, true, 0 );
+    top_box.pack_start( box, true, true, 0 );
+
+    add( top_box );
     show_all();
 
     /* Set the stage for menu actions */
@@ -93,7 +97,10 @@ public class MainWindow : ApplicationWindow {
     /* Handle the application closing */
     destroy.connect( Gtk.main_quit );
 
+  }
 
+  static construct {
+    Hdy.init();
   }
 
   /* Adds keyboard shortcuts for the menu actions */
@@ -135,14 +142,13 @@ public class MainWindow : ApplicationWindow {
       move( window_x, window_y );
     }
     set_default_size( window_w, window_h );
-    set_border_width( 2 );
 
   }
 
   /* Create the header bar */
   private void create_header() {
 
-    _header = new HeaderBar();
+    _header = new Hdy.HeaderBar();
     _header.set_show_close_button( true );
 
     _open_btn = new Button.from_icon_name( "document-open", IconSize.LARGE_TOOLBAR );
@@ -185,7 +191,6 @@ public class MainWindow : ApplicationWindow {
     _zoom_btn = create_zoom();
     _header.pack_end( _zoom_btn );
 
-    set_titlebar( _header );
     set_title( _( "Annotator" ) );
 
   }
