@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: com.github.phase1geo.annotator\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-05-01 21:24+0000\n"
-"PO-Revision-Date: 2021-04-18 10:59+0100\n"
+"PO-Revision-Date: 2021-05-16 16:59+0100\n"
 "Last-Translator: Albano Battistella <albano_battistella@hotmail.com>\n"
 "Language-Team: ITALIAN <LL@li.org>\n"
 "Language: It\n"
@@ -54,23 +54,23 @@ msgstr "Copia negli appunti"
 
 #: src/MainWindow.vala:242
 msgid "Print…"
-msgstr "Print…"
+msgstr "Stampa…"
 
 #: src/MainWindow.vala:264
 msgid "Zoom"
-msgstr ""
+msgstr "Zoom"
 
 #: src/MainWindow.vala:268
 msgid "Zoom (%):"
-msgstr ""
+msgstr "Zoom (%):"
 
 #: src/MainWindow.vala:281
 msgid "Zoom to Actual Size"
-msgstr ""
+msgstr "Zoom a dimensioni reali"
 
 #: src/MainWindow.vala:286
 msgid "Zoom to Fit Window"
-msgstr ""
+msgstr "Zoom adatta finestra"
 
 #: src/MainWindow.vala:314
 msgid "Send by Email"
