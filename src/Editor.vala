@@ -45,7 +45,6 @@ public class Editor : Box {
 
     /* Create the overlay that will hold the canvas so that we can add emoji support */
     var overlay = new Overlay();
-    overlay.border_width = 10;
     overlay.add( canvas );
 
     _sw = new ScrolledWindow( null, null );
@@ -53,6 +52,7 @@ public class Editor : Box {
     _sw.min_content_height = 400;
     _sw.vscrollbar_policy  = PolicyType.AUTOMATIC;
     _sw.hscrollbar_policy  = PolicyType.AUTOMATIC;
+    _sw.get_style_context().add_class( Granite.STYLE_CLASS_CHECKERBOARD );
     _sw.add( overlay );
 
     /* Create the toolbar */
@@ -62,11 +62,15 @@ public class Editor : Box {
       toolbar.crop_ended();
     });
 
+    var sep = new Separator( Orientation.HORIZONTAL );
+
     var box = new Box( Orientation.HORIZONTAL, 0 );
+    box.margin = 10;
     box.pack_start( toolbar, true, true );
 
     /* Pack the box */
     pack_start( box, false, true, 0 );
+    pack_start( sep, false, true, 0 );
     pack_start( _sw, true,  true, 0 );
 
     show_all();

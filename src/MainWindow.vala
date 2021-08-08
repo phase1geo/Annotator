@@ -112,6 +112,7 @@ public class MainWindow : Hdy.ApplicationWindow {
     app.set_accels_for_action( "win.action_redo",        { "<Control><Shift>z" } );
     app.set_accels_for_action( "win.action_paste",       { "<Control>v" } );
     app.set_accels_for_action( "win.action_zoom_in",     { "<Control>plus" } );
+    app.set_accels_for_action( "win.action_zoom_in",     { "<Control>equal" } );
     app.set_accels_for_action( "win.action_zoom_out",    { "<Control>minus" } );
     app.set_accels_for_action( "win.action_zoom_actual", { "<Control>0" } );
     app.set_accels_for_action( "win.action_zoom_fit",    { "<Control>1" } );
