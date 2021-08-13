@@ -51,6 +51,7 @@ case $1 in
     ninja com.github.phase1geo.annotator-update-po
     ninja extra-pot
     ninja extra-update-po
+    cp data/* ../data
     ;;
 "install")
     initialize 0

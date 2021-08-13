@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.annotator\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-05-01 21:24+0000\n"
+"POT-Creation-Date: 2021-08-12 20:01-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -29,98 +29,98 @@ msgstr ""
 msgid "Annotate clipboard image"
 msgstr ""
 
-#: src/MainWindow.vala:162
+#: src/MainWindow.vala:156
 msgid "Open Image"
 msgstr ""
 
-#: src/MainWindow.vala:184
+#: src/MainWindow.vala:178
 msgid "Undo"
 msgstr ""
 
-#: src/MainWindow.vala:190
+#: src/MainWindow.vala:184
 msgid "Redo"
 msgstr ""
 
-#: src/MainWindow.vala:202
+#: src/MainWindow.vala:195
 msgid "Annotator"
 msgstr ""
 
-#: src/MainWindow.vala:211
+#: src/MainWindow.vala:204
 msgid "Export Image"
 msgstr ""
 
-#: src/MainWindow.vala:233
+#: src/MainWindow.vala:226
 msgid "Copy To Clipboard"
 msgstr ""
 
-#: src/MainWindow.vala:242
+#: src/MainWindow.vala:235
 msgid "Print…"
 msgstr ""
 
-#: src/MainWindow.vala:264
+#: src/MainWindow.vala:257
 msgid "Zoom"
 msgstr ""
 
-#: src/MainWindow.vala:268
+#: src/MainWindow.vala:261
 msgid "Zoom (%):"
 msgstr ""
 
-#: src/MainWindow.vala:281
+#: src/MainWindow.vala:274
 msgid "Zoom to Actual Size"
 msgstr ""
 
-#: src/MainWindow.vala:286
+#: src/MainWindow.vala:279
 msgid "Zoom to Fit Window"
 msgstr ""
 
-#: src/MainWindow.vala:314
+#: src/MainWindow.vala:307
 msgid "Send by Email"
 msgstr ""
 
-#: src/MainWindow.vala:314
+#: src/MainWindow.vala:307
 msgid "Send files via Bluetooth"
 msgstr ""
 
-#: src/MainWindow.vala:351
+#: src/MainWindow.vala:344
 msgid "Welcome to Annotator"
 msgstr ""
 
-#: src/MainWindow.vala:351
+#: src/MainWindow.vala:344
 msgid "Let's get started annotating an image"
 msgstr ""
 
-#: src/MainWindow.vala:352
+#: src/MainWindow.vala:345
 msgid "Open Image From File"
 msgstr ""
 
-#: src/MainWindow.vala:352
+#: src/MainWindow.vala:345
 msgid "Open a PNG, JPEG, TIFF or BMP file"
 msgstr ""
 
-#: src/MainWindow.vala:353
+#: src/MainWindow.vala:346
 msgid "Paste Image From Clipboard"
 msgstr ""
 
-#: src/MainWindow.vala:353
+#: src/MainWindow.vala:346
 msgid "Open an image from the clipboard"
 msgstr ""
 
-#: src/MainWindow.vala:388
+#: src/MainWindow.vala:381
 msgid "Font:"
 msgstr ""
 
-#: src/MainWindow.vala:439
+#: src/MainWindow.vala:432
 msgid "All Image Formats  (*)"
 msgstr ""
 
-#: src/MainWindow.vala:451
+#: src/MainWindow.vala:444
 msgid "Open Image File"
 msgstr ""
 
-#: src/MainWindow.vala:451
+#: src/MainWindow.vala:444
 msgid "Open"
 msgstr ""
 
-#: src/MainWindow.vala:451
+#: src/MainWindow.vala:444
 msgid "Cancel"
 msgstr ""

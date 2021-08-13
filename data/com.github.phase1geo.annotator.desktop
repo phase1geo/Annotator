@@ -1,18 +1,24 @@
 [Desktop Entry]
+Name[it]=Annotator
 Name=Annotator
+GenericName[it]=Annotator
 GenericName=Annotator
+Comment[it]=Comunica meglio con le immagini
 Comment=Communicate with images better
 Categories=Utility;Development;
 Exec=com.github.phase1geo.annotator %f
+Icon[it]=com.github.phase1geo.annotator
 Icon=com.github.phase1geo.annotator
 Terminal=false
 Type=Application
 MimeType=image/bmp;image/gif;image/png;image/jpeg;image/svg+xml;image/tiff;image/wmf;image/xbm;image/xpm;image/x-icns;image/x-quicktime;image/x-tga;
 X-GNOME-Gettext-Domain=Annotator
 X-GNOME-UsesNotifications=true
+Keywords[it]=annotatore; immagine; annotazione;
 Keywords=annotator;image;annotate;
 Actions=EditClipboard;
 
 [Desktop Action EditClipboard]
+Name[it]=Modifica Immagine negli Appunti
 Name=Edit Clipboard Image
 Exec=com.github.phase1geo.annotator --use-clipboard
