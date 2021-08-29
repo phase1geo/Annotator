@@ -352,8 +352,8 @@ public class Canvas : DrawingArea {
     int win_width, win_height;
     editor.get_win_size( out win_width, out win_height );
 
-    var img_width  = (double)image.pixbuf.width;
-    var img_height = (double)image.pixbuf.height;
+    var img_width  = (double)image.info.width;
+    var img_height = (double)image.info.height;
     var dw         = Math.fabs( win_width  - img_width );
     var dh         = Math.fabs( win_height - img_height );
 
