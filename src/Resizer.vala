@@ -86,6 +86,9 @@ public class ResizerMargin {
     _btn.toggled.connect(() => {
       _entry.set_sensitive( _btn.active );
       _mb.set_sensitive( _btn.active );
+      if( _btn.active ) {
+        _entry.grab_focus();
+      }
       changed();
     });
 
