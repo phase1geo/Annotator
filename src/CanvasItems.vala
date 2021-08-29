@@ -1,4 +1,4 @@
-/*
+ /*
 * Copyright (c) 2020-2021 (https://github.com/phase1geo/Annotator)
 *
 * This program is free software; you can redistribute it and/or
@@ -346,7 +346,7 @@ public class CanvasItems {
   /* Adjusts all items by the given diff amounts */
   public void adjust_items( double diffx, double diffy ) {
     foreach( CanvasItem item in _items ) {
-      item.move_item( (0 - diffx), (0 - diffy) );
+      item.move_item( diffx, diffy );
     }
   }
 

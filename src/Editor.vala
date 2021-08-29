@@ -103,6 +103,12 @@ public class Editor : Box {
     return( canvas.is_surface_set() );
   }
 
+  /* Returns the width and height to size the current image so that it fits in the window */
+  public void get_win_size( out int width, out int height ) {
+    width  = _sw.get_allocated_width();
+    height = _sw.get_allocated_height();
+  }
+
   /* Returns the width and height of the overlay area of the canvas */
   public CanvasRect get_displayed_rect() {
     var x = (int)_sw.hadjustment.value;
