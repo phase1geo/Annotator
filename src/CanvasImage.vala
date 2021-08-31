@@ -151,11 +151,13 @@ public class CanvasImage {
 
     /* Set the surface that will be drawn */
     _surface = (ImageSurface)cairo_surface_create_from_pixbuf( _buf, 1, null );
-    _canvas.resize( old_info, new_info );
 
     /* Calculate the scaling factors */
     width_scale  = info.pixbuf_rect.width  / pixbuf.width;
     height_scale = info.pixbuf_rect.height / pixbuf.height;
+
+    /* Resize the canvas */
+    _canvas.resize( old_info, new_info );
 
   }
 

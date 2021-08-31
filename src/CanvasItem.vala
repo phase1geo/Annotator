@@ -197,8 +197,10 @@ public class CanvasItem {
   protected virtual void mode_changed() {}
 
   /* Moves the item by the given amount */
-  public virtual void move_item( double diffx, double diffy ) {
-    mode = CanvasItemMode.MOVING;
+  public virtual void move_item( double diffx, double diffy, bool moving = true ) {
+    if( moving ) {
+      mode = CanvasItemMode.MOVING;
+    }
     bbox.x += diffx;
     bbox.y += diffy;
     bbox_changed();

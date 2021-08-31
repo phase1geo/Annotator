@@ -344,9 +344,9 @@ public class CanvasItems {
   }
 
   /* Adjusts all items by the given diff amounts */
-  public void adjust_items( double diffx, double diffy ) {
+  public void adjust_items( double diffx, double diffy, bool moving = true ) {
     foreach( CanvasItem item in _items ) {
-      item.move_item( diffx, diffy );
+      item.move_item( diffx, diffy, moving );
     }
   }
 

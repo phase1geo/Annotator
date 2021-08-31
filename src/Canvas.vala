@@ -368,15 +368,19 @@ public class Canvas : DrawingArea {
   /* Performs canvas resizing, if the user modified the margin, we will need to move the items around */
   public void resize( CanvasImageInfo old_info, CanvasImageInfo new_info ) {
 
+    /* Calculate the scaling factors */
+    var old_xscale = 1 / (old_info.pixbuf_rect.width  / image.pixbuf.width);
+    var old_yscale = 1 / (old_info.pixbuf_rect.height / image.pixbuf.height);
+    var new_xscale = 1 / (new_info.pixbuf_rect.width  / image.pixbuf.width);
+    var new_yscale = 1 / (new_info.pixbuf_rect.height / image.pixbuf.height);
+
     /* Move all of the canvas Items according to the difference in margin */
-    var xscale = 1 / image.width_scale;
-    var yscale = 1 / image.height_scale;
-    var diffx  = (new_info.left_margin() - old_info.left_margin()) * xscale;
-    var diffy  = (new_info.top_margin()  - old_info.top_margin())  * yscale;
+    var diffx = (new_info.left_margin() * new_xscale) - (old_info.left_margin() * old_xscale);
+    var diffy = (new_info.top_margin()  * new_yscale) - (old_info.top_margin()  * old_yscale);
 
     /* Adjust all of the elements if the image moved horizontally or vertically */
     if( (diffx != 0) || (diffy != 0) ) {
-      items.adjust_items( diffx, diffy );  // , xscale, yscale );
+      items.adjust_items( diffx, diffy, false );
     }
 
     /* Resize the canvas itself */
