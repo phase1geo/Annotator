@@ -54,7 +54,7 @@ msgstr "Copia negli appunti"
 
 #: src/MainWindow.vala:235
 msgid "Print…"
-msgstr "Print…"
+msgstr "Stampa…"
 
 #: src/MainWindow.vala:257
 msgid "Zoom"
@@ -66,11 +66,11 @@ msgstr "Zoom (%):"
 
 #: src/MainWindow.vala:274
 msgid "Zoom to Actual Size"
-msgstr "Zoom alle dimensioni reali"
+msgstr "Zoom a dimensioni reali"
 
 #: src/MainWindow.vala:279
 msgid "Zoom to Fit Window"
-msgstr "Zoom per adattare alla finestra"
+msgstr "Zoom adatta finestra"
 
 #: src/MainWindow.vala:307
 msgid "Send by Email"
