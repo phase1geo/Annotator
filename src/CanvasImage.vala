@@ -122,13 +122,14 @@ public class CanvasImage {
     if( dialog.run() == ResponseType.ACCEPT ) {
 
       /* Get the information from the resizer */
+      var old_info = new CanvasImageInfo.from_info( info );
       var new_info = dialog.get_image_info();
 
       /* Add the resize to the undo buffer */
-      _canvas.undo_buffer.add_item( new UndoImageResize( info, new_info ) );
+      _canvas.undo_buffer.add_item( new UndoImageResize( old_info, new_info ) );
 
       /* Perform resize */
-      do_resize( new_info );
+      do_resize( old_info, new_info );
 
     }
 
@@ -137,7 +138,7 @@ public class CanvasImage {
   }
 
   /* This is the function that performs the actual resize */
-  public void do_resize( CanvasImageInfo new_info ) {
+  public void do_resize( CanvasImageInfo old_info, CanvasImageInfo new_info ) {
 
     /* Copy the new info into our info */
     info.copy( new_info );
@@ -150,11 +151,13 @@ public class CanvasImage {
 
     /* Set the surface that will be drawn */
     _surface = (ImageSurface)cairo_surface_create_from_pixbuf( _buf, 1, null );
-    _canvas.set_size_request( info.width, info.height );
 
     /* Calculate the scaling factors */
-    width_scale  = info.pixbuf_rect.width  / _buf.width;
-    height_scale = info.pixbuf_rect.height / _buf.height;
+    width_scale  = info.pixbuf_rect.width  / pixbuf.width;
+    height_scale = info.pixbuf_rect.height / pixbuf.height;
+
+    /* Resize the canvas */
+    _canvas.resize( old_info, new_info );
 
   }
 
@@ -311,7 +314,7 @@ public class CanvasImage {
     cropping = false;
     var buf = new Pixbuf.subpixbuf( _buf, (int)crop_rect.x, (int)crop_rect.y, (int)crop_rect.width, (int)crop_rect.height );
     set_image( buf, _( "image crop" ) );
-    _canvas.items.adjust_items( crop_rect.x, crop_rect.y );
+    _canvas.items.adjust_items( (0 - crop_rect.x), (0 - crop_rect.y) );
     _canvas.queue_draw();
     crop_ended();
     return( true );
@@ -381,7 +384,7 @@ public class CanvasImage {
   /* Draw the image being annotated */
   private void draw_image( Context ctx ) {
 
-    ctx.set_source_surface( _surface, (int)info.pixbuf_rect.x, (int)info.pixbuf_rect.y );
+    ctx.set_source_surface( _surface, 0, 0 );
     ctx.paint();
 
   }

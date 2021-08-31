@@ -64,7 +64,7 @@ public class CanvasItemPencil : CanvasItem {
   }
 
   /* Move the item */
-  public override void move_item( double diffx, double diffy ) {
+  public override void move_item( double diffx, double diffy, bool moving = true ) {
     for( int i=0; i<_edit_points.length; i++ ) {
       _edit_points.index( i ).adjust( diffx, diffy );
     }

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: extra\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-05-01 21:24+0000\n"
+"POT-Creation-Date: 2021-08-30 23:01-0500\n"
 "PO-Revision-Date: 2020-12-27 19:30-0600\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -45,9 +45,55 @@ msgid "Trevor Williams"
 msgstr ""
 
 #: data/com.github.phase1geo.annotator.appdata.xml.in:22
-msgid "TBD"
+msgid "Annotate your images and let a picture say 1000 words."
 msgstr ""
 
-#: data/com.github.phase1geo.annotator.appdata.xml.in:66
-msgid "Initial release"
+#: data/com.github.phase1geo.annotator.appdata.xml.in:24
+msgid "Load image from the file system or clipboard."
+msgstr ""
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:25
+msgid ""
+"Add shapes, stickers, text, drawings, and other callouts to highlight image "
+"details."
+msgstr ""
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:26
+msgid "Add magnifiers to enhance image details."
+msgstr ""
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:27
+msgid "Blur out portions of the image to obfuscate data."
+msgstr ""
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:28
+msgid "Crop, resize and add image borders."
+msgstr ""
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:29
+msgid "Control colors, line thickness and font details."
+msgstr ""
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:30
+msgid "Zoom support."
+msgstr ""
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:31
+msgid "Unlimited undo/redo of any change."
+msgstr ""
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:32
+msgid "Export to JPEG, PNG, TIFF, BMP, PDF and SVG image formats."
+msgstr ""
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:33
+msgid "Support for copying annotated image to clipboard."
+msgstr ""
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:34
+msgid "Printer support."
+msgstr ""
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:77
+msgid "Initial release."
 msgstr ""

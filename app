@@ -51,6 +51,7 @@ case $1 in
     ninja com.github.phase1geo.annotator-update-po
     ninja extra-pot
     ninja extra-update-po
+    cp data/* ../data
     ;;
 "install")
     initialize 0
@@ -104,6 +105,9 @@ case $1 in
     initialize 0
     sudo ninja uninstall
     ;;
+"flatpak")
+    sudo flatpak-builder --install --force-clean ../build-annotator com.github.phase1geo.annotator.yml
+    ;;
 *)
     echo "Usage:"
     echo "  ./app [OPTION]"
@@ -118,5 +122,6 @@ case $1 in
     echo "  test              Builds and runs testing for the application"
     echo "  test-run          Builds application, runs testing and if successful application is started"
     echo "  uninstall         Removes the application from the system (requires sudo)"
+    echo "  flatpak           Builds and installs the Flatpak version of the application"
     ;;
 esac

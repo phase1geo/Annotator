@@ -35,13 +35,13 @@ public class UndoImageResize : UndoItem {
 
   /* Causes the stored item to be put into the before state */
   public override void undo( Canvas canvas ) {
-    canvas.image.do_resize( _old_info );
+    canvas.image.do_resize( _new_info, _old_info );
     canvas.queue_draw();
   }
 
   /* Causes the stored item to be put into the after state */
   public override void redo( Canvas canvas ) {
-    canvas.image.do_resize( _new_info );
+    canvas.image.do_resize( _old_info, _new_info );
     canvas.queue_draw();
   }
 

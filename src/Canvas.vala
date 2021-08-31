@@ -331,27 +331,61 @@ public class Canvas : DrawingArea {
     zoom_changed( zoom_factor );
   }
 
+  /* Zooms the canvas in by the zoom_step */
   public void zoom_in() {
     zoom_set( ((zoom_factor + zoom_step) > zoom_max) ? zoom_max : (zoom_factor + zoom_step) );
   }
 
+  /* Zooms the canvas out by the zoom_step */
   public void zoom_out() {
     zoom_set( ((zoom_factor - zoom_step) < zoom_min) ? zoom_min : (zoom_factor - zoom_step) );
   }
 
+  /* Zooms the image to the actual size */
   public void zoom_actual() {
     zoom_set( 1.0 );
   }
 
+  /* Zooms the image to fit into the window */
   public void zoom_fit() {
-    var rect       = editor.get_displayed_rect();
-    var img_width  = image.pixbuf.width;
-    var img_height = image.pixbuf.height;
-    zoom_set( (img_width < img_height) ? (rect.height / img_height) : (rect.width / img_width) );
+
+    int win_width, win_height;
+    editor.get_win_size( out win_width, out win_height );
+
+    var img_width  = (double)image.info.width;
+    var img_height = (double)image.info.height;
+    var dw         = Math.fabs( win_width  - img_width );
+    var dh         = Math.fabs( win_height - img_height );
+
+    zoom_set( (dw < dh) ? (win_height / img_height) : (win_width / img_width) );
+
   }
 
   private void zoom_adjust() {
     set_size_request( (int)(image.info.width * zoom_factor), (int)(image.info.height * zoom_factor) );
+  }
+
+  /* Performs canvas resizing, if the user modified the margin, we will need to move the items around */
+  public void resize( CanvasImageInfo old_info, CanvasImageInfo new_info ) {
+
+    /* Calculate the scaling factors */
+    var old_xscale = 1 / (old_info.pixbuf_rect.width  / image.pixbuf.width);
+    var old_yscale = 1 / (old_info.pixbuf_rect.height / image.pixbuf.height);
+    var new_xscale = 1 / (new_info.pixbuf_rect.width  / image.pixbuf.width);
+    var new_yscale = 1 / (new_info.pixbuf_rect.height / image.pixbuf.height);
+
+    /* Move all of the canvas Items according to the difference in margin */
+    var diffx = (new_info.left_margin() * new_xscale) - (old_info.left_margin() * old_xscale);
+    var diffy = (new_info.top_margin()  * new_yscale) - (old_info.top_margin()  * old_yscale);
+
+    /* Adjust all of the elements if the image moved horizontally or vertically */
+    if( (diffx != 0) || (diffy != 0) ) {
+      items.adjust_items( diffx, diffy, false );
+    }
+
+    /* Resize the canvas itself */
+    set_size_request( new_info.width, new_info.height );
+
   }
 
   /****************************************************************************/
