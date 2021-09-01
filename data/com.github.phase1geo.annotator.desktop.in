@@ -2,7 +2,7 @@
 Name=Annotator
 GenericName=Annotator
 Comment=Communicate with images better
-Categories=Utility;Development;
+Categories=Utility;Graphics;
 Exec=com.github.phase1geo.annotator %f
 Icon=com.github.phase1geo.annotator
 Terminal=false

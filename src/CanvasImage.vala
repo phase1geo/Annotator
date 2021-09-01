@@ -53,6 +53,7 @@ public class CanvasImage {
   public double           width_scale   { get; private set; default = 1.0; }
   public double           height_scale  { get; private set; default = 1.0; }
 
+  public signal void crop_started();
   public signal void crop_ended();
   public signal void image_changed();
 
@@ -88,8 +89,8 @@ public class CanvasImage {
 
   }
 
-  /* Pastes an image from the given pixbuf to the canvas */
-  public void set_image( Pixbuf buf, string? undo_name = _( "change image" ) ) {
+  /* Changes the stored image to the given pixbuf and performs other related tasks */
+  public void change_image( Pixbuf buf, string? undo_name = _( "change image" ) ) {
 
     if( (undo_name != null) && (_buf != null) ) {
       _canvas.undo_buffer.add_item( new UndoImageChange( undo_name, _buf, buf ) );
@@ -106,11 +107,19 @@ public class CanvasImage {
     /* Store the average color value for faster lookups */
     average_color = average_color_of_rect( new CanvasRect.from_coords( 0, 0, _buf.width, _buf.height ) );
 
+    /* Indicate that the image changed to anyone listening */
+    image_changed();
+
+  }
+
+  /* Pastes an image from the given pixbuf to the canvas */
+  public void set_image( Pixbuf buf, string? undo_name = _( "change image" ) ) {
+
     /* Delete the canvas items */
     _canvas.items.clear();
 
-    /* Indicate that the image changed to anyone listening */
-    image_changed();
+    /* Update the image */
+    change_image( buf, undo_name );
 
   }
 
@@ -201,6 +210,8 @@ public class CanvasImage {
       if( crop_rect.contains( x, y ) ) {
         _crop_index = -1;
         _canvas.set_cursor_from_name( "grabbing" );
+      } else {
+        cancel_crop();
       }
     }
 
@@ -295,10 +306,10 @@ public class CanvasImage {
   /* Start the cropping function */
   public void start_crop() {
     int width, height;
-    _canvas.get_size_request( out width, out height );
     cropping = true;
     // crop_rect.copy_coords( 0, 0, (width / width_scale), (height / height_scale) );
-    crop_rect.copy_coords( 0, 0, width, height );
+    crop_rect.copy_coords( 0, 0, info.width, info.height );
+    crop_started();
   }
 
   /* Cancels the crop operation */
@@ -313,8 +324,8 @@ public class CanvasImage {
   public bool end_crop() {
     cropping = false;
     var buf = new Pixbuf.subpixbuf( _buf, (int)crop_rect.x, (int)crop_rect.y, (int)crop_rect.width, (int)crop_rect.height );
-    set_image( buf, _( "image crop" ) );
-    _canvas.items.adjust_items( (0 - crop_rect.x), (0 - crop_rect.y) );
+    change_image( buf, _( "image crop" ) );
+    _canvas.items.adjust_items( (0 - crop_rect.x), (0 - crop_rect.y), false );
     _canvas.queue_draw();
     crop_ended();
     return( true );

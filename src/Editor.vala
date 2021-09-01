@@ -58,8 +58,15 @@ public class Editor : Box {
     /* Create the toolbar */
     var toolbar = new CanvasToolbar( canvas );
     toolbar.halign = Align.CENTER;
+    canvas.image.crop_started.connect(() => {
+      _sw.vscrollbar_policy = PolicyType.EXTERNAL;
+      _sw.hscrollbar_policy = PolicyType.EXTERNAL;
+    });
     canvas.image.crop_ended.connect(() => {
       toolbar.crop_ended();
+      _sw.vscrollbar_policy = PolicyType.AUTOMATIC;
+      _sw.hscrollbar_policy = PolicyType.AUTOMATIC;
+      show_all();
     });
 
     var sep = new Separator( Orientation.HORIZONTAL );

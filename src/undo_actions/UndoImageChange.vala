@@ -35,13 +35,13 @@ public class UndoImageChange : UndoItem {
 
   /* Causes the stored item to be put into the before state */
   public override void undo( Canvas canvas ) {
-    canvas.image.set_image( _old_pixbuf, null );
+    canvas.image.change_image( _old_pixbuf, null );
     canvas.queue_draw();
   }
 
   /* Causes the stored item to be put into the after state */
   public override void redo( Canvas canvas ) {
-    canvas.image.set_image( _new_pixbuf, null );
+    canvas.image.change_image( _new_pixbuf, null );
     canvas.queue_draw();
   }
 
