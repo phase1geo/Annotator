@@ -238,7 +238,7 @@ public class Canvas : DrawingArea {
       queue_draw();
     }
 
-    return( false );
+    return( true );
 
   }
 
@@ -252,7 +252,7 @@ public class Canvas : DrawingArea {
       }
     }
 
-    return( false );
+    return( true );
 
   }
 
