@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: extra\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-08-30 23:01-0500\n"
+"POT-Creation-Date: 2021-09-01 21:01-0500\n"
 "PO-Revision-Date: 2021-08-31 13:13+0200\n"
 "Last-Translator: Albano Battistella <albano_battistella@hotmail.com>\n"
 "Language-Team: ITALIAN <LL@li.org>\n"
@@ -56,12 +56,13 @@ msgid ""
 "Add shapes, stickers, text, drawings, and other callouts to highlight image "
 "details."
 msgstr ""
-"Aggiungi forme, adesivi, testo, disegni e altri richiami per evidenziare i particolari "
-"dell'immagine."
+"Aggiungi forme, adesivi, testo, disegni e altri richiami per evidenziare i "
+"particolari dell'immagine."
 
 #: data/com.github.phase1geo.annotator.appdata.xml.in:26
 msgid "Add magnifiers to enhance image details."
-msgstr "Aggiungi lenti di ingrandimento per migliorare i dettagli dell'immagine."
+msgstr ""
+"Aggiungi lenti di ingrandimento per migliorare i dettagli dell'immagine."
 
 #: data/com.github.phase1geo.annotator.appdata.xml.in:27
 msgid "Blur out portions of the image to obfuscate data."
@@ -73,7 +74,8 @@ msgstr "Ritaglia, ridimensiona e aggiungi bordi dell'immagine."
 
 #: data/com.github.phase1geo.annotator.appdata.xml.in:29
 msgid "Control colors, line thickness and font details."
-msgstr "Controlla i colori, lo spessore della linea e i dettagli dei caratteri."
+msgstr ""
+"Controlla i colori, lo spessore della linea e i dettagli dei caratteri."
 
 #: data/com.github.phase1geo.annotator.appdata.xml.in:30
 msgid "Zoom support."

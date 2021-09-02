@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.annotator\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-08-30 23:01-0500\n"
+"POT-Creation-Date: 2021-09-01 21:01-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -58,18 +58,19 @@ msgid "Print…"
 msgstr ""
 
 #: src/MainWindow.vala:257
-msgid "Zoom"
+#, c-format
+msgid "Zoom (%d%%)"
 msgstr ""
 
-#: src/MainWindow.vala:261
+#: src/MainWindow.vala:262
 msgid "Zoom (%):"
 msgstr ""
 
-#: src/MainWindow.vala:274
+#: src/MainWindow.vala:275
 msgid "Zoom to Actual Size"
 msgstr ""
 
-#: src/MainWindow.vala:279
+#: src/MainWindow.vala:280
 msgid "Zoom to Fit Window"
 msgstr ""
 
