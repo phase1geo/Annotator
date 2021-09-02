@@ -443,6 +443,60 @@ public class CanvasItemText : CanvasItem {
     adjust_selection( last_cursor );
   }
 
+  /* Finds the start or end character of a line */
+  private int find_line_extent( bool start ) {
+    int line, line2, column;
+    _pango_layout.index_to_line_x( text.text.index_of_nth_char( _cursor ), false, out line, out column );
+    var line_layout = _pango_layout.get_line_readonly( line );
+    if( start ) {
+      return( text.text.char_count( line_layout.start_index ) );
+    } else {
+      var eol = line_layout.start_index + line_layout.length;
+      _pango_layout.index_to_line_x( eol, false, out line2, out column );
+      return( text.text.char_count( eol ) - ((line != line2) ? 1 : 0) );
+    }
+  }
+
+  /* Moves the cursor to the beginning of the current line */
+  public void move_cursor_to_linestart() {
+    set_cursor_only( find_line_extent( true ) );
+    clear_selection( "move_cursor_to_start_of_line" );
+  }
+
+  /* Moves the cursor to the end of the name */
+  public void move_cursor_to_lineend() {
+    set_cursor_only( find_line_extent( false ) );
+    clear_selection( "move_cursor_to_end_of_line" );
+  }
+
+  /* Causes the selection to continue from the start of the line */
+  public void selection_to_linestart( bool home ) {
+    int line_start = find_line_extent( true );
+    if( (_selstart == _selend) || home ) {
+      change_selection( line_start, _cursor, "selection_to_line_start A" );
+      if( !home ) {
+        set_cursor_only( line_start );
+      }
+    } else {
+      change_selection( _cursor, null, "selection_to_line_start B" );
+      set_cursor_only( line_start );
+    }
+  }
+
+  /* Causes the selection to continue to the end of the line */
+  public void selection_to_lineend( bool end ) {
+    int line_end = find_line_extent( false );
+    if( (_selstart == _selend) || end ) {
+      change_selection( _cursor, line_end, "selection_to_end A" );
+      if( !end ) {
+        set_cursor_only( line_end );
+      }
+    } else {
+      change_selection( null, line_end, "selection_to_end B" );
+      set_cursor_only( line_end );
+    }
+  }
+
   /* Moves the cursor to the beginning of the name */
   public void move_cursor_to_start() {
     set_cursor_only( 0 );

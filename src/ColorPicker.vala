@@ -63,6 +63,8 @@ public class ColorPicker : Box {
 
     _type = type;
 
+    homogeneous = true;
+
     _toggle = new ToggleButton();
     _toggle.relief = ReliefStyle.NONE;
     _toggle.toggled.connect( handle_toggle );
@@ -73,6 +75,7 @@ public class ColorPicker : Box {
     _chooser.rgba = init_color;
 
     var overlay = new Overlay();
+    overlay.margin = 10;
     overlay.button_press_event.connect( handle_chooser );
     overlay.add( _chooser );
     overlay.show_all();
@@ -84,8 +87,8 @@ public class ColorPicker : Box {
     _select.popover = new Popover( null );
     _select.popover.add( overlay );
 
-    pack_start( _toggle, false, false );
-    pack_start( _select, false, false );
+    pack_start( _toggle, false, true, 2 );
+    pack_start( _select, false, true, 2 );
     show_all();
 
     update_css( init_color );

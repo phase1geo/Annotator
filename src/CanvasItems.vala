@@ -416,6 +416,7 @@ public class CanvasItems {
       case Key.Delete    :  return( handle_delete() );
       case Key.Return    :  return( handle_return( shift ) );
       case Key.Escape    :  return( handle_escape() );
+      case Key.a         :
       case Key.Left      :
       case Key.Right     :
       case Key.Home      :
@@ -495,28 +496,29 @@ public class CanvasItems {
           switch( keyval ) {
             case Key.Left  :  text.selection_by_word( -1 );  break;
             case Key.Right :  text.selection_by_word( 1 );   break;
-            case Key.Up    :  text.selection_to_start();     break;
-            case Key.Down  :  text.selection_to_end();       break;
+            case Key.Home  :  text.selection_to_start();     break;
+            case Key.End   :  text.selection_to_end();       break;
             default        :  return( false );
           }
         } else {
           switch( keyval ) {
+            case Key.a     :  text.set_cursor_all( false );    break;
             case Key.Left  :  text.move_cursor_by_word( -1 );  break;
             case Key.Right :  text.move_cursor_by_word( 1 );   break;
-            case Key.Up    :  text.move_cursor_to_start();     break;
-            case Key.Down  :  text.move_cursor_to_end();       break;
+            case Key.Home  :  text.move_cursor_to_start();     break;
+            case Key.End   :  text.move_cursor_to_end();       break;
             default        :  return( false );
           }
         }
       } else {
         if( shift ) {
           switch( keyval ) {
-            case Key.Left  :  text.selection_by_char( -1 );     break;
-            case Key.Right :  text.selection_by_char( 1 );      break;
-            case Key.Up    :  text.selection_vertically( -1 );  break;
-            case Key.Down  :  text.selection_vertically( 1 );   break;
-            case Key.Home  :  text.selection_to_start();        break;
-            case Key.End   :  text.selection_to_end();          break;
+            case Key.Left  :  text.selection_by_char( -1 );         break;
+            case Key.Right :  text.selection_by_char( 1 );          break;
+            case Key.Up    :  text.selection_vertically( -1 );      break;
+            case Key.Down  :  text.selection_vertically( 1 );       break;
+            case Key.Home  :  text.selection_to_linestart( true );  break;
+            case Key.End   :  text.selection_to_lineend( true );    break;
             default        :  return( false );
           }
         } else {
@@ -525,8 +527,8 @@ public class CanvasItems {
             case Key.Right :  text.move_cursor( 1 );              break;
             case Key.Up    :  text.move_cursor_vertically( -1 );  break;
             case Key.Down  :  text.move_cursor_vertically( 1 );   break;
-            case Key.Home  :  text.move_cursor_to_start();        break;
-            case Key.End   :  text.move_cursor_to_end();          break;
+            case Key.Home  :  text.move_cursor_to_linestart();    break;
+            case Key.End   :  text.move_cursor_to_lineend();      break;
             default        :  return( false );
           }
         }

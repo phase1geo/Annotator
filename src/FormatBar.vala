@@ -49,7 +49,6 @@ public class FormatBar : Gtk.Popover {
     modal       = false;
 
     var box = new Box( Orientation.HORIZONTAL, 0 );
-    box.border_width = 5;
 
     _copy = new Button.from_icon_name( "edit-copy-symbolic", IconSize.SMALL_TOOLBAR );
     _copy.relief = ReliefStyle.NONE;
@@ -62,25 +61,25 @@ public class FormatBar : Gtk.Popover {
     _cut.clicked.connect( handle_cut );
 
     _bold = new ToggleButton();
-    add_markup( _bold, "<b>B</b>" );
+    add_markup( _bold, " <b>B</b> " );
     _bold.relief = ReliefStyle.NONE;
     _bold.set_tooltip_markup( Utils.tooltip_with_accel( _( "Bold" ), "<Control>b" ) );
     _bold.toggled.connect( handle_bold );
 
     _italics = new ToggleButton();
-    add_markup( _italics, "<i>I</i>" );
+    add_markup( _italics, " <i>I</i> " );
     _italics.relief = ReliefStyle.NONE;
     _italics.set_tooltip_markup( Utils.tooltip_with_accel( _( "Italic" ), "<Control>i" ) );
     _italics.toggled.connect( handle_italics );
 
     _underline = new ToggleButton();
-    add_markup( _underline, "<u>U</u>" );
+    add_markup( _underline, " <u>U</u> " );
     _underline.relief = ReliefStyle.NONE;
     _underline.set_tooltip_text( _( "Underline" ) );
     _underline.toggled.connect( handle_underline );
 
     _strike = new ToggleButton();
-    add_markup( _strike, "<s>S</s>" );
+    add_markup( _strike, " <s>S</s> " );
     _strike.relief = ReliefStyle.NONE;
     _strike.set_tooltip_text( _( "Strikethrough" ) );
     _strike.toggled.connect( handle_strikethru );
@@ -137,28 +136,49 @@ public class FormatBar : Gtk.Popover {
     _clear.set_tooltip_text( _( "Clear all formatting" ) );
     _clear.clicked.connect( handle_clear );
 
-    var spacer = "    ";
+    var box_a = new Box( Orientation.HORIZONTAL, 0 );
+    box_a.border_width = 5;
+    box_a.homogeneous  = true;
+    box_a.pack_start( _copy, false, true, 2 );
+    box_a.pack_start( _cut,  false, true, 2 );
 
-    box.pack_start( _copy,               false, false, 0 );
-    box.pack_start( _cut,                false, false, 0 );
+    var box_b = new Box( Orientation.HORIZONTAL, 0 );
+    box_b.border_width = 5;
+    box_b.homogeneous  = true;
+    box_b.pack_start( _bold,      false, true, 2 );
+    box_b.pack_start( _italics,   false, true, 2 );
+    box_b.pack_start( _underline, false, true, 2 );
+    box_b.pack_start( _strike,    false, true, 2 );
+
+    var box_c = new Box( Orientation.HORIZONTAL, 0 );
+    box_c.border_width = 5;
+    box_c.homogeneous  = true;
+    box_c.pack_start( _code,   false, true, 2 );
+    box_c.pack_start( _header, false, true, 2 );
+
+    var box_d = new Box( Orientation.HORIZONTAL, 0 );
+    box_d.border_width = 5;
+    box_d.homogeneous  = true;
+    box_d.pack_start( _super, false, true, 2 );
+    box_d.pack_start( _sub,   false, true, 2 );
+
+    var box_e = new Box( Orientation.HORIZONTAL, 0 );
+    box_e.border_width = 5;
+    box_e.homogeneous  = true;
+    box_e.pack_start( _hilite, false, false, 2 );
+    box_e.pack_start( _color,  false, false, 2 );
+
+    box.pack_start( box_a, false, false, 0 );
     box.pack_start( new Separator( Orientation.VERTICAL ), false, false, 0 );
-    box.pack_start( _bold,               false, false, 0 );
-    box.pack_start( _italics,            false, false, 0 );
-    box.pack_start( _underline,          false, false, 0 );
-    box.pack_start( _strike,             false, false, 0 );
+    box.pack_start( box_b, false, false, 0 );
     box.pack_start( new Separator( Orientation.VERTICAL ), false, false, 0 );
-    box.pack_start( _code,               false, false, 0 );
-    box.pack_start( _header,             false, false, 0 );
+    box.pack_start( box_c, false, false, 0 );
     box.pack_start( new Separator( Orientation.VERTICAL ), false, false, 0 );
-    box.pack_start( _super,              false, false, 0 );
-    box.pack_start( _sub,                false, false, 0 );
+    box.pack_start( box_d, false, false, 0 );
     box.pack_start( new Separator( Orientation.VERTICAL ), false, false, 0 );
-    box.pack_start( new Label( spacer ), false, false, 0 );
-    box.pack_start( _hilite,             false, false, 0 );
-    box.pack_start( new Label( spacer ), false, false, 0 );
-    box.pack_start( _color,              false, false, 0 );
+    box.pack_start( box_e, false, false, 0 );
     box.pack_start( new Separator( Orientation.VERTICAL ), false, false, 0 );
-    box.pack_start( _clear,              false, false, 0 );
+    box.pack_start( _clear, false, true, 2 );
 
     add( box );
 
