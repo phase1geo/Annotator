@@ -416,6 +416,7 @@ public class CanvasItems {
       case Key.Delete    :  return( handle_delete() );
       case Key.Return    :  return( handle_return( shift ) );
       case Key.Escape    :  return( handle_escape() );
+      case Key.A         :
       case Key.a         :
       case Key.Left      :
       case Key.Right     :
@@ -494,6 +495,7 @@ public class CanvasItems {
       if( control ) {
         if( shift ) {
           switch( keyval ) {
+            case Key.A     :  text.clear_selection();          break;
             case Key.Left  :  text.selection_by_word( -1 );  break;
             case Key.Right :  text.selection_by_word( 1 );   break;
             case Key.Home  :  text.selection_to_start();     break;
