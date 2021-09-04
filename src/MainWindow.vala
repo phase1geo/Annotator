@@ -1,10 +1,10 @@
 /*
-* Copyright (c) 2020-2021 (https://github.com/phase1geo/Annotator)
+* Copyright(c) 2020-2021(https://github.com/phase1geo/Annotator)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
 * License as published by the Free Software Foundation; either
-* version 2 of the License, or (at your option) any later version.
+* version 2 of the License, or(at your option) any later version.
 *
 * This program is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -17,6 +17,7 @@
 * Boston, MA 02110-1301 USA
 *
 * Authored by: Trevor Williams <phase1geo@gmail.com>
+* Authored by: Rajdeep Singha <singharajdeep97@gmail.com>
 */
 
 using Gtk;
@@ -31,11 +32,17 @@ public class MainWindow : Hdy.ApplicationWindow {
   private Button            _redo_btn;
   private MenuButton        _export_btn;
   private MenuButton        _zoom_btn;
-  private SpinButton        _zoom;
+  private Button            _zoom_in_btn;
+  private Button            _zoom_out_btn;
+  private Button            _zoom_default_btn;
+  private Popover           _zoom_popover;
+  private Entry             _zoom_entry;
   private Box               _box;
   private Editor            _editor;
   private Stack             _stack;
   private SList<FileFilter> _image_filters;
+
+  string zoom_label;
 
   private const GLib.ActionEntry[] action_entries = {
     { "action_open",        do_open },
@@ -58,7 +65,7 @@ public class MainWindow : Hdy.ApplicationWindow {
     Object( application: app );
 
     /* Add the application CSS */
-    var provider = new Gtk.CssProvider ();
+    var provider = new Gtk.CssProvider();
     provider.load_from_resource( "/com/github/phase1geo/annotator/css/style.css" );
     StyleContext.add_provider_for_screen( Gdk.Screen.get_default(), provider, STYLE_PROVIDER_PRIORITY_APPLICATION );
 
@@ -84,7 +91,7 @@ public class MainWindow : Hdy.ApplicationWindow {
     show_all();
 
     /* Set the stage for menu actions */
-    var actions = new SimpleActionGroup ();
+    var actions = new SimpleActionGroup();
     actions.add_action_entries( action_entries, this );
     insert_action_group( "win", actions );
 
@@ -123,7 +130,7 @@ public class MainWindow : Hdy.ApplicationWindow {
     var granite_settings = Granite.Settings.get_default();
     var gtk_settings     = Gtk.Settings.get_default();
     gtk_settings.gtk_application_prefer_dark_theme = granite_settings.prefers_color_scheme == Granite.Settings.ColorScheme.DARK;
-    granite_settings.notify["prefers-color-scheme"].connect (() => {
+    granite_settings.notify["prefers-color-scheme"].connect(() => {
       gtk_settings.gtk_application_prefer_dark_theme = granite_settings.prefers_color_scheme == Granite.Settings.ColorScheme.DARK;
     });
   }
@@ -137,7 +144,7 @@ public class MainWindow : Hdy.ApplicationWindow {
     var window_h = Annotator.settings.get_int( "window-h" );
 
     /* Set the main window data */
-    if( (window_x == -1) && (window_y == -1) ) {
+    if((window_x == -1) &&(window_y == -1) ) {
       set_position( Gtk.WindowPosition.CENTER );
     } else {
       move( window_x, window_y );
@@ -208,7 +215,7 @@ public class MainWindow : Hdy.ApplicationWindow {
     var box = new Box( Orientation.VERTICAL, 0 );
 
     for( int i=0; i<ExportType.NUM; i++ ) {
-      var type = (ExportType)i;
+      var type =(ExportType)i;
       var btn  = new ModelButton();
       btn.halign = Align.START;
       btn.text   = type.label();
@@ -254,42 +261,166 @@ public class MainWindow : Hdy.ApplicationWindow {
     /* Add the button */
     var zoom_btn = new MenuButton();
     zoom_btn.set_image( new Image.from_icon_name( "zoom-fit-best", IconSize.LARGE_TOOLBAR ) );
-    zoom_btn.set_tooltip_text( _( "Zoom (%d%%)".printf( 100 ) ) );
+    zoom_btn.set_tooltip_text( _( "Zoom(%d%%)".printf( 100 ) ) );
     zoom_btn.popover = new Popover( null );
     zoom_btn.set_sensitive( false );
 
-    var zoom_box = new Box( Orientation.HORIZONTAL, 0 );
-    var zoom_lbl = new Label( _( "Zoom (%):" ) );
+    // _zoom = new SpinButton.with_range((_editor.canvas.zoom_min * 100),(_editor.canvas.zoom_max * 100),(_editor.canvas.zoom_step * 100) );
+    // _zoom.set_value( 100 );
+    // _zoom.value_changed.connect(() => {
+    //   _editor.canvas.zoom_set( _zoom.get_value() / 100 );
+    // });
 
-    _zoom = new SpinButton.with_range( (_editor.canvas.zoom_min * 100), (_editor.canvas.zoom_max * 100), (_editor.canvas.zoom_step * 100) );
-    _zoom.set_value( 100 );
-    _zoom.value_changed.connect(() => {
-      _editor.canvas.zoom_set( _zoom.get_value() / 100 );
+    _zoom_in_btn = new Gtk.Button.from_icon_name( "zoom-in-symbolic", Gtk.IconSize.MENU );
+    _zoom_in_btn.action_name = "win.action_zoom_in";
+    _zoom_in_btn.tooltip_markup = Granite.markup_accel_tooltip( { "<Ctrl>plus", "<Ctrl>equal" }, _( "Zoom In" ));
+
+    _zoom_out_btn = new Gtk.Button.from_icon_name( "zoom-out-symbolic", Gtk.IconSize.MENU );
+    _zoom_out_btn.action_name = "win.action_zoom_out";
+    _zoom_out_btn.tooltip_markup = Granite.markup_accel_tooltip( { "<Ctrl>minus" }, _( "Zoom Out" ));
+
+    _zoom_default_btn = new Gtk.Button.with_label( "100%" );
+    _zoom_default_btn.action_name = "win.action_zoom_actual";
+    _zoom_default_btn.tooltip_markup = Granite.markup_accel_tooltip( { "<Ctrl>0" }, _( "Reset Zoom, Ctrl+Click to input value" ));
+
+    _zoom_popover = new Gtk.Popover( _zoom_default_btn );
+    _zoom_popover.position = Gtk.PositionType.BOTTOM;
+
+    _zoom_popover.closed.connect( handle_popover_close );
+
+    _zoom_entry = new Gtk.Entry();
+    _zoom_entry.text = "100";
+    _zoom_entry.input_purpose = Gtk.InputPurpose.NUMBER;
+    _zoom_entry.secondary_icon_name = "input-percentage-symbolic";
+    _zoom_entry.secondary_icon_sensitive = false;
+    _zoom_entry.secondary_icon_activatable = false;
+    _zoom_entry.xalign = 1.0f;
+    _zoom_entry.width_chars = 8;
+    _zoom_entry.show_all();
+    _zoom_popover.add( _zoom_entry );
+
+    _zoom_entry.changed.connect(() => {
+        _editor.canvas.zoom_set( _zoom_entry.get_text().to_double() / 100 );
     });
 
-    zoom_box.pack_start( zoom_lbl, false, false, 10 );
-    zoom_box.pack_end( _zoom,      false, false, 10 );
+    _zoom_entry.key_press_event.connect( handle_key_press);
 
-    var zoom_actual = new ModelButton();
-    zoom_actual.get_child().destroy();
-    zoom_actual.add( new Granite.AccelLabel( _( "Zoom to Actual Size" ), "<Control>0" ) );
-    zoom_actual.action_name = "win.action_zoom_actual";
+    _zoom_default_btn.button_press_event.connect( zoom_reset );
+
+    var zoom_grid = new Gtk.Grid();
+    zoom_grid.column_homogeneous = true;
+    zoom_grid.hexpand = true;
+    zoom_grid.margin = 12;
+    zoom_grid.get_style_context().add_class( Gtk.STYLE_CLASS_LINKED );
+    zoom_grid.add( _zoom_out_btn );
+    zoom_grid.add( _zoom_default_btn );
+    zoom_grid.add( _zoom_in_btn );
 
     var zoom_fit = new ModelButton();
     zoom_fit.get_child().destroy();
     zoom_fit.add( new Granite.AccelLabel( _( "Zoom to Fit Window" ), "<Control>1" ) );
     zoom_fit.action_name = "win.action_zoom_fit";
 
-    var box = new Box( Orientation.VERTICAL, 0 );
-    box.pack_start( zoom_box,    false, false, 10 );
-    box.pack_start( zoom_actual, false, false );
-    box.pack_start( zoom_fit,    false, false );
+    var grid = new Gtk.Grid();
+    grid.margin_bottom = 3;
+    grid.orientation = Gtk.Orientation.VERTICAL;
+    grid.width_request = 200;
+    grid.attach( zoom_grid, 0, 0, 3, 1 );
+    grid.attach( zoom_fit, 0, 1, 3, 1 );
 
-    box.show_all();
+    grid.show_all();
 
-    zoom_btn.popover.add( box );
+    zoom_btn.popover.add( grid );
 
     return( zoom_btn );
+
+  }
+
+  private void handle_popover_close() {
+      var text_value = _zoom_entry.get_text().to_double();
+
+      if( text_value < _editor.canvas.zoom_min * 100 ) {
+          text_value = _editor.canvas.zoom_min * 100;
+      }
+      if( text_value > _editor.canvas.zoom_max * 100 ) {
+          text_value = _editor.canvas.zoom_max * 100;
+      }
+
+      _zoom_entry.text = text_value.to_string();
+
+  }
+
+  private bool zoom_reset( Gdk.EventButton event) {
+      if(( event.state & Gdk.ModifierType.CONTROL_MASK ) > 0 ) {
+          _zoom_popover.popup();
+          return true;
+      }
+
+      _zoom_in_btn.sensitive = true;
+      _zoom_out_btn.sensitive = true;
+      do_zoom_actual();
+
+      return true;
+
+  }
+
+  private bool handle_key_press( Gdk.EventKey event ) {
+      /* Arrow UP pressed, increase value by 1 */
+      if( event.keyval == Gdk.Key.Up ) {
+          var text_value =( _zoom_entry.get_text().to_double() ) + 1;
+          _zoom_entry.text = text_value.to_string();
+          return true;
+      }
+
+      /* Arrow DOWN pressed, decrease value by 1 */
+      if( event.keyval == Gdk.Key.Down ) {
+          var text_value =( _zoom_entry.get_text().to_double() ) - 1;
+          _zoom_entry.text = text_value.to_string();
+          return true;
+      }
+
+      /* Enter pressed, update the zoom level */
+      if( event.keyval == Gdk.Key.Return ) {
+          var text_value =( _zoom_entry.get_text().to_double() );
+
+          if( text_value < _editor.canvas.zoom_min * 100 ) {
+              text_value = _editor.canvas.zoom_min * 100;
+          }
+          if( text_value > _editor.canvas.zoom_max * 100 ) {
+              text_value = _editor.canvas.zoom_max * 100;
+          }
+
+          _zoom_entry.text = text_value.to_string();
+          return false;
+      }
+
+      /* Escape pressed, reset to the old value held by the zoom button */
+      if( event.keyval == Gdk.Key.Escape ) {
+          _zoom_entry.text = _zoom_default_btn.label.replace( "%", "" );
+          return true;
+      }
+
+      /* Only allow arrows, delete, and backspace keys other than numbers */
+      if(
+          event.keyval == Gdk.Key.Left ||
+          event.keyval == Gdk.Key.Right ||
+          event.keyval == Gdk.Key.Delete ||
+          event.keyval == Gdk.Key.BackSpace
+      ) {
+          return false;
+      }
+
+      /* Gtk.Entry doesn't currently support the "number only" filter, so
+      we need to intercept the keypress and prevent typing if the value
+      is not a number, or the CTRL modifier is not pressed */
+      if(
+          !( event.keyval >= Gdk.Key.@0 && event.keyval <= Gdk.Key.@9 ) &&
+          ( event.state & Gdk.ModifierType.CONTROL_MASK ) == 0
+      ) {
+          return true;
+      }
+
+      return false;
 
   }
 
@@ -304,7 +435,7 @@ public class MainWindow : Hdy.ApplicationWindow {
 
     foreach( Granite.Services.Contract contract in contracts ) {
       var name = contract.get_display_name();
-      if( (name != _( "Send by Email")) && (name != _( "Send files via Bluetooth" )) ) continue;
+      if((name != _( "Send by Email")) &&(name != _( "Send files via Bluetooth" )) ) continue;
       var ct  = contract;
       var btn = new ModelButton();
       btn.halign = Align.START;
@@ -382,11 +513,11 @@ public class MainWindow : Hdy.ApplicationWindow {
 
     _font = new FontButton();
     _font.show_style = false;
-    _font.set_filter_func( (family, face) => {
+    _font.set_filter_func((family, face) => {
       var fd     = face.describe();
       var weight = fd.get_weight();
       var style  = fd.get_style();
-      return( (weight == Pango.Weight.NORMAL) && (style == Pango.Style.NORMAL) );
+      return((weight == Pango.Weight.NORMAL) &&(style == Pango.Style.NORMAL) );
     });
     _font.font_set.connect(() => {
       var name = _font.get_font_family().get_name();
@@ -418,7 +549,7 @@ public class MainWindow : Hdy.ApplicationWindow {
 
     foreach( Gdk.PixbufFormat format in Gdk.Pixbuf.get_formats() ) {
       var filter = new FileFilter();
-      filter.set_filter_name( format.get_description() + "  (" + format.get_name() + ")" );
+      filter.set_filter_name( format.get_description() + " (" + format.get_name() + ")" );
       foreach( string ext in format.get_extensions() ) {
         var pattern = "*" + ext;
         filter.add_pattern( pattern );
@@ -429,7 +560,7 @@ public class MainWindow : Hdy.ApplicationWindow {
 
     /* Add the 'all image formats' filter first */
     var filter = new FileFilter();
-    filter.set_filter_name( _( "All Image Formats  (*)" ) );
+    filter.set_filter_name( _( "All Image Formats (*)" ) );
     foreach( string pattern in patterns ) {
       filter.add_pattern( pattern );
     }
@@ -535,8 +666,9 @@ public class MainWindow : Hdy.ApplicationWindow {
 
   /* Called whenever the zoom value changes */
   private void do_zoom_changed( double zoom_factor ) {
-    _zoom.value = zoom_factor * 100;
-    _zoom_btn.set_tooltip_text( "Zoom (%d%%)".printf( (int)_zoom.value ) );
+    _zoom_default_btn.label = (( zoom_factor * 100 ).to_string()) + "%";
+    _zoom_entry.text = ( zoom_factor * 100 ).to_string();
+    _zoom_btn.set_tooltip_text( "Zoom(%d%%)".printf((int)( zoom_factor * 100 )));
   }
 
   /* Generate a notification */
@@ -552,4 +684,3 @@ public class MainWindow : Hdy.ApplicationWindow {
   }
 
 }
-
