@@ -70,7 +70,7 @@
     <custom>
       <value key="x-appcenter-color-primary">#007367</value>
       <value key="x-appcenter-color-primary-text">#ffffff</value>
-      <value key="x-appcenter-suggested-price">5</value>
+      <value key="x-appcenter-suggested-price">10</value>
     </custom>
     <releases>
       <release version="1.0.0" date="2021-08-31">
