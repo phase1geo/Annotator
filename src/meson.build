@@ -22,6 +22,7 @@ sources += files(
     'UndoTextBuffer.vala',
     'UndoTextItem.vala',
     'Utils.vala',
+    'ZoomWidget.vala'
 )
 
 subdir('canvas_items')

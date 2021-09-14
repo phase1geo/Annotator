@@ -31,7 +31,7 @@ public class MainWindow : Hdy.ApplicationWindow {
   private Button            _redo_btn;
   private MenuButton        _export_btn;
   private MenuButton        _zoom_btn;
-  private SpinButton        _zoom;
+  private ZoomWidget        _zoom;
   private Box               _box;
   private Editor            _editor;
   private Stack             _stack;
@@ -258,22 +258,11 @@ public class MainWindow : Hdy.ApplicationWindow {
     zoom_btn.popover = new Popover( null );
     zoom_btn.set_sensitive( false );
 
-    var zoom_box = new Box( Orientation.HORIZONTAL, 0 );
-    var zoom_lbl = new Label( _( "Zoom (%):" ) );
-
-    _zoom = new SpinButton.with_range( (_editor.canvas.zoom_min * 100), (_editor.canvas.zoom_max * 100), (_editor.canvas.zoom_step * 100) );
-    _zoom.set_value( 100 );
-    _zoom.value_changed.connect(() => {
-      _editor.canvas.zoom_set( _zoom.get_value() / 100 );
+    _zoom = new ZoomWidget( (int)(_editor.canvas.zoom_min * 100), (int)(_editor.canvas.zoom_max * 100), (int)(_editor.canvas.zoom_step * 100) );
+    _zoom.margin = 10;
+    _zoom.zoom_changed.connect((factor) => {
+      _editor.canvas.zoom_set( factor );
     });
-
-    zoom_box.pack_start( zoom_lbl, false, false, 10 );
-    zoom_box.pack_end( _zoom,      false, false, 10 );
-
-    var zoom_actual = new ModelButton();
-    zoom_actual.get_child().destroy();
-    zoom_actual.add( new Granite.AccelLabel( _( "Zoom to Actual Size" ), "<Control>0" ) );
-    zoom_actual.action_name = "win.action_zoom_actual";
 
     var zoom_fit = new ModelButton();
     zoom_fit.get_child().destroy();
@@ -281,9 +270,8 @@ public class MainWindow : Hdy.ApplicationWindow {
     zoom_fit.action_name = "win.action_zoom_fit";
 
     var box = new Box( Orientation.VERTICAL, 0 );
-    box.pack_start( zoom_box,    false, false, 10 );
-    box.pack_start( zoom_actual, false, false );
-    box.pack_start( zoom_fit,    false, false );
+    box.pack_start( _zoom,    false, false );
+    box.pack_start( zoom_fit, false, false );
 
     box.show_all();
 
@@ -535,7 +523,7 @@ public class MainWindow : Hdy.ApplicationWindow {
 
   /* Called whenever the zoom value changes */
   private void do_zoom_changed( double zoom_factor ) {
-    _zoom.value = zoom_factor * 100;
+    _zoom.value = (int)(zoom_factor * 100);
     _zoom_btn.set_tooltip_text( "Zoom (%d%%)".printf( (int)_zoom.value ) );
   }
 
