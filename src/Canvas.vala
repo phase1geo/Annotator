@@ -223,7 +223,7 @@ public class Canvas : DrawingArea {
   private bool on_keypress( EventKey e ) {
 
     /* If the character is printable, pass the value through the input method filter */
-    if( e.str.get_char( 0 ).isprint() ) {
+    if( items.in_edit_mode() && e.str.get_char( 0 ).isprint() ) {
       _im_context.filter_keypress( e );
 
     /* If we are cropping the image, pass key presses to the image */
