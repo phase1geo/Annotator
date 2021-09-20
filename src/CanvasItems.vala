@@ -288,6 +288,16 @@ public class CanvasItems {
     _items.prepend( item );
   }
 
+  /* Returns true if an item is currently selected */
+  public bool is_item_selected() {
+    foreach( CanvasItem item in _items ) {
+      if( item.mode == CanvasItemMode.SELECTED ) {
+        return( true );
+      }
+    }
+    return( false );
+  }
+
   /* Deletes all of the selected items */
   private bool remove_selected() {
     var retval    = false;
@@ -417,13 +427,31 @@ public class CanvasItems {
       case Key.Return    :  return( handle_return( shift ) );
       case Key.Escape    :  return( handle_escape() );
       case Key.A         :
-      case Key.a         :
       case Key.Left      :
       case Key.Right     :
       case Key.Home      :
       case Key.End       :
       case Key.Up        :
       case Key.Down      :  return( handle_cursor( control, shift, keyval ) );
+      case Key.a         :
+        if( in_edit_mode() ) {
+          return( handle_cursor( control, shift, keyval ) );
+        } else {
+          add_shape_item( CanvasItemType.ARROW );
+          return( true );
+        }
+      case Key.r         :  add_shape_item( CanvasItemType.RECT_STROKE );  return( true );
+      case Key.R         :  add_shape_item( CanvasItemType.RECT_FILL );    return( true );
+      case Key.o         :  add_shape_item( CanvasItemType.OVAL_STROKE );  return( true );
+      case Key.O         :  add_shape_item( CanvasItemType.OVAL_FILL );    return( true );
+      case Key.s         :  add_shape_item( CanvasItemType.STAR_STROKE );  return( true );
+      case Key.S         :  add_shape_item( CanvasItemType.STAR_FILL );    return( true );
+      case Key.l         :  add_shape_item( CanvasItemType.LINE );         return( true );
+      case Key.t         :  add_shape_item( CanvasItemType.TEXT );         return( true );
+      case Key.b         :  add_shape_item( CanvasItemType.BLUR );         return( true );
+      case Key.m         :  add_shape_item( CanvasItemType.MAGNIFIER );    return( true );
+      case Key.p         :  add_shape_item( CanvasItemType.PENCIL );       return( true );
+      case Key.q         :  add_shape_item( CanvasItemType.SEQUENCE );     return( true );
       case Key.Control_L :  return( handle_control() );
     }
 
@@ -495,7 +523,7 @@ public class CanvasItems {
       if( control ) {
         if( shift ) {
           switch( keyval ) {
-            case Key.A     :  text.clear_selection();          break;
+            case Key.A     :  text.clear_selection();        break;
             case Key.Left  :  text.selection_by_word( -1 );  break;
             case Key.Right :  text.selection_by_word( 1 );   break;
             case Key.Home  :  text.selection_to_start();     break;
@@ -807,13 +835,23 @@ public class CanvasItems {
   /* Displays the contextual menu for the currently selected item, if one exists */
   public void show_contextual_menu( double x, double y ) {
 
+    CanvasItem? within = null;
+
     foreach( CanvasItem item in _items ) {
-      if( item.is_within( x, y ) ) {
+      if( item.mode == CanvasItemMode.SELECTED ) {
         create_contextual_menu( item );
-        item.mode = CanvasItemMode.SELECTED;
-        _canvas.queue_draw();
         return;
       }
+      if( (within == null) && item.is_within( x, y ) ) {
+        within = item;
+      }
+    }
+
+    /* If a node was not selected, display it for the item under the given cursor position */
+    if( within != null ) {
+      create_contextual_menu( within );
+      within.mode = CanvasItemMode.SELECTED;
+      _canvas.queue_draw();
     }
 
   }

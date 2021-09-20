@@ -31,6 +31,8 @@ public class Canvas : DrawingArea {
 
   private ImageSurface?  _surface = null;
   private IMMulticontext _im_context;
+  private double         _last_x = 0;
+  private double         _last_y = 0;
 
   public MainWindow     win          { get; private set; }
   public Editor         editor       { get; private set; }
@@ -223,7 +225,7 @@ public class Canvas : DrawingArea {
   private bool on_keypress( EventKey e ) {
 
     /* If the character is printable, pass the value through the input method filter */
-    if( e.str.get_char( 0 ).isprint() ) {
+    if( items.in_edit_mode() && e.str.get_char( 0 ).isprint() ) {
       _im_context.filter_keypress( e );
 
     /* If we are cropping the image, pass key presses to the image */
@@ -240,6 +242,13 @@ public class Canvas : DrawingArea {
 
     return( true );
 
+  }
+
+  /* Displays the contextual menu (if any) for the currently selected item */
+  public void show_contextual_menu() {
+    if( !image.cropping ) {
+      items.show_contextual_menu( _last_x, _last_y );
+    }
   }
 
   /* Handles keyrelease events */
@@ -288,6 +297,9 @@ public class Canvas : DrawingArea {
 
     var x = scale_x( e.x );
     var y = scale_y( e.y );
+
+    _last_x = x;
+    _last_y = y;
 
     if( image.cropping ) {
       if( image.cursor_moved( x, y, e.state ) ) {
