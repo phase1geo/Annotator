@@ -3,6 +3,9 @@
     <gresource prefix="/com/github/phase1geo/annotator/css">
         <file alias="style.css" compressed="true">css/style.css</file>
     </gresource>
+    <gresource prefix="/com/github/phase1geo/annotator/shortcuts">
+        <file alias="shortcuts.ui" compressed="true">com.github.phase1geo.annotator.shortcuts.ui</file>
+    </gresource>
     <gresource prefix="/com/github/phase1geo/annotator/images">
         <file alias="stickers.xml" compressed="true">images/icons/flat-color-icons/categories.xml</file>
 

@@ -31,6 +31,8 @@ public class Canvas : DrawingArea {
 
   private ImageSurface?  _surface = null;
   private IMMulticontext _im_context;
+  private double         _last_x = 0;
+  private double         _last_y = 0;
 
   public MainWindow     win          { get; private set; }
   public Editor         editor       { get; private set; }
@@ -242,6 +244,13 @@ public class Canvas : DrawingArea {
 
   }
 
+  /* Displays the contextual menu (if any) for the currently selected item */
+  public void show_contextual_menu() {
+    if( !image.cropping ) {
+      items.show_contextual_menu( _last_x, _last_y );
+    }
+  }
+
   /* Handles keyrelease events */
   private bool on_keyrelease( EventKey e ) {
 
@@ -288,6 +297,9 @@ public class Canvas : DrawingArea {
 
     var x = scale_x( e.x );
     var y = scale_y( e.y );
+
+    _last_x = x;
+    _last_y = y;
 
     if( image.cropping ) {
       if( image.cursor_moved( x, y, e.state ) ) {

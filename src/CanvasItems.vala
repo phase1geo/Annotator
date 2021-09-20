@@ -288,6 +288,16 @@ public class CanvasItems {
     _items.prepend( item );
   }
 
+  /* Returns true if an item is currently selected */
+  public bool is_item_selected() {
+    foreach( CanvasItem item in _items ) {
+      if( item.mode == CanvasItemMode.SELECTED ) {
+        return( true );
+      }
+    }
+    return( false );
+  }
+
   /* Deletes all of the selected items */
   private bool remove_selected() {
     var retval    = false;
@@ -825,13 +835,23 @@ public class CanvasItems {
   /* Displays the contextual menu for the currently selected item, if one exists */
   public void show_contextual_menu( double x, double y ) {
 
+    CanvasItem? within = null;
+
     foreach( CanvasItem item in _items ) {
-      if( item.is_within( x, y ) ) {
+      if( item.mode == CanvasItemMode.SELECTED ) {
         create_contextual_menu( item );
-        item.mode = CanvasItemMode.SELECTED;
-        _canvas.queue_draw();
         return;
       }
+      if( (within == null) && item.is_within( x, y ) ) {
+        within = item;
+      }
+    }
+
+    /* If a node was not selected, display it for the item under the given cursor position */
+    if( within != null ) {
+      create_contextual_menu( within );
+      within.mode = CanvasItemMode.SELECTED;
+      _canvas.queue_draw();
     }
 
   }

@@ -29,6 +29,7 @@ public class MainWindow : Hdy.ApplicationWindow {
   private Button            _open_btn;
   private Button            _undo_btn;
   private Button            _redo_btn;
+  private MenuButton        _pref_btn;
   private MenuButton        _export_btn;
   private MenuButton        _zoom_btn;
   private ZoomWidget        _zoom;
@@ -38,18 +39,21 @@ public class MainWindow : Hdy.ApplicationWindow {
   private SList<FileFilter> _image_filters;
 
   private const GLib.ActionEntry[] action_entries = {
-    { "action_open",        do_open },
-    { "action_save",        do_save },
-    { "action_quit",        do_quit },
-    { "action_undo",        do_undo },
-    { "action_redo",        do_redo },
-    { "action_copy",        do_copy },
-    { "action_cut",         do_cut },
-    { "action_paste",       do_paste },
-    { "action_zoom_in",     do_zoom_in },
-    { "action_zoom_out",    do_zoom_out },
-    { "action_zoom_actual", do_zoom_actual },
-    { "action_zoom_fit",    do_zoom_fit }
+    { "action_open",            do_open },
+    { "action_save",            do_save },
+    { "action_quit",            do_quit },
+    { "action_undo",            do_undo },
+    { "action_redo",            do_redo },
+    { "action_copy",            do_copy },
+    { "action_cut",             do_cut },
+    { "action_paste",           do_paste },
+    { "action_zoom_in",         do_zoom_in },
+    { "action_zoom_out",        do_zoom_out },
+    { "action_zoom_actual",     do_zoom_actual },
+    { "action_zoom_fit",        do_zoom_fit },
+    { "action_shortcuts",       do_shortcuts },
+    { "action_contextual_menu", do_contextual_menu },
+    { "action_print",           do_print }
   };
 
   /* Constructor */
@@ -105,17 +109,20 @@ public class MainWindow : Hdy.ApplicationWindow {
 
   /* Adds keyboard shortcuts for the menu actions */
   private void add_keyboard_shortcuts( Gtk.Application app ) {
-    app.set_accels_for_action( "win.action_open",        { "<Control>o" } );
-    app.set_accels_for_action( "win.action_save",        { "<Control>s" } );
-    app.set_accels_for_action( "win.action_quit",        { "<Control>q" } );
-    app.set_accels_for_action( "win.action_undo",        { "<Control>z" } );
-    app.set_accels_for_action( "win.action_redo",        { "<Control><Shift>z" } );
-    app.set_accels_for_action( "win.action_paste",       { "<Control>v" } );
-    app.set_accels_for_action( "win.action_zoom_in",     { "<Control>plus" } );
-    app.set_accels_for_action( "win.action_zoom_in",     { "<Control>equal" } );
-    app.set_accels_for_action( "win.action_zoom_out",    { "<Control>minus" } );
-    app.set_accels_for_action( "win.action_zoom_actual", { "<Control>0" } );
-    app.set_accels_for_action( "win.action_zoom_fit",    { "<Control>1" } );
+    app.set_accels_for_action( "win.action_open",            { "<Control>o" } );
+    app.set_accels_for_action( "win.action_save",            { "<Control>s" } );
+    app.set_accels_for_action( "win.action_quit",            { "<Control>q" } );
+    app.set_accels_for_action( "win.action_undo",            { "<Control>z" } );
+    app.set_accels_for_action( "win.action_redo",            { "<Control><Shift>z" } );
+    app.set_accels_for_action( "win.action_paste",           { "<Control>v" } );
+    app.set_accels_for_action( "win.action_zoom_in",         { "<Control>plus" } );
+    app.set_accels_for_action( "win.action_zoom_in",         { "<Control>equal" } );
+    app.set_accels_for_action( "win.action_zoom_out",        { "<Control>minus" } );
+    app.set_accels_for_action( "win.action_zoom_actual",     { "<Control>0" } );
+    app.set_accels_for_action( "win.action_zoom_fit",        { "<Control>1" } );
+    app.set_accels_for_action( "win.action_shortcuts",       { "<Control>question" } );
+    app.set_accels_for_action( "win.action_contextual_menu", { "<Shift>F10", "Menu" } );
+    app.set_accels_for_action( "win.action_print",           { "<Control>p" } );
   }
 
   /* Handles any changes to the dark mode preference gsettings for the desktop */
@@ -186,6 +193,9 @@ public class MainWindow : Hdy.ApplicationWindow {
     _redo_btn.clicked.connect( do_redo );
     _header.pack_start( _redo_btn );
 
+    _pref_btn = create_preferences();
+    _header.pack_end( _pref_btn );
+
     _export_btn = create_exports();
     _header.pack_end( _export_btn );
 
@@ -193,6 +203,29 @@ public class MainWindow : Hdy.ApplicationWindow {
     _header.pack_end( _zoom_btn );
 
     set_title( _( "Annotator" ) );
+
+  }
+
+  private MenuButton create_preferences() {
+
+    var pref_btn = new MenuButton();
+    pref_btn.image = new Image.from_icon_name( "open-menu", IconSize.LARGE_TOOLBAR );
+    pref_btn.set_tooltip_text( _( "Properties" ) );
+    pref_btn.popover = new Popover( null );
+
+    var box = new Box( Orientation.VERTICAL, 0 );
+
+    var shortcuts = new ModelButton();
+    shortcuts.get_child().destroy();
+    shortcuts.add( new Granite.AccelLabel( _( "Shortcuts Cheatsheet" ), "<Control>question" ) );
+    shortcuts.action_name = "win.action_shortcuts";
+
+    box.pack_start( shortcuts );
+
+    box.show_all();
+    pref_btn.popover.add( box );
+
+    return( pref_btn );
 
   }
 
@@ -231,8 +264,9 @@ public class MainWindow : Hdy.ApplicationWindow {
 
     /* Print option */
     var print_btn = new ModelButton();
-    print_btn.halign = Align.START;
-    print_btn.text   = _( "Print…" );
+    print_btn.get_child().destroy();
+    print_btn.add( new Granite.AccelLabel( _( "Print…" ), "<Control>p" ) );
+    print_btn.action_name = "win.action_print";
     print_btn.clicked.connect(() => {
       _editor.canvas.image.export_print();
     });
@@ -511,6 +545,38 @@ public class MainWindow : Hdy.ApplicationWindow {
   /* Zooms in/out to fit image to window width */
   private void do_zoom_fit() {
     _editor.canvas.zoom_fit();
+  }
+
+  /* Displays the keyboard shortcuts cheatsheet */
+  private void do_shortcuts() {
+
+    var builder = new Builder.from_resource( "/com/github/phase1geo/annotator/shortcuts/shortcuts.ui" );
+    var win     = builder.get_object( "shortcuts" ) as ShortcutsWindow;
+
+    win.transient_for = this;
+    win.view_name     = null;
+
+    /* Display the most relevant information based on the current state */
+    if( _editor.canvas.items.in_edit_mode() ) {
+      win.section_name = "text-editing";
+    } else if( _editor.canvas.items.is_item_selected() ) {
+      win.section_name = "items";
+    } else {
+      win.section_name = "general";
+    }
+
+    win.show();
+
+  }
+
+  /* Displays the contextual menu for the item under the cursor */
+  private void do_contextual_menu() {
+    _editor.canvas.show_contextual_menu();
+  }
+
+  /* Prints the current image */
+  private void do_print() {
+    _editor.canvas.image.export_print();
   }
 
   /* Called whenever the undo buffer changes */
