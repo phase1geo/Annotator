@@ -235,7 +235,7 @@ public class Canvas : DrawingArea {
       }
 
     /* Otherwise, allow the canvas item handler to deal with it immediately */
-    } else if( items.key_pressed( e.keyval, e.state ) ) {
+    } else if( items.key_pressed( e.hardware_keycode, e.state ) ) {
       _im_context.reset();
       queue_draw();
     }

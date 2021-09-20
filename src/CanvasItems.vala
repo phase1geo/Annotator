@@ -416,44 +416,48 @@ public class CanvasItems {
   /*****************************/
 
   /* Handles keypress events.  Returns true if the canvas should be redrawn. */
-  public bool key_pressed( uint keyval, ModifierType state ) {
+  public bool key_pressed( uint keycode, ModifierType state ) {
 
     var control = control_state( state );
     var shift   = shift_state( state );
+    var keymap  = Keymap.get_for_display( Display.get_default() );
+    KeymapKey[] ks  = {};
+    uint[]      kvs = {};
 
-    switch( keyval ) {
-      case Key.BackSpace :  return( handle_backspace() );
-      case Key.Delete    :  return( handle_delete() );
-      case Key.Return    :  return( handle_return( shift ) );
-      case Key.Escape    :  return( handle_escape() );
-      case Key.A         :
-      case Key.Left      :
-      case Key.Right     :
-      case Key.Home      :
-      case Key.End       :
-      case Key.Up        :
-      case Key.Down      :  return( handle_cursor( control, shift, keyval ) );
-      case Key.a         :
-        if( in_edit_mode() ) {
-          return( handle_cursor( control, shift, keyval ) );
-        } else {
-          add_shape_item( CanvasItemType.ARROW );
-          return( true );
-        }
-      case Key.r         :  add_shape_item( CanvasItemType.RECT_STROKE );  return( true );
-      case Key.R         :  add_shape_item( CanvasItemType.RECT_FILL );    return( true );
-      case Key.o         :  add_shape_item( CanvasItemType.OVAL_STROKE );  return( true );
-      case Key.O         :  add_shape_item( CanvasItemType.OVAL_FILL );    return( true );
-      case Key.s         :  add_shape_item( CanvasItemType.STAR_STROKE );  return( true );
-      case Key.S         :  add_shape_item( CanvasItemType.STAR_FILL );    return( true );
-      case Key.l         :  add_shape_item( CanvasItemType.LINE );         return( true );
-      case Key.t         :  add_shape_item( CanvasItemType.TEXT );         return( true );
-      case Key.b         :  add_shape_item( CanvasItemType.BLUR );         return( true );
-      case Key.m         :  add_shape_item( CanvasItemType.MAGNIFIER );    return( true );
-      case Key.p         :  add_shape_item( CanvasItemType.PENCIL );       return( true );
-      case Key.q         :  add_shape_item( CanvasItemType.SEQUENCE );     return( true );
-      case Key.Control_L :  return( handle_control() );
+    keymap.get_entries_for_keycode( keycode, out ks, out kvs );
+
+    if( Utils.has_key( kvs, Key.BackSpace ) )        { return( handle_backspace() ); }
+    else if( Utils.has_key( kvs, Key.Delete ) )      { return( handle_delete() ); }
+    else if( Utils.has_key( kvs, Key.Return ) )      { return( handle_return( shift ) ); }
+    else if( Utils.has_key( kvs, Key.Escape ) )      { return( handle_escape() ); }
+    else if(  shift && Utils.has_key( kvs, Key.a ) ) { return( handle_cursor( control, shift, Key.A ) ); }
+    else if( !shift && Utils.has_key( kvs, Key.a ) ) {
+      if( in_edit_mode() ) {
+        return( handle_cursor( control, shift, Key.a ) );
+      } else {
+        add_shape_item( CanvasItemType.ARROW );
+        return( true );
+      }
     }
+    else if( Utils.has_key( kvs, Key.Left ) )        { return( handle_cursor( control, shift, Key.Left ) ); }
+    else if( Utils.has_key( kvs, Key.Right ) )       { return( handle_cursor( control, shift, Key.Right ) ); }
+    else if( Utils.has_key( kvs, Key.Home ) )        { return( handle_cursor( control, shift, Key.Home ) ); }
+    else if( Utils.has_key( kvs, Key.End ) )         { return( handle_cursor( control, shift, Key.End ) ); }
+    else if( Utils.has_key( kvs, Key.Up ) )          { return( handle_cursor( control, shift, Key.Up ) ); }
+    else if( Utils.has_key( kvs, Key.Down ) )        { return( handle_cursor( control, shift, Key.Down ) ); }
+    else if( !shift && Utils.has_key( kvs, Key.r ) ) { add_shape_item( CanvasItemType.RECT_STROKE );  return( true ); }
+    else if(  shift && Utils.has_key( kvs, Key.r ) ) { add_shape_item( CanvasItemType.RECT_FILL );    return( true ); }
+    else if( !shift && Utils.has_key( kvs, Key.o ) ) { add_shape_item( CanvasItemType.OVAL_STROKE );  return( true ); }
+    else if(  shift && Utils.has_key( kvs, Key.o ) ) { add_shape_item( CanvasItemType.OVAL_FILL );    return( true ); }
+    else if( !shift && Utils.has_key( kvs, Key.s ) ) { add_shape_item( CanvasItemType.STAR_STROKE );  return( true ); }
+    else if(  shift && Utils.has_key( kvs, Key.s ) ) { add_shape_item( CanvasItemType.STAR_FILL );    return( true ); }
+    else if( !shift && Utils.has_key( kvs, Key.l ) ) { add_shape_item( CanvasItemType.LINE );         return( true ); }
+    else if( !shift && Utils.has_key( kvs, Key.t ) ) { add_shape_item( CanvasItemType.TEXT );         return( true ); }
+    else if( !shift && Utils.has_key( kvs, Key.b ) ) { add_shape_item( CanvasItemType.BLUR );         return( true ); }
+    else if( !shift && Utils.has_key( kvs, Key.m ) ) { add_shape_item( CanvasItemType.MAGNIFIER );    return( true ); }
+    else if( !shift && Utils.has_key( kvs, Key.p ) ) { add_shape_item( CanvasItemType.PENCIL );       return( true ); }
+    else if( !shift && Utils.has_key( kvs, Key.q ) ) { add_shape_item( CanvasItemType.SEQUENCE );     return( true ); }
+    else if( !shift && Utils.has_key( kvs, Key.Control_L ) ) { return( handle_control() ); }
 
     return( false );
 

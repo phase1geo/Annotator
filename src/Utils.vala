@@ -228,4 +228,15 @@ public class Utils {
     Annotator.settings.set_string( "last-directory", dir );
   }
 
+  /*
+   Returns true if the following key was found to be pressed (regardless of
+   keyboard layout).
+  */
+  public static bool has_key( uint[] kvs, uint key ) {
+    foreach( uint kv in kvs ) {
+      if( kv == key ) return( true );
+    }
+    return( false );
+  }
+
 }
