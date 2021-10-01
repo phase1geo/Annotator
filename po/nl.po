@@ -1,0 +1,128 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the com.github.phase1geo.annotator package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: com.github.phase1geo.annotator\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-09-05 15:12-0500\n"
+"PO-Revision-Date: 2021-09-30 18:25+0200\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.0\n"
+"Last-Translator: Heimen Stoffels <vistausss@fastmail.com>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Language: nl\n"
+
+#: src/Application.vala:82
+msgid "Opening file"
+msgstr "Bestand openen"
+
+#: src/Application.vala:103
+msgid "Display version number"
+msgstr "Toon het versienummer"
+
+#: src/Application.vala:104
+msgid "Annotate clipboard image"
+msgstr "Voorzie een klembordafbeelding van een aantekening"
+
+#: src/MainWindow.vala:156
+msgid "Open Image"
+msgstr "Afbeelding openen"
+
+#: src/MainWindow.vala:178
+msgid "Undo"
+msgstr "Ongedaan maken"
+
+#: src/MainWindow.vala:184
+msgid "Redo"
+msgstr "Opnieuw uitvoeren"
+
+#: src/MainWindow.vala:195
+msgid "Annotator"
+msgstr "Aantekeningen"
+
+#: src/MainWindow.vala:204
+msgid "Export Image"
+msgstr "Afbeelding exporteren"
+
+#: src/MainWindow.vala:226
+msgid "Copy To Clipboard"
+msgstr "Kopiëren naar klembord"
+
+#: src/MainWindow.vala:235
+msgid "Print…"
+msgstr "Afdrukken…"
+
+#: src/MainWindow.vala:257
+#, c-format
+msgid "Zoom (%d%%)"
+msgstr "Zoomen (%d%%)"
+
+#: src/MainWindow.vala:262
+msgid "Zoom (%):"
+msgstr "Zoomen (%):"
+
+#: src/MainWindow.vala:275
+msgid "Zoom to Actual Size"
+msgstr "Zoomen naar ware grootte"
+
+#: src/MainWindow.vala:280
+msgid "Zoom to Fit Window"
+msgstr "Passend zoomen"
+
+#: src/MainWindow.vala:307
+msgid "Send by Email"
+msgstr "Delen via e-mail"
+
+#: src/MainWindow.vala:307
+msgid "Send files via Bluetooth"
+msgstr "Delen via bluetooth"
+
+#: src/MainWindow.vala:344
+msgid "Welcome to Annotator"
+msgstr "Welkom bij Aantekeningen"
+
+#: src/MainWindow.vala:344
+msgid "Let's get started annotating an image"
+msgstr "Laten we aan de slag gaan"
+
+#: src/MainWindow.vala:345
+msgid "Open Image From File"
+msgstr "Afbeelding laden uit bestand"
+
+#: src/MainWindow.vala:345
+msgid "Open a PNG, JPEG, TIFF or BMP file"
+msgstr "Open een png-, jpeg-, tiff- of bmp-bestand"
+
+#: src/MainWindow.vala:346
+msgid "Paste Image From Clipboard"
+msgstr "Afbeelding laden van klembord"
+
+#: src/MainWindow.vala:346
+msgid "Open an image from the clipboard"
+msgstr "Open een afbeelding van het klembord"
+
+#: src/MainWindow.vala:381
+msgid "Font:"
+msgstr "Lettertype:"
+
+#: src/MainWindow.vala:432
+msgid "All Image Formats  (*)"
+msgstr "Alle afbeeldingen  (*)"
+
+#: src/MainWindow.vala:444
+msgid "Open Image File"
+msgstr "Afbeeldingsbestand openen"
+
+#: src/MainWindow.vala:444
+msgid "Open"
+msgstr "Openen"
+
+#: src/MainWindow.vala:444
+msgid "Cancel"
+msgstr "Annuleren"
