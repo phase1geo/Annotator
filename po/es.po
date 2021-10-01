@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.annotator\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-05 15:12-0500\n"
+"POT-Creation-Date: 2021-09-30 23:16-0500\n"
 "PO-Revision-Date: 2020-12-27 19:30-0600\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -29,99 +29,777 @@ msgstr ""
 msgid "Annotate clipboard image"
 msgstr ""
 
-#: src/MainWindow.vala:156
-msgid "Open Image"
+#: src/CanvasImage.vala:93 src/CanvasImage.vala:116
+msgid "change image"
 msgstr ""
 
-#: src/MainWindow.vala:178
-msgid "Undo"
+#: src/CanvasImage.vala:327
+msgid "image crop"
 msgstr ""
 
-#: src/MainWindow.vala:184
-msgid "Redo"
+#: src/canvas_items/CanvasItemBlur.vala:125
+msgid "Blur Amount:"
 msgstr ""
 
-#: src/MainWindow.vala:195
-msgid "Annotator"
+#: src/canvas_items/CanvasItemMagnifier.vala:175
+msgid "Drag to control amount of zoom"
 msgstr ""
 
-#: src/MainWindow.vala:204
+#: src/canvas_items/CanvasItemMagnifier.vala:176
+msgid "Drag to change area to magnify"
+msgstr ""
+
+#: src/canvas_items/CanvasItemMagnifier.vala:201
+msgid "Magnification:"
+msgstr ""
+
+#: src/canvas_items/CanvasItemMagnifier.vala:214
+msgid "Reset Focal Point"
+msgstr ""
+
+#: src/canvas_items/CanvasItemSequence.vala:95
+msgid "Sequence Number:"
+msgstr ""
+
+#: src/canvas_items/CanvasItemStar.vala:145
+msgid "Points:"
+msgstr ""
+
+#: src/canvas_items/CanvasItemText.vala:109
+msgid "Text"
+msgstr ""
+
+#: src/CanvasItems.vala:804
+msgid "move items"
+msgstr ""
+
+#: src/CanvasItems.vala:879 src/FormatBar.vala:55
+msgid "Copy"
+msgstr ""
+
+#: src/CanvasItems.vala:880 src/FormatBar.vala:60
+msgid "Cut"
+msgstr ""
+
+#: src/CanvasItems.vala:882
+msgid "Delete"
+msgstr ""
+
+#: src/CanvasItems.vala:884
+msgid "Send to Front"
+msgstr ""
+
+#: src/CanvasItems.vala:885
+msgid "Send to Back"
+msgstr ""
+
+#: src/CanvasItem.vala:247
+msgid "resize item"
+msgstr ""
+
+#: src/CanvasToolbar.vala:59
+msgid "Add Shape"
+msgstr ""
+
+#: src/CanvasToolbar.vala:98
+msgid "Add Sticker"
+msgstr ""
+
+#: src/CanvasToolbar.vala:194
+msgid "Add Sequence Number"
+msgstr ""
+
+#: src/CanvasToolbar.vala:210
+msgid "Pencil Tool"
+msgstr ""
+
+#: src/CanvasToolbar.vala:226
+msgid "Add Text"
+msgstr ""
+
+#: src/CanvasToolbar.vala:241
+msgid "Add magnifier"
+msgstr ""
+
+#: src/CanvasToolbar.vala:257
+msgid "Add Blur Box"
+msgstr ""
+
+#: src/CanvasToolbar.vala:273
+msgid "Crop Image"
+msgstr ""
+
+#: src/CanvasToolbar.vala:301 src/Resizer.vala:155
+msgid "Resize Image"
+msgstr ""
+
+#: src/CanvasToolbar.vala:320
+msgid "Shape Color"
+msgstr ""
+
+#: src/CanvasToolbar.vala:345
+msgid "Item Color"
+msgstr ""
+
+#: src/CanvasToolbar.vala:384
+msgid "Add Transparency"
+msgstr ""
+
+#: src/CanvasToolbar.vala:406
+msgid "Shape Border"
+msgstr ""
+
+#: src/CanvasToolbar.vala:415
+msgid "Border Width"
+msgstr ""
+
+#: src/CanvasToolbar.vala:440
+msgid "Dash Pattern"
+msgstr ""
+
+#: src/CanvasToolbar.vala:481
+msgid "Font Properties"
+msgstr ""
+
+#: src/Exporter.vala:49
+msgid "JPEG Image (JPEG)"
+msgstr ""
+
+#: src/Exporter.vala:50
+msgid "Portable Network Graphics (PNG)"
+msgstr ""
+
+#: src/Exporter.vala:51
+msgid "Tag Image File Format (TIFF)"
+msgstr ""
+
+#: src/Exporter.vala:52
+msgid "Bitmap Image (BMP)"
+msgstr ""
+
+#: src/Exporter.vala:53
+msgid "Portable Document Format (PDF)"
+msgstr ""
+
+#: src/Exporter.vala:54
+msgid "Scalable Vector Graphics (SVG)"
+msgstr ""
+
+#: src/Exporter.vala:61
+msgid "Export As JPEG…"
+msgstr ""
+
+#: src/Exporter.vala:62
+msgid "Export As PNG…"
+msgstr ""
+
+#: src/Exporter.vala:63
+msgid "Export As TIFF…"
+msgstr ""
+
+#: src/Exporter.vala:64
+msgid "Export As BMP…"
+msgstr ""
+
+#: src/Exporter.vala:65
+msgid "Export As PDF…"
+msgstr ""
+
+#: src/Exporter.vala:66
+msgid "Export As SVG…"
+msgstr ""
+
+#: src/Exporter.vala:73
+msgid ".jpg"
+msgstr ""
+
+#: src/Exporter.vala:74
+msgid ".png"
+msgstr ""
+
+#: src/Exporter.vala:75
+msgid ".tiff"
+msgstr ""
+
+#: src/Exporter.vala:76
+msgid ".bmp"
+msgstr ""
+
+#: src/Exporter.vala:77
+msgid ".pdf"
+msgstr ""
+
+#: src/Exporter.vala:78
+msgid ".svg"
+msgstr ""
+
+#: src/Exporter.vala:116 src/MainWindow.vala:237
 msgid "Export Image"
 msgstr ""
 
-#: src/MainWindow.vala:226
+#: src/Exporter.vala:116
+msgid "Export"
+msgstr ""
+
+#: src/Exporter.vala:116 src/MainWindow.vala:466 src/Resizer.vala:160
+msgid "Cancel"
+msgstr ""
+
+#: src/FormatBar.vala:66
+msgid "Bold"
+msgstr ""
+
+#: src/FormatBar.vala:72
+msgid "Italic"
+msgstr ""
+
+#: src/FormatBar.vala:78
+msgid "Underline"
+msgstr ""
+
+#: src/FormatBar.vala:84
+msgid "Strikethrough"
+msgstr ""
+
+#: src/FormatBar.vala:90
+msgid "Code Block"
+msgstr ""
+
+#: src/FormatBar.vala:96
+msgid "Superscript"
+msgstr ""
+
+#: src/FormatBar.vala:102
+msgid "Subscript"
+msgstr ""
+
+#: src/FormatBar.vala:108
+msgid "Header"
+msgstr ""
+
+#: src/FormatBar.vala:112
+msgid "None"
+msgstr ""
+
+#: src/FormatBar.vala:125
+msgid "Apply Highlight Color"
+msgstr ""
+
+#: src/FormatBar.vala:126
+msgid "Change Highlight Color"
+msgstr ""
+
+#: src/FormatBar.vala:130
+msgid "Apply Font Color"
+msgstr ""
+
+#: src/FormatBar.vala:131
+msgid "Change Font Color"
+msgstr ""
+
+#: src/FormatBar.vala:136
+msgid "Clear all formatting"
+msgstr ""
+
+#: src/MainWindow.vala:163
+msgid "Open Image"
+msgstr ""
+
+#: src/MainWindow.vala:185 src/UndoBuffer.vala:84
+msgid "Undo"
+msgstr ""
+
+#: src/MainWindow.vala:191 src/UndoBuffer.vala:90
+msgid "Redo"
+msgstr ""
+
+#: src/MainWindow.vala:205
+msgid "Annotator"
+msgstr ""
+
+#: src/MainWindow.vala:213
+msgid "Properties"
+msgstr ""
+
+#: src/MainWindow.vala:220
+msgid "Shortcuts Cheatsheet"
+msgstr ""
+
+#: src/MainWindow.vala:259
 msgid "Copy To Clipboard"
 msgstr ""
 
-#: src/MainWindow.vala:235
+#: src/MainWindow.vala:268
 msgid "Print…"
 msgstr ""
 
-#: src/MainWindow.vala:257
+#: src/MainWindow.vala:291
 #, c-format
 msgid "Zoom (%d%%)"
 msgstr ""
 
-#: src/MainWindow.vala:262
-msgid "Zoom (%):"
-msgstr ""
-
-#: src/MainWindow.vala:275
-msgid "Zoom to Actual Size"
-msgstr ""
-
-#: src/MainWindow.vala:280
+#: src/MainWindow.vala:303
 msgid "Zoom to Fit Window"
 msgstr ""
 
-#: src/MainWindow.vala:307
+#: src/MainWindow.vala:329
 msgid "Send by Email"
 msgstr ""
 
-#: src/MainWindow.vala:307
+#: src/MainWindow.vala:329
 msgid "Send files via Bluetooth"
 msgstr ""
 
-#: src/MainWindow.vala:344
+#: src/MainWindow.vala:366
 msgid "Welcome to Annotator"
 msgstr ""
 
-#: src/MainWindow.vala:344
+#: src/MainWindow.vala:366
 msgid "Let's get started annotating an image"
 msgstr ""
 
-#: src/MainWindow.vala:345
+#: src/MainWindow.vala:367
 msgid "Open Image From File"
 msgstr ""
 
-#: src/MainWindow.vala:345
+#: src/MainWindow.vala:367
 msgid "Open a PNG, JPEG, TIFF or BMP file"
 msgstr ""
 
-#: src/MainWindow.vala:346
+#: src/MainWindow.vala:368
 msgid "Paste Image From Clipboard"
 msgstr ""
 
-#: src/MainWindow.vala:346
+#: src/MainWindow.vala:368
 msgid "Open an image from the clipboard"
 msgstr ""
 
-#: src/MainWindow.vala:381
+#: src/MainWindow.vala:403
 msgid "Font:"
 msgstr ""
 
-#: src/MainWindow.vala:432
+#: src/MainWindow.vala:454
 msgid "All Image Formats  (*)"
 msgstr ""
 
-#: src/MainWindow.vala:444
+#: src/MainWindow.vala:466
 msgid "Open Image File"
 msgstr ""
 
-#: src/MainWindow.vala:444
+#: src/MainWindow.vala:466
 msgid "Open"
 msgstr ""
 
-#: src/MainWindow.vala:444
-msgid "Cancel"
+#: src/Resizer.vala:161
+msgid "Resize"
+msgstr ""
+
+#: src/Resizer.vala:243
+msgid "Width:"
+msgstr ""
+
+#: src/Resizer.vala:258
+msgid "Height:"
+msgstr ""
+
+#: src/Resizer.vala:275
+msgid "Scale proportionally"
+msgstr ""
+
+#: src/Resizer.vala:322
+msgid "Image Size"
+msgstr ""
+
+#: src/Resizer.vala:359
+msgid "Top"
+msgstr ""
+
+#: src/Resizer.vala:359
+msgid "Right"
+msgstr ""
+
+#: src/Resizer.vala:359
+msgid "Bottom"
+msgstr ""
+
+#: src/Resizer.vala:359
+msgid "Left"
+msgstr ""
+
+#: src/Resizer.vala:371
+msgid "Margins"
+msgstr ""
+
+#: src/Resizer.vala:398
+msgid "Preview"
+msgstr ""
+
+#: src/Resizer.vala:416
+#, c-format
+msgid "%d x %d pixels"
+msgstr ""
+
+#: src/undo_actions/UndoImageResize.vala:31
+msgid "image resize"
+msgstr ""
+
+#: src/undo_actions/UndoItemAdd.vala:29
+msgid "item add"
+msgstr ""
+
+#: src/undo_actions/UndoItemBlur.vala:30
+msgid "blur amount"
+msgstr ""
+
+#: src/undo_actions/UndoItemDelete.vala:37
+msgid "item delete"
+msgstr ""
+
+#: src/undo_actions/UndoItemMagnifierFocus.vala:30
+msgid "magnifier focus change"
+msgstr ""
+
+#: src/undo_actions/UndoItemMagnifierZoom.vala:30
+msgid "magnifier zoom"
+msgstr ""
+
+#: src/undo_actions/UndoItemPaste.vala:28
+msgid "item paste"
+msgstr ""
+
+#: src/undo_actions/UndoItemPropChange.vala:52
+msgid "item property change"
+msgstr ""
+
+#: src/undo_actions/UndoItemSendBack.vala:29
+msgid "move item to back"
+msgstr ""
+
+#: src/undo_actions/UndoItemSendFront.vala:29
+msgid "move item to front"
+msgstr ""
+
+#: src/undo_actions/UndoItemSequenceNum.vala:30
+msgid "sequence number change"
+msgstr ""
+
+#: src/undo_actions/UndoItemStarPoints.vala:30
+msgid "start points change"
+msgstr ""
+
+#: src/undo_actions/UndoItemTextResize.vala:30
+msgid "text resize"
+msgstr ""
+
+#: src/undo_actions/UndoTextClearTags.vala:30
+msgid "clear formatting"
+msgstr ""
+
+#: src/undo_actions/UndoTextCommit.vala:32
+msgid "text changed"
+msgstr ""
+
+#: src/undo_actions/UndoTextDelete.vala:30
+msgid "text deletion"
+msgstr ""
+
+#: src/undo_actions/UndoTextInsert.vala:29
+#: src/undo_actions/UndoTextMultiInsert.vala:33
+msgid "text insertion"
+msgstr ""
+
+#: src/undo_actions/UndoTextReplace.vala:31
+msgid "text replacement"
+msgstr ""
+
+#: src/undo_actions/UndoTextTagAdd.vala:31
+msgid "format tag add"
+msgstr ""
+
+#: src/undo_actions/UndoTextTagRemove.vala:31
+msgid "format tag remove"
+msgstr ""
+
+#: src/UndoBuffer.vala:85
+msgid "Undo "
+msgstr ""
+
+#: src/UndoBuffer.vala:91
+msgid "Redo "
+msgstr ""
+
+#: src/ZoomWidget.vala:92 data/com.github.phase1geo.annotator.shortcuts.ui:75
+msgid "Zoom Out"
+msgstr ""
+
+#: src/ZoomWidget.vala:97
+msgid "Zoom Actual"
+msgstr ""
+
+#: src/ZoomWidget.vala:102 data/com.github.phase1geo.annotator.shortcuts.ui:68
+msgid "Zoom In"
+msgstr ""
+
+#: data/com.github.phase1geo.annotator.shortcuts.ui:6
+msgid "Annotator Shortcuts"
+msgstr ""
+
+#: data/com.github.phase1geo.annotator.shortcuts.ui:12
+msgid "General"
+msgstr ""
+
+#: data/com.github.phase1geo.annotator.shortcuts.ui:16
+msgid "File"
+msgstr ""
+
+#: data/com.github.phase1geo.annotator.shortcuts.ui:21
+msgid "New From File System"
+msgstr ""
+
+#: data/com.github.phase1geo.annotator.shortcuts.ui:28
+msgid "New From Clipboard"
+msgstr ""
+
+#: data/com.github.phase1geo.annotator.shortcuts.ui:35
+msgid "Print"
+msgstr ""
+
+#: data/com.github.phase1geo.annotator.shortcuts.ui:44
+msgid "Undo/Redo"
+msgstr ""
+
+#: data/com.github.phase1geo.annotator.shortcuts.ui:48
+msgid "Undo Last Change"
+msgstr ""
+
+#: data/com.github.phase1geo.annotator.shortcuts.ui:55
+msgid "Redo Last Undo"
+msgstr ""
+
+#: data/com.github.phase1geo.annotator.shortcuts.ui:64
+msgid "Zooming"
+msgstr ""
+
+#: data/com.github.phase1geo.annotator.shortcuts.ui:82
+msgid "Zoom To Actual Size"
+msgstr ""
+
+#: data/com.github.phase1geo.annotator.shortcuts.ui:89
+msgid "Zoom To Window"
+msgstr ""
+
+#: data/com.github.phase1geo.annotator.shortcuts.ui:98
+msgid "Miscellaneous"
+msgstr ""
+
+#: data/com.github.phase1geo.annotator.shortcuts.ui:102
+msgid "Show Contextual Menu"
+msgstr ""
+
+#: data/com.github.phase1geo.annotator.shortcuts.ui:109
+msgid "Show Keyboard Shortcuts"
+msgstr ""
+
+#: data/com.github.phase1geo.annotator.shortcuts.ui:116
+msgid "Quit Application"
+msgstr ""
+
+#: data/com.github.phase1geo.annotator.shortcuts.ui:128
+msgid "Annotation Commands"
+msgstr ""
+
+#: data/com.github.phase1geo.annotator.shortcuts.ui:132
+msgid "Creation"
+msgstr ""
+
+#: data/com.github.phase1geo.annotator.shortcuts.ui:136
+msgid "New Arrow"
+msgstr ""
+
+#: data/com.github.phase1geo.annotator.shortcuts.ui:143
+msgid "New Outlined Rectangle"
+msgstr ""
+
+#: data/com.github.phase1geo.annotator.shortcuts.ui:150
+msgid "New Solid Rectangle"
+msgstr ""
+
+#: data/com.github.phase1geo.annotator.shortcuts.ui:157
+msgid "New Outlined Oval"
+msgstr ""
+
+#: data/com.github.phase1geo.annotator.shortcuts.ui:164
+msgid "New Solid Oval"
+msgstr ""
+
+#: data/com.github.phase1geo.annotator.shortcuts.ui:171
+msgid "New Outlined Star"
+msgstr ""
+
+#: data/com.github.phase1geo.annotator.shortcuts.ui:178
+msgid "New Solid Star"
+msgstr ""
+
+#: data/com.github.phase1geo.annotator.shortcuts.ui:185
+msgid "New Line"
+msgstr ""
+
+#: data/com.github.phase1geo.annotator.shortcuts.ui:192
+msgid "New Text Box"
+msgstr ""
+
+#: data/com.github.phase1geo.annotator.shortcuts.ui:199
+msgid "New Blur Box"
+msgstr ""
+
+#: data/com.github.phase1geo.annotator.shortcuts.ui:206
+msgid "New Magnifier"
+msgstr ""
+
+#: data/com.github.phase1geo.annotator.shortcuts.ui:213
+msgid "New Pencil Stroke"
+msgstr ""
+
+#: data/com.github.phase1geo.annotator.shortcuts.ui:220
+msgid "New Sequence Marker"
+msgstr ""
+
+#: data/com.github.phase1geo.annotator.shortcuts.ui:229
+msgid "Current Item"
+msgstr ""
+
+#: data/com.github.phase1geo.annotator.shortcuts.ui:233
+msgid "Delete Selected Item"
+msgstr ""
+
+#: data/com.github.phase1geo.annotator.shortcuts.ui:240
+msgid "Copy Selected Item and Move"
+msgstr ""
+
+#: data/com.github.phase1geo.annotator.shortcuts.ui:241
+msgid "[Control + Drag]"
+msgstr ""
+
+#: data/com.github.phase1geo.annotator.shortcuts.ui:252
+msgid "Text Commands"
+msgstr ""
+
+#: data/com.github.phase1geo.annotator.shortcuts.ui:256
+msgid "Editing"
+msgstr ""
+
+#: data/com.github.phase1geo.annotator.shortcuts.ui:260
+msgid "Delete Previous Character"
+msgstr ""
+
+#: data/com.github.phase1geo.annotator.shortcuts.ui:267
+msgid "Delete Next Character"
+msgstr ""
+
+#: data/com.github.phase1geo.annotator.shortcuts.ui:274
+msgid "Exit Text Edit Mode And Select Item"
+msgstr ""
+
+#: data/com.github.phase1geo.annotator.shortcuts.ui:281
+msgid "Insert Newline Character"
+msgstr ""
+
+#: data/com.github.phase1geo.annotator.shortcuts.ui:288
+msgid "Show Emoji Picker"
+msgstr ""
+
+#: data/com.github.phase1geo.annotator.shortcuts.ui:297
+msgid "Cursor"
+msgstr ""
+
+#: data/com.github.phase1geo.annotator.shortcuts.ui:301
+msgid "Move Cursor Left One Word"
+msgstr ""
+
+#: data/com.github.phase1geo.annotator.shortcuts.ui:308
+msgid "Move Cursor Right One Word"
+msgstr ""
+
+#: data/com.github.phase1geo.annotator.shortcuts.ui:315
+msgid "Move Cursor Left One Character"
+msgstr ""
+
+#: data/com.github.phase1geo.annotator.shortcuts.ui:322
+msgid "Move Cursor Right One Character"
+msgstr ""
+
+#: data/com.github.phase1geo.annotator.shortcuts.ui:329
+msgid "Move Cursor To Text Start"
+msgstr ""
+
+#: data/com.github.phase1geo.annotator.shortcuts.ui:336
+msgid "Move Cursor To Text End"
+msgstr ""
+
+#: data/com.github.phase1geo.annotator.shortcuts.ui:343
+msgid "Move Cursor To Current Line Start"
+msgstr ""
+
+#: data/com.github.phase1geo.annotator.shortcuts.ui:350
+msgid "Move Cursor To Current Line End"
+msgstr ""
+
+#: data/com.github.phase1geo.annotator.shortcuts.ui:357
+msgid "Move Cursor Up One Line"
+msgstr ""
+
+#: data/com.github.phase1geo.annotator.shortcuts.ui:364
+msgid "Move Cursor Down One Line"
+msgstr ""
+
+#: data/com.github.phase1geo.annotator.shortcuts.ui:373
+msgid "Selection"
+msgstr ""
+
+#: data/com.github.phase1geo.annotator.shortcuts.ui:377
+msgid "Select All Text"
+msgstr ""
+
+#: data/com.github.phase1geo.annotator.shortcuts.ui:384
+msgid "Deselect All Text"
+msgstr ""
+
+#: data/com.github.phase1geo.annotator.shortcuts.ui:391
+msgid "Add Left Word To Selection"
+msgstr ""
+
+#: data/com.github.phase1geo.annotator.shortcuts.ui:398
+msgid "Add Right Word To Selection"
+msgstr ""
+
+#: data/com.github.phase1geo.annotator.shortcuts.ui:405
+msgid "Add Left Character To Selection"
+msgstr ""
+
+#: data/com.github.phase1geo.annotator.shortcuts.ui:412
+msgid "Add Right Character To Selection"
+msgstr ""
+
+#: data/com.github.phase1geo.annotator.shortcuts.ui:419
+msgid "Add Text From Start To Selection"
+msgstr ""
+
+#: data/com.github.phase1geo.annotator.shortcuts.ui:426
+msgid "Add Text From End To Selection"
+msgstr ""
+
+#: data/com.github.phase1geo.annotator.shortcuts.ui:433
+msgid "Add Text From Current Line Start To Selection"
+msgstr ""
+
+#: data/com.github.phase1geo.annotator.shortcuts.ui:440
+msgid "Add Text From Current Line End To Selection"
+msgstr ""
+
+#: data/com.github.phase1geo.annotator.shortcuts.ui:447
+msgid "Add Text Above Cursor To Selection"
+msgstr ""
+
+#: data/com.github.phase1geo.annotator.shortcuts.ui:454
+msgid "Add Text Below Cursor To Selection"
 msgstr ""

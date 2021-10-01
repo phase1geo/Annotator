@@ -46,6 +46,8 @@ case $1 in
     sudo rm -rf ./build
     ;;
 "generate-i18n")
+    grep -rc _\( * | grep ^src | grep -v :0 | cut -d : -f 1 | sort -o po/POTFILES
+    echo "data/com.github.phase1geo.annotator.shortcuts.ui" >> po/POTFILES
     initialize 0
     ninja com.github.phase1geo.annotator-pot
     ninja com.github.phase1geo.annotator-update-po
