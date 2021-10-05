@@ -28,7 +28,7 @@ Annotate your images and let a picture say 1000 words.
 
 ### Debian
 
-You will need the following dependencies to build Minder:
+You will need the following dependencies to build Annotator:
 
 - meson
 - valac
