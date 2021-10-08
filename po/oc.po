@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: com.github.phase1geo.annotator\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-30 23:16-0500\n"
-"PO-Revision-Date: 2021-10-06 12:08+0200\n"
+"PO-Revision-Date: 2021-10-08 09:11+0200\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -19,7 +19,7 @@ msgstr ""
 
 #: src/Application.vala:82
 msgid "Opening file"
-msgstr ""
+msgstr "Dubertura del fichièr"
 
 #: src/Application.vala:103
 msgid "Display version number"
@@ -27,7 +27,7 @@ msgstr "Afichar lo numèro de la version"
 
 #: src/Application.vala:104
 msgid "Annotate clipboard image"
-msgstr ""
+msgstr "Anotar l’imatge del quichapapièrs"
 
 #: src/CanvasImage.vala:93 src/CanvasImage.vala:116
 msgid "change image"
@@ -35,7 +35,7 @@ msgstr "cambiar d’imatge"
 
 #: src/CanvasImage.vala:327
 msgid "image crop"
-msgstr ""
+msgstr "requadrar imatge"
 
 #: src/canvas_items/CanvasItemBlur.vala:125
 msgid "Blur Amount:"
@@ -43,27 +43,27 @@ msgstr ""
 
 #: src/canvas_items/CanvasItemMagnifier.vala:175
 msgid "Drag to control amount of zoom"
-msgstr ""
+msgstr "Lisatz per contrarotlar l’agrandiment"
 
 #: src/canvas_items/CanvasItemMagnifier.vala:176
 msgid "Drag to change area to magnify"
-msgstr ""
+msgstr "Lisatz per cambiar l’airal d’agrandir"
 
 #: src/canvas_items/CanvasItemMagnifier.vala:201
 msgid "Magnification:"
-msgstr ""
+msgstr "Agrandiment :"
 
 #: src/canvas_items/CanvasItemMagnifier.vala:214
 msgid "Reset Focal Point"
-msgstr ""
+msgstr "Reïnicializar lo punt focal"
 
 #: src/canvas_items/CanvasItemSequence.vala:95
 msgid "Sequence Number:"
-msgstr ""
+msgstr "Numèro de sequéncia :"
 
 #: src/canvas_items/CanvasItemStar.vala:145
 msgid "Points:"
-msgstr ""
+msgstr "Punts :"
 
 #: src/canvas_items/CanvasItemText.vala:109
 msgid "Text"
@@ -71,7 +71,7 @@ msgstr "Tèxte"
 
 #: src/CanvasItems.vala:804
 msgid "move items"
-msgstr ""
+msgstr "desplaçar elements"
 
 #: src/CanvasItems.vala:879 src/FormatBar.vala:55
 msgid "Copy"
@@ -95,23 +95,23 @@ msgstr "Enviar enrèire"
 
 #: src/CanvasItem.vala:247
 msgid "resize item"
-msgstr ""
+msgstr "retalhar element"
 
 #: src/CanvasToolbar.vala:59
 msgid "Add Shape"
-msgstr ""
+msgstr "Apondre fòrma"
 
 #: src/CanvasToolbar.vala:98
 msgid "Add Sticker"
-msgstr ""
+msgstr "Apondre pegasolet"
 
 #: src/CanvasToolbar.vala:194
 msgid "Add Sequence Number"
-msgstr ""
+msgstr "Apondre numèro de sequéncia"
 
 #: src/CanvasToolbar.vala:210
 msgid "Pencil Tool"
-msgstr ""
+msgstr "Aisina gredon"
 
 #: src/CanvasToolbar.vala:226
 msgid "Add Text"
@@ -119,7 +119,7 @@ msgstr "Apondre tèxt"
 
 #: src/CanvasToolbar.vala:241
 msgid "Add magnifier"
-msgstr ""
+msgstr "Apondre una lópia"
 
 #: src/CanvasToolbar.vala:257
 msgid "Add Blur Box"
@@ -135,7 +135,7 @@ msgstr "Redimensionar l'imatge"
 
 #: src/CanvasToolbar.vala:320
 msgid "Shape Color"
-msgstr ""
+msgstr "Color de fòrma"
 
 #: src/CanvasToolbar.vala:345
 msgid "Item Color"
@@ -147,7 +147,7 @@ msgstr "Apondre transparéncia"
 
 #: src/CanvasToolbar.vala:406
 msgid "Shape Border"
-msgstr ""
+msgstr "Bordadura de fòrma"
 
 #: src/CanvasToolbar.vala:415
 msgid "Border Width"
@@ -283,23 +283,23 @@ msgstr "Pas cap"
 
 #: src/FormatBar.vala:125
 msgid "Apply Highlight Color"
-msgstr ""
+msgstr "Aplicar la color d’enlusiment"
 
 #: src/FormatBar.vala:126
 msgid "Change Highlight Color"
-msgstr ""
+msgstr "Cambiar la color d’enlusiment"
 
 #: src/FormatBar.vala:130
 msgid "Apply Font Color"
-msgstr ""
+msgstr "Aplicar color de poliça"
 
 #: src/FormatBar.vala:131
 msgid "Change Font Color"
-msgstr ""
+msgstr "Cambiar color de poliça"
 
 #: src/FormatBar.vala:136
 msgid "Clear all formatting"
-msgstr ""
+msgstr "Escafar tot lo formatatge"
 
 #: src/MainWindow.vala:163
 msgid "Open Image"
@@ -323,7 +323,7 @@ msgstr "Proprietats"
 
 #: src/MainWindow.vala:220
 msgid "Shortcuts Cheatsheet"
-msgstr ""
+msgstr "Resumit dels acorchis"
 
 #: src/MainWindow.vala:259
 msgid "Copy To Clipboard"
@@ -336,11 +336,11 @@ msgstr "Imprimir…"
 #: src/MainWindow.vala:291
 #, c-format
 msgid "Zoom (%d%%)"
-msgstr ""
+msgstr "Zoom (%d%%)"
 
 #: src/MainWindow.vala:303
 msgid "Zoom to Fit Window"
-msgstr ""
+msgstr "Agrandir per garnir la fenèstra"
 
 #: src/MainWindow.vala:329
 msgid "Send by Email"
@@ -352,27 +352,27 @@ msgstr "Mandadís de fichièrs per Bluetooth"
 
 #: src/MainWindow.vala:366
 msgid "Welcome to Annotator"
-msgstr ""
+msgstr "La benvenguda a Annotator"
 
 #: src/MainWindow.vala:366
 msgid "Let's get started annotating an image"
-msgstr ""
+msgstr "Comencem d’anotar un imatge"
 
 #: src/MainWindow.vala:367
 msgid "Open Image From File"
-msgstr ""
+msgstr "Dobrir un imatge a partir de Fichièr"
 
 #: src/MainWindow.vala:367
 msgid "Open a PNG, JPEG, TIFF or BMP file"
-msgstr ""
+msgstr "Dobrir un fichièr PNG, JPEG, TIFF o BMP"
 
 #: src/MainWindow.vala:368
 msgid "Paste Image From Clipboard"
-msgstr ""
+msgstr "Pegar imatge del quichapapièrs"
 
 #: src/MainWindow.vala:368
 msgid "Open an image from the clipboard"
-msgstr ""
+msgstr "Dobrir imatge del quichapapièrs"
 
 #: src/MainWindow.vala:403
 msgid "Font:"
@@ -493,11 +493,11 @@ msgstr ""
 
 #: src/undo_actions/UndoTextClearTags.vala:30
 msgid "clear formatting"
-msgstr ""
+msgstr "escafar lo formatatge"
 
 #: src/undo_actions/UndoTextCommit.vala:32
 msgid "text changed"
-msgstr ""
+msgstr "tèxt cambiat"
 
 #: src/undo_actions/UndoTextDelete.vala:30
 msgid "text deletion"
@@ -526,7 +526,7 @@ msgstr "Desfar "
 
 #: src/UndoBuffer.vala:91
 msgid "Redo "
-msgstr ""
+msgstr "Restablir "
 
 #: src/ZoomWidget.vala:92 data/com.github.phase1geo.annotator.shortcuts.ui:75
 msgid "Zoom Out"
@@ -534,7 +534,7 @@ msgstr "Reduire el zoom"
 
 #: src/ZoomWidget.vala:97
 msgid "Zoom Actual"
-msgstr ""
+msgstr "Zoom actual"
 
 #: src/ZoomWidget.vala:102 data/com.github.phase1geo.annotator.shortcuts.ui:68
 msgid "Zoom In"
@@ -542,7 +542,7 @@ msgstr "Agrandir lo zoom"
 
 #: data/com.github.phase1geo.annotator.shortcuts.ui:6
 msgid "Annotator Shortcuts"
-msgstr ""
+msgstr "Acorchis d’Annotator"
 
 #: data/com.github.phase1geo.annotator.shortcuts.ui:12
 msgid "General"
@@ -566,19 +566,19 @@ msgstr "Imprimir"
 
 #: data/com.github.phase1geo.annotator.shortcuts.ui:44
 msgid "Undo/Redo"
-msgstr ""
+msgstr "Desfar/refar"
 
 #: data/com.github.phase1geo.annotator.shortcuts.ui:48
 msgid "Undo Last Change"
-msgstr ""
+msgstr "Desfar la darrièra modificacion"
 
 #: data/com.github.phase1geo.annotator.shortcuts.ui:55
 msgid "Redo Last Undo"
-msgstr ""
+msgstr "Refar la darrièra modificacion"
 
 #: data/com.github.phase1geo.annotator.shortcuts.ui:64
 msgid "Zooming"
-msgstr ""
+msgstr "Agrandiment"
 
 #: data/com.github.phase1geo.annotator.shortcuts.ui:82
 msgid "Zoom To Actual Size"
@@ -602,7 +602,7 @@ msgstr "Mostrar los acorchis clavièr"
 
 #: data/com.github.phase1geo.annotator.shortcuts.ui:116
 msgid "Quit Application"
-msgstr ""
+msgstr "Quitar l’aplicacion"
 
 #: data/com.github.phase1geo.annotator.shortcuts.ui:128
 msgid "Annotation Commands"
@@ -610,11 +610,11 @@ msgstr ""
 
 #: data/com.github.phase1geo.annotator.shortcuts.ui:132
 msgid "Creation"
-msgstr ""
+msgstr "Creacion"
 
 #: data/com.github.phase1geo.annotator.shortcuts.ui:136
 msgid "New Arrow"
-msgstr ""
+msgstr "Sageta novèla"
 
 #: data/com.github.phase1geo.annotator.shortcuts.ui:143
 msgid "New Outlined Rectangle"
@@ -666,11 +666,11 @@ msgstr ""
 
 #: data/com.github.phase1geo.annotator.shortcuts.ui:229
 msgid "Current Item"
-msgstr ""
+msgstr "Element actual"
 
 #: data/com.github.phase1geo.annotator.shortcuts.ui:233
 msgid "Delete Selected Item"
-msgstr ""
+msgstr "Suprimir l’element seleccionat"
 
 #: data/com.github.phase1geo.annotator.shortcuts.ui:240
 msgid "Copy Selected Item and Move"
@@ -758,11 +758,11 @@ msgstr "Seleccion"
 
 #: data/com.github.phase1geo.annotator.shortcuts.ui:377
 msgid "Select All Text"
-msgstr ""
+msgstr "Seleccionar tot lo tèxte"
 
 #: data/com.github.phase1geo.annotator.shortcuts.ui:384
 msgid "Deselect All Text"
-msgstr ""
+msgstr "Deseleccionar tot lo tèxte"
 
 #: data/com.github.phase1geo.annotator.shortcuts.ui:391
 msgid "Add Left Word To Selection"
