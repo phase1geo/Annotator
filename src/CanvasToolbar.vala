@@ -33,6 +33,7 @@ public class CanvasToolbar : Toolbar {
 
     _canvas = canvas;
 
+    create_arrow();
     create_shapes();
     create_sticker();
     create_sequence();
@@ -52,13 +53,28 @@ public class CanvasToolbar : Toolbar {
 
   }
 
+  private void create_arrow() {
+
+    var btn = new ToolButton( null, null );
+    btn.set_tooltip_text( _( "Add Arrow" ) );
+    btn.icon_name    = "arrow-symbolic";
+    btn.margin_left  = margin;
+    btn.margin_right = margin;
+    btn.clicked.connect(() => {
+      _canvas.items.add_shape_item( CanvasItemType.ARROW );
+    });
+
+    add( btn );
+
+  }
+
   /* Creates the shape toolbar item */
   private void create_shapes() {
 
     var mb = new MenuButton();
     mb.set_tooltip_text( _( "Add Shape" ) );
-    mb.image   = _canvas.items.get_shape_icon( 0 );
-    mb.relief  = ReliefStyle.NONE;
+    mb.image  = _canvas.items.get_shape_icon( 0 );
+    mb.relief = ReliefStyle.NONE;
 
     var grid = new Grid();
     grid.border_width = 5;

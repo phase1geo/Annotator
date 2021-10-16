@@ -124,7 +124,7 @@ public class CanvasItems {
     _shape_icons.append_val( "star-stroke-symbolic" );
     _shape_icons.append_val( "star-fill-symbolic" );
     _shape_icons.append_val( "line-symbolic" );
-    _shape_icons.append_val( "arrow-symbolic" );
+    // _shape_icons.append_val( "arrow-symbolic" );
 
   }
 
