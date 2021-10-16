@@ -85,42 +85,24 @@ public enum CanvasItemType {
 
   public string tooltip() {
     switch( this ) {
-      case RECT_STROKE :  return( _( "Rectangle Outline" ) );
-      case RECT_FILL   :  return( _( "Rectangle" ) );
-      case OVAL_STROKE :  return( _( "Oval Outline" ) );
-      case OVAL_FILL   :  return( _( "Oval" ) );
-      case STAR_STROKE :  return( _( "Star Outline" ) );
-      case STAR_FILL   :  return( _( "Star" ) );
-      case LINE        :  return( _( "Line" ) );
-      case ARROW       :  return( _( "Arrow" ) );
-      case TEXT        :  return( _( "Text" ) );
-      case BLUR        :  return( _( "Blur" ) );
-      case MAGNIFIER   :  return( _( "Magnifier" ) );
-      case PENCIL      :  return( _( "Pencil Tool" ) );
-      case SEQUENCE    :  return( _( "Sequence Number" ) );
+      case RECT_STROKE :  return( Utils.tooltip_with_accel( _( "Rectangle Outline" ), "r" ) );
+      case RECT_FILL   :  return( Utils.tooltip_with_accel( _( "Rectangle" ), "<shift>r" ) );
+      case OVAL_STROKE :  return( Utils.tooltip_with_accel( _( "Oval Outline" ), "o" ) );
+      case OVAL_FILL   :  return( Utils.tooltip_with_accel( _( "Oval" ), "<shift>o" ) );
+      case STAR_STROKE :  return( Utils.tooltip_with_accel( _( "Star Outline" ), "s" ) );
+      case STAR_FILL   :  return( Utils.tooltip_with_accel( _( "Star" ), "<shift>s" ) );
+      case LINE        :  return( Utils.tooltip_with_accel( _( "Line" ), "l" ) );
+      case ARROW       :  return( Utils.tooltip_with_accel( _( "Arrow" ), "a" ) );
+      case TEXT        :  return( Utils.tooltip_with_accel( _( "Text" ), "t" ) );
+      case BLUR        :  return( Utils.tooltip_with_accel( _( "Blur" ), "b" ) );
+      case MAGNIFIER   :  return( Utils.tooltip_with_accel( _( "Magnifier" ), "m" ) );
+      case PENCIL      :  return( Utils.tooltip_with_accel( _( "Pencil Tool" ), "p" ) );
+      case SEQUENCE    :  return( Utils.tooltip_with_accel( _( "Sequence Number" ), "q" ) );
       case STICKER     :  return( _( "Sticker" ) );
       default          :  return( "" );
     }
   }
 
-  public string shortcut() {
-    switch( this ) {
-      case RECT_STROKE :  return( "r" );
-      case RECT_FILL   :  return( "<shift>r" );
-      case OVAL_STROKE :  return( "o" );
-      case OVAL_FILL   :  return( "<shift>o" );
-      case STAR_STROKE :  return( "s" );
-      case STAR_FILL   :  return( "<shift>s" );
-      case LINE        :  return( "l" );
-      case ARROW       :  return( "a" );
-      case TEXT        :  return( "t" );
-      case BLUR        :  return( "b" );
-      case MAGNIFIER   :  return( "m" );
-      case PENCIL      :  return( "p" );
-      case SEQUENCE    :  return( "q" );
-      default          :  return( "" );
-    }
-  }
 }
 
 public class CanvasItems {
