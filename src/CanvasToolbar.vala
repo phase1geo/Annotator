@@ -55,8 +55,10 @@ public class CanvasToolbar : Toolbar {
 
   private void create_arrow() {
 
+    var type = CanvasItemType.ARROW;
+
     var btn = new ToolButton( null, null );
-    btn.set_tooltip_text( _( "Add Arrow" ) );
+    btn.set_tooltip_markup( Utils.tooltip_with_accel( type.tooltip(), type.shortcut() ) );
     btn.icon_name    = "arrow-symbolic";
     btn.margin_left  = margin;
     btn.margin_right = margin;
@@ -72,7 +74,7 @@ public class CanvasToolbar : Toolbar {
   private void create_shapes() {
 
     var mb = new MenuButton();
-    mb.set_tooltip_text( _( "Add Shape" ) );
+    mb.set_tooltip_text( _( "Shapes" ) );
     mb.image  = _canvas.items.get_shape_icon( 0 );
     mb.relief = ReliefStyle.NONE;
 
@@ -82,6 +84,7 @@ public class CanvasToolbar : Toolbar {
     for( int i=0; i<_canvas.items.num_shapes(); i++ ) {
       var btn        = new Button();
       var shape_type = (CanvasItemType)i;
+      btn.set_tooltip_markup( Utils.tooltip_with_accel( shape_type.tooltip(), shape_type.shortcut() ) );
       btn.image  = _canvas.items.get_shape_icon( i );
       btn.relief = ReliefStyle.NONE;
       btn.margin = 5;
@@ -110,8 +113,10 @@ public class CanvasToolbar : Toolbar {
   /* Creates the sticker toolbar item */
   private void create_sticker() {
 
+    var type = CanvasItemType.STICKER;
+
     var mb = new MenuButton();
-    mb.set_tooltip_text( _( "Add Sticker" ) );
+    mb.set_tooltip_markup( Utils.tooltip_with_accel( type.tooltip(), type.shortcut() ) );
     mb.image   = new Image.from_icon_name( "sticker-symbolic", IconSize.LARGE_TOOLBAR );
     mb.relief  = ReliefStyle.NONE;
     mb.popover = new Popover( null );
@@ -206,8 +211,10 @@ public class CanvasToolbar : Toolbar {
   /* Adds the sequence button */
   private void create_sequence() {
 
+    var type = CanvasItemType.SEQUENCE;
+
     var btn = new ToolButton( null, null );
-    btn.set_tooltip_text( _( "Add Sequence Number" ) );
+    btn.set_tooltip_markup( Utils.tooltip_with_accel( type.tooltip(), type.shortcut() ) );
     btn.icon_name    = "sequence-symbolic";
     btn.margin_left  = margin;
     btn.margin_right = margin;
@@ -222,8 +229,10 @@ public class CanvasToolbar : Toolbar {
   /* Starts a drawing operation with the pencil tool */
   private void create_pencil() {
 
+    var type = CanvasItemType.PENCIL;
+
     var btn = new ToolButton( null, null );
-    btn.set_tooltip_text( _( "Pencil Tool" ) );
+    btn.set_tooltip_markup( Utils.tooltip_with_accel( type.tooltip(), type.shortcut() ) );
     btn.icon_name = "edit-symbolic";
     btn.margin_left  = margin;
     btn.margin_right = margin;
@@ -238,8 +247,10 @@ public class CanvasToolbar : Toolbar {
   /* Adds the text insertion button */
   private void create_text() {
 
+    var type = CanvasItemType.TEXT;
+
     var btn = new ToolButton( null, null );
-    btn.set_tooltip_text( _( "Add Text" ) );
+    btn.set_tooltip_markup( Utils.tooltip_with_accel( type.tooltip(), type.shortcut() ) );
     btn.icon_name    = "insert-text-symbolic";
     btn.margin_left  = margin;
     btn.margin_right = margin;
@@ -253,8 +264,10 @@ public class CanvasToolbar : Toolbar {
 
   private void create_magnifier() {
 
+    var type = CanvasItemType.MAGNIFIER;
+
     var btn = new ToolButton( null, null );
-    btn.set_tooltip_text( _( "Add magnifier" ) );
+    btn.set_tooltip_markup( Utils.tooltip_with_accel( type.tooltip(), type.shortcut() ) );
     btn.icon_name    = "magnifier-symbolic";
     btn.margin_left  = margin;
     btn.margin_right = margin;
@@ -269,8 +282,10 @@ public class CanvasToolbar : Toolbar {
   /* Create the blur button */
   private void create_blur() {
 
+    var type = CanvasItemType.BLUR;
+
     var btn = new ToolButton( null, null );
-    btn.set_tooltip_text( _( "Add Blur Box" ) );
+    btn.set_tooltip_markup( Utils.tooltip_with_accel( type.tooltip(), type.shortcut() ) );
     btn.icon_name    = "blur-symbolic";
     btn.margin_left  = margin;
     btn.margin_right = margin;
