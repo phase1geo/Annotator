@@ -7,16 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.annotator\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-30 23:16-0500\n"
+"POT-Creation-Date: 2021-10-19 22:34-0500\n"
 "PO-Revision-Date: 2021-10-05 19:21-0300\n"
+"Last-Translator: Fúlvio Alves <fga.fulvio@gmail.com>\n"
 "Language-Team: \n"
+"Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 3.0\n"
-"Last-Translator: Fúlvio Alves <fga.fulvio@gmail.com>\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"Language: pt_BR\n"
 
 #: src/Application.vala:82
 msgid "Opening file"
@@ -66,31 +66,89 @@ msgstr "Número sequencial:"
 msgid "Points:"
 msgstr "Pontos:"
 
-#: src/canvas_items/CanvasItemText.vala:109
+#: src/canvas_items/CanvasItemText.vala:109 src/CanvasItems.vala:96
 msgid "Text"
 msgstr "Texto"
 
-#: src/CanvasItems.vala:804
+#: src/CanvasItems.vala:88
+msgid "Rectangle Outline"
+msgstr ""
+
+#: src/CanvasItems.vala:89
+#, fuzzy
+msgid "Rectangle"
+msgstr "Novo retângulo sólido"
+
+#: src/CanvasItems.vala:90
+msgid "Oval Outline"
+msgstr ""
+
+#: src/CanvasItems.vala:91
+msgid "Oval"
+msgstr ""
+
+#: src/CanvasItems.vala:92
+msgid "Star Outline"
+msgstr ""
+
+#: src/CanvasItems.vala:93
+msgid "Star"
+msgstr ""
+
+#: src/CanvasItems.vala:94
+#, fuzzy
+msgid "Line"
+msgstr "Nova linha"
+
+#: src/CanvasItems.vala:95
+#, fuzzy
+msgid "Arrow"
+msgstr "Nova seta"
+
+#: src/CanvasItems.vala:97
+msgid "Blur"
+msgstr ""
+
+#: src/CanvasItems.vala:98
+#, fuzzy
+msgid "Magnifier"
+msgstr "Nova lupa"
+
+#: src/CanvasItems.vala:99
+msgid "Pencil Tool"
+msgstr "Ferramenta Lápis"
+
+#: src/CanvasItems.vala:100
+#, fuzzy
+msgid "Sequence Number"
+msgstr "Número sequencial:"
+
+#: src/CanvasItems.vala:101
+#, fuzzy
+msgid "Sticker"
+msgstr "Adicionar adesivo"
+
+#: src/CanvasItems.vala:824
 msgid "move items"
 msgstr ""
 
-#: src/CanvasItems.vala:879 src/FormatBar.vala:55
+#: src/CanvasItems.vala:899 src/FormatBar.vala:55
 msgid "Copy"
 msgstr "Copiar"
 
-#: src/CanvasItems.vala:880 src/FormatBar.vala:60
+#: src/CanvasItems.vala:900 src/FormatBar.vala:60
 msgid "Cut"
 msgstr "Recortar"
 
-#: src/CanvasItems.vala:882
+#: src/CanvasItems.vala:902
 msgid "Delete"
 msgstr "Excluir"
 
-#: src/CanvasItems.vala:884
+#: src/CanvasItems.vala:904
 msgid "Send to Front"
 msgstr "Enviar para a frente"
 
-#: src/CanvasItems.vala:885
+#: src/CanvasItems.vala:905
 msgid "Send to Back"
 msgstr "Enviar para trás"
 
@@ -98,67 +156,44 @@ msgstr "Enviar para trás"
 msgid "resize item"
 msgstr ""
 
-#: src/CanvasToolbar.vala:59
-msgid "Add Shape"
+#: src/CanvasToolbar.vala:75
+#, fuzzy
+msgid "Shapes"
 msgstr "Adicionar forma"
 
-#: src/CanvasToolbar.vala:98
-msgid "Add Sticker"
-msgstr "Adicionar adesivo"
-
-#: src/CanvasToolbar.vala:194
-msgid "Add Sequence Number"
-msgstr "Adicionar número sequencial"
-
-#: src/CanvasToolbar.vala:210
-msgid "Pencil Tool"
-msgstr "Ferramenta Lápis"
-
-#: src/CanvasToolbar.vala:226
-msgid "Add Text"
-msgstr "Adicionar texto"
-
-#: src/CanvasToolbar.vala:241
-msgid "Add magnifier"
-msgstr "Adicionar lupa"
-
-#: src/CanvasToolbar.vala:257
-msgid "Add Blur Box"
-msgstr "Adicionar caixa de desfoque"
-
-#: src/CanvasToolbar.vala:273
+#: src/CanvasToolbar.vala:290
 msgid "Crop Image"
 msgstr "Cortar imagem"
 
-#: src/CanvasToolbar.vala:301 src/Resizer.vala:155
+#: src/CanvasToolbar.vala:318 src/Resizer.vala:155
 msgid "Resize Image"
 msgstr "Redimensionar imagem"
 
-#: src/CanvasToolbar.vala:320
+#: src/CanvasToolbar.vala:337
 msgid "Shape Color"
 msgstr "Cor da forma"
 
-#: src/CanvasToolbar.vala:345
+#: src/CanvasToolbar.vala:362
 msgid "Item Color"
 msgstr "Cor do item"
 
-#: src/CanvasToolbar.vala:384
+#: src/CanvasToolbar.vala:401
 msgid "Add Transparency"
 msgstr "Adicionar transparência"
 
-#: src/CanvasToolbar.vala:406
+#: src/CanvasToolbar.vala:423
 msgid "Shape Border"
 msgstr "Borda da forma"
 
-#: src/CanvasToolbar.vala:415
+#: src/CanvasToolbar.vala:432
 msgid "Border Width"
 msgstr "Largura da forma"
 
-#: src/CanvasToolbar.vala:440
+#: src/CanvasToolbar.vala:457
 msgid "Dash Pattern"
 msgstr "Padrão de traço"
 
-#: src/CanvasToolbar.vala:481
+#: src/CanvasToolbar.vala:498
 msgid "Font Properties"
 msgstr "Propriedades da fonte"
 
@@ -804,3 +839,15 @@ msgstr "Adicionar texto acima do cursor à seleção"
 #: data/com.github.phase1geo.annotator.shortcuts.ui:454
 msgid "Add Text Below Cursor To Selection"
 msgstr "Adicionar texto abaixo do cursor à seleção"
+
+#~ msgid "Add Sequence Number"
+#~ msgstr "Adicionar número sequencial"
+
+#~ msgid "Add Text"
+#~ msgstr "Adicionar texto"
+
+#~ msgid "Add magnifier"
+#~ msgstr "Adicionar lupa"
+
+#~ msgid "Add Blur Box"
+#~ msgstr "Adicionar caixa de desfoque"

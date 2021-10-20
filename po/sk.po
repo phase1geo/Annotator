@@ -2,12 +2,12 @@
 # Copyright (C) 2021
 # This file is distributed under the same license as the com.github.phase1geo.annotator package.
 # MartinIIOT <https://www.github.com/MartinIIOT>, 2021.
-#
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.annotator\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-30 23:16-0500\n"
+"POT-Creation-Date: 2021-10-19 22:34-0500\n"
 "PO-Revision-Date: 2021-10-10 14:15+0100\n"
 "Last-Translator: MartinIIOT <https://www.github.com/MartinIIOT>\n"
 "Language-Team: SLOVAKIA\n"
@@ -64,31 +64,89 @@ msgstr "Poradové číslo:"
 msgid "Points:"
 msgstr "Body:"
 
-#: src/canvas_items/CanvasItemText.vala:109
+#: src/canvas_items/CanvasItemText.vala:109 src/CanvasItems.vala:96
 msgid "Text"
 msgstr "Text"
 
-#: src/CanvasItems.vala:804
+#: src/CanvasItems.vala:88
+msgid "Rectangle Outline"
+msgstr ""
+
+#: src/CanvasItems.vala:89
+#, fuzzy
+msgid "Rectangle"
+msgstr "Nový plný obdĺžnik"
+
+#: src/CanvasItems.vala:90
+msgid "Oval Outline"
+msgstr ""
+
+#: src/CanvasItems.vala:91
+msgid "Oval"
+msgstr ""
+
+#: src/CanvasItems.vala:92
+msgid "Star Outline"
+msgstr ""
+
+#: src/CanvasItems.vala:93
+msgid "Star"
+msgstr ""
+
+#: src/CanvasItems.vala:94
+#, fuzzy
+msgid "Line"
+msgstr "Nová čiara"
+
+#: src/CanvasItems.vala:95
+#, fuzzy
+msgid "Arrow"
+msgstr "Nová šípka"
+
+#: src/CanvasItems.vala:97
+msgid "Blur"
+msgstr ""
+
+#: src/CanvasItems.vala:98
+#, fuzzy
+msgid "Magnifier"
+msgstr "Nová lupa"
+
+#: src/CanvasItems.vala:99
+msgid "Pencil Tool"
+msgstr "Nástroj ceruzka"
+
+#: src/CanvasItems.vala:100
+#, fuzzy
+msgid "Sequence Number"
+msgstr "Poradové číslo:"
+
+#: src/CanvasItems.vala:101
+#, fuzzy
+msgid "Sticker"
+msgstr "Pridať nálepku"
+
+#: src/CanvasItems.vala:824
 msgid "move items"
 msgstr "presunúť položky"
 
-#: src/CanvasItems.vala:879 src/FormatBar.vala:55
+#: src/CanvasItems.vala:899 src/FormatBar.vala:55
 msgid "Copy"
 msgstr "Kopírovať"
 
-#: src/CanvasItems.vala:880 src/FormatBar.vala:60
+#: src/CanvasItems.vala:900 src/FormatBar.vala:60
 msgid "Cut"
 msgstr "Vystrihnúť"
 
-#: src/CanvasItems.vala:882
+#: src/CanvasItems.vala:902
 msgid "Delete"
 msgstr "Zmazať"
 
-#: src/CanvasItems.vala:884
+#: src/CanvasItems.vala:904
 msgid "Send to Front"
 msgstr "Presunúť dopredu"
 
-#: src/CanvasItems.vala:885
+#: src/CanvasItems.vala:905
 msgid "Send to Back"
 msgstr "Presunúť dozadu"
 
@@ -96,67 +154,44 @@ msgstr "Presunúť dozadu"
 msgid "resize item"
 msgstr "zmeniť veľkosť položky"
 
-#: src/CanvasToolbar.vala:59
-msgid "Add Shape"
+#: src/CanvasToolbar.vala:75
+#, fuzzy
+msgid "Shapes"
 msgstr "Pridať tvar"
 
-#: src/CanvasToolbar.vala:98
-msgid "Add Sticker"
-msgstr "Pridať nálepku"
-
-#: src/CanvasToolbar.vala:194
-msgid "Add Sequence Number"
-msgstr "Pridať poradové číslo"
-
-#: src/CanvasToolbar.vala:210
-msgid "Pencil Tool"
-msgstr "Nástroj ceruzka"
-
-#: src/CanvasToolbar.vala:226
-msgid "Add Text"
-msgstr "Pridať text"
-
-#: src/CanvasToolbar.vala:241
-msgid "Add magnifier"
-msgstr "Pridať lupu"
-
-#: src/CanvasToolbar.vala:257
-msgid "Add Blur Box"
-msgstr "Pridať pole rozmazania"
-
-#: src/CanvasToolbar.vala:273
+#: src/CanvasToolbar.vala:290
 msgid "Crop Image"
 msgstr "Orezať obrázok"
 
-#: src/CanvasToolbar.vala:301 src/Resizer.vala:155
+#: src/CanvasToolbar.vala:318 src/Resizer.vala:155
 msgid "Resize Image"
 msgstr "Zmeniť veľkosť obrázku"
 
-#: src/CanvasToolbar.vala:320
+#: src/CanvasToolbar.vala:337
 msgid "Shape Color"
 msgstr "Farba tvaru"
 
-#: src/CanvasToolbar.vala:345
+#: src/CanvasToolbar.vala:362
 msgid "Item Color"
 msgstr "Farba položky"
 
-#: src/CanvasToolbar.vala:384
+#: src/CanvasToolbar.vala:401
 msgid "Add Transparency"
 msgstr "Pridať priehľadnosť"
 
-#: src/CanvasToolbar.vala:406
+#: src/CanvasToolbar.vala:423
 msgid "Shape Border"
 msgstr "Orámovanie tvaru"
 
-#: src/CanvasToolbar.vala:415
+#: src/CanvasToolbar.vala:432
 msgid "Border Width"
 msgstr "Hrúbka orámovania"
 
-#: src/CanvasToolbar.vala:440
+#: src/CanvasToolbar.vala:457
 msgid "Dash Pattern"
 msgstr "Prerušovaný vzor"
 
-#: src/CanvasToolbar.vala:481
+#: src/CanvasToolbar.vala:498
 msgid "Font Properties"
 msgstr "Vlastnosti písma"
 
@@ -804,5 +839,14 @@ msgstr "Pridať text nad kurzorom do výberu"
 msgid "Add Text Below Cursor To Selection"
 msgstr "Pridať text pod kurzorom do výberu"
 
-#~ msgstr "Zoom (%):"
-#~ msgid "Zväčšenie (%):"
+#~ msgid "Add Sequence Number"
+#~ msgstr "Pridať poradové číslo"
+
+#~ msgid "Add Text"
+#~ msgstr "Pridať text"
+
+#~ msgid "Add magnifier"
+#~ msgstr "Pridať lupu"
+
+#~ msgid "Add Blur Box"
+#~ msgstr "Pridať pole rozmazania"

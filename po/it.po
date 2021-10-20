@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.annotator\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-30 23:16-0500\n"
+"POT-Creation-Date: 2021-10-19 22:34-0500\n"
 "PO-Revision-Date: 2021-10-10 14:15+0100\n"
 "Last-Translator: Albano Battistella <albano_battistella@hotmail.com>\n"
 "Language-Team: ITALIAN <LL@li.org>\n"
@@ -64,31 +64,89 @@ msgstr "Numero di sequenza:"
 msgid "Points:"
 msgstr "Punti:"
 
-#: src/canvas_items/CanvasItemText.vala:109
+#: src/canvas_items/CanvasItemText.vala:109 src/CanvasItems.vala:96
 msgid "Text"
 msgstr "Testo"
 
-#: src/CanvasItems.vala:804
+#: src/CanvasItems.vala:88
+msgid "Rectangle Outline"
+msgstr ""
+
+#: src/CanvasItems.vala:89
+#, fuzzy
+msgid "Rectangle"
+msgstr "Nuovo rettangolo solido"
+
+#: src/CanvasItems.vala:90
+msgid "Oval Outline"
+msgstr ""
+
+#: src/CanvasItems.vala:91
+msgid "Oval"
+msgstr ""
+
+#: src/CanvasItems.vala:92
+msgid "Star Outline"
+msgstr ""
+
+#: src/CanvasItems.vala:93
+msgid "Star"
+msgstr ""
+
+#: src/CanvasItems.vala:94
+#, fuzzy
+msgid "Line"
+msgstr "Nuova linea"
+
+#: src/CanvasItems.vala:95
+#, fuzzy
+msgid "Arrow"
+msgstr "Nuova freccia"
+
+#: src/CanvasItems.vala:97
+msgid "Blur"
+msgstr ""
+
+#: src/CanvasItems.vala:98
+#, fuzzy
+msgid "Magnifier"
+msgstr "Nuova lente d'ingrandimento"
+
+#: src/CanvasItems.vala:99
+msgid "Pencil Tool"
+msgstr "Strumento Matita"
+
+#: src/CanvasItems.vala:100
+#, fuzzy
+msgid "Sequence Number"
+msgstr "Numero di sequenza:"
+
+#: src/CanvasItems.vala:101
+#, fuzzy
+msgid "Sticker"
+msgstr "Aggiungi Adesivo"
+
+#: src/CanvasItems.vala:824
 msgid "move items"
 msgstr "sposta oggetti"
 
-#: src/CanvasItems.vala:879 src/FormatBar.vala:55
+#: src/CanvasItems.vala:899 src/FormatBar.vala:55
 msgid "Copy"
 msgstr "Copia"
 
-#: src/CanvasItems.vala:880 src/FormatBar.vala:60
+#: src/CanvasItems.vala:900 src/FormatBar.vala:60
 msgid "Cut"
 msgstr "Taglia"
 
-#: src/CanvasItems.vala:882
+#: src/CanvasItems.vala:902
 msgid "Delete"
 msgstr "Cancella"
 
-#: src/CanvasItems.vala:884
+#: src/CanvasItems.vala:904
 msgid "Send to Front"
 msgstr "Manda in primo piano"
 
-#: src/CanvasItems.vala:885
+#: src/CanvasItems.vala:905
 msgid "Send to Back"
 msgstr "Rimandare indietro"
 
@@ -96,67 +154,44 @@ msgstr "Rimandare indietro"
 msgid "resize item"
 msgstr "ridimensiona oggetto"
 
-#: src/CanvasToolbar.vala:59
-msgid "Add Shape"
+#: src/CanvasToolbar.vala:75
+#, fuzzy
+msgid "Shapes"
 msgstr "Aggiungi Forma"
 
-#: src/CanvasToolbar.vala:98
-msgid "Add Sticker"
-msgstr "Aggiungi Adesivo"
-
-#: src/CanvasToolbar.vala:194
-msgid "Add Sequence Number"
-msgstr "Aggiungi numero di sequenza"
-
-#: src/CanvasToolbar.vala:210
-msgid "Pencil Tool"
-msgstr "Strumento Matita"
-
-#: src/CanvasToolbar.vala:226
-msgid "Add Text"
-msgstr "Aggiungi Testo"
-
-#: src/CanvasToolbar.vala:241
-msgid "Add magnifier"
-msgstr "Aggiungi lente d'ingrandimento"
-
-#: src/CanvasToolbar.vala:257
-msgid "Add Blur Box"
-msgstr "Aggiungi riquadro sfocatura"
-
-#: src/CanvasToolbar.vala:273
+#: src/CanvasToolbar.vala:290
 msgid "Crop Image"
 msgstr "Ritaglia Immagine"
 
-#: src/CanvasToolbar.vala:301 src/Resizer.vala:155
+#: src/CanvasToolbar.vala:318 src/Resizer.vala:155
 msgid "Resize Image"
 msgstr "Ridimensiona Immagine"
 
-#: src/CanvasToolbar.vala:320
+#: src/CanvasToolbar.vala:337
 msgid "Shape Color"
 msgstr "Colore Forma"
 
-#: src/CanvasToolbar.vala:345
+#: src/CanvasToolbar.vala:362
 msgid "Item Color"
 msgstr "Colore Elemento"
 
-#: src/CanvasToolbar.vala:384
+#: src/CanvasToolbar.vala:401
 msgid "Add Transparency"
 msgstr "Aggiungi Trasparenza"
 
-#: src/CanvasToolbar.vala:406
+#: src/CanvasToolbar.vala:423
 msgid "Shape Border"
 msgstr "Bordo Forma"
 
-#: src/CanvasToolbar.vala:415
+#: src/CanvasToolbar.vala:432
 msgid "Border Width"
 msgstr "Larghezza del bordo"
 
-#: src/CanvasToolbar.vala:440
+#: src/CanvasToolbar.vala:457
 msgid "Dash Pattern"
 msgstr "Modello tratto"
 
-#: src/CanvasToolbar.vala:481
+#: src/CanvasToolbar.vala:498
 msgid "Font Properties"
 msgstr "Proprietà Carattere"
 
@@ -803,6 +838,18 @@ msgstr "Aggiungi testo sopra il cursore alla selezione"
 #: data/com.github.phase1geo.annotator.shortcuts.ui:454
 msgid "Add Text Below Cursor To Selection"
 msgstr "Aggiungi testo sotto il cursore alla selezione"
+
+#~ msgid "Add Sequence Number"
+#~ msgstr "Aggiungi numero di sequenza"
+
+#~ msgid "Add Text"
+#~ msgstr "Aggiungi Testo"
+
+#~ msgid "Add magnifier"
+#~ msgstr "Aggiungi lente d'ingrandimento"
+
+#~ msgid "Add Blur Box"
+#~ msgstr "Aggiungi riquadro sfocatura"
 
 #~ msgid "Zoom (%):"
 #~ msgstr "Zoom (%):"
