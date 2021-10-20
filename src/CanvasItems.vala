@@ -1,4 +1,4 @@
- /*
+  /*
 * Copyright (c) 2020-2021 (https://github.com/phase1geo/Annotator)
 *
 * This program is free software; you can redistribute it and/or
@@ -679,11 +679,13 @@ public class CanvasItems {
           _canvas.set_cursor_from_name( "grabbing" );
           add_item( _active, -1 );
           _canvas.undo_buffer.add_item( new UndoItemAdd( item, (int)(_items.length() - 1) ) );
+          selection_changed( item.props );
         } else {
           switch( press_count ) {
             case 1 :
               _active.mode = CanvasItemMode.SELECTED;
               _canvas.set_cursor_from_name( "grabbing" );
+              selection_changed( item.props );
               break;
             case 2 :
               if( _active.itype != CanvasItemType.TEXT ) return( false );
@@ -817,6 +819,7 @@ public class CanvasItems {
     /* Indicate that we are done editing */
     } else if( in_draw_mode() ) {
       _active.mode = CanvasItemMode.SELECTED;
+      selection_changed( _active.props );
       retval = true;
 
     /* If we were move one or more items, make sure that they stay selected */
@@ -875,6 +878,7 @@ public class CanvasItems {
     if( within != null ) {
       create_contextual_menu( within );
       within.mode = CanvasItemMode.SELECTED;
+      selection_changed( within.props );
       _canvas.queue_draw();
     }
 

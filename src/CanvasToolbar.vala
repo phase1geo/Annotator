@@ -25,13 +25,22 @@ public class CanvasToolbar : Toolbar {
 
   private const int margin = 5;
 
-  private Canvas       _canvas;
-  private ToggleButton _crop_btn;
+  private Canvas             _canvas;
+  private ToggleButton       _crop_btn;
+  private Array<RadioButton> _width_btns;
+  private Array<RadioButton> _dash_btns;
+  private ColorChooserWidget _color_chooser;
+  private Switch             _asw;
+  private Revealer           _areveal;
+  private Scale              _ascale;
+  private FontChooserWidget  _font_chooser;
 
   /* Constructor */
   public CanvasToolbar( Canvas canvas ) {
 
-    _canvas = canvas;
+    _canvas     = canvas;
+    _width_btns = new Array<RadioButton>();
+    _dash_btns  = new Array<RadioButton>();
 
     create_arrow();
     create_shapes();
@@ -50,6 +59,9 @@ public class CanvasToolbar : Toolbar {
     create_fonts();
 
     show_all();
+
+    /* If the selection changes, update the toolbar */
+    _canvas.items.selection_changed.connect( selection_changed );
 
   }
 
@@ -342,14 +354,14 @@ public class CanvasToolbar : Toolbar {
     var box = new Box( Orientation.VERTICAL, 0 );
     box.border_width = 10;
 
-    var chooser = new ColorChooserWidget();
-    chooser.rgba = _canvas.items.props.color;
-    chooser.notify.connect((p) => {
-      _canvas.items.props.color = chooser.rgba;
+    _color_chooser = new ColorChooserWidget();
+    _color_chooser.rgba = _canvas.items.props.color;
+    _color_chooser.notify.connect((p) => {
+      _canvas.items.props.color = _color_chooser.rgba;
       mb.image = new Image.from_surface( make_color_icon() );
     });
     mb.image = new Image.from_surface( make_color_icon() );
-    box.pack_start( chooser, false, false );
+    box.pack_start( _color_chooser, false, false );
 
     create_color_alpha( mb, box );
 
@@ -368,33 +380,33 @@ public class CanvasToolbar : Toolbar {
 
   private void create_color_alpha( MenuButton mb, Box box ) {
 
-    var ascale = new Scale.with_range( Orientation.HORIZONTAL, 0.0, 1.0, 0.1 );
-    ascale.margin_left  = 20;
-    ascale.margin_right = 20;
-    ascale.draw_value   = true;
-    ascale.set_value( _canvas.items.props.alpha );
-    ascale.value_changed.connect(() => {
-      _canvas.items.props.alpha = ascale.get_value();
+    _ascale = new Scale.with_range( Orientation.HORIZONTAL, 0.0, 1.0, 0.1 );
+    _ascale.margin_left  = 20;
+    _ascale.margin_right = 20;
+    _ascale.draw_value   = true;
+    _ascale.set_value( _canvas.items.props.alpha );
+    _ascale.value_changed.connect(() => {
+      _canvas.items.props.alpha = _ascale.get_value();
       mb.image = new Image.from_surface( make_color_icon() );
     });
-    ascale.format_value.connect((value) => {
+    _ascale.format_value.connect((value) => {
       return( "%d%%".printf( (int)(value * 100) ) );
     });
     for( int i=0; i<=10; i++ ) {
-      ascale.add_mark( (i / 10.0), PositionType.BOTTOM, null );
+      _ascale.add_mark( (i / 10.0), PositionType.BOTTOM, null );
     }
 
-    var areveal = new Revealer();
-    areveal.reveal_child = (_canvas.items.props.alpha < 1.0);
-    areveal.add( ascale );
+    _areveal = new Revealer();
+    _areveal.reveal_child = (_canvas.items.props.alpha < 1.0);
+    _areveal.add( _ascale );
 
-    var asw = new Switch();
-    asw.halign = Align.START;
-    asw.set_active( _canvas.items.props.alpha < 1.0 );
-    asw.button_release_event.connect((e) => {
-      _canvas.items.props.alpha = areveal.reveal_child ? 1.0 : ascale.get_value();
+    _asw = new Switch();
+    _asw.halign = Align.START;
+    _asw.set_active( _canvas.items.props.alpha < 1.0 );
+    _asw.button_release_event.connect((e) => {
+      _canvas.items.props.alpha = _areveal.reveal_child ? 1.0 : _ascale.get_value();
       mb.image = new Image.from_surface( make_color_icon() );
-      areveal.reveal_child = !areveal.reveal_child;
+      _areveal.reveal_child = !_areveal.reveal_child;
       return( false );
     });
 
@@ -404,13 +416,13 @@ public class CanvasToolbar : Toolbar {
     albl.margin_right = 10;
 
     var albox = new Box( Orientation.HORIZONTAL, 10 );
-    albox.pack_start( asw,  false, false );
+    albox.pack_start( _asw, false, false );
     albox.pack_start( albl, false, false );
 
     var abox = new Box( Orientation.VERTICAL, 0 );
     abox.margin_top = 20;
-    abox.pack_start( albox,   false, false );
-    abox.pack_start( areveal, true,  true );
+    abox.pack_start( albox,    false, false );
+    abox.pack_start( _areveal, true,  true );
 
     box.pack_start( abox, true, true );
 
@@ -447,6 +459,7 @@ public class CanvasToolbar : Toolbar {
           mb.image = new Image.from_surface( make_stroke_icon() );
         }
       });
+      _width_btns.append_val( btn );
       if( width_group == null ) {
         width_group = btn;
       }
@@ -473,6 +486,7 @@ public class CanvasToolbar : Toolbar {
           mb.image = new Image.from_surface( make_stroke_icon() );
         }
       });
+      _dash_btns.append_val( btn );
       if( dash_group == null ) {
         dash_group = btn;
       }
@@ -501,21 +515,21 @@ public class CanvasToolbar : Toolbar {
     mb.get_style_context().add_class( "color_chooser" );
     mb.popover = new Popover( null );
 
-    var chooser = new FontChooserWidget();
-    chooser.border_width = 10;
-    chooser.font_desc    = _canvas.items.props.font;
-    chooser.set_filter_func( (family, face) => {
+    _font_chooser = new FontChooserWidget();
+    _font_chooser.border_width = 10;
+    _font_chooser.font_desc    = _canvas.items.props.font;
+    _font_chooser.set_filter_func( (family, face) => {
       var fd     = face.describe();
       var weight = fd.get_weight();
       var style  = fd.get_style();
       return( (weight == Pango.Weight.NORMAL) && (style == Pango.Style.NORMAL) );
     });
-    chooser.notify.connect((p) => {
-      _canvas.items.props.font = Pango.FontDescription.from_string( chooser.get_font() );
+    _font_chooser.notify.connect((p) => {
+      _canvas.items.props.font = Pango.FontDescription.from_string( _font_chooser.get_font() );
     });
-    chooser.show_all();
+    _font_chooser.show_all();
 
-    mb.popover.add( chooser );
+    mb.popover.add( _font_chooser );
 
     var btn = new ToolItem();
     btn.margin_left  = margin;
@@ -621,6 +635,31 @@ public class CanvasToolbar : Toolbar {
   /* Called when the canvas image crop ends */
   public void crop_ended() {
     _crop_btn.active = false;
+  }
+
+  /* Called whenever the item selection changes */
+  private void selection_changed( CanvasItemProperties props ) {
+
+    var p = new CanvasItemProperties();
+    p.copy( props );
+
+    /* Updates the width group */
+    _width_btns.index( (int)p.stroke_width ).set_active( true );
+
+    /* Updates the dash group */
+    _dash_btns.index( (int)p.dash ).set_active( true );
+
+    /* Set the color */
+    _color_chooser.rgba = p.color;
+
+    /* Handle the alpha value */
+    _ascale.set_value( p.alpha );
+    _areveal.reveal_child = (p.alpha < 1.0);
+    _asw.set_active( p.alpha < 1.0 );
+
+    /* Set the font */
+    _font_chooser.font_desc = p.font;
+
   }
 
 }
