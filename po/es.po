@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.annotator\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-30 23:16-0500\n"
+"POT-Creation-Date: 2021-10-19 22:34-0500\n"
 "PO-Revision-Date: 2020-12-27 19:30-0600\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -65,31 +65,83 @@ msgstr ""
 msgid "Points:"
 msgstr ""
 
-#: src/canvas_items/CanvasItemText.vala:109
+#: src/canvas_items/CanvasItemText.vala:109 src/CanvasItems.vala:96
 msgid "Text"
 msgstr ""
 
-#: src/CanvasItems.vala:804
+#: src/CanvasItems.vala:88
+msgid "Rectangle Outline"
+msgstr ""
+
+#: src/CanvasItems.vala:89
+msgid "Rectangle"
+msgstr ""
+
+#: src/CanvasItems.vala:90
+msgid "Oval Outline"
+msgstr ""
+
+#: src/CanvasItems.vala:91
+msgid "Oval"
+msgstr ""
+
+#: src/CanvasItems.vala:92
+msgid "Star Outline"
+msgstr ""
+
+#: src/CanvasItems.vala:93
+msgid "Star"
+msgstr ""
+
+#: src/CanvasItems.vala:94
+msgid "Line"
+msgstr ""
+
+#: src/CanvasItems.vala:95
+msgid "Arrow"
+msgstr ""
+
+#: src/CanvasItems.vala:97
+msgid "Blur"
+msgstr ""
+
+#: src/CanvasItems.vala:98
+msgid "Magnifier"
+msgstr ""
+
+#: src/CanvasItems.vala:99
+msgid "Pencil Tool"
+msgstr ""
+
+#: src/CanvasItems.vala:100
+msgid "Sequence Number"
+msgstr ""
+
+#: src/CanvasItems.vala:101
+msgid "Sticker"
+msgstr ""
+
+#: src/CanvasItems.vala:824
 msgid "move items"
 msgstr ""
 
-#: src/CanvasItems.vala:879 src/FormatBar.vala:55
+#: src/CanvasItems.vala:899 src/FormatBar.vala:55
 msgid "Copy"
 msgstr ""
 
-#: src/CanvasItems.vala:880 src/FormatBar.vala:60
+#: src/CanvasItems.vala:900 src/FormatBar.vala:60
 msgid "Cut"
 msgstr ""
 
-#: src/CanvasItems.vala:882
+#: src/CanvasItems.vala:902
 msgid "Delete"
 msgstr ""
 
-#: src/CanvasItems.vala:884
+#: src/CanvasItems.vala:904
 msgid "Send to Front"
 msgstr ""
 
-#: src/CanvasItems.vala:885
+#: src/CanvasItems.vala:905
 msgid "Send to Back"
 msgstr ""
 
@@ -97,67 +149,43 @@ msgstr ""
 msgid "resize item"
 msgstr ""
 
-#: src/CanvasToolbar.vala:59
-msgid "Add Shape"
+#: src/CanvasToolbar.vala:75
+msgid "Shapes"
 msgstr ""
 
-#: src/CanvasToolbar.vala:98
-msgid "Add Sticker"
-msgstr ""
-
-#: src/CanvasToolbar.vala:194
-msgid "Add Sequence Number"
-msgstr ""
-
-#: src/CanvasToolbar.vala:210
-msgid "Pencil Tool"
-msgstr ""
-
-#: src/CanvasToolbar.vala:226
-msgid "Add Text"
-msgstr ""
-
-#: src/CanvasToolbar.vala:241
-msgid "Add magnifier"
-msgstr ""
-
-#: src/CanvasToolbar.vala:257
-msgid "Add Blur Box"
-msgstr ""
-
-#: src/CanvasToolbar.vala:273
+#: src/CanvasToolbar.vala:290
 msgid "Crop Image"
 msgstr ""
 
-#: src/CanvasToolbar.vala:301 src/Resizer.vala:155
+#: src/CanvasToolbar.vala:318 src/Resizer.vala:155
 msgid "Resize Image"
 msgstr ""
 
-#: src/CanvasToolbar.vala:320
+#: src/CanvasToolbar.vala:337
 msgid "Shape Color"
 msgstr ""
 
-#: src/CanvasToolbar.vala:345
+#: src/CanvasToolbar.vala:362
 msgid "Item Color"
 msgstr ""
 
-#: src/CanvasToolbar.vala:384
+#: src/CanvasToolbar.vala:401
 msgid "Add Transparency"
 msgstr ""
 
-#: src/CanvasToolbar.vala:406
+#: src/CanvasToolbar.vala:423
 msgid "Shape Border"
 msgstr ""
 
-#: src/CanvasToolbar.vala:415
+#: src/CanvasToolbar.vala:432
 msgid "Border Width"
 msgstr ""
 
-#: src/CanvasToolbar.vala:440
+#: src/CanvasToolbar.vala:457
 msgid "Dash Pattern"
 msgstr ""
 
-#: src/CanvasToolbar.vala:481
+#: src/CanvasToolbar.vala:498
 msgid "Font Properties"
 msgstr ""
 
