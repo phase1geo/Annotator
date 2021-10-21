@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: com.github.phase1geo.annotator\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-19 22:34-0500\n"
-"PO-Revision-Date: 2021-10-10 14:15+0100\n"
+"PO-Revision-Date: 2021-10-21 19:15+0100\n"
 "Last-Translator: Albano Battistella <albano_battistella@hotmail.com>\n"
 "Language-Team: ITALIAN <LL@li.org>\n"
 "Language: It\n"
@@ -70,61 +70,55 @@ msgstr "Testo"
 
 #: src/CanvasItems.vala:88
 msgid "Rectangle Outline"
-msgstr ""
+msgstr "Contorno Rettangolo"
 
 #: src/CanvasItems.vala:89
-#, fuzzy
 msgid "Rectangle"
-msgstr "Nuovo rettangolo solido"
+msgstr "Rettangolo"
 
 #: src/CanvasItems.vala:90
 msgid "Oval Outline"
-msgstr ""
+msgstr "Contorno Ovale"
 
 #: src/CanvasItems.vala:91
 msgid "Oval"
-msgstr ""
+msgstr "Ovale"
 
 #: src/CanvasItems.vala:92
 msgid "Star Outline"
-msgstr ""
+msgstr "Contorno Stella"
 
 #: src/CanvasItems.vala:93
 msgid "Star"
-msgstr ""
+msgstr "Stella"
 
 #: src/CanvasItems.vala:94
-#, fuzzy
 msgid "Line"
-msgstr "Nuova linea"
+msgstr "Linea"
 
 #: src/CanvasItems.vala:95
-#, fuzzy
 msgid "Arrow"
-msgstr "Nuova freccia"
+msgstr "Freccia"
 
 #: src/CanvasItems.vala:97
 msgid "Blur"
-msgstr ""
+msgstr "Sfocatura"
 
 #: src/CanvasItems.vala:98
-#, fuzzy
 msgid "Magnifier"
-msgstr "Nuova lente d'ingrandimento"
+msgstr "Lente ingrandimento"
 
 #: src/CanvasItems.vala:99
 msgid "Pencil Tool"
 msgstr "Strumento Matita"
 
 #: src/CanvasItems.vala:100
-#, fuzzy
 msgid "Sequence Number"
-msgstr "Numero di sequenza:"
+msgstr "Numero di sequenza"
 
 #: src/CanvasItems.vala:101
-#, fuzzy
 msgid "Sticker"
-msgstr "Aggiungi Adesivo"
+msgstr "Adesivo"
 
 #: src/CanvasItems.vala:824
 msgid "move items"
@@ -155,9 +149,8 @@ msgid "resize item"
 msgstr "ridimensiona oggetto"
 
 #: src/CanvasToolbar.vala:75
-#, fuzzy
 msgid "Shapes"
-msgstr "Aggiungi Forma"
+msgstr "Forma"
 
 #: src/CanvasToolbar.vala:290
 msgid "Crop Image"
@@ -575,7 +568,6 @@ msgid "Zoom In"
 msgstr "Ingrandisci"
 
 #: data/com.github.phase1geo.annotator.shortcuts.ui:6
-#, fuzzy
 msgid "Annotator Shortcuts"
 msgstr "Scorciatoie per Annotator"
 
