@@ -45,6 +45,16 @@ To install Annotator from source, run `./app install`.
 
 To run Annotator, run `com.github.phase1geo.annotator`.
 
+### Arch Linux
+
+If you're an Arch Linux user, there's an
+[AUR package](https://aur.archlinux.org/packages/annotator/)
+`annotator`:
+
+```
+% yay -S annotator
+```
+
 ### Flatpak
 
 Additionally, Annotator can be installed and run via Flatpak.
