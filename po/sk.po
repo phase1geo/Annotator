@@ -70,47 +70,47 @@ msgstr "Text"
 
 #: src/CanvasItems.vala:88
 msgid "Rectangle Outline"
-msgstr ""
+msgstr "Orámovanie obdĺžnika"
 
 #: src/CanvasItems.vala:89
 #, fuzzy
 msgid "Rectangle"
-msgstr "Nový plný obdĺžnik"
+msgstr "Obdĺžnik"
 
 #: src/CanvasItems.vala:90
 msgid "Oval Outline"
-msgstr ""
+msgstr "Orámovanie oválu"
 
 #: src/CanvasItems.vala:91
 msgid "Oval"
-msgstr ""
+msgstr "Ovál"
 
 #: src/CanvasItems.vala:92
 msgid "Star Outline"
-msgstr ""
+msgstr "Orámovanie hviezdy"
 
 #: src/CanvasItems.vala:93
 msgid "Star"
-msgstr ""
+msgstr "Hviezda"
 
 #: src/CanvasItems.vala:94
 #, fuzzy
 msgid "Line"
-msgstr "Nová čiara"
+msgstr "Čiara"
 
 #: src/CanvasItems.vala:95
 #, fuzzy
 msgid "Arrow"
-msgstr "Nová šípka"
+msgstr "Šípka"
 
 #: src/CanvasItems.vala:97
 msgid "Blur"
-msgstr ""
+msgstr "Rozmazanie"
 
 #: src/CanvasItems.vala:98
 #, fuzzy
 msgid "Magnifier"
-msgstr "Nová lupa"
+msgstr "Lupa"
 
 #: src/CanvasItems.vala:99
 msgid "Pencil Tool"
@@ -124,7 +124,7 @@ msgstr "Poradové číslo:"
 #: src/CanvasItems.vala:101
 #, fuzzy
 msgid "Sticker"
-msgstr "Pridať nálepku"
+msgstr "Nálepka"
 
 #: src/CanvasItems.vala:824
 msgid "move items"
@@ -157,7 +157,7 @@ msgstr "zmeniť veľkosť položky"
 #: src/CanvasToolbar.vala:75
 #, fuzzy
 msgid "Shapes"
-msgstr "Pridať tvar"
+msgstr "Tvary"
 
 #: src/CanvasToolbar.vala:290
 msgid "Crop Image"
@@ -386,7 +386,7 @@ msgstr "Odoslať súbory cez Bluetooth"
 
 #: src/MainWindow.vala:366
 msgid "Welcome to Annotator"
-msgstr "Vitajte v Annotator"
+msgstr "Vitajte v Annotatore"
 
 #: src/MainWindow.vala:366
 msgid "Let's get started annotating an image"
@@ -577,7 +577,7 @@ msgstr "Priblížiť"
 #: data/com.github.phase1geo.annotator.shortcuts.ui:6
 #, fuzzy
 msgid "Annotator Shortcuts"
-msgstr "Skratky Annotator-a"
+msgstr "Skratky Annotatora"
 
 #: data/com.github.phase1geo.annotator.shortcuts.ui:12
 msgid "General"
@@ -641,7 +641,7 @@ msgstr "Ukončiť aplikáciu"
 
 #: data/com.github.phase1geo.annotator.shortcuts.ui:128
 msgid "Annotation Commands"
-msgstr "Príkazy Annotation-u"
+msgstr "Popisové príkazy"
 
 #: data/com.github.phase1geo.annotator.shortcuts.ui:132
 msgid "Creation"
