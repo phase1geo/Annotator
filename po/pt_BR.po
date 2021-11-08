@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: com.github.phase1geo.annotator\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-19 22:34-0500\n"
-"PO-Revision-Date: 2021-10-05 19:21-0300\n"
+"PO-Revision-Date: 2021-11-07 17:58-0300\n"
 "Last-Translator: Fúlvio Alves <fga.fulvio@gmail.com>\n"
 "Language-Team: \n"
 "Language: pt_BR\n"
@@ -28,15 +28,15 @@ msgstr "Número da versão de exibição"
 
 #: src/Application.vala:104
 msgid "Annotate clipboard image"
-msgstr ""
+msgstr "Faça anotações em imagens da área de transferência"
 
 #: src/CanvasImage.vala:93 src/CanvasImage.vala:116
 msgid "change image"
-msgstr ""
+msgstr "alterar imagem"
 
 #: src/CanvasImage.vala:327
 msgid "image crop"
-msgstr ""
+msgstr "recorte de imagem"
 
 #: src/canvas_items/CanvasItemBlur.vala:125
 msgid "Blur Amount:"
@@ -72,65 +72,59 @@ msgstr "Texto"
 
 #: src/CanvasItems.vala:88
 msgid "Rectangle Outline"
-msgstr ""
+msgstr "Contorno de retângulo"
 
 #: src/CanvasItems.vala:89
-#, fuzzy
 msgid "Rectangle"
-msgstr "Novo retângulo sólido"
+msgstr "Retângulo"
 
 #: src/CanvasItems.vala:90
 msgid "Oval Outline"
-msgstr ""
+msgstr "Contorno oval"
 
 #: src/CanvasItems.vala:91
 msgid "Oval"
-msgstr ""
+msgstr "Oval"
 
 #: src/CanvasItems.vala:92
 msgid "Star Outline"
-msgstr ""
+msgstr "Contorno de estrela"
 
 #: src/CanvasItems.vala:93
 msgid "Star"
-msgstr ""
+msgstr "Estrela"
 
 #: src/CanvasItems.vala:94
-#, fuzzy
 msgid "Line"
-msgstr "Nova linha"
+msgstr "Linha"
 
 #: src/CanvasItems.vala:95
-#, fuzzy
 msgid "Arrow"
-msgstr "Nova seta"
+msgstr "Seta"
 
 #: src/CanvasItems.vala:97
 msgid "Blur"
-msgstr ""
+msgstr "Desfoque"
 
 #: src/CanvasItems.vala:98
-#, fuzzy
 msgid "Magnifier"
-msgstr "Nova lupa"
+msgstr "Lupa"
 
 #: src/CanvasItems.vala:99
 msgid "Pencil Tool"
 msgstr "Ferramenta Lápis"
 
 #: src/CanvasItems.vala:100
-#, fuzzy
 msgid "Sequence Number"
-msgstr "Número sequencial:"
+msgstr "Número sequencial"
 
 #: src/CanvasItems.vala:101
-#, fuzzy
 msgid "Sticker"
-msgstr "Adicionar adesivo"
+msgstr "Adesivo"
 
 #: src/CanvasItems.vala:824
 msgid "move items"
-msgstr ""
+msgstr "mover itens"
 
 #: src/CanvasItems.vala:899 src/FormatBar.vala:55
 msgid "Copy"
@@ -154,12 +148,11 @@ msgstr "Enviar para trás"
 
 #: src/CanvasItem.vala:247
 msgid "resize item"
-msgstr ""
+msgstr "redimensionar item"
 
 #: src/CanvasToolbar.vala:75
-#, fuzzy
 msgid "Shapes"
-msgstr "Adicionar forma"
+msgstr "Formas"
 
 #: src/CanvasToolbar.vala:290
 msgid "Crop Image"
@@ -359,7 +352,7 @@ msgstr "Propriedades"
 
 #: src/MainWindow.vala:220
 msgid "Shortcuts Cheatsheet"
-msgstr ""
+msgstr "Folha de dados de atalhos"
 
 #: src/MainWindow.vala:259
 msgid "Copy To Clipboard"
