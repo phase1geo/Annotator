@@ -26,7 +26,7 @@ Annotate your images and let a picture say 1000 words.
 
 ## Installation
 
-### Debian
+### Debian (from source)
 
 You will need the following dependencies to build Annotator:
 
@@ -44,6 +44,16 @@ You will need the following dependencies to build Annotator:
 To install Annotator from source, run `./app install`.
 
 To run Annotator, run `com.github.phase1geo.annotator`.
+
+### Ubuntu (PPA)
+
+You can use the [PPA](https://launchpad.net/~ubuntuhandbook1/+archive/ubuntu/annotator/) maintained by @PandaJim. The PPA supports Ubuntu 20.04+. Enter the following commands one by one
+
+```
+sudo add-apt-repository ppa:ubuntuhandbook1/annotator
+sudo apt update
+sudo apt install com.github.phase1geo.annotator
+```
 
 ### Arch Linux
 
