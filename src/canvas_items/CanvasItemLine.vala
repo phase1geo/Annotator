@@ -42,8 +42,8 @@ public class CanvasItemLine : CanvasItem {
 
   /* Creates the selection points */
   private void create_points() {
-    points.append_val( new CanvasPoint( CanvasPointType.RESIZER ) );  // Start
-    points.append_val( new CanvasPoint( CanvasPointType.RESIZER ) );  // End
+    points.append_val( new CanvasPoint( CanvasPointType.RESIZER0 ) );  // Start
+    points.append_val( new CanvasPoint( CanvasPointType.RESIZER0 ) );  // End
     points.append_val( new CanvasPoint() );  // Above Start
     points.append_val( new CanvasPoint() );  // Below Start
     points.append_val( new CanvasPoint() );  // Above End

@@ -35,8 +35,8 @@ public class CanvasItemPencil : CanvasItem {
 
   /* Creates the selection points */
   private void create_points() {
-    points.append_val( new CanvasPoint( CanvasPointType.RESIZER ) );  // Start
-    points.append_val( new CanvasPoint( CanvasPointType.RESIZER ) );  // End
+    points.append_val( new CanvasPoint( CanvasPointType.RESIZER0 ) );  // Start
+    points.append_val( new CanvasPoint( CanvasPointType.RESIZER0 ) );  // End
   }
 
   /* Copies the given arrow item properties to this one */
@@ -78,7 +78,7 @@ public class CanvasItemPencil : CanvasItem {
 
   /* Add an edit point */
   public override void draw( double x, double y ) {
-    _edit_points.append_val( new CanvasPoint.from_coords( x, y, CanvasPointType.RESIZER ) );
+    _edit_points.append_val( new CanvasPoint.from_coords( x, y, CanvasPointType.RESIZER0 ) );
     points.index( 0 ).copy( _edit_points.index( 0 ) );
     points.index( 1 ).copy( _edit_points.index( _edit_points.length - 1 ) );
   }

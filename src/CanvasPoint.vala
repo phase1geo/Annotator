@@ -23,30 +23,66 @@ using Gtk;
 
 public enum CanvasPointType {
   NONE,
-  RESIZER,
+  RESIZER0,
+  RESIZER1,
+  RESIZER2,
+  RESIZER3,
+  HIDDEN0,   // This is a resizer that is currently hidden from view
+  HIDDEN1,   // This is a resizer that is currently hidden from view
+  HIDDEN2,   // This is a resizer that is currently hidden from view
+  HIDDEN3,   // This is a resizer that is currently hidden from view
   CONTROL,
   SELECTOR;
 
   /* Returns the string version of this type */
   public string to_string() {
     switch( this ) {
-      case RESIZER  :  return( "resizer" );
+      case RESIZER0 :  return( "resizer0" );
+      case RESIZER1 :  return( "resizer1" );
+      case RESIZER2 :  return( "resizer2" );
+      case RESIZER3 :  return( "resizer3" );
+      case HIDDEN0  :  return( "hidden0" );
+      case HIDDEN1  :  return( "hidden1" );
+      case HIDDEN2  :  return( "hidden2" );
+      case HIDDEN3  :  return( "hidden3" );
       case CONTROL  :  return( "control" );
       case SELECTOR :  return( "selector" );
       default       :  return( "none" );
     }
   }
 
+  /* Returns the hidden/shown version of the current type */
+  public CanvasPointType version( bool hide ) {
+    switch( this ) {
+      case RESIZER0 :  return( hide ? HIDDEN0 : RESIZER0 );
+      case RESIZER1 :  return( hide ? HIDDEN1 : RESIZER1 );
+      case RESIZER2 :  return( hide ? HIDDEN2 : RESIZER2 );
+      case RESIZER3 :  return( hide ? HIDDEN3 : RESIZER3 );
+      case HIDDEN0  :  return( hide ? HIDDEN0 : RESIZER0 );
+      case HIDDEN1  :  return( hide ? HIDDEN1 : RESIZER1 );
+      case HIDDEN2  :  return( hide ? HIDDEN2 : RESIZER2 );
+      case HIDDEN3  :  return( hide ? HIDDEN3 : RESIZER3 );
+      default       :  return( this );
+    }
+  }
+
   /* Returns true if this point should be drawn */
   public bool draw() {
-    return( this != NONE );
+    return( (this == RESIZER0) || (this == RESIZER1) || (this == RESIZER2) || (this == RESIZER3) || (this == CONTROL) || (this == SELECTOR) );
   }
 
   /* Returns the color to draw the given point */
   public Gdk.RGBA color() {
     switch( this ) {
       case SELECTOR :
-      case RESIZER  :  return( Utils.color_from_string( "light blue" ) );
+      case HIDDEN0  :
+      case HIDDEN1  :
+      case HIDDEN2  :
+      case HIDDEN3  :
+      case RESIZER0 :
+      case RESIZER1 :
+      case RESIZER2 :
+      case RESIZER3 :  return( Utils.color_from_string( "light blue" ) );
       case CONTROL  :  return( Utils.color_from_string( "yellow" ) );
       default       :  return( Utils.color_from_string( "white" ) );
     }
@@ -92,6 +128,13 @@ public class CanvasPoint {
   public void adjust( double diffx, double diffy ) {
     this.x += diffx;
     this.y += diffy;
+  }
+
+  /* Updates the visual status of this point kind */
+  public void set_visual( CanvasPointType point_kind, bool hide ) {
+    if( point_kind != kind ) {
+      kind = kind.version( hide );
+    }
   }
 
   /* Returns a printable version of this point */

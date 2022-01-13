@@ -39,7 +39,7 @@ public class CanvasItemImage : CanvasItem {
 
   /* Creates the item points */
   private void create_points() {
-    points.append_val( new CanvasPoint( CanvasPointType.RESIZER ) );  // Resizer
+    points.append_val( new CanvasPoint( CanvasPointType.RESIZER0 ) );  // Resizer
   }
 
   /* Creates a pixbuf from the given filename or resource at full size */

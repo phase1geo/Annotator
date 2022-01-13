@@ -40,12 +40,12 @@ public class CanvasItemStar : CanvasItem {
 
   /* Creates the item points */
   private void create_points() {
-    points.append_val( new CanvasPoint( CanvasPointType.RESIZER ) );  // Outer radius
-    points.append_val( new CanvasPoint( CanvasPointType.RESIZER ) );  // Inner radius
-    points.append_val( new CanvasPoint( CanvasPointType.RESIZER ) );  // Upper left
-    points.append_val( new CanvasPoint( CanvasPointType.RESIZER ) );  // Upper right
-    points.append_val( new CanvasPoint( CanvasPointType.RESIZER ) );  // Lower left
-    points.append_val( new CanvasPoint( CanvasPointType.RESIZER ) );  // Lower right
+    points.append_val( new CanvasPoint( CanvasPointType.RESIZER0 ) );  // Outer radius
+    points.append_val( new CanvasPoint( CanvasPointType.RESIZER0 ) );  // Inner radius
+    points.append_val( new CanvasPoint( CanvasPointType.RESIZER0 ) );  // Upper left
+    points.append_val( new CanvasPoint( CanvasPointType.RESIZER0 ) );  // Upper right
+    points.append_val( new CanvasPoint( CanvasPointType.RESIZER0 ) );  // Lower left
+    points.append_val( new CanvasPoint( CanvasPointType.RESIZER0 ) );  // Lower right
   }
 
   /* Copies the contents of the given item to ourselves */

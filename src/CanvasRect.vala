@@ -97,6 +97,16 @@ public class CanvasRect {
     return( y + (height / 2) );
   }
 
+  /* Returns the absolute width of the rectangle */
+  public double abs_width() {
+    return( width.abs() );
+  }
+
+  /* Returns the absolute height of the rectangle */
+  public double abs_height() {
+    return( height.abs() );
+  }
+
   /* Resizes the size of the rectangle by the numb of pixels */
   public void resize( double amount ) {
     x      -= amount;

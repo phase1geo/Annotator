@@ -223,6 +223,14 @@ public class CanvasItem {
     }
   }
 
+  /* Called when the selectors need to be adjusted from shown or hidden */
+  protected void set_selector_visual( int index, bool hide ) {
+    CanvasPointType kind = points.index( index ).kind;
+    for( int i=0; i<points.length; i++ ) {
+      points.index( i ).set_visual( kind, hide );
+    }
+  }
+
   /* Adjusts the specified selector by the given amount */
   public virtual void move_selector( int index, double diffx, double diffy, bool shift ) {}
 

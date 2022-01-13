@@ -40,7 +40,7 @@ public class CanvasItemSequence : CanvasItem {
 
   /* Creates the item points */
   private void create_points() {
-    points.append_val( new CanvasPoint( CanvasPointType.RESIZER ) );  // Resizer
+    points.append_val( new CanvasPoint( CanvasPointType.RESIZER0 ) );  // Resizer
   }
 
   /* Copies the contents of the given item to ourselves */

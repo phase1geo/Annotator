@@ -39,14 +39,14 @@ public class CanvasItemBlur : CanvasItem {
 
   /* Create the points */
   private void create_points() {
-    points.append_val( new CanvasPoint( CanvasPointType.RESIZER ) );  // upper-left
-    points.append_val( new CanvasPoint( CanvasPointType.RESIZER ) );  // upper-right
-    points.append_val( new CanvasPoint( CanvasPointType.RESIZER ) );  // lower-left
-    points.append_val( new CanvasPoint( CanvasPointType.RESIZER ) );  // lower-right
-    points.append_val( new CanvasPoint( CanvasPointType.RESIZER ) );  // blur control
-    points.append_val( new CanvasPoint( CanvasPointType.RESIZER ) );  // right
-    points.append_val( new CanvasPoint( CanvasPointType.RESIZER ) );  // bottom
-    points.append_val( new CanvasPoint( CanvasPointType.RESIZER ) );  // left
+    points.append_val( new CanvasPoint( CanvasPointType.RESIZER0 ) );  // upper-left
+    points.append_val( new CanvasPoint( CanvasPointType.RESIZER1 ) );  // upper-right
+    points.append_val( new CanvasPoint( CanvasPointType.RESIZER1 ) );  // lower-left
+    points.append_val( new CanvasPoint( CanvasPointType.RESIZER0 ) );  // lower-right
+    points.append_val( new CanvasPoint( CanvasPointType.RESIZER2 ) );  // blur control
+    points.append_val( new CanvasPoint( CanvasPointType.RESIZER3 ) );  // right
+    points.append_val( new CanvasPoint( CanvasPointType.RESIZER2 ) );  // bottom
+    points.append_val( new CanvasPoint( CanvasPointType.RESIZER3 ) );  // left
   }
 
   /* Copies the information from the given item to ourselves */
@@ -98,8 +98,14 @@ public class CanvasItemBlur : CanvasItem {
       case 7 :  box.x += diffx;                   box.width -= diffx;                        break;
     }
 
-    if( (box.width >= (selector_width * 3)) && (box.height >= (selector_height * 3)) ) {
+    if( (box.width >= 1) && (box.height >= 1) ) {
       bbox = box;
+    }
+
+    if( (box.width >= (selector_width * 3)) && (box.height >= (selector_height * 3)) ) {
+      set_selector_visual( index, false );
+    } else {
+      set_selector_visual( index, true );
     }
 
   }
