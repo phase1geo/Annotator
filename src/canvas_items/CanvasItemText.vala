@@ -901,7 +901,7 @@ public class CanvasItemText : CanvasItem {
     var h = bbox.height + (_padding * 2);
 
     /* Draw the selection box, if needed */
-    if( mode == CanvasItemMode.SELECTED ) {
+    if( (mode == CanvasItemMode.SELECTED) || (mode == CanvasItemMode.EDITING) ) {
 
       var dash = CanvasItemDashPattern.LONG;
 

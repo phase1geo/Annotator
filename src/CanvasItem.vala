@@ -28,6 +28,7 @@ public enum CanvasItemMode {
   SELECTED,
   MOVING,
   RESIZING,
+  EDITING,
   DRAWING;
 
   public string to_string() {
@@ -36,6 +37,7 @@ public enum CanvasItemMode {
       case SELECTED :  return( "selected" );
       case MOVING   :  return( "moving" );
       case RESIZING :  return( "resizing" );
+      case EDITING  :  return( "editing" );
       case DRAWING  :  return( "drawing" );
       default       :  assert_not_reached();
     }
@@ -47,6 +49,7 @@ public enum CanvasItemMode {
       case "selected" :  return( SELECTED );
       case "moving"   :  return( MOVING );
       case "resizing" :  return( RESIZING );
+      case "editing"  :  return( EDITING );
       case "drawing"  :  return( DRAWING );
       default         :  assert_not_reached();
     }

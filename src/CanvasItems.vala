@@ -339,11 +339,14 @@ public class CanvasItems {
   }
 
   /* Clears the currently selected items */
-  public void clear_selection() {
+  public bool clear_selection() {
+    var retval = false;
     _selector_index = -1;
     foreach( CanvasItem item in _items ) {
+      retval |= (item.mode != CanvasItemMode.NONE);
       item.mode = CanvasItemMode.NONE;
     }
+    return( retval );
   }
 
   /* Update the selected attributes */
@@ -420,9 +423,11 @@ public class CanvasItems {
         if( value ) {
           text.set_cursor_all( false );
           _canvas.set_cursor( CursorType.XTERM );
+          text.mode = CanvasItemMode.EDITING;
         } else {
           text.clear_selection();
           _canvas.set_cursor( null );
+          text.mode = CanvasItemMode.SELECTED;
         }
         text_item_edit_changed( text );
         return( true );
@@ -518,10 +523,7 @@ public class CanvasItems {
         var text = get_active_text();
         text.insert( "\n", _canvas.undo_text );
       } else {
-        var text = get_active_text();
         set_edit_mode( false );
-        text.mode = CanvasItemMode.NONE;
-        _active = null;
       }
       return( true );
     }
@@ -531,10 +533,9 @@ public class CanvasItems {
   /* If we are in text editing mode, remove the active node from editing mode */
   private bool handle_escape() {
     if( in_edit_mode() ) {
-      var text = get_active_text();
       set_edit_mode( false );
-      text.mode = CanvasItemMode.NONE;
-      _active = null;
+      return( true );
+    } else if( clear_selection() ) {
       return( true );
     }
     return( false );
