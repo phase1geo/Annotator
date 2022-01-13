@@ -119,6 +119,20 @@ public class CanvasRect {
     return( (x5 <= x6) && (y6 <= y5) );
   }
 
+  /*
+   Stores the intersected rectangle of the two specified rectangles in ourself.
+  */
+  public void intersection( CanvasRect a, CanvasRect b ) {
+    var x1 = (a.x1() < b.x1()) ? b.x1() : a.x1();
+    var y1 = (a.y1() < b.y1()) ? b.y1() : a.y1();
+    var x2 = (a.x2() < b.x2()) ? a.x2() : b.x2();
+    var y2 = (a.y2() < b.y2()) ? a.y2() : b.y2();
+    x      = x1;
+    y      = y1;
+    width  = (x2 - x1);
+    height = (y2 - y1);
+  }
+
   /* Returns true if this rectangle contains the given point */
   public bool contains( double x, double y ) {
     return( Utils.is_within_bounds( x, y, this.x, this.y, this.width, this.height ) );
