@@ -5,10 +5,16 @@
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>GPL-3.0+</project_license>
   <name>Annotator</name>
+  <name xml:lang="pt_BR">Annotator</name>
+  <name xml:lang="nl">Aantekeningen</name>
   <name xml:lang="it">Annotator</name>
   <summary>Communicate with images better</summary>
+  <summary xml:lang="pt_BR">Comunique-se melhor com imagens</summary>
+  <summary xml:lang="nl">Communiceer met betere afbeeldingen</summary>
   <summary xml:lang="it">Comunica meglio con le immagini</summary>
   <developer_name>Trevor Williams</developer_name>
+  <developer_name xml:lang="pt_BR">Trevor Williams</developer_name>
+  <developer_name xml:lang="nl">Trevor Williams</developer_name>
   <developer_name xml:lang="it">Trevor Williams</developer_name>
   <update_contact>phase1geo@gmail.com</update_contact>
   <provides>
@@ -24,28 +30,53 @@
   </screenshots>
   <description>
     <p>Communicate with images. Better.</p>
+    <p xml:lang="pt_BR">Comunique-se com imagens. Melhor.</p>
+    <p xml:lang="nl">Communiceer met afbeeldingen. Bétere afbeeldingen.</p>
+    <p xml:lang="it">Comunica con le immagini. Meglio.</p>
     <ul>
       <li>Load image from the file system or clipboard.</li>
+      <li xml:lang="pt_BR">Carregue a imagem do sistema de arquivos ou da área de transferência.</li>
+      <li xml:lang="nl">Laad een afbeelding van het bestandssysteem of klembord.</li>
       <li xml:lang="it">Carica l'immagine dal file system o dagli appunti.</li>
       <li>Add shapes, stickers, text, drawings, and other callouts to highlight image details.</li>
+      <li xml:lang="pt_BR">Adicione formas, adesivos, texto, desenhos ou outros textos explicativos para destacar os detalhes da imagem.</li>
+      <li xml:lang="nl">Voeg vormen, stickers, tekst, tekeningen en andere items toe om afbeeldingen te verduidelijken.</li>
       <li xml:lang="it">Aggiungi forme, adesivi, testo, disegni e altri richiami per evidenziare i particolari dell'immagine.</li>
       <li>Add magnifiers to enhance image details.</li>
+      <li xml:lang="pt_BR">Adicione uma lupa para melhorar os detalhes da imagem.</li>
+      <li xml:lang="nl">Voeg vergrotingen toe om details te verduidelijken.</li>
       <li xml:lang="it">Aggiungi lenti di ingrandimento per migliorare i dettagli dell'immagine.</li>
       <li>Blur out portions of the image to obfuscate data.</li>
+      <li xml:lang="pt_BR">Desfoque partes da imagem para ofuscar os dados.</li>
+      <li xml:lang="nl">Vervaag privédelen van afbeeldingen.</li>
       <li xml:lang="it">Sfoca porzioni dell'immagine per offuscare i dati.</li>
       <li>Crop, resize and add image borders.</li>
+      <li xml:lang="pt_BR">Corte, redimensione e adicione bordas de imagem.</li>
+      <li xml:lang="nl">Snijd afbeeldingen bij, verklein ze of voeg kaders toe.</li>
       <li xml:lang="it">Ritaglia, ridimensiona e aggiungi bordi dell'immagine.</li>
       <li>Control colors, line thickness and font details.</li>
+      <li xml:lang="pt_BR">Controle as cores, a espessura da linha e os detalhes da fonte.</li>
+      <li xml:lang="nl">Bepaal kleuren, lijndikten en lettertypen.</li>
       <li xml:lang="it">Controlla i colori, lo spessore della linea e i dettagli dei caratteri.</li>
       <li>Zoom support.</li>
+      <li xml:lang="pt_BR">Suporte para zoom.</li>
+      <li xml:lang="nl">Zoomondersteuning.</li>
       <li xml:lang="it">Supporto per lo zoom.</li>
       <li>Unlimited undo/redo of any change.</li>
+      <li xml:lang="pt_BR">Desfazer/refazer ilimitado de qualquer alteração.</li>
+      <li xml:lang="nl">Ongelimiteerd ongedaan maken/opnieuw uitvoeren van aanpassingen.</li>
       <li xml:lang="it">Annulla/ripeti illimitati di qualsiasi modifica.</li>
       <li>Export to JPEG, PNG, TIFF, BMP, PDF and SVG image formats.</li>
+      <li xml:lang="pt_BR">Exporte para os formatos de imagem JPEG, PNG, TIFF, BMP, PDF e SVG.</li>
+      <li xml:lang="nl">Exporteer naar jpeg-, png-, tiff-, bmp-, pdf- en svg-formaat.</li>
       <li xml:lang="it">Esporta in formati immagine JPEG, PNG, TIFF, BMP, PDF e SVG.</li>
       <li>Support for copying annotated image to clipboard.</li>
+      <li xml:lang="pt_BR">Suporte para copiar imagens anotadas para a área de transferência.</li>
+      <li xml:lang="nl">Ondersteuning voor het kopiëren van afbeeldingen naar het klembord.</li>
       <li xml:lang="it">Supporto per la copia di immagini annotate negli appunti.</li>
       <li>Printer support.</li>
+      <li xml:lang="pt_BR">Suporte a impressoras.</li>
+      <li xml:lang="nl">Afdrukondersteuning.</li>
       <li xml:lang="it">Supporto stampante.</li>
     </ul>
   </description>
@@ -86,9 +117,40 @@
     <value key="x-appcenter-suggested-price">10</value>
   </custom>
   <releases>
+    <release version="1.1.0" date="2022-01-14">
+      <p>New</p>
+      <ul>
+        <li>Added keyboard shortcuts for creating annotation items, printing and displaying contextual menus.</li>
+        <li>Added keyboard shortcut cheatsheet.</li>
+        <li>Added keyboard shortcut support for non-English keyboards.</li>
+        <li>Added Brazilian Portugese translation (thanks to Fúlvio Alves).</li>
+        <li>Added Slovakia translation (thanks to @MartinIIOT)</li>
+        <li>Added support for hitting the escape key to deselect all items on the canvas.</li>
+      </ul>
+      <h3>Changes</h3>
+      <ul>
+        <li>Updated Italian translation (thanks to @albanobattistella).</li>
+        <li>Updated German translation (thanks to Hannes Fritz).</li>
+        <li>Updated zoom UI to make it more consistent with other elementary apps.</li>
+        <li>Improved accuracy of the list of translatable files.</li>
+        <li>Moved arrow annotation to its own button in the toolbar.</li>
+        <li>Removed Accounts permissions from Flatpak manifest as it is no longer needed.</li>
+        <li>Removed text grab selector when editing text.</li>
+        <li>Changed behavior of Return key when text is edited to keep the text item selected.</li>
+      </ul>
+      <h3>Bug Fixes</h3>
+      <ul>
+        <li>Fixed icons8_cup sticker issue (thanks to Jan Tojnar).</li>
+        <li>Fixed issue where the toolbar state did not update to match the currently selected item.</li>
+        <li>Fixed issue where dragging a blur rectangle outside of the image caused application crash.</li>
+        <li>Fixed issue where a text widget could be deleted but remain on the canvas.</li>
+      </ul>
+    </release>
     <release version="1.0.0" date="2021-09-08">
       <description>
         <p>Initial release.</p>
+        <p xml:lang="pt_BR">Lançamento inicial.</p>
+        <p xml:lang="nl">Eerste uitgave.</p>
         <p xml:lang="it">Versione iniziale.</p>
       </description>
     </release>

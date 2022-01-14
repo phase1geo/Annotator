@@ -30,7 +30,7 @@ public class Annotator : Granite.Application {
 
   public  static GLib.Settings settings;
   public  static bool          use_clipboard = false;
-  public  static string        version       = "1.0.0";
+  public  static string        version       = "1.1.0";
 
   public Annotator () {
 

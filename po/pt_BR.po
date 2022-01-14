@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.annotator\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-19 22:34-0500\n"
+"POT-Creation-Date: 2022-01-14 14:37-0600\n"
 "PO-Revision-Date: 2021-11-07 17:58-0300\n"
 "Last-Translator: Fúlvio Alves <fga.fulvio@gmail.com>\n"
 "Language-Team: \n"
@@ -30,15 +30,15 @@ msgstr "Número da versão de exibição"
 msgid "Annotate clipboard image"
 msgstr "Faça anotações em imagens da área de transferência"
 
-#: src/CanvasImage.vala:93 src/CanvasImage.vala:116
+#: src/CanvasImage.vala:95 src/CanvasImage.vala:118
 msgid "change image"
 msgstr "alterar imagem"
 
-#: src/CanvasImage.vala:327
+#: src/CanvasImage.vala:329
 msgid "image crop"
 msgstr "recorte de imagem"
 
-#: src/canvas_items/CanvasItemBlur.vala:125
+#: src/canvas_items/CanvasItemBlur.vala:131
 msgid "Blur Amount:"
 msgstr "Quantidade de desfoque:"
 
@@ -122,71 +122,71 @@ msgstr "Número sequencial"
 msgid "Sticker"
 msgstr "Adesivo"
 
-#: src/CanvasItems.vala:824
+#: src/CanvasItems.vala:828
 msgid "move items"
 msgstr "mover itens"
 
-#: src/CanvasItems.vala:899 src/FormatBar.vala:55
+#: src/CanvasItems.vala:904 src/FormatBar.vala:55
 msgid "Copy"
 msgstr "Copiar"
 
-#: src/CanvasItems.vala:900 src/FormatBar.vala:60
+#: src/CanvasItems.vala:905 src/FormatBar.vala:60
 msgid "Cut"
 msgstr "Recortar"
 
-#: src/CanvasItems.vala:902
+#: src/CanvasItems.vala:907
 msgid "Delete"
 msgstr "Excluir"
 
-#: src/CanvasItems.vala:904
+#: src/CanvasItems.vala:909
 msgid "Send to Front"
 msgstr "Enviar para a frente"
 
-#: src/CanvasItems.vala:905
+#: src/CanvasItems.vala:910
 msgid "Send to Back"
 msgstr "Enviar para trás"
 
-#: src/CanvasItem.vala:247
+#: src/CanvasItem.vala:258
 msgid "resize item"
 msgstr "redimensionar item"
 
-#: src/CanvasToolbar.vala:75
+#: src/CanvasToolbar.vala:87
 msgid "Shapes"
 msgstr "Formas"
 
-#: src/CanvasToolbar.vala:290
+#: src/CanvasToolbar.vala:302
 msgid "Crop Image"
 msgstr "Cortar imagem"
 
-#: src/CanvasToolbar.vala:318 src/Resizer.vala:155
+#: src/CanvasToolbar.vala:330 src/Resizer.vala:155
 msgid "Resize Image"
 msgstr "Redimensionar imagem"
 
-#: src/CanvasToolbar.vala:337
+#: src/CanvasToolbar.vala:349
 msgid "Shape Color"
 msgstr "Cor da forma"
 
-#: src/CanvasToolbar.vala:362
+#: src/CanvasToolbar.vala:374
 msgid "Item Color"
 msgstr "Cor do item"
 
-#: src/CanvasToolbar.vala:401
+#: src/CanvasToolbar.vala:413
 msgid "Add Transparency"
 msgstr "Adicionar transparência"
 
-#: src/CanvasToolbar.vala:423
+#: src/CanvasToolbar.vala:435
 msgid "Shape Border"
 msgstr "Borda da forma"
 
-#: src/CanvasToolbar.vala:432
+#: src/CanvasToolbar.vala:444
 msgid "Border Width"
 msgstr "Largura da forma"
 
-#: src/CanvasToolbar.vala:457
+#: src/CanvasToolbar.vala:470
 msgid "Dash Pattern"
 msgstr "Padrão de traço"
 
-#: src/CanvasToolbar.vala:498
+#: src/CanvasToolbar.vala:512
 msgid "Font Properties"
 msgstr "Propriedades da fonte"
 

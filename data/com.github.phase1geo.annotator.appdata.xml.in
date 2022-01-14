@@ -72,6 +72,35 @@
     <value key="x-appcenter-suggested-price">10</value>
   </custom>
   <releases>
+    <release version="1.1.0" date="2022-01-14">
+      <p>New</p>
+      <ul>
+        <li>Added keyboard shortcuts for creating annotation items, printing and displaying contextual menus.</li>
+        <li>Added keyboard shortcut cheatsheet.</li>
+        <li>Added keyboard shortcut support for non-English keyboards.</li>
+        <li>Added Brazilian Portugese translation (thanks to Fúlvio Alves).</li>
+        <li>Added Slovakia translation (thanks to @MartinIIOT)</li>
+        <li>Added support for hitting the escape key to deselect all items on the canvas.</li>
+      </ul>
+      <h3>Changes</h3>
+      <ul>
+        <li>Updated Italian translation (thanks to @albanobattistella).</li>
+        <li>Updated German translation (thanks to Hannes Fritz).</li>
+        <li>Updated zoom UI to make it more consistent with other elementary apps.</li>
+        <li>Improved accuracy of the list of translatable files.</li>
+        <li>Moved arrow annotation to its own button in the toolbar.</li>
+        <li>Removed Accounts permissions from Flatpak manifest as it is no longer needed.</li>
+        <li>Removed text grab selector when editing text.</li>
+        <li>Changed behavior of Return key when text is edited to keep the text item selected.</li>
+      </ul>
+      <h3>Bug Fixes</h3>
+      <ul>
+        <li>Fixed icons8_cup sticker issue (thanks to Jan Tojnar).</li>
+        <li>Fixed issue where the toolbar state did not update to match the currently selected item.</li>
+        <li>Fixed issue where dragging a blur rectangle outside of the image caused application crash.</li>
+        <li>Fixed issue where a text widget could be deleted but remain on the canvas.</li>
+      </ul>
+    </release>
     <release version="1.0.0" date="2021-09-08">
       <description>
         <p>Initial release.</p>
