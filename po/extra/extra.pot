@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: extra\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-01-14 14:37-0600\n"
+"POT-Creation-Date: 2022-01-16 20:10-0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -94,6 +94,6 @@ msgstr ""
 msgid "Printer support."
 msgstr ""
 
-#: data/com.github.phase1geo.annotator.appdata.xml.in:106
+#: data/com.github.phase1geo.annotator.appdata.xml.in:107
 msgid "Initial release."
 msgstr ""
