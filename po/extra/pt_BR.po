@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: extra\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-01-16 20:10-0600\n"
+"POT-Creation-Date: 2022-01-17 23:31-0600\n"
 "PO-Revision-Date: 2021-10-05 19:42-0300\n"
 "Last-Translator: Fúlvio Alves <fga.fulvio@gmail.com>\n"
 "Language-Team: \n"
@@ -40,6 +40,10 @@ msgstr "imagem;anotador;annotator;image;annotate;"
 #: data/com.github.phase1geo.annotator.desktop.in:18
 msgid "Edit Clipboard Image"
 msgstr "Edite imagens da área de transferência"
+
+#: data/com.github.phase1geo.annotator.desktop.in:22
+msgid "Take Screenshot"
+msgstr ""
 
 #: data/com.github.phase1geo.annotator.appdata.xml.in:9
 msgid "Trevor Williams"

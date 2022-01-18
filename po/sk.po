@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.annotator\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-01-16 20:10-0600\n"
+"POT-Creation-Date: 2022-01-17 23:31-0600\n"
 "PO-Revision-Date: 2021-10-10 14:15+0100\n"
 "Last-Translator: MartinIIOT <https://www.github.com/MartinIIOT>\n"
 "Language-Team: SLOVAKIA\n"
@@ -16,17 +16,21 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/Application.vala:82
+#: src/Application.vala:85
 msgid "Opening file"
 msgstr "Otvoriť súbor"
 
-#: src/Application.vala:103
+#: src/Application.vala:106
 msgid "Display version number"
 msgstr "Zobraziť číslo verzie"
 
-#: src/Application.vala:104
+#: src/Application.vala:107
 msgid "Annotate clipboard image"
 msgstr "Popíšte obrázok schránky"
+
+#: src/Application.vala:108
+msgid "Annotate screenshot of an area"
+msgstr ""
 
 #: src/CanvasImage.vala:95 src/CanvasImage.vala:118
 msgid "change image"
@@ -267,7 +271,7 @@ msgstr ".pdf"
 msgid ".svg"
 msgstr ".svg"
 
-#: src/Exporter.vala:116 src/MainWindow.vala:237
+#: src/Exporter.vala:116 src/MainWindow.vala:245
 msgid "Export Image"
 msgstr "Exportovať obrázok"
 
@@ -275,7 +279,8 @@ msgstr "Exportovať obrázok"
 msgid "Export"
 msgstr "Export"
 
-#: src/Exporter.vala:116 src/MainWindow.vala:466 src/Resizer.vala:160
+#: src/Exporter.vala:116 src/MainWindow.vala:476 src/MainWindow.vala:524
+#: src/Resizer.vala:160
 msgid "Cancel"
 msgstr "Zrušiť"
 
@@ -335,94 +340,119 @@ msgstr "Zmeniť farbu písma"
 msgid "Clear all formatting"
 msgstr "Vymazať formátovanie"
 
-#: src/MainWindow.vala:163
+#: src/MainWindow.vala:166
 msgid "Open Image"
 msgstr "Otvoriť obrázok"
 
-#: src/MainWindow.vala:185 src/UndoBuffer.vala:84
+#: src/MainWindow.vala:171
+msgid "Take Screeshot"
+msgstr ""
+
+#: src/MainWindow.vala:193 src/UndoBuffer.vala:84
 msgid "Undo"
 msgstr "Späť"
 
-#: src/MainWindow.vala:191 src/UndoBuffer.vala:90
+#: src/MainWindow.vala:199 src/UndoBuffer.vala:90
 msgid "Redo"
 msgstr "Vpred"
 
-#: src/MainWindow.vala:205
+#: src/MainWindow.vala:213
 msgid "Annotator"
 msgstr "Annotator"
 
-#: src/MainWindow.vala:213
+#: src/MainWindow.vala:221
 msgid "Properties"
 msgstr "Vlastnosti"
 
-#: src/MainWindow.vala:220
+#: src/MainWindow.vala:228
 msgid "Shortcuts Cheatsheet"
 msgstr "Zoznam klávesových skratiek"
 
-#: src/MainWindow.vala:259
+#: src/MainWindow.vala:267
 msgid "Copy To Clipboard"
 msgstr "Kopírovať do schránky"
 
-#: src/MainWindow.vala:268
+#: src/MainWindow.vala:276
 msgid "Print…"
 msgstr "Tlačiť…"
 
-#: src/MainWindow.vala:291
+#: src/MainWindow.vala:299
 #, c-format
 msgid "Zoom (%d%%)"
 msgstr "Priblíženie (%d%%)"
 
-#: src/MainWindow.vala:303
+#: src/MainWindow.vala:311
 msgid "Zoom to Fit Window"
 msgstr "Prispôsobiť veľkosti okna"
 
-#: src/MainWindow.vala:329
+#: src/MainWindow.vala:337
 msgid "Send by Email"
 msgstr "Odoslať e-mailom"
 
-#: src/MainWindow.vala:329
+#: src/MainWindow.vala:337
 msgid "Send files via Bluetooth"
 msgstr "Odoslať súbory cez Bluetooth"
 
-#: src/MainWindow.vala:366
+#: src/MainWindow.vala:374
 msgid "Welcome to Annotator"
 msgstr "Vitajte v Annotatore"
 
-#: src/MainWindow.vala:366
+#: src/MainWindow.vala:374
 msgid "Let's get started annotating an image"
 msgstr "Začnime popisovať obrázok"
 
-#: src/MainWindow.vala:367
+#: src/MainWindow.vala:375
 msgid "Open Image From File"
 msgstr "Otvoriť obrázok zo súboru"
 
-#: src/MainWindow.vala:367
+#: src/MainWindow.vala:375
 msgid "Open a PNG, JPEG, TIFF or BMP file"
 msgstr "Otvoriť PNG, JPEG, TIFF o BMP"
 
-#: src/MainWindow.vala:368
+#: src/MainWindow.vala:376
 msgid "Paste Image From Clipboard"
 msgstr "Prilepiť obrázok zo schránky"
 
-#: src/MainWindow.vala:368
+#: src/MainWindow.vala:376
 msgid "Open an image from the clipboard"
 msgstr "Otvoriť obrázok zo schránky"
 
-#: src/MainWindow.vala:403
+#: src/MainWindow.vala:377
+msgid "Take A Screenshot"
+msgstr ""
+
+#: src/MainWindow.vala:377
+#, fuzzy
+msgid "Open an image from a screenshot"
+msgstr "Otvoriť obrázok zo schránky"
+
+#: src/MainWindow.vala:413
 msgid "Font:"
 msgstr "Písmo:"
 
-#: src/MainWindow.vala:454
+#: src/MainWindow.vala:464
 msgid "All Image Formats  (*)"
 msgstr "Všetky formáty obrázkov  (*)"
 
-#: src/MainWindow.vala:466
+#: src/MainWindow.vala:476
 msgid "Open Image File"
 msgstr "Otvoriť súbor s obrázkom"
 
-#: src/MainWindow.vala:466
+#: src/MainWindow.vala:476
 msgid "Open"
 msgstr "Otvoriť"
+
+#: src/MainWindow.vala:521
+msgid "Screenshot"
+msgstr ""
+
+#: src/MainWindow.vala:525
+msgid "Take Screenshot"
+msgstr ""
+
+#: src/MainWindow.vala:530
+msgid "Screenshot Type:"
+msgstr ""
 
 #: src/Resizer.vala:161
 msgid "Resize"
