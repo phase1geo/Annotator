@@ -29,8 +29,9 @@ public class Annotator : Granite.Application {
   private        MainWindow appwin;
 
   public  static GLib.Settings settings;
-  public  static bool          use_clipboard = false;
-  public  static string        version       = "1.1.0";
+  public  static bool          use_clipboard   = false;
+  public  static bool          screenshot_area = false;
+  public  static string        version         = "1.1.0";
 
   public Annotator () {
 
@@ -57,6 +58,8 @@ public class Annotator : Granite.Application {
     /* Attempt to paste from the clipboard */
     if( use_clipboard ) {
       appwin.do_paste();
+    } else if( screenshot_area ) {
+      appwin.do_screenshot();
     }
 
     /* Handle any changes to the position of the window */
@@ -97,12 +100,13 @@ public class Annotator : Granite.Application {
   private void parse_arguments( ref unowned string[] args ) {
 
     var context = new OptionContext( "- Annotator Options" );
-    var options = new OptionEntry[3];
+    var options = new OptionEntry[4];
 
     /* Create the command-line options */
-    options[0] = {"version",       0, 0, OptionArg.NONE, ref show_version, _( "Display version number" ), null};
-    options[1] = {"use-clipboard", 0, 0, OptionArg.NONE, ref use_clipboard, _( "Annotate clipboard image" ), null};
-    options[2] = {null};
+    options[0] = {"version",         0, 0, OptionArg.NONE, ref show_version, _( "Display version number" ), null};
+    options[1] = {"use-clipboard",   0, 0, OptionArg.NONE, ref use_clipboard, _( "Annotate clipboard image" ), null};
+    options[2] = {"screenshot-area", 0, 0, OptionArg.NONE, ref screenshot_area, _( "Annotate screenshot of an area" ), null};
+    options[3] = {null};
 
     /* Parse the arguments */
     try {

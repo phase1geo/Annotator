@@ -27,6 +27,7 @@ public class MainWindow : Hdy.ApplicationWindow {
   private Hdy.HeaderBar     _header;
   private FontButton        _font;
   private Button            _open_btn;
+  private Button            _screenshot_btn;
   private Button            _undo_btn;
   private Button            _redo_btn;
   private MenuButton        _pref_btn;
@@ -40,6 +41,7 @@ public class MainWindow : Hdy.ApplicationWindow {
 
   private const GLib.ActionEntry[] action_entries = {
     { "action_open",            do_open },
+    { "action_screenshot",      do_screenshot },
     { "action_save",            do_save },
     { "action_quit",            do_quit },
     { "action_undo",            do_undo },
@@ -110,6 +112,7 @@ public class MainWindow : Hdy.ApplicationWindow {
   /* Adds keyboard shortcuts for the menu actions */
   private void add_keyboard_shortcuts( Gtk.Application app ) {
     app.set_accels_for_action( "win.action_open",            { "<Control>o" } );
+    app.set_accels_for_action( "win.action_screenshot",      { "<Control>t" } );
     app.set_accels_for_action( "win.action_save",            { "<Control>s" } );
     app.set_accels_for_action( "win.action_quit",            { "<Control>q" } );
     app.set_accels_for_action( "win.action_undo",            { "<Control>z" } );
@@ -163,6 +166,11 @@ public class MainWindow : Hdy.ApplicationWindow {
     _open_btn.set_tooltip_markup( Utils.tooltip_with_accel( _( "Open Image" ), "<Control>o" ) );
     _open_btn.clicked.connect( do_open );
     _header.pack_start( _open_btn );
+
+    _screenshot_btn = new Button.from_icon_name( "insert-image", IconSize.LARGE_TOOLBAR );
+    _screenshot_btn.set_tooltip_markup( Utils.tooltip_with_accel( _( "Take Screeshot" ), "<Control>t" ) );
+    _screenshot_btn.clicked.connect( do_screenshot );
+    _header.pack_start( _screenshot_btn );
 
     /*
     _save_btn = new Button.from_icon_name( "document-save", IconSize.LARGE_TOOLBAR );
@@ -366,10 +374,12 @@ public class MainWindow : Hdy.ApplicationWindow {
     var welcome = new Granite.Widgets.Welcome( _( "Welcome to Annotator" ), _( "Let's get started annotating an image" ) );
     welcome.append( "document-open", _( "Open Image From File" ), _( "Open a PNG, JPEG, TIFF or BMP file" ) );
     welcome.append( "edit-paste", _( "Paste Image From Clipboard" ), _( "Open an image from the clipboard" ) );
+    welcome.append( "insert-image", _( "Take A Screenshot" ), _( "Open an image from a screenshot" ) );
     welcome.activated.connect((index) => {
       switch( index ) {
-        case 0  :  do_open();   break;
-        case 1  :  do_paste();  break;
+        case 0  :  do_open();        break;
+        case 1  :  do_paste();       break;
+        case 2  :  do_screenshot();  break;
         default :  assert_not_reached();
       }
     });
@@ -502,6 +512,73 @@ public class MainWindow : Hdy.ApplicationWindow {
     AnnotatorClipboard.paste( _editor );
     _zoom_btn.set_sensitive( true );
     _export_btn.set_sensitive( true );
+  }
+
+  /* Returns the capture mode as determined by the user */
+  private CaptureType get_capture_mode() {
+
+    var dialog = new Dialog.with_buttons(
+      _( "Screenshot" ),
+      this,
+      DialogFlags.MODAL,
+      _( "Cancel" ),          ResponseType.REJECT,
+      _( "Take Screenshot" ), ResponseType.ACCEPT,
+      null
+    );
+    dialog.set_default_response( 1 );
+
+    var label = new Label( _( "Screenshot Type:" ) );
+
+    var cb = new ComboBoxText();
+    for( int i=0; i<CaptureType.NUM; i++ ) {
+      var mode = (CaptureType)i;
+      cb.append( mode.to_string(), mode.label() );
+    }
+
+    var cbox = new Box( Orientation.HORIZONTAL, 10 );
+    cbox.pack_start( label, false, false, 0 );
+    cbox.pack_start( cb,    false, false, 0 );
+
+    var box = dialog.get_content_area();
+    box.pack_start( cbox, false, false, 0 );
+    box.show_all();
+
+    var mode = CaptureType.NONE;
+    if( dialog.run() == ResponseType.ACCEPT ) {
+      mode = CaptureType.parse( cb.get_active_id() );
+    }
+
+    dialog.close();
+
+    return( mode );
+
+  }
+
+  public void do_screenshot() {
+
+    var capture_mode = get_capture_mode();
+    var backend      = new ScreenshotBackend();
+
+    if( capture_mode == CaptureType.NONE ) return;
+
+    backend.capture.begin (capture_mode, 0, false, false /* redact */, (obj, res) => {
+      Gdk.Pixbuf? pixbuf = null;
+      try {
+        pixbuf = backend.capture.end (res);
+      } catch (GLib.IOError.CANCELLED e) {
+        // TBD
+      } catch (Error e) {
+        // TBD
+      }
+
+      if (pixbuf != null) {
+        _editor.paste_image( pixbuf );
+        _zoom_btn.set_sensitive( true );
+        _export_btn.set_sensitive( true );
+      }
+
+    });
+
   }
 
   private void do_save() {

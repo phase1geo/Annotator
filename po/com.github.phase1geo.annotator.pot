@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.annotator\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-01-16 20:10-0600\n"
+"POT-Creation-Date: 2022-01-17 23:31-0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,16 +17,20 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/Application.vala:82
+#: src/Application.vala:85
 msgid "Opening file"
 msgstr ""
 
-#: src/Application.vala:103
+#: src/Application.vala:106
 msgid "Display version number"
 msgstr ""
 
-#: src/Application.vala:104
+#: src/Application.vala:107
 msgid "Annotate clipboard image"
+msgstr ""
+
+#: src/Application.vala:108
+msgid "Annotate screenshot of an area"
 msgstr ""
 
 #: src/CanvasImage.vala:95 src/CanvasImage.vala:118
@@ -261,7 +265,7 @@ msgstr ""
 msgid ".svg"
 msgstr ""
 
-#: src/Exporter.vala:116 src/MainWindow.vala:237
+#: src/Exporter.vala:116 src/MainWindow.vala:245
 msgid "Export Image"
 msgstr ""
 
@@ -269,7 +273,8 @@ msgstr ""
 msgid "Export"
 msgstr ""
 
-#: src/Exporter.vala:116 src/MainWindow.vala:466 src/Resizer.vala:160
+#: src/Exporter.vala:116 src/MainWindow.vala:476 src/MainWindow.vala:524
+#: src/Resizer.vala:160
 msgid "Cancel"
 msgstr ""
 
@@ -329,93 +334,117 @@ msgstr ""
 msgid "Clear all formatting"
 msgstr ""
 
-#: src/MainWindow.vala:163
+#: src/MainWindow.vala:166
 msgid "Open Image"
 msgstr ""
 
-#: src/MainWindow.vala:185 src/UndoBuffer.vala:84
+#: src/MainWindow.vala:171
+msgid "Take Screeshot"
+msgstr ""
+
+#: src/MainWindow.vala:193 src/UndoBuffer.vala:84
 msgid "Undo"
 msgstr ""
 
-#: src/MainWindow.vala:191 src/UndoBuffer.vala:90
+#: src/MainWindow.vala:199 src/UndoBuffer.vala:90
 msgid "Redo"
 msgstr ""
 
-#: src/MainWindow.vala:205
+#: src/MainWindow.vala:213
 msgid "Annotator"
 msgstr ""
 
-#: src/MainWindow.vala:213
+#: src/MainWindow.vala:221
 msgid "Properties"
 msgstr ""
 
-#: src/MainWindow.vala:220
+#: src/MainWindow.vala:228
 msgid "Shortcuts Cheatsheet"
 msgstr ""
 
-#: src/MainWindow.vala:259
+#: src/MainWindow.vala:267
 msgid "Copy To Clipboard"
 msgstr ""
 
-#: src/MainWindow.vala:268
+#: src/MainWindow.vala:276
 msgid "Print…"
 msgstr ""
 
-#: src/MainWindow.vala:291
+#: src/MainWindow.vala:299
 #, c-format
 msgid "Zoom (%d%%)"
 msgstr ""
 
-#: src/MainWindow.vala:303
+#: src/MainWindow.vala:311
 msgid "Zoom to Fit Window"
 msgstr ""
 
-#: src/MainWindow.vala:329
+#: src/MainWindow.vala:337
 msgid "Send by Email"
 msgstr ""
 
-#: src/MainWindow.vala:329
+#: src/MainWindow.vala:337
 msgid "Send files via Bluetooth"
 msgstr ""
 
-#: src/MainWindow.vala:366
+#: src/MainWindow.vala:374
 msgid "Welcome to Annotator"
 msgstr ""
 
-#: src/MainWindow.vala:366
+#: src/MainWindow.vala:374
 msgid "Let's get started annotating an image"
 msgstr ""
 
-#: src/MainWindow.vala:367
+#: src/MainWindow.vala:375
 msgid "Open Image From File"
 msgstr ""
 
-#: src/MainWindow.vala:367
+#: src/MainWindow.vala:375
 msgid "Open a PNG, JPEG, TIFF or BMP file"
 msgstr ""
 
-#: src/MainWindow.vala:368
+#: src/MainWindow.vala:376
 msgid "Paste Image From Clipboard"
 msgstr ""
 
-#: src/MainWindow.vala:368
+#: src/MainWindow.vala:376
 msgid "Open an image from the clipboard"
 msgstr ""
 
-#: src/MainWindow.vala:403
+#: src/MainWindow.vala:377
+msgid "Take A Screenshot"
+msgstr ""
+
+#: src/MainWindow.vala:377
+msgid "Open an image from a screenshot"
+msgstr ""
+
+#: src/MainWindow.vala:413
 msgid "Font:"
 msgstr ""
 
-#: src/MainWindow.vala:454
+#: src/MainWindow.vala:464
 msgid "All Image Formats  (*)"
 msgstr ""
 
-#: src/MainWindow.vala:466
+#: src/MainWindow.vala:476
 msgid "Open Image File"
 msgstr ""
 
-#: src/MainWindow.vala:466
+#: src/MainWindow.vala:476
 msgid "Open"
+msgstr ""
+
+#: src/MainWindow.vala:521
+msgid "Screenshot"
+msgstr ""
+
+#: src/MainWindow.vala:525
+msgid "Take Screenshot"
+msgstr ""
+
+#: src/MainWindow.vala:530
+msgid "Screenshot Type:"
 msgstr ""
 
 #: src/Resizer.vala:161
