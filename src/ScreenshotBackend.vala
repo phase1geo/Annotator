@@ -30,7 +30,7 @@ public enum CaptureType {
       case "screen"  :  return( SCREEN );
       case "current" :  return( CURRENT_WINDOW );
       case "area"    :  return( AREA );
-      default        :  assert_not_reached();
+      default        :  return( NONE );
     }
   }
 
