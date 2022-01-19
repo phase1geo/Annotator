@@ -7,10 +7,6 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.annotator\n"
 "Report-Msgid-Bugs-To: \n"
-<<<<<<< master
-"POT-Creation-Date: 2022-01-16 20:10-0600\n"
-"PO-Revision-Date: 2022-01-18 20:15+0100\n"
-=======
 "POT-Creation-Date: 2022-01-17 23:31-0600\n"
 "PO-Revision-Date: 2021-10-21 19:15+0100\n"
 >>>>>>> Adding initial support for annotating a screenshot.
