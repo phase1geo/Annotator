@@ -340,7 +340,7 @@ msgstr "Apri Immagine"
 
 #: src/MainWindow.vala:171
 msgid "Take Screeshot"
-msgstr "Fai uno screenshot"
+msgstr "Fai screenshot"
 
 #: src/MainWindow.vala:193 src/UndoBuffer.vala:84
 msgid "Undo"
