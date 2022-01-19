@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: com.github.phase1geo.annotator\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-17 23:31-0600\n"
-"PO-Revision-Date: 2021-10-21 19:15+0100\n"
+"PO-Revision-Date: 2021-10-22 20:15+0100\n"
 >>>>>>> Adding initial support for annotating a screenshot.
 "Last-Translator: Albano Battistella <albano_battistella@hotmail.com>\n"
 "Language-Team: ITALIAN <LL@li.org>\n"
@@ -31,7 +31,7 @@ msgstr "Annota l'immagine negli appunti"
 
 #: src/Application.vala:108
 msgid "Annotate screenshot of an area"
-msgstr ""
+msgstr "Annota lo screenshot di un'area"
 
 #: src/CanvasImage.vala:95 src/CanvasImage.vala:118
 msgid "change image"
@@ -340,7 +340,7 @@ msgstr "Apri Immagine"
 
 #: src/MainWindow.vala:171
 msgid "Take Screeshot"
-msgstr ""
+msgstr "Fai uno screenshot"
 
 #: src/MainWindow.vala:193 src/UndoBuffer.vala:84
 msgid "Undo"
@@ -413,12 +413,11 @@ msgstr "Apri un'immagine dagli appunti"
 
 #: src/MainWindow.vala:377
 msgid "Take A Screenshot"
-msgstr ""
+msgstr "Fai uno screenshot"
 
 #: src/MainWindow.vala:377
-#, fuzzy
 msgid "Open an image from a screenshot"
-msgstr "Apri un'immagine dagli appunti"
+msgstr "Apri un'immagine da uno screenshot"
 
 #: src/MainWindow.vala:413
 msgid "Font:"
@@ -438,15 +437,15 @@ msgstr "Apri"
 
 #: src/MainWindow.vala:521
 msgid "Screenshot"
-msgstr ""
+msgstr "Screenshot"
 
 #: src/MainWindow.vala:525
 msgid "Take Screenshot"
-msgstr ""
+msgstr "Fai screenshot"
 
 #: src/MainWindow.vala:530
 msgid "Screenshot Type:"
-msgstr ""
+msgstr "Tipo di screenshot:"
 
 #: src/Resizer.vala:161
 msgid "Resize"
