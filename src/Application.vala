@@ -30,6 +30,8 @@ public class Annotator : Granite.Application {
 
   public  static GLib.Settings settings;
   public  static bool          use_clipboard   = false;
+  public  static bool          screenshot_all  = false;
+  public  static bool          screenshot_win  = false;
   public  static bool          screenshot_area = false;
   public  static string        version         = "1.1.0";
 
@@ -58,8 +60,12 @@ public class Annotator : Granite.Application {
     /* Attempt to paste from the clipboard */
     if( use_clipboard ) {
       appwin.do_paste();
+    } else if( screenshot_all ) {
+      appwin.do_screenshot( CaptureType.SCREEN );
+    } else if( screenshot_win ) {
+      appwin.do_screenshot( CaptureType.CURRENT_WINDOW );
     } else if( screenshot_area ) {
-      appwin.do_screenshot();
+      appwin.do_screenshot( CaptureType.AREA );
     }
 
     /* Handle any changes to the position of the window */
@@ -100,13 +106,15 @@ public class Annotator : Granite.Application {
   private void parse_arguments( ref unowned string[] args ) {
 
     var context = new OptionContext( "- Annotator Options" );
-    var options = new OptionEntry[4];
+    var options = new OptionEntry[6];
 
     /* Create the command-line options */
-    options[0] = {"version",         0, 0, OptionArg.NONE, ref show_version, _( "Display version number" ), null};
-    options[1] = {"use-clipboard",   0, 0, OptionArg.NONE, ref use_clipboard, _( "Annotate clipboard image" ), null};
-    options[2] = {"screenshot-area", 0, 0, OptionArg.NONE, ref screenshot_area, _( "Annotate screenshot of an area" ), null};
-    options[3] = {null};
+    options[0] = {"version",           0, 0, OptionArg.NONE, ref show_version,    _( "Display version number" ), null};
+    options[1] = {"use-clipboard",     0, 0, OptionArg.NONE, ref use_clipboard,   _( "Annotate clipboard image" ), null};
+    options[2] = {"screenshot-screen", 0, 0, OptionArg.NONE, ref screenshot_all,  _( "Annotate screenshot of the screen" ), null};
+    options[3] = {"screenshot-screen", 0, 0, OptionArg.NONE, ref screenshot_win,  _( "Annotate screenshot of the focused window" ), null};
+    options[4] = {"screenshot-area",   0, 0, OptionArg.NONE, ref screenshot_area, _( "Annotate screenshot of an area" ), null};
+    options[5] = {null};
 
     /* Parse the arguments */
     try {

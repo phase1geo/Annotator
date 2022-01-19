@@ -66,5 +66,15 @@
       <summary>Last opened/saved directory.</summary>
       <description>Last successfully opened or saved directory.</description>
     </key>
+    <key name="screenshot-delay" type="i">
+      <default>3</default>
+      <summary>Number seconds of delay after selecting the 'Focused Window' screenshot option.</summary>
+      <description>Number seconds of delay after selecting the 'Focused Window' screenshot option.</description>
+    </key>
+    <key name="screenshot-include-win" type="b">
+      <default>false</default>
+      <summary>Set to true to allow the Annotator window to be included in the screenshot.</summary>
+      <description>Set to true to allow the Annotator window to be included in the screenshot.  Set to false to hide the Annotator window during the screenshot.</description>
+    </key>
   </schema>
 </schemalist>
