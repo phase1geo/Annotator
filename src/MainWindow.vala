@@ -41,7 +41,10 @@ public class MainWindow : Hdy.ApplicationWindow {
 
   private const GLib.ActionEntry[] action_entries = {
     { "action_open",            do_open },
-    { "action_screenshot",      do_screenshot },
+    { "action_screenshot",      do_screenshot_menu },
+    { "action_screenshot_all",  do_screenshot_all },
+    { "action_screenshot_win",  do_screenshot_win },
+    { "action_screenshot_area", do_screenshot_area },
     { "action_save",            do_save },
     { "action_quit",            do_quit },
     { "action_undo",            do_undo },
@@ -113,6 +116,9 @@ public class MainWindow : Hdy.ApplicationWindow {
   private void add_keyboard_shortcuts( Gtk.Application app ) {
     app.set_accels_for_action( "win.action_open",            { "<Control>o" } );
     app.set_accels_for_action( "win.action_screenshot",      { "<Control>t" } );
+    app.set_accels_for_action( "win.action_screenshot_all",  { "<Control>1" } );
+    app.set_accels_for_action( "win.action_screenshot_win",  { "<Control>2" } );
+    app.set_accels_for_action( "win.action_screenshot_area", { "<Control>3" } );
     app.set_accels_for_action( "win.action_save",            { "<Control>s" } );
     app.set_accels_for_action( "win.action_quit",            { "<Control>q" } );
     app.set_accels_for_action( "win.action_undo",            { "<Control>z" } );
@@ -169,7 +175,9 @@ public class MainWindow : Hdy.ApplicationWindow {
 
     _screenshot_btn = new Button.from_icon_name( "insert-image", IconSize.LARGE_TOOLBAR );
     _screenshot_btn.set_tooltip_markup( Utils.tooltip_with_accel( _( "Take Screeshot" ), "<Control>t" ) );
-    _screenshot_btn.clicked.connect( do_screenshot );
+    _screenshot_btn.clicked.connect(() => {
+      show_screenshot_popover( _screenshot_btn );
+    });
     _header.pack_start( _screenshot_btn );
 
     /*
@@ -377,9 +385,9 @@ public class MainWindow : Hdy.ApplicationWindow {
     welcome.append( "insert-image", _( "Take A Screenshot" ), _( "Open an image from a screenshot" ) );
     welcome.activated.connect((index) => {
       switch( index ) {
-        case 0  :  do_open();        break;
-        case 1  :  do_paste();       break;
-        case 2  :  do_screenshot();  break;
+        case 0  :  do_open();   break;
+        case 1  :  do_paste();  break;
+        case 2  :  show_screenshot_popover( welcome.get_button_from_index( 2 ) );  break;
         default :  assert_not_reached();
       }
     });
@@ -515,53 +523,90 @@ public class MainWindow : Hdy.ApplicationWindow {
   }
 
   /* Returns the capture mode as determined by the user */
-  private CaptureType get_capture_mode() {
+  private void show_screenshot_popover( Widget parent ) {
 
-    var dialog = new Dialog.with_buttons(
-      _( "Screenshot" ),
-      this,
-      DialogFlags.MODAL,
-      _( "Cancel" ),          ResponseType.REJECT,
-      _( "Take Screenshot" ), ResponseType.ACCEPT,
-      null
-    );
-    dialog.set_default_response( 1 );
+    var box = new Box( Orientation.VERTICAL, 10 );
+    box.margin = 10;
 
-    var label = new Label( _( "Screenshot Type:" ) );
+    var popover = new Popover( parent );
 
-    var cb = new ComboBoxText();
     for( int i=0; i<CaptureType.NUM; i++ ) {
       var mode = (CaptureType)i;
-      cb.append( mode.to_string(), mode.label() );
+      var btn  = new ModelButton();
+      btn.get_child().destroy();
+      btn.add( new Granite.AccelLabel( mode.label(), "<Control>%d".printf( i + 1 ) ) );
+      btn.clicked.connect(() => {
+        do_screenshot( mode );
+        popover.popdown();
+      });
+      box.pack_start( btn, false, false, 0 );
     }
 
-    var cbox = new Box( Orientation.HORIZONTAL, 10 );
-    cbox.pack_start( label, false, false, 0 );
-    cbox.pack_start( cb,    false, false, 0 );
+    var delay    = new Label( _( "Delay (in seconds)" ) + ":" );
+    var delay_sb = new SpinButton.with_range( 0, 6, 1 );
+    delay_sb.value = Annotator.settings.get_int( "screenshot-delay" );
+    delay_sb.value_changed.connect(() => {
+      Annotator.settings.set_int( "screenshot-delay", (int)delay_sb.value );
+    });
 
-    var box = dialog.get_content_area();
-    box.pack_start( cbox, false, false, 0 );
+    var dbox = new Box( Orientation.HORIZONTAL, 10 );
+    dbox.pack_start( delay,    false, false, 0 );
+    dbox.pack_start( delay_sb, false, false, 0 );
+
+    var include = new Label( _( "Include Annotator window" ) + ":" );
+    var include_sw = new Switch();
+    include_sw.active = Annotator.settings.get_boolean( "screenshot-include-win" );
+    include_sw.state_set.connect((value) => {
+      Annotator.settings.set_boolean( "screenshot-include-win", value );
+      return( true );
+    });
+
+    var sbox = new Box( Orientation.HORIZONTAL,  10 );
+    sbox.pack_start( include,    false, false, 0 );
+    sbox.pack_start( include_sw, false, false, 0 );
+
+    box.pack_start( new Separator( Orientation.HORIZONTAL ), false, true, 0 );
+    box.pack_start( dbox, false, true, 0 );
+    box.pack_start( sbox, false, true, 0 );
     box.show_all();
 
-    var mode = CaptureType.NONE;
-    if( dialog.run() == ResponseType.ACCEPT ) {
-      mode = CaptureType.parse( cb.get_active_id() );
-    }
-
-    dialog.close();
-
-    return( mode );
+    popover.add( box );
+    popover.position = PositionType.BOTTOM;
+    popover.popup();
 
   }
 
-  public void do_screenshot() {
+  private void do_screenshot_menu() {
+    show_screenshot_popover( _screenshot_btn );
+  }
 
-    var capture_mode = get_capture_mode();
-    var backend      = new ScreenshotBackend();
+  private void do_screenshot_all() {
+    do_screenshot( CaptureType.SCREEN );
+  }
 
+  private void do_screenshot_win() {
+    do_screenshot( CaptureType.CURRENT_WINDOW );
+  }
+
+  private void do_screenshot_area() {
+    do_screenshot( CaptureType.AREA );
+  }
+
+  public void do_screenshot( CaptureType capture_mode ) {
+
+    /* If we aren't capturing anything, end now */
     if( capture_mode == CaptureType.NONE ) return;
 
-    backend.capture.begin (capture_mode, 0, false, false /* redact */, (obj, res) => {
+    var backend = new ScreenshotBackend();
+    var delay   = Annotator.settings.get_int( "screenshot-delay" );
+    var include = Annotator.settings.get_boolean( "screenshot-include-win" );
+
+    /* Hide the application */
+    if( !include ) {
+      hide();
+    }
+
+    backend.capture.begin (capture_mode, delay, false, false /* redact */, (obj, res) => {
       Gdk.Pixbuf? pixbuf = null;
       try {
         pixbuf = backend.capture.end (res);
@@ -570,13 +615,14 @@ public class MainWindow : Hdy.ApplicationWindow {
       } catch (Error e) {
         // TBD
       }
-
       if (pixbuf != null) {
         _editor.paste_image( pixbuf );
         _zoom_btn.set_sensitive( true );
         _export_btn.set_sensitive( true );
+        if( !include ) {
+          show();
+        }
       }
-
     });
 
   }
