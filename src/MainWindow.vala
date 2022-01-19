@@ -536,7 +536,7 @@ public class MainWindow : Hdy.ApplicationWindow {
       btn.get_child().destroy();
       btn.add( new Granite.AccelLabel( mode.label(), "<Control>%d".printf( i + 1 ) ) );
       btn.clicked.connect(() => {
-        do_screenshot( mode );
+        do_screenshot( mode, false );
         popover.popdown();
       });
       box.pack_start( btn, false, false, 0 );
@@ -581,25 +581,25 @@ public class MainWindow : Hdy.ApplicationWindow {
   }
 
   private void do_screenshot_all() {
-    do_screenshot( CaptureType.SCREEN );
+    do_screenshot( CaptureType.SCREEN, false );
   }
 
   private void do_screenshot_win() {
-    do_screenshot( CaptureType.CURRENT_WINDOW );
+    do_screenshot( CaptureType.CURRENT_WINDOW, false );
   }
 
   private void do_screenshot_area() {
-    do_screenshot( CaptureType.AREA );
+    do_screenshot( CaptureType.AREA, false );
   }
 
-  public void do_screenshot( CaptureType capture_mode ) {
+  public void do_screenshot( CaptureType capture_mode, bool use_params, int param_delay = 0, bool param_include_win = false ) {
 
     /* If we aren't capturing anything, end now */
     if( capture_mode == CaptureType.NONE ) return;
 
     var backend = new ScreenshotBackend();
-    var delay   = Annotator.settings.get_int( "screenshot-delay" );
-    var include = Annotator.settings.get_boolean( "screenshot-include-win" );
+    var delay   = use_params ? param_delay       : Annotator.settings.get_int( "screenshot-delay" );
+    var include = use_params ? param_include_win : Annotator.settings.get_boolean( "screenshot-include-win" );
 
     /* Hide the application */
     if( !include ) {

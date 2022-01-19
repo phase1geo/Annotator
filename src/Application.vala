@@ -29,11 +29,11 @@ public class Annotator : Granite.Application {
   private        MainWindow appwin;
 
   public  static GLib.Settings settings;
-  public  static bool          use_clipboard   = false;
-  public  static bool          screenshot_all  = false;
-  public  static bool          screenshot_win  = false;
-  public  static bool          screenshot_area = false;
-  public  static string        version         = "1.1.0";
+  public  static bool          use_clipboard     = false;
+  public  static CaptureType   screenshot_type   = CaptureType.NONE;
+  public  static int           screenshot_delay  = 0;
+  public  static bool          screenshot_incwin = false;
+  public  static string        version           = "1.1.0";
 
   public Annotator () {
 
@@ -60,12 +60,8 @@ public class Annotator : Granite.Application {
     /* Attempt to paste from the clipboard */
     if( use_clipboard ) {
       appwin.do_paste();
-    } else if( screenshot_all ) {
-      appwin.do_screenshot( CaptureType.SCREEN );
-    } else if( screenshot_win ) {
-      appwin.do_screenshot( CaptureType.CURRENT_WINDOW );
-    } else if( screenshot_area ) {
-      appwin.do_screenshot( CaptureType.AREA );
+    } else if( screenshot_type != CaptureType.NONE ) {
+      appwin.do_screenshot( screenshot_type, true, screenshot_delay, screenshot_incwin );
     }
 
     /* Handle any changes to the position of the window */
@@ -105,15 +101,24 @@ public class Annotator : Granite.Application {
   /* Parse the command-line arguments */
   private void parse_arguments( ref unowned string[] args ) {
 
-    var context = new OptionContext( "- Annotator Options" );
-    var options = new OptionEntry[6];
+    var context     = new OptionContext( "- Annotator Options" );
+    var options     = new OptionEntry[6];
+    var screenshot  = "";
+    string[] sshots = {};
+
+    for( int i=0; i<CaptureType.NUM; i++ ) {
+      var type = (CaptureType)i;
+      sshots += type.to_string();
+    }
+
+    var sshot_type = "(" + string.joinv( "|", sshots ) + ")";
 
     /* Create the command-line options */
-    options[0] = {"version",           0, 0, OptionArg.NONE, ref show_version,    _( "Display version number" ), null};
-    options[1] = {"use-clipboard",     0, 0, OptionArg.NONE, ref use_clipboard,   _( "Annotate clipboard image" ), null};
-    options[2] = {"screenshot-screen", 0, 0, OptionArg.NONE, ref screenshot_all,  _( "Annotate screenshot of the screen" ), null};
-    options[3] = {"screenshot-screen", 0, 0, OptionArg.NONE, ref screenshot_win,  _( "Annotate screenshot of the focused window" ), null};
-    options[4] = {"screenshot-area",   0, 0, OptionArg.NONE, ref screenshot_area, _( "Annotate screenshot of an area" ), null};
+    options[0] = {"version",                 0, 0, OptionArg.NONE,   ref show_version,      _( "Display version number." ), null};
+    options[1] = {"use-clipboard",           0, 0, OptionArg.NONE,   ref use_clipboard,     _( "Annotate clipboard image." ), null};
+    options[2] = {"screenshot",              0, 0, OptionArg.STRING, ref screenshot,        _( "Take and annotate a screenshot." ), sshot_type};
+    options[3] = {"screenshot-delay",        0, 0, OptionArg.INT,    ref screenshot_delay,  _( "Delay (in seconds) before screenshot capture occurs.  Only valid when --screenshot is set.  Default is 0." ), "INT"};
+    options[4] = {"screenshot-include-win",  0, 0, OptionArg.NONE,   ref screenshot_incwin, _( "Include Annotator window in screenshot.  Only valid when --screenshot is set." ), null};
     options[5] = {null};
 
     /* Parse the arguments */
@@ -122,8 +127,8 @@ public class Annotator : Granite.Application {
       context.add_main_entries( options, null );
       context.parse( ref args );
     } catch( OptionError e ) {
-      stdout.printf( "ERROR: %s\n", e.message );
-      stdout.printf( "Run '%s --help' to see valid options\n", args[0] );
+      stdout.printf( "\nERROR: %s\n\n", e.message );
+      stdout.printf( "    Run '%s --help' to see valid options\n\n", args[0] );
       Process.exit( 1 );
     }
 
@@ -131,6 +136,16 @@ public class Annotator : Granite.Application {
     if( show_version ) {
       stdout.printf( version + "\n" );
       Process.exit( 0 );
+    }
+
+    /* Convert and check the screenshot option */
+    if( screenshot != "" ) {
+      screenshot_type = CaptureType.parse( screenshot );
+      if( screenshot_type == CaptureType.NONE ) {
+        stdout.printf( "\nERROR: --screenshot=%s is not a supported type\n\n", screenshot );
+        stdout.printf( "    Run '%s --help to see valid options\n\n", args[0] );
+        Process.exit( 1 );
+      }
     }
 
   }
