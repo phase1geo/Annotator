@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.annotator\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-01-17 23:31-0600\n"
+"POT-Creation-Date: 2022-01-19 23:03-0600\n"
 "PO-Revision-Date: 2021-10-08 09:11+0200\n"
 "Last-Translator: Quentin PAGÈS\n"
 "Language-Team: \n"
@@ -17,20 +17,34 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 3.0\n"
 
-#: src/Application.vala:85
+#: src/Application.vala:87
 msgid "Opening file"
 msgstr "Dubertura del fichièr"
 
-#: src/Application.vala:106
-msgid "Display version number"
+#: src/Application.vala:117
+#, fuzzy
+msgid "Display version number."
 msgstr "Afichar lo numèro de la version"
 
-#: src/Application.vala:107
-msgid "Annotate clipboard image"
+#: src/Application.vala:118
+#, fuzzy
+msgid "Annotate clipboard image."
 msgstr "Anotar l’imatge del quichapapièrs"
 
-#: src/Application.vala:108
-msgid "Annotate screenshot of an area"
+#: src/Application.vala:119
+#, fuzzy
+msgid "Take and annotate a screenshot."
+msgstr "Dobrir imatge del quichapapièrs"
+
+#: src/Application.vala:120
+msgid ""
+"Delay (in seconds) before screenshot capture occurs.  Only valid when --"
+"screenshot is set.  Default is 0."
+msgstr ""
+
+#: src/Application.vala:121
+msgid ""
+"Include Annotator window in screenshot.  Only valid when --screenshot is set."
 msgstr ""
 
 #: src/CanvasImage.vala:95 src/CanvasImage.vala:118
@@ -271,7 +285,7 @@ msgstr ".pdf"
 msgid ".svg"
 msgstr ".svg"
 
-#: src/Exporter.vala:116 src/MainWindow.vala:245
+#: src/Exporter.vala:116 src/MainWindow.vala:253
 msgid "Export Image"
 msgstr "Exportar l'imatge"
 
@@ -279,8 +293,7 @@ msgstr "Exportar l'imatge"
 msgid "Export"
 msgstr "Exportar"
 
-#: src/Exporter.vala:116 src/MainWindow.vala:476 src/MainWindow.vala:524
-#: src/Resizer.vala:160
+#: src/Exporter.vala:116 src/MainWindow.vala:484 src/Resizer.vala:160
 msgid "Cancel"
 msgstr "Anullar"
 
@@ -340,118 +353,114 @@ msgstr "Cambiar color de poliça"
 msgid "Clear all formatting"
 msgstr "Escafar tot lo formatatge"
 
-#: src/MainWindow.vala:166
+#: src/MainWindow.vala:172
 msgid "Open Image"
 msgstr "Dobrir un imatge"
 
-#: src/MainWindow.vala:171
+#: src/MainWindow.vala:177
 msgid "Take Screeshot"
 msgstr ""
 
-#: src/MainWindow.vala:193 src/UndoBuffer.vala:84
+#: src/MainWindow.vala:201 src/UndoBuffer.vala:84
 msgid "Undo"
 msgstr "Desfar"
 
-#: src/MainWindow.vala:199 src/UndoBuffer.vala:90
+#: src/MainWindow.vala:207 src/UndoBuffer.vala:90
 msgid "Redo"
 msgstr "Refar"
 
-#: src/MainWindow.vala:213
+#: src/MainWindow.vala:221
 msgid "Annotator"
 msgstr "Annotator"
 
-#: src/MainWindow.vala:221
+#: src/MainWindow.vala:229
 msgid "Properties"
 msgstr "Proprietats"
 
-#: src/MainWindow.vala:228
+#: src/MainWindow.vala:236
 msgid "Shortcuts Cheatsheet"
 msgstr "Resumit dels acorchis"
 
-#: src/MainWindow.vala:267
+#: src/MainWindow.vala:275
 msgid "Copy To Clipboard"
 msgstr "Copiar al quichapapièrs"
 
-#: src/MainWindow.vala:276
+#: src/MainWindow.vala:284
 msgid "Print…"
 msgstr "Imprimir…"
 
-#: src/MainWindow.vala:299
+#: src/MainWindow.vala:307
 #, c-format
 msgid "Zoom (%d%%)"
 msgstr "Zoom (%d%%)"
 
-#: src/MainWindow.vala:311
+#: src/MainWindow.vala:319
 msgid "Zoom to Fit Window"
 msgstr "Agrandir per garnir la fenèstra"
 
-#: src/MainWindow.vala:337
+#: src/MainWindow.vala:345
 msgid "Send by Email"
 msgstr "Mandar per e-mail"
 
-#: src/MainWindow.vala:337
+#: src/MainWindow.vala:345
 msgid "Send files via Bluetooth"
 msgstr "Mandadís de fichièrs per Bluetooth"
 
-#: src/MainWindow.vala:374
+#: src/MainWindow.vala:382
 msgid "Welcome to Annotator"
 msgstr "La benvenguda a Annotator"
 
-#: src/MainWindow.vala:374
+#: src/MainWindow.vala:382
 msgid "Let's get started annotating an image"
 msgstr "Comencem d’anotar un imatge"
 
-#: src/MainWindow.vala:375
+#: src/MainWindow.vala:383
 msgid "Open Image From File"
 msgstr "Dobrir un imatge a partir de Fichièr"
 
-#: src/MainWindow.vala:375
+#: src/MainWindow.vala:383
 msgid "Open a PNG, JPEG, TIFF or BMP file"
 msgstr "Dobrir un fichièr PNG, JPEG, TIFF o BMP"
 
-#: src/MainWindow.vala:376
+#: src/MainWindow.vala:384
 msgid "Paste Image From Clipboard"
 msgstr "Pegar imatge del quichapapièrs"
 
-#: src/MainWindow.vala:376
+#: src/MainWindow.vala:384
 msgid "Open an image from the clipboard"
 msgstr "Dobrir imatge del quichapapièrs"
 
-#: src/MainWindow.vala:377
+#: src/MainWindow.vala:385
 msgid "Take A Screenshot"
 msgstr ""
 
-#: src/MainWindow.vala:377
+#: src/MainWindow.vala:385
 #, fuzzy
 msgid "Open an image from a screenshot"
 msgstr "Dobrir imatge del quichapapièrs"
 
-#: src/MainWindow.vala:413
+#: src/MainWindow.vala:421
 msgid "Font:"
 msgstr "Poliça :"
 
-#: src/MainWindow.vala:464
+#: src/MainWindow.vala:472
 msgid "All Image Formats  (*)"
 msgstr "Totes los formats d’imatges (*)"
 
-#: src/MainWindow.vala:476
+#: src/MainWindow.vala:484
 msgid "Open Image File"
 msgstr "Dobrir un fichièr imatge"
 
-#: src/MainWindow.vala:476
+#: src/MainWindow.vala:484
 msgid "Open"
 msgstr "Dobrir"
 
-#: src/MainWindow.vala:521
-msgid "Screenshot"
+#: src/MainWindow.vala:545
+msgid "Delay (in seconds)"
 msgstr ""
 
-#: src/MainWindow.vala:525
-msgid "Take Screenshot"
-msgstr ""
-
-#: src/MainWindow.vala:530
-msgid "Screenshot Type:"
+#: src/MainWindow.vala:556
+msgid "Include Annotator window"
 msgstr ""
 
 #: src/Resizer.vala:161
