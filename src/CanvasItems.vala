@@ -31,6 +31,7 @@ public enum CanvasItemType {
   STAR_STROKE,
   STAR_FILL,
   LINE,
+  GLASS,
   ARROW,
   TEXT,
   BLUR,
@@ -50,6 +51,7 @@ public enum CanvasItemType {
       case STAR_STROKE :  return( "star-stroke" );
       case STAR_FILL   :  return( "star-fill" );
       case LINE        :  return( "line" );
+      case GLASS       :  return( "glass" );
       case ARROW       :  return( "arrow" );
       case TEXT        :  return( "text" );
       case BLUR        :  return( "blur" );
@@ -71,6 +73,7 @@ public enum CanvasItemType {
       case "star-stroke" :  return( STAR_STROKE );
       case "star-fill"   :  return( STAR_FILL );
       case "line"        :  return( LINE );
+      case "glass"       :  return( GLASS );
       case "arrow"       :  return( ARROW );
       case "text"        :  return( TEXT );
       case "blur"        :  return( BLUR );
@@ -92,6 +95,7 @@ public enum CanvasItemType {
       case STAR_STROKE :  return( Utils.tooltip_with_accel( _( "Star Outline" ), "s" ) );
       case STAR_FILL   :  return( Utils.tooltip_with_accel( _( "Star" ), "<shift>s" ) );
       case LINE        :  return( Utils.tooltip_with_accel( _( "Line" ), "l" ) );
+      case GLASS       :  return( Utils.tooltip_with_accel( _( "Glass" ), "g" ) );
       case ARROW       :  return( Utils.tooltip_with_accel( _( "Arrow" ), "a" ) );
       case TEXT        :  return( Utils.tooltip_with_accel( _( "Text" ), "t" ) );
       case BLUR        :  return( Utils.tooltip_with_accel( _( "Blur" ), "b" ) );
@@ -145,6 +149,7 @@ public class CanvasItems {
     _shape_icons.append_val( "star-stroke-symbolic" );
     _shape_icons.append_val( "star-fill-symbolic" );
     _shape_icons.append_val( "line-symbolic" );
+    _shape_icons.append_val( "glass-symbolic" );
 
   }
 
@@ -185,6 +190,12 @@ public class CanvasItems {
 
   private CanvasItem create_line() {
     var item = new CanvasItemLine( _canvas, props );
+    item.bbox = center_box( 200, 1 );
+    return( item );
+  }
+
+  private CanvasItem create_glass() {
+    var item = new CanvasItemGlass( _canvas, props );
     item.bbox = center_box( 200, 1 );
     return( item );
   }
@@ -261,6 +272,7 @@ public class CanvasItems {
       case CanvasItemType.STAR_STROKE  :  item = create_star( false );  break;
       case CanvasItemType.STAR_FILL    :  item = create_star( true );  break;
       case CanvasItemType.LINE         :  item = create_line();  break;
+      case CanvasItemType.GLASS        :  item = create_glass();  break;
       case CanvasItemType.ARROW        :  item = create_arrow();  break;
       case CanvasItemType.TEXT         :  item = create_text();  break;
       case CanvasItemType.BLUR         :  item = create_blur();  break;
