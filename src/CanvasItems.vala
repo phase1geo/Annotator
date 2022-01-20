@@ -196,7 +196,7 @@ public class CanvasItems {
 
   private CanvasItem create_glass() {
     var item = new CanvasItemGlass( _canvas, props );
-    item.bbox = center_box( 200, 1 );
+    item.bbox = center_box( 100, 100 );
     return( item );
   }
 

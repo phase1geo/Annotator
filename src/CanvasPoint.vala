@@ -91,9 +91,10 @@ public enum CanvasPointType {
 
 public class CanvasPoint {
 
-  public double          x    { get; set; default = 0.0; }
-  public double          y    { get; set; default = 0.0; }
-  public CanvasPointType kind { get; private set; default = CanvasPointType.NONE; }
+  public double          x     { get; set; default = 0.0; }
+  public double          y     { get; set; default = 0.0; }
+  public CanvasPointType kind  { get; private set; default = CanvasPointType.NONE; }
+  public bool            isset { get; private set; default = false; }
 
   /* Constructor */
   public CanvasPoint( CanvasPointType kind = CanvasPointType.NONE ) {
@@ -113,21 +114,24 @@ public class CanvasPoint {
 
   /* Copies the point information to this instance */
   public void copy( CanvasPoint point ) {
-    this.x    = point.x;
-    this.y    = point.y;
-    this.kind = point.kind;
+    this.x     = point.x;
+    this.y     = point.y;
+    this.kind  = point.kind;
+    this.isset = true;
   }
 
   /* Copies the x,y coordinates to this instance */
   public void copy_coords( double x, double y ) {
-    this.x = x;
-    this.y = y;
+    this.x     = x;
+    this.y     = y;
+    this.isset = true;
   }
 
   /* Adjust the point by the given amounts */
   public void adjust( double diffx, double diffy ) {
     this.x += diffx;
     this.y += diffy;
+    this.isset = true;
   }
 
   /* Updates the visual status of this point kind */

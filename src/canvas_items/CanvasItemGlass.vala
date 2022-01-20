@@ -51,16 +51,19 @@ public class CanvasItemGlass : CanvasItem {
     var y0 = bbox.mid_y() + Math.sin( (RAD_distance * 3) - RAD_half_PI ) * radius;
 
     points.index( 0 ).copy_coords( x0, y0 );
-    // points.index( 1 ).copy_coords( x1, y1 );
+
+    if( points.index( 1 ).isset ) {
+      if( mode == CanvasItemMode.MOVING ) {
+        points.index( 1 ).copy_coords( (_line_end.x + (bbox.x1() - last_bbox.x1())), (_line_end.y + (bbox.y1() - last_bbox.y1())) );
+      }
+    } else {
+      points.index( 1 ).copy_coords( bbox.x2(), bbox.y2() );
+    }
 
   }
 
-  /*
-   If the mode changes to RESIZING, capture the current zoom factor point in case it
-   is the one being moved so that we can recalculate the proper zoom_factor value.
-  */
   protected override void mode_changed() {
-    if( mode == CanvasItemMode.RESIZING ) {
+    if( mode == CanvasItemMode.MOVING ) {
       _line_end.copy( points.index( 1 ) );
     }
   }
@@ -68,17 +71,14 @@ public class CanvasItemGlass : CanvasItem {
   /* Adjusts the bounding box */
   public override void move_selector( int index, double diffx, double diffy, bool shift ) {
 
-    var box = new CanvasRect.from_rect( bbox );
-
     if( index == 0 ) {
+      var box = new CanvasRect.from_rect( bbox );
       box.width  += diffy;
       box.height += diffy;
+      bbox = box;
     } else {
-      points.index( 1 ).x += diffx;
-      points.index( 1 ).y += diffy;
+      points.index( 1 ).adjust( diffx, diffy );
     }
-
-    bbox = box;
 
   }
 
@@ -91,7 +91,7 @@ public class CanvasItemGlass : CanvasItem {
     Utils.set_context_color_with_alpha( ctx, props.color, alpha );
     ctx.set_line_width( props.stroke_width.width() );
     ctx.arc( bbox.mid_x(), bbox.mid_y(), (bbox.width / 2), 0, (2 * Math.PI) );
-    save_path( ctx, CanvasItemPathType.STROKE );
+    save_path( ctx, CanvasItemPathType.FILL );
     ctx.stroke_preserve();
 
     /* Draw line outside of circle (but line always points to center */
@@ -104,7 +104,7 @@ public class CanvasItemGlass : CanvasItem {
 
     ctx.move_to( x0, y0 );
     ctx.line_to( points.index( 1 ).x, points.index( 1 ).y );
-    save_path( ctx, CanvasItemPathType.STROKE );
+    save_path( ctx, CanvasItemPathType.FILL );
     ctx.stroke_preserve();
 
   }
