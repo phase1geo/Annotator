@@ -47,7 +47,7 @@ public class UndoItemDelete : UndoItem {
   public override void undo( Canvas canvas ) {
     for( int i=0; i<_list.length; i++ ) {
       var elem = _list.index( i );
-      canvas.items.add_item( elem.item, elem.position );
+      canvas.items.add_item( elem.item, elem.position, false, false );
     }
     canvas.queue_draw();
   }
