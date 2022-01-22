@@ -72,8 +72,13 @@ public class CanvasToolbar : Toolbar {
     btn.icon_name    = "arrow-symbolic";
     btn.margin_left  = margin;
     btn.margin_right = margin;
-    btn.clicked.connect(() => {
-      _canvas.items.add_shape_item( CanvasItemType.ARROW );
+    btn.button_press_event.connect((e) => {
+      if( e.button == Gdk.BUTTON_PRIMARY ) {
+        _canvas.items.add_shape_item( CanvasItemType.ARROW );
+      } else if( e.button == Gdk.BUTTON_SECONDARY ) {
+        show_custom_menu( btn, CanvasItemCategory.ARROW );
+      }
+      return( true );
     });
 
     add( btn );
@@ -83,38 +88,43 @@ public class CanvasToolbar : Toolbar {
   /* Creates the shape toolbar item */
   private void create_shapes() {
 
-    var mb = new MenuButton();
-    mb.set_tooltip_text( _( "Shapes" ) );
-    mb.image  = _canvas.items.get_shape_icon( 0 );
-    mb.relief = ReliefStyle.NONE;
+    var btn = new ToolButton( null, null );
+    var popover = new Popover( btn );
+    btn.set_tooltip_text( _( "Shapes" ) );
+    btn.icon_widget  = _canvas.items.get_shape_icon( 0 );
+    btn.margin_left  = margin;
+    btn.margin_right = margin;
+    btn.button_press_event.connect((e) => {
+      if( e.button == Gdk.BUTTON_PRIMARY ) {
+        stdout.printf( "Display the shapes\n" );
+        popover.popup();
+      } else if( e.button == Gdk.BUTTON_SECONDARY ) {
+        show_custom_menu( btn, CanvasItemCategory.SHAPE );
+      }
+      return( true );
+    });
 
     var grid = new Grid();
     grid.border_width = 5;
 
     for( int i=0; i<_canvas.items.num_shapes(); i++ ) {
-      var btn        = new Button();
+      var b          = new Button();
       var shape_type = (CanvasItemType)i;
-      btn.set_tooltip_markup( shape_type.tooltip() );
-      btn.image  = _canvas.items.get_shape_icon( i );
-      btn.relief = ReliefStyle.NONE;
-      btn.margin = 5;
-      btn.clicked.connect(() => {
+      b.set_tooltip_markup( shape_type.tooltip() );
+      b.image  = _canvas.items.get_shape_icon( i );
+      b.relief = ReliefStyle.NONE;
+      b.margin = 5;
+      b.clicked.connect(() => {
         _canvas.items.add_shape_item( shape_type );
-        mb.image = _canvas.items.get_shape_icon( shape_type );
-        Utils.hide_popover( mb.popover );
+        btn.icon_widget = _canvas.items.get_shape_icon( shape_type );
+        Utils.hide_popover( popover );
       });
-      grid.attach( btn, (i % 2), (i / 2) );
+      grid.attach( b, (i % 2), (i / 2) );
     }
 
     grid.show_all();
 
-    mb.popover = new Popover( null );
-    mb.popover.add( grid );
-
-    var btn = new ToolItem();
-    btn.margin_left  = margin;
-    btn.margin_right = margin;
-    btn.add( mb );
+    popover.add( grid );
 
     add( btn );
 
@@ -256,8 +266,13 @@ public class CanvasToolbar : Toolbar {
     btn.icon_name    = "insert-text-symbolic";
     btn.margin_left  = margin;
     btn.margin_right = margin;
-    btn.clicked.connect(() => {
-      _canvas.items.add_shape_item( CanvasItemType.TEXT );
+    btn.button_press_event.connect((e) => {
+      if( e.button == Gdk.BUTTON_PRIMARY ) {
+        _canvas.items.add_shape_item( CanvasItemType.TEXT );
+      } else if( e.button == Gdk.BUTTON_SECONDARY ) {
+        show_custom_menu( btn, CanvasItemCategory.TEXT );
+      }
+      return( true );
     });
 
     add( btn );
@@ -659,6 +674,20 @@ public class CanvasToolbar : Toolbar {
 
     /* Set the font */
     _font_chooser.font_desc = p.font;
+
+  }
+
+  /*
+   Displays the custom menu for the specified item category type
+   relative to the given widget.
+  */
+  private void show_custom_menu( Widget w, CanvasItemCategory category ) {
+
+    var popover = new Popover( w );
+
+    if( _canvas.items.custom_items.populate_menu( _canvas.items, category, popover ) ) {
+      popover.popup();
+    }
 
   }
 

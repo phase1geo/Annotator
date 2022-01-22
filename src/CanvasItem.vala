@@ -179,6 +179,7 @@ public class CanvasItem {
     _mode = item.mode;
     props.copy( item.props );
 
+    stdout.printf( "Copying points, mine: %u, theirs: %u\n", points.length, item.points.length );
     for( int i=0; i<item.points.length; i++ ) {
       points.index( i ).copy( item.points.index( i ) );
     }
