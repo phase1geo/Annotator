@@ -23,6 +23,14 @@ using Gtk;
 using Gdk;
 using Cairo;
 
+public enum CanvasItemCategory {
+  NONE,
+  ARROW,
+  SHAPE,
+  TEXT,
+  NUM
+}
+
 public enum CanvasItemType {
   RECT_STROKE,
   RECT_FILL,
@@ -103,6 +111,20 @@ public enum CanvasItemType {
     }
   }
 
+  public CanvasItemCategory category() {
+    switch( this ) {
+      case RECT_STROKE :  return( CanvasItemCategory.SHAPE );
+      case RECT_FILL   :  return( CanvasItemCategory.SHAPE );
+      case OVAL_STROKE :  return( CanvasItemCategory.SHAPE );
+      case OVAL_FILL   :  return( CanvasItemCategory.SHAPE );
+      case STAR_STROKE :  return( CanvasItemCategory.SHAPE );
+      case STAR_FILL   :  return( CanvasItemCategory.SHAPE );
+      case LINE        :  return( CanvasItemCategory.SHAPE );
+      case ARROW       :  return( CanvasItemCategory.ARROW );
+      case TEXT        :  return( CanvasItemCategory.TEXT );
+      default          :  return( CanvasItemCategory.NONE );
+    }
+  }
 }
 
 public class CanvasItems {
@@ -116,6 +138,7 @@ public class CanvasItems {
   private Array<string>        _shape_icons;
   private int                  _press_count    = -1;
   private FormatBar?           _format_bar     = null;
+  private CustomItems          _custom_items;
 
   public CanvasItemProperties props        { get; private set; }
   public string               hilite_color { get; set; default = "yellow"; }
@@ -135,6 +158,10 @@ public class CanvasItems {
     /* Create the overall properties structure */
     props = new CanvasItemProperties( true );
     props.changed.connect( update_selected_attributes );
+
+    /* Create the CustomItems object */
+    _custom_items = new CustomItems();
+    _custom_items.load( this );
 
     /* Load the shapes */
     _shape_icons = new Array<string>();
@@ -159,7 +186,7 @@ public class CanvasItems {
   }
 
   /* Returns the box to place a canvas item into */
-  private CanvasRect center_box( double width, double height ) {
+  public CanvasRect center_box( double width, double height ) {
     var rect = _canvas.editor.get_displayed_rect();
     rect.copy_coords( (rect.x + ((rect.width - width) / 2)), (rect.y + ((rect.height - height) / 2)), width, height );
     return( rect );
@@ -244,10 +271,16 @@ public class CanvasItems {
     return( item );
   }
 
-  public void add_item( CanvasItem item, int position ) {
+  public void add_item( CanvasItem item, int position, bool undo, bool draw = true ) {
     clear_selection();
     item.mode = CanvasItemMode.SELECTED;
     _items.insert( item, position );
+    if( undo ) {
+      _canvas.undo_buffer.add_item( new UndoItemAdd( item, (int)(_items.length() - 1) ) );
+    }
+    if( draw ) {
+      _canvas.queue_draw();
+    }
   }
 
   /* Adds the given shape to the top of the item stack */
@@ -269,16 +302,12 @@ public class CanvasItems {
       case CanvasItemType.SEQUENCE     :  item = create_sequence();  break;
       default :  assert_not_reached();
     }
-    add_item( item, -1 );
-    _canvas.undo_buffer.add_item( new UndoItemAdd( item, (int)(_items.length() - 1) ) );
-    _canvas.queue_draw();
+    add_item( item, -1, true );
   }
 
   public void add_sticker( string name ) {
     var item = create_sticker( name );
-    add_item( item, -1 );
-    _canvas.undo_buffer.add_item( new UndoItemAdd( item, (int)(_items.length() - 1) ) );
-    _canvas.queue_draw();
+    add_item( item, -1, true );
   }
 
   /* Removes all of the canvas items */
@@ -678,8 +707,7 @@ public class CanvasItems {
           _active = item.duplicate();
           _active.mode = CanvasItemMode.SELECTED;
           _canvas.set_cursor_from_name( "grabbing" );
-          add_item( _active, -1 );
-          _canvas.undo_buffer.add_item( new UndoItemAdd( item, (int)(_items.length() - 1) ) );
+          add_item( _active, -1, true, false );
           selection_changed( item.props );
         } else {
           switch( press_count ) {
@@ -909,6 +937,11 @@ public class CanvasItems {
     item.add_contextual_menuitem( box, _( "Send to Front" ), null, (pos != last), do_send_to_front );
     item.add_contextual_menuitem( box, _( "Send to Back" ),  null, (pos != 0),    do_send_to_back );
 
+    if( item.itype.category() != CanvasItemCategory.NONE ) {
+      item.add_contextual_separator( box );
+      item.add_contextual_menuitem( box, _( "Save As Custom" ), null, true, do_save_custom );
+    }
+
     box.show_all();
 
     /* Create the popover */
@@ -971,6 +1004,13 @@ public class CanvasItems {
     _canvas.queue_draw();
   }
 
+  /* Saves the given item as a custom item */
+  private void do_save_custom( CanvasItem item ) {
+    var name      = "Custom";
+    var save_item = new CustomItem.with_item( name, item.duplicate() );
+    _custom_items.add( save_item );
+  }
+
   /* Serialize the canvas items for the copy buffer */
   public string serialize_for_copy( Array<CanvasItem> items ) {
     var       serialized = "";
@@ -1013,7 +1053,7 @@ public class CanvasItems {
         if( item != null ) {
           item.load( it );
           item.bbox = center_box( item.bbox.width, item.bbox.height );
-          add_item( item, -1 );
+          add_item( item, -1, false, false );
           undo_item.add( item );
         }
       }
@@ -1076,29 +1116,36 @@ public class CanvasItems {
     return( node );
   }
 
+  public CanvasItem? load_item( Xml.Node* node ) {
+    CanvasItem? item = null;
+    var type = CanvasItem.get_type_from_xml( node );
+    switch( type ) {
+      case CanvasItemType.RECT_STROKE :  item = create_rectangle( false );  break;
+      case CanvasItemType.RECT_FILL   :  item = create_rectangle( true );   break;
+      case CanvasItemType.OVAL_STROKE :  item = create_oval( false );       break;
+      case CanvasItemType.OVAL_FILL   :  item = create_oval( true );        break;
+      case CanvasItemType.STAR_STROKE :  item = create_star( false );       break;
+      case CanvasItemType.STAR_FILL   :  item = create_star( true );        break;
+      case CanvasItemType.LINE        :  item = create_line();              break;
+      case CanvasItemType.ARROW       :  item = create_arrow();             break;
+      case CanvasItemType.TEXT        :  item = create_text();              break;
+      case CanvasItemType.BLUR        :  item = create_blur();              break;
+      case CanvasItemType.MAGNIFIER   :  item = create_magnifier();         break;
+      case CanvasItemType.PENCIL      :  item = create_pencil();            break;
+      case CanvasItemType.SEQUENCE    :  item = create_sequence();          break;
+      case CanvasItemType.STICKER     :  item = create_sticker( null );     break;
+    }
+    if( item != null ) {
+      item.load( node );
+    }
+    return( item );
+  }
+
   public void load( Xml.Node* node ) {
     for( Xml.Node* it=node->children; it!=null; it=it->next ) {
       if( (it->type == Xml.ElementType.ELEMENT_NODE) && (it->name == "item") ) {
-        CanvasItem? item = null;
-        var type = CanvasItem.get_type_from_xml( it );
-        switch( type ) {
-          case CanvasItemType.RECT_STROKE :  item = create_rectangle( false );  break;
-          case CanvasItemType.RECT_FILL   :  item = create_rectangle( true );   break;
-          case CanvasItemType.OVAL_STROKE :  item = create_oval( false );       break;
-          case CanvasItemType.OVAL_FILL   :  item = create_oval( true );        break;
-          case CanvasItemType.STAR_STROKE :  item = create_star( false );       break;
-          case CanvasItemType.STAR_FILL   :  item = create_star( true );        break;
-          case CanvasItemType.LINE        :  item = create_line();              break;
-          case CanvasItemType.ARROW       :  item = create_arrow();             break;
-          case CanvasItemType.TEXT        :  item = create_text();              break;
-          case CanvasItemType.BLUR        :  item = create_blur();              break;
-          case CanvasItemType.MAGNIFIER   :  item = create_magnifier();         break;
-          case CanvasItemType.PENCIL      :  item = create_pencil();            break;
-          case CanvasItemType.SEQUENCE    :  item = create_sequence();          break;
-          case CanvasItemType.STICKER     :  item = create_sticker( null );     break;
-        }
+        var item = load_item( it );
         if( item != null ) {
-          item.load( it );
           _items.append( item );
         }
       }

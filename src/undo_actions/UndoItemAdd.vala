@@ -39,7 +39,7 @@ public class UndoItemAdd : UndoItem {
 
   /* Causes the stored item to be put into the after state */
   public override void redo( Canvas canvas ) {
-    canvas.items.add_item( _item, _position );
+    canvas.items.add_item( _item, _position, false, false );
     canvas.queue_draw();
   }
 

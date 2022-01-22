@@ -45,7 +45,7 @@ public class UndoItemPaste : UndoItem {
   /* Causes the stored item to be put into the after state */
   public override void redo( Canvas canvas ) {
     for( int i=0; i<_items.length; i++ ) {
-      canvas.items.add_item( _items.index( i ), -1 );
+      canvas.items.add_item( _items.index( i ), -1, false, false );
     }
     canvas.queue_draw();
   }
