@@ -142,9 +142,9 @@ public class CanvasItemStar : CanvasItem {
   /* Adds the contextual menu items */
   protected override void add_contextual_menu_items( Box box ) {
 
-    add_contextual_spinner( box, _( "Points:" ), 3, 50, 1, _num_points,
+    add_contextual_spinner( box, _( "Points:" ), 3, 50, 1, num_points,
       (item, value) => {
-        _num_points = value;
+        num_points = value;
         create_points();
         bbox_changed();
         canvas.queue_draw();
@@ -160,7 +160,7 @@ public class CanvasItemStar : CanvasItem {
 
   public override Xml.Node* save() {
     Xml.Node* node = base.save();
-    node->set_prop( "points",       _num_points.to_string() );
+    node->set_prop( "points",       num_points.to_string() );
     node->set_prop( "inner-radius", _inner_radius.to_string() );
     return( node );
   }
@@ -170,7 +170,7 @@ public class CanvasItemStar : CanvasItem {
     base.load( node );
     var p = node->get_prop( "points" );
     if( p != null ) {
-      _num_points = int.parse( p );
+      num_points = int.parse( p );
     }
     var i = node->get_prop( "inner-radius" );
     if( i != null ) {
@@ -187,7 +187,7 @@ public class CanvasItemStar : CanvasItem {
 
     Utils.set_context_color_with_alpha( ctx, props.color, alpha );
     ctx.move_to( points.index( 0 ).x, points.index( 0 ).y );
-    for( int i=1; i<(_num_points * 2); i++ ) {
+    for( int i=1; i<(num_points * 2); i++ ) {
       calculate_point( i, point );
       ctx.line_to( point.x, point.y );
     }

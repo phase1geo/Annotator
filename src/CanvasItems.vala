@@ -138,11 +138,11 @@ public class CanvasItems {
   private Array<string>        _shape_icons;
   private int                  _press_count    = -1;
   private FormatBar?           _format_bar     = null;
-  private CustomItems          _custom_items;
 
   public CanvasItemProperties props        { get; private set; }
   public string               hilite_color { get; set; default = "yellow"; }
   public string               font_color   { get; set; default = "black"; }
+  public CustomItems          custom_items { get; private set; }
 
   public signal void text_item_edit_changed( CanvasItemText item );
   public signal void selection_changed( CanvasItemProperties props );
@@ -160,8 +160,8 @@ public class CanvasItems {
     props.changed.connect( update_selected_attributes );
 
     /* Create the CustomItems object */
-    _custom_items = new CustomItems();
-    _custom_items.load( this );
+    custom_items = new CustomItems();
+    custom_items.load( this );
 
     /* Load the shapes */
     _shape_icons = new Array<string>();
@@ -192,40 +192,48 @@ public class CanvasItems {
     return( rect );
   }
 
-  private CanvasItem create_rectangle( bool fill ) {
+  private CanvasItem create_rectangle( bool fill, bool loading = false ) {
     var item = new CanvasItemRect( _canvas, fill, props );
-    item.bbox = center_box( 200, 50 );
+    if( !loading ) {
+      item.bbox = center_box( 200, 50 );
+    }
     return( item );
   }
 
-  private CanvasItem create_oval( bool fill ) {
+  private CanvasItem create_oval( bool fill, bool loading = false ) {
     var item = new CanvasItemOval( _canvas, fill, props );
-    item.bbox = center_box( 200, 50 );
+    if( !loading ) {
+      item.bbox = center_box( 200, 50 );
+    }
     return( item );
   }
 
-  private CanvasItem create_star( bool fill ) {
+  private CanvasItem create_star( bool fill, bool loading = false ) {
     var item = new CanvasItemStar( _canvas, fill, 5, 25, props );
-    item.bbox = center_box( 100, 100 );
+    if( !loading ) {
+      item.bbox = center_box( 100, 100 );
+    }
     return( item );
   }
 
-  private CanvasItem create_line() {
+  private CanvasItem create_line( bool loading = false ) {
     var item = new CanvasItemLine( _canvas, props );
-    item.bbox = center_box( 200, 1 );
+    if( !loading ) {
+      item.bbox = center_box( 200, 1 );
+    }
     return( item );
   }
 
-  private CanvasItem create_arrow() {
+  private CanvasItem create_arrow( bool loading = false ) {
     var item = new CanvasItemArrow( _canvas, props );
-    item.bbox = center_box( 200, 1 );
+    if( !loading ) {
+      item.bbox = center_box( 200, 1 );
+    }
     return( item );
   }
 
-  private CanvasItem create_text() {
+  private CanvasItem create_text( bool loading = false ) {
     var item = new CanvasItemText( _canvas, props );
-    item.bbox = center_box( 200, 1 );
-    item.mode = CanvasItemMode.SELECTED;
     item.select_mode.connect((value) => {
       if( value ) {
         show_format_bar();
@@ -233,39 +241,51 @@ public class CanvasItems {
         hide_format_bar();
       }
     });
-    _active = item;
-    set_edit_mode( true );
+    if( !loading ) {
+      item.bbox = center_box( 200, 1 );
+      item.mode = CanvasItemMode.SELECTED;
+      _active = item;
+      set_edit_mode( true );
+    }
     return( item );
   }
 
-  private CanvasItem create_blur() {
+  private CanvasItem create_blur( bool loading = false ) {
     var item = new CanvasItemBlur( _canvas, props );
-    item.bbox = center_box( 200, 50 );
+    if( !loading ) {
+      item.bbox = center_box( 200, 50 );
+    }
     return( item );
   }
 
-  private CanvasItem create_magnifier() {
+  private CanvasItem create_magnifier( bool loading = false ) {
     var item = new CanvasItemMagnifier( _canvas, 2.0, props );
-    item.bbox = center_box( 200, 200 );
+    if( !loading ) {
+      item.bbox = center_box( 200, 200 );
+    }
     return( item );
   }
 
-  private CanvasItem create_pencil() {
+  private CanvasItem create_pencil( bool loading = false ) {
     var item = new CanvasItemPencil( _canvas, props );
-    _active = item;
-    _canvas.set_cursor( CursorType.PENCIL );
+    if( !loading ) {
+      _active = item;
+      _canvas.set_cursor( CursorType.PENCIL );
+    }
     return( item );
   }
 
-  private CanvasItem create_sequence() {
+  private CanvasItem create_sequence( bool loading = false ) {
     var item = new CanvasItemSequence( _canvas, props );
-    item.bbox = center_box( 50, 50 );
+    if( !loading ) {
+      item.bbox = center_box( 50, 50 );
+    }
     return( item );
   }
 
-  private CanvasItem create_sticker( string? name ) {
+  private CanvasItem create_sticker( string? name, bool loading = false ) {
     var item = new CanvasItemImage( _canvas, name, false, props );
-    if( name != null ) {
+    if( (name != null) && !loading ) {
       item.bbox = center_box( 50, 50 );
     }
     return( item );
@@ -1008,7 +1028,7 @@ public class CanvasItems {
   private void do_save_custom( CanvasItem item ) {
     var name      = "Custom";
     var save_item = new CustomItem.with_item( name, item.duplicate() );
-    _custom_items.add( save_item );
+    custom_items.add( save_item );
   }
 
   /* Serialize the canvas items for the copy buffer */
@@ -1120,20 +1140,20 @@ public class CanvasItems {
     CanvasItem? item = null;
     var type = CanvasItem.get_type_from_xml( node );
     switch( type ) {
-      case CanvasItemType.RECT_STROKE :  item = create_rectangle( false );  break;
-      case CanvasItemType.RECT_FILL   :  item = create_rectangle( true );   break;
-      case CanvasItemType.OVAL_STROKE :  item = create_oval( false );       break;
-      case CanvasItemType.OVAL_FILL   :  item = create_oval( true );        break;
-      case CanvasItemType.STAR_STROKE :  item = create_star( false );       break;
-      case CanvasItemType.STAR_FILL   :  item = create_star( true );        break;
-      case CanvasItemType.LINE        :  item = create_line();              break;
-      case CanvasItemType.ARROW       :  item = create_arrow();             break;
-      case CanvasItemType.TEXT        :  item = create_text();              break;
-      case CanvasItemType.BLUR        :  item = create_blur();              break;
-      case CanvasItemType.MAGNIFIER   :  item = create_magnifier();         break;
-      case CanvasItemType.PENCIL      :  item = create_pencil();            break;
-      case CanvasItemType.SEQUENCE    :  item = create_sequence();          break;
-      case CanvasItemType.STICKER     :  item = create_sticker( null );     break;
+      case CanvasItemType.RECT_STROKE :  item = create_rectangle( false, true );  break;
+      case CanvasItemType.RECT_FILL   :  item = create_rectangle( true, true );   break;
+      case CanvasItemType.OVAL_STROKE :  item = create_oval( false, true );       break;
+      case CanvasItemType.OVAL_FILL   :  item = create_oval( true, true );        break;
+      case CanvasItemType.STAR_STROKE :  item = create_star( false, true );       break;
+      case CanvasItemType.STAR_FILL   :  item = create_star( true, true );        break;
+      case CanvasItemType.LINE        :  item = create_line( true );              break;
+      case CanvasItemType.ARROW       :  item = create_arrow( true );             break;
+      case CanvasItemType.TEXT        :  item = create_text( true );              break;
+      case CanvasItemType.BLUR        :  item = create_blur( true );              break;
+      case CanvasItemType.MAGNIFIER   :  item = create_magnifier( true );         break;
+      case CanvasItemType.PENCIL      :  item = create_pencil( true );            break;
+      case CanvasItemType.SEQUENCE    :  item = create_sequence( true );          break;
+      case CanvasItemType.STICKER     :  item = create_sticker( null, true );     break;
     }
     if( item != null ) {
       item.load( node );

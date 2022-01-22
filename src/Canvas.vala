@@ -56,7 +56,7 @@ public class Canvas : DrawingArea {
     image = new CanvasImage( this );
 
     /* Create the canvas items */
-    items       = new CanvasItems( this );
+    items = new CanvasItems( this );
     items.text_item_edit_changed.connect( edit_mode_changed );
 
     /* Create the undo buffers */
