@@ -72,10 +72,11 @@ public class CanvasToolbar : Toolbar {
     btn.icon_name    = "arrow-symbolic";
     btn.margin_left  = margin;
     btn.margin_right = margin;
+    btn.clicked.connect(() => {
+      _canvas.items.add_shape_item( CanvasItemType.ARROW );
+    });
     btn.button_press_event.connect((e) => {
-      if( e.button == Gdk.BUTTON_PRIMARY ) {
-        _canvas.items.add_shape_item( CanvasItemType.ARROW );
-      } else if( e.button == Gdk.BUTTON_SECONDARY ) {
+      if( e.button == Gdk.BUTTON_SECONDARY ) {
         show_custom_menu( btn, CanvasItemCategory.ARROW );
       }
       return( true );
@@ -94,11 +95,11 @@ public class CanvasToolbar : Toolbar {
     btn.icon_widget  = _canvas.items.get_shape_icon( 0 );
     btn.margin_left  = margin;
     btn.margin_right = margin;
+    btn.clicked.connect(() => {
+      Utils.show_popover( popover );
+    });
     btn.button_press_event.connect((e) => {
-      if( e.button == Gdk.BUTTON_PRIMARY ) {
-        stdout.printf( "Display the shapes\n" );
-        popover.popup();
-      } else if( e.button == Gdk.BUTTON_SECONDARY ) {
+      if( e.button == Gdk.BUTTON_SECONDARY ) {
         show_custom_menu( btn, CanvasItemCategory.SHAPE );
       }
       return( true );
@@ -116,7 +117,9 @@ public class CanvasToolbar : Toolbar {
       b.margin = 5;
       b.clicked.connect(() => {
         _canvas.items.add_shape_item( shape_type );
+        stdout.printf( "Setting btn.icon_widget to shape_type: %d (%s)\n", i, shape_type.to_string() );
         btn.icon_widget = _canvas.items.get_shape_icon( shape_type );
+        btn.show();
         Utils.hide_popover( popover );
       });
       grid.attach( b, (i % 2), (i / 2) );
@@ -266,10 +269,11 @@ public class CanvasToolbar : Toolbar {
     btn.icon_name    = "insert-text-symbolic";
     btn.margin_left  = margin;
     btn.margin_right = margin;
+    btn.clicked.connect(() => {
+      _canvas.items.add_shape_item( CanvasItemType.TEXT );
+    });
     btn.button_press_event.connect((e) => {
-      if( e.button == Gdk.BUTTON_PRIMARY ) {
-        _canvas.items.add_shape_item( CanvasItemType.TEXT );
-      } else if( e.button == Gdk.BUTTON_SECONDARY ) {
+      if( e.button == Gdk.BUTTON_SECONDARY ) {
         show_custom_menu( btn, CanvasItemCategory.TEXT );
       }
       return( true );
@@ -686,7 +690,7 @@ public class CanvasToolbar : Toolbar {
     var popover = new Popover( w );
 
     if( _canvas.items.custom_items.populate_menu( _canvas.items, category, popover ) ) {
-      popover.popup();
+      Utils.show_popover( popover );
     }
 
   }

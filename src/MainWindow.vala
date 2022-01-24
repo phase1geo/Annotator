@@ -572,7 +572,7 @@ public class MainWindow : Hdy.ApplicationWindow {
 
     popover.add( box );
     popover.position = PositionType.BOTTOM;
-    popover.popup();
+    Utils.show_popover( popover );
 
   }
 
