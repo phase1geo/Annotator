@@ -25,7 +25,7 @@ public class CustomItems {
     _items.foreach((item) => {
       if( item.item.itype.category() == category ) {
         var box   = new Box( Orientation.HORIZONTAL, 5 );
-        var icon  = item.icon;
+        var icon  = item.get_icon();
         var mb    = new ModelButton();
         mb.text = item.name;
         mb.clicked.connect(() => {
