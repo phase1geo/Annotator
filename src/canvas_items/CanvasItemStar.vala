@@ -176,6 +176,7 @@ public class CanvasItemStar : CanvasItem {
     if( i != null ) {
       _inner_radius = double.parse( i );
     }
+    bbox_changed();
   }
 
   /* Draw the rectangle */
@@ -193,10 +194,9 @@ public class CanvasItemStar : CanvasItem {
     }
     ctx.close_path();
 
-    save_path( ctx, CanvasItemPathType.FILL );
-
     if( itype == CanvasItemType.STAR_FILL ) {
 
+      save_path( ctx, CanvasItemPathType.FILL );
       ctx.fill_preserve();
 
       Utils.set_context_color_with_alpha( ctx, outline, 0.5 );
@@ -210,6 +210,7 @@ public class CanvasItemStar : CanvasItem {
       Utils.set_context_color_with_alpha( ctx, outline, 0.5 );
       ctx.set_line_width( sw + 2 );
       props.dash.set_bg_pattern( ctx );
+      save_path( ctx, CanvasItemPathType.STROKE );
       ctx.stroke_preserve();
 
       Utils.set_context_color_with_alpha( ctx, props.color, alpha );

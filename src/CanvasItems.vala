@@ -1026,8 +1026,7 @@ public class CanvasItems {
 
   /* Saves the given item as a custom item */
   private void do_save_custom( CanvasItem item ) {
-    var name      = "Custom";
-    var save_item = new CustomItem.with_item( name, item.duplicate() );
+    var save_item = new CustomItem.with_item( item.duplicate() );
     custom_items.add( save_item );
   }
 
@@ -1176,6 +1175,7 @@ public class CanvasItems {
   public void draw( Context ctx ) {
     foreach( CanvasItem item in _items ) {
       item.draw_item( ctx );
+      // item.draw_extents( ctx );
       CanvasItemDashPattern.NONE.set_fg_pattern( ctx );
     }
     foreach( CanvasItem item in _items ) {
@@ -1184,5 +1184,4 @@ public class CanvasItems {
   }
 
 }
-
 

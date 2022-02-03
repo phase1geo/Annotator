@@ -24,10 +24,9 @@ public class CustomItems {
     var mbox = new Box( Orientation.VERTICAL, 0 );
     _items.foreach((item) => {
       if( item.item.itype.category() == category ) {
-        var box   = new Box( Orientation.HORIZONTAL, 5 );
-        var icon  = item.get_icon();
-        var mb    = new ModelButton();
-        mb.text = item.name;
+        var box = new Box( Orientation.HORIZONTAL, 5 );
+        var mb  = new Button();
+        mb.image = item.get_image();
         mb.clicked.connect(() => {
           var it = item.item.duplicate();
           it.bbox = canvas_items.center_box( it.bbox.width, it.bbox.height );
@@ -45,9 +44,8 @@ public class CustomItems {
           }
         });
         box.margin = 5;
-        box.pack_start( icon, false, false, 0 );
-        box.pack_start( mb,   false, false, 0 );
-        box.pack_end(   del,  false, false, 0 );
+        box.pack_start( mb, false, false, 0 );
+        box.pack_end(   del,false, false, 0 );
         mbox.add( box );
       }
     });

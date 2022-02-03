@@ -179,9 +179,10 @@ public class CanvasItem {
     _mode = item.mode;
     props.copy( item.props );
 
-    stdout.printf( "Copying points, mine: %u, theirs: %u\n", points.length, item.points.length );
+    points.remove_range( 0, points.length );
     for( int i=0; i<item.points.length; i++ ) {
-      points.index( i ).copy( item.points.index( i ) );
+      var point = new CanvasPoint.from_point( item.points.index( i ) );
+      points.append_val( point );
     }
 
   }
@@ -272,8 +273,21 @@ public class CanvasItem {
   public virtual bool is_within( double x, double y ) {
     var surface = new ImageSurface( Cairo.Format.ARGB32, canvas.image.info.width, canvas.image.info.height );
     var context = new Context( surface );
+    context.set_line_width( props.stroke_width.width() );
     context.append_path( _path );
     return( _path_type.is_within( context, x, y ) );
+  }
+
+  /* Returns the extents of the shape */
+  public void get_extents( out double x1, out double y1, out double x2, out double y2 ) {
+    var surface = new ImageSurface( Cairo.Format.ARGB32, (int)(bbox.width * 2), (int)(bbox.height * 2) );
+    var context = new Context( surface );
+    if( _path == null ) {
+      draw_item( context );
+    }
+    context.set_line_width( props.stroke_width.width() );
+    context.append_path( _path );
+    context.stroke_extents( out x1, out y1, out x2, out y2 );
   }
 
   /* Returns the selector index that is below the current pointer coordinate */
@@ -434,6 +448,16 @@ public class CanvasItem {
 
   /* Draw the current item */
   public virtual void draw_item( Context ctx ) {}
+
+  public void draw_extents( Context ctx ) {
+    double x1, y1, x2, y2;
+    var red = Utils.color_from_string( "red" );
+    get_extents( out x1, out y1, out x2, out y2 );
+    ctx.set_line_width( 1 );
+    Utils.set_context_color( ctx, red );
+    ctx.rectangle( x1, y1, (x2 - x1), (y2 - y1) );
+    ctx.stroke();
+  }
 
   /* Draw the selection boxes */
   public void draw_selectors( Context ctx ) {
