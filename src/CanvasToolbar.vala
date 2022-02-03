@@ -1,4 +1,4 @@
-/*
+ /*
 * Copyright (c) 2020-2021 (https://github.com/phase1geo/Annotator)
 *
 * This program is free software; you can redistribute it and/or
@@ -122,7 +122,7 @@ public class CanvasToolbar : Toolbar {
         btn.show();
         Utils.hide_popover( popover );
       });
-      grid.attach( b, (i % 2), (i / 2) );
+      grid.attach( b, (i % 4), (i / 4) );
     }
 
     grid.show_all();
