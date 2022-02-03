@@ -20,11 +20,9 @@ public class CustomItems {
    at least one custom item was found for the given category; otherwise, returns false to indicate
    that the popover should not be popped up..
   */
-  public bool populate_menu( CanvasItems canvas_items, CanvasItemCategory category, Popover popover ) {
-    var mbox = new Box( Orientation.VERTICAL, 0 );
+  public void populate_menu( CanvasItems canvas_items, CanvasItemCategory category, Popover popover, FlowBox fb ) {
     _items.foreach((item) => {
       if( item.item.itype.category() == category ) {
-        var box = new Box( Orientation.HORIZONTAL, 5 );
         var mb  = new Button();
         mb.image = item.get_image();
         mb.clicked.connect(() => {
@@ -33,25 +31,18 @@ public class CustomItems {
           canvas_items.add_item( it, -1, true );
           popover.popdown();
         });
+        /*
         var del   = new Button.from_icon_name( "edit-delete-symbolic", IconSize.SMALL_TOOLBAR );
         del.clicked.connect(() => {
           _items.remove( item );
           save();
-          mbox.remove( box );
-          mbox.show_all();
-          if( mbox.get_children().length() == 0 ) {
-            popover.popdown();
-          }
+          fb.remove( box );
+          fb.show_all();
         });
-        box.margin = 5;
-        box.pack_start( mb, false, false, 0 );
-        box.pack_end(   del,false, false, 0 );
-        mbox.add( box );
+        */
+        fb.add( mb );
       }
     });
-    mbox.show_all();
-    popover.add( mbox );
-    return( mbox.get_children().length() > 0 );
   }
 
   /* Returns the local filename containing the custom items */

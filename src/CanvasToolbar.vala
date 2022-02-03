@@ -1,4 +1,4 @@
- /*
+/*
 * Copyright (c) 2020-2021 (https://github.com/phase1geo/Annotator)
 *
 * This program is free software; you can redistribute it and/or
@@ -98,15 +98,14 @@ public class CanvasToolbar : Toolbar {
     btn.clicked.connect(() => {
       Utils.show_popover( popover );
     });
-    btn.button_press_event.connect((e) => {
-      if( e.button == Gdk.BUTTON_SECONDARY ) {
-        show_custom_menu( btn, CanvasItemCategory.SHAPE );
-      }
-      return( true );
-    });
 
-    var grid = new Grid();
-    grid.border_width = 5;
+    var box = new Box( Orientation.VERTICAL, 5 );
+    box.margin = 5;
+
+    var fb = new FlowBox();
+    fb.orientation = Orientation.HORIZONTAL;
+    fb.min_children_per_line = 4;
+    fb.max_children_per_line = 4;
 
     for( int i=0; i<_canvas.items.num_shapes(); i++ ) {
       var b          = new Button();
@@ -122,12 +121,22 @@ public class CanvasToolbar : Toolbar {
         btn.show();
         Utils.hide_popover( popover );
       });
-      grid.attach( b, (i % 4), (i / 4) );
+      fb.add( b );
     }
 
-    grid.show_all();
+    var ci = new FlowBox();
+    ci.orientation = Orientation.HORIZONTAL;
+    ci.min_children_per_line = 4;
+    ci.max_children_per_line = 4;
 
-    popover.add( grid );
+    _canvas.items.custom_items.populate_menu( _canvas.items, CanvasItemCategory.SHAPE, popover, ci );
+
+    box.pack_start( fb, false, false, 0 );
+    box.pack_start( new Separator( Orientation.HORIZONTAL ), false, true, 0 );
+    box.pack_start( ci, false, false, 0 );
+    box.show_all();
+
+    popover.add( box );
 
     add( btn );
 
@@ -687,9 +696,16 @@ public class CanvasToolbar : Toolbar {
   */
   private void show_custom_menu( Widget w, CanvasItemCategory category ) {
 
-    var popover = new Popover( w );
+    var fb = new FlowBox();
+    fb.orientation = Orientation.HORIZONTAL;
+    fb.min_children_per_line = 4;
+    fb.max_children_per_line = 4;
 
-    if( _canvas.items.custom_items.populate_menu( _canvas.items, category, popover ) ) {
+    var popover = new Popover( w );
+    _canvas.items.custom_items.populate_menu( _canvas.items, category, popover, fb );
+
+    if( fb.get_children().length() > 0 ) {
+      popover.add( fb );
       Utils.show_popover( popover );
     }
 
