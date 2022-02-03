@@ -19,7 +19,8 @@ public class CustomItem {
     double x1, y1, x2, y2;
     item.get_extents( out x1, out y1, out x2, out y2 );
     this.item = item.duplicate();
-    this.item.move_item( (0 - x1), (0 - y1) );
+    this.item.move_item( (0 - x1), (0 - y1), false );
+    this.item.mode = CanvasItemMode.NONE;
     create_surface();
   }
 
