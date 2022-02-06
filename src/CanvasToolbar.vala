@@ -89,16 +89,6 @@ public class CanvasToolbar : Toolbar {
   /* Creates the shape toolbar item */
   private void create_shapes() {
 
-    var btn = new ToolButton( null, null );
-    var popover = new Popover( btn );
-    btn.set_tooltip_text( _( "Shapes" ) );
-    btn.icon_widget  = _canvas.items.get_shape_icon( 0 );
-    btn.margin_left  = margin;
-    btn.margin_right = margin;
-    btn.clicked.connect(() => {
-      Utils.show_popover( popover );
-    });
-
     var box = new Box( Orientation.VERTICAL, 5 );
     box.margin = 5;
 
@@ -106,6 +96,9 @@ public class CanvasToolbar : Toolbar {
     fb.orientation = Orientation.HORIZONTAL;
     fb.min_children_per_line = 4;
     fb.max_children_per_line = 4;
+
+    var btn = new ToolButton( null, null );
+    var popover = new Popover( btn );
 
     for( int i=0; i<_canvas.items.num_shapes(); i++ ) {
       var b          = new Button();
@@ -124,19 +117,19 @@ public class CanvasToolbar : Toolbar {
       fb.add( b );
     }
 
-    var ci = new FlowBox();
-    ci.orientation = Orientation.HORIZONTAL;
-    ci.min_children_per_line = 4;
-    ci.max_children_per_line = 4;
-
-    _canvas.items.custom_items.populate_menu( _canvas.items, CanvasItemCategory.SHAPE, popover, ci );
-
     box.pack_start( fb, false, false, 0 );
-    box.pack_start( new Separator( Orientation.HORIZONTAL ), false, true, 0 );
-    box.pack_start( ci, false, false, 0 );
+    _canvas.items.custom_items.create_menu( _canvas.items, CanvasItemCategory.SHAPE, popover, box, _( "Custom Shapes" ), 4 );
     box.show_all();
 
     popover.add( box );
+
+    btn.set_tooltip_text( _( "Shapes" ) );
+    btn.icon_widget  = _canvas.items.get_shape_icon( 0 );
+    btn.margin_left  = margin;
+    btn.margin_right = margin;
+    btn.clicked.connect(() => {
+      Utils.show_popover( popover );
+    });
 
     add( btn );
 
