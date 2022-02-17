@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: com.github.phase1geo.annotator\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-19 23:03-0600\n"
-"PO-Revision-Date: 2021-10-21 19:15+0100\n"
+"PO-Revision-Date: 2022-02-17 20:30+0100\n"
 "Last-Translator: Albano Battistella <albano_battistella@hotmail.com>\n"
 "Language-Team: ITALIAN <LL@li.org>\n"
 "Language: It\n"
@@ -21,30 +21,30 @@ msgid "Opening file"
 msgstr "File di apertura"
 
 #: src/Application.vala:117
-#, fuzzy
 msgid "Display version number."
-msgstr "Visualizza il numero di versione"
+msgstr "Visualizza il numero di versione."
 
 #: src/Application.vala:118
-#, fuzzy
 msgid "Annotate clipboard image."
-msgstr "Annota l'immagine negli appunti"
+msgstr "Annota l'immagine negli appunti."
 
 #: src/Application.vala:119
-#, fuzzy
 msgid "Take and annotate a screenshot."
-msgstr "Apri un'immagine dagli appunti"
+msgstr "Prendi e annota uno screenshot."
 
 #: src/Application.vala:120
 msgid ""
 "Delay (in seconds) before screenshot capture occurs.  Only valid when --"
 "screenshot is set.  Default is 0."
 msgstr ""
+"Ritardo (in secondi) prima dell'acquisizione dello screenshot. Valido solo quando --"
+"lo screenshot è impostato. Il valore predefinito è 0."
 
 #: src/Application.vala:121
 msgid ""
 "Include Annotator window in screenshot.  Only valid when --screenshot is set."
 msgstr ""
+"Includi la finestra Annotator nello screenshot. Valido solo quando --lo screenshot è impostato."
 
 #: src/CanvasImage.vala:95 src/CanvasImage.vala:118
 msgid "change image"
@@ -352,7 +352,7 @@ msgstr "Apri Immagine"
 
 #: src/MainWindow.vala:177
 msgid "Take Screeshot"
-msgstr ""
+msgstr "Prendi Screenshot"
 
 #: src/MainWindow.vala:201 src/UndoBuffer.vala:84
 msgid "Undo"
@@ -425,12 +425,11 @@ msgstr "Apri un'immagine dagli appunti"
 
 #: src/MainWindow.vala:385
 msgid "Take A Screenshot"
-msgstr ""
+msgstr "Prendi Uno Screenshot"
 
 #: src/MainWindow.vala:385
-#, fuzzy
 msgid "Open an image from a screenshot"
-msgstr "Apri un'immagine dagli appunti"
+msgstr "Apri un'immagine da uno screenshot"
 
 #: src/MainWindow.vala:421
 msgid "Font:"
@@ -450,11 +449,11 @@ msgstr "Apri"
 
 #: src/MainWindow.vala:545
 msgid "Delay (in seconds)"
-msgstr ""
+msgstr "Ritardo (in secondi)"
 
 #: src/MainWindow.vala:556
 msgid "Include Annotator window"
-msgstr ""
+msgstr "Includi finestra di Annotator"
 
 #: src/Resizer.vala:161
 msgid "Resize"
