@@ -11,6 +11,7 @@ sources += files(
     'CanvasToolbar.vala',
     'Clipboard.vala',
     'ColorPicker.vala',
+    'CurrentItem.vala',
     'CustomItem.vala',
     'CustomItems.vala',
     'Editor.vala',

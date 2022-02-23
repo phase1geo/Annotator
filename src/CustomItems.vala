@@ -4,6 +4,7 @@ public class CustomItems : Object {
 
   private List<CustomItem> _items;
 
+  public signal void item_selected( CanvasItemCategory category, CustomItem item );
   public signal void edit_start_custom( CanvasItemCategory category );
   public signal void edit_end_custom( CanvasItemCategory category );
   public signal void item_removed();
@@ -22,7 +23,7 @@ public class CustomItems : Object {
   /*
    Creates the custom menu UI and adds it to the end of the given box.
   */
-  public void create_menu( CanvasItems canvas_items, CanvasItemCategory category, Popover popover, Box box, string label_str, int columns = 4 ) {
+  public void create_menu( CanvasItemCategory category, Popover popover, Box box, string label_str, int columns = 4 ) {
 
     var rev_box = new Box( Orientation.VERTICAL, 5 );
 
@@ -36,7 +37,7 @@ public class CustomItems : Object {
     fb.max_children_per_line = columns;
     popover.show.connect(() => {
       edit_end_custom( category );
-      populate_menu( canvas_items, category, popover, fb );
+      populate_menu( category, fb );
       if( fb.get_children().length() == 0 ) {
         rev_box.hide();
       } else {
@@ -86,7 +87,7 @@ public class CustomItems : Object {
    at least one custom item was found for the given category; otherwise, returns false to indicate
    that the popover should not be popped up..
   */
-  public void populate_menu( CanvasItems canvas_items, CanvasItemCategory category, Popover popover, FlowBox fb ) {
+  public void populate_menu( CanvasItemCategory category, FlowBox fb ) {
 
     /* Clear the flowbox */
     fb.get_children().foreach((child) => {
@@ -101,8 +102,7 @@ public class CustomItems : Object {
         var mb  = new Button();
         mb.image = item.get_image();
         mb.clicked.connect(() => {
-          add_item_to_canvas( canvas_items, item.item );
-          popover.popdown();
+          item_selected( category, item );
         });
 
         var del = new Button.from_icon_name( "edit-delete-symbolic", IconSize.SMALL_TOOLBAR );
@@ -142,8 +142,8 @@ public class CustomItems : Object {
 
   }
 
-  private void add_item_to_canvas( CanvasItems canvas_items, CanvasItem item ) {
-    var it = item.duplicate();
+  private void add_item_to_canvas( CanvasItems canvas_items, CustomItem item ) {
+    var it = item.item.duplicate();
     it.bbox = canvas_items.center_box( it.bbox.width, it.bbox.height );
     canvas_items.add_item( it, -1, true );
   }
