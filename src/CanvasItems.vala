@@ -1,4 +1,4 @@
-  /*
+   /*
 * Copyright (c) 2020-2021 (https://github.com/phase1geo/Annotator)
 *
 * This program is free software; you can redistribute it and/or
@@ -47,7 +47,8 @@ public enum CanvasItemType {
   SEQUENCE,
   STICKER,
   IMAGE,
-  NONE;
+  NONE,
+  NUM;
 
   public string to_string() {
     switch( this ) {
@@ -88,6 +89,20 @@ public enum CanvasItemType {
       case "sticker"     :  return( STICKER );
       case "image"       :  return( IMAGE );
       default            :  return( NONE );
+    }
+  }
+
+  public string icon_name() {
+    switch( this ) {
+      case RECT_STROKE :  return( "rect-stroke-symbolic" );
+      case RECT_FILL   :  return( "rect-fill-symbolic" );
+      case OVAL_STROKE :  return( "circle-stroke-symbolic" );
+      case OVAL_FILL   :  return( "circle-fill-symbolic" );
+      case STAR_STROKE :  return( "star-stroke-symbolic" );
+      case STAR_FILL   :  return( "star-fill-symbolic" );
+      case LINE        :  return( "line-symbolic" );
+      case ARROW       :  return( "arrow-symbolic" );
+      default          :  return( "" );
     }
   }
 
@@ -135,7 +150,6 @@ public class CanvasItems {
   private int                  _selector_index = -1;
   private double               _last_x;
   private double               _last_y;
-  private Array<string>        _shape_icons;
   private int                  _press_count    = -1;
   private FormatBar?           _format_bar     = null;
 
@@ -163,26 +177,6 @@ public class CanvasItems {
     custom_items = new CustomItems();
     custom_items.load( this );
 
-    /* Load the shapes */
-    _shape_icons = new Array<string>();
-    _shape_icons.append_val( "rect-stroke-symbolic" );
-    _shape_icons.append_val( "rect-fill-symbolic" );
-    _shape_icons.append_val( "circle-stroke-symbolic" );
-    _shape_icons.append_val( "circle-fill-symbolic" );
-    _shape_icons.append_val( "star-stroke-symbolic" );
-    _shape_icons.append_val( "star-fill-symbolic" );
-    _shape_icons.append_val( "line-symbolic" );
-
-  }
-
-  /* Returns the number of shapes that we support */
-  public int num_shapes() {
-    return( (int)_shape_icons.length );
-  }
-
-  /* Returns the shape of the icon */
-  public Image get_shape_icon( int index ) {
-    return( new Image.from_icon_name( _shape_icons.index( index ), IconSize.LARGE_TOOLBAR ) );
   }
 
   /* Returns the box to place a canvas item into */

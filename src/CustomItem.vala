@@ -1,10 +1,11 @@
 using Gtk;
+using Cairo;
 
 public class CustomItem {
 
-  private static const int icon_size = 32;
+  private static const int icon_size = 24;
 
-  private Cairo.Surface? _surface = null;
+  private ImageSurface? _surface = null;
 
   public CanvasItem? item { get; private set; default = null; }
 
@@ -26,15 +27,17 @@ public class CustomItem {
 
   /* Returns the image associated with this item */
   public Image get_image() {
-    var image = new Image.from_surface( _surface );
+    var surface = new ImageSurface.for_data( _surface.get_data(), _surface.get_format(), _surface.get_width(),
+                                             _surface.get_height(), _surface.get_stride() );
+    var image   = new Image.from_surface( surface );
     return( image );
   }
 
   /* Create an icon from the item */
   private void create_surface() {
     if( item != null ) {
-      var src = new Cairo.ImageSurface( Cairo.Format.A8, icon_size, icon_size );
-     	var ctx = new Cairo.Context( src );
+      var src = new ImageSurface( Format.A8, icon_size, icon_size );
+     	var ctx = new Context( src );
       var it  = item.duplicate();
       double x1, y1, x2, y2;
       it.get_extents( out x1, out y1, out x2, out y2 );

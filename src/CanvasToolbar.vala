@@ -20,6 +20,7 @@
 */
 
 using Gtk;
+using Gee;
 
 public class CanvasToolbar : Toolbar {
 
@@ -34,16 +35,23 @@ public class CanvasToolbar : Toolbar {
   private Revealer           _areveal;
   private Scale              _ascale;
   private FontChooserWidget  _font_chooser;
+  private int                _current_shape;
+  private HashMap<CanvasItemCategory,CurrentItem> _current_item;
 
   /* Constructor */
   public CanvasToolbar( Canvas canvas ) {
 
-    _canvas     = canvas;
-    _width_btns = new Array<RadioButton>();
-    _dash_btns  = new Array<RadioButton>();
+    _canvas       = canvas;
+    _width_btns   = new Array<RadioButton>();
+    _dash_btns    = new Array<RadioButton>();
+    _current_item = new HashMap<CanvasItemCategory,CurrentItem>();
 
-    create_arrow();
-    create_shapes();
+    /* Create current items */
+    _current_item.set( CanvasItemCategory.ARROW, new CurrentItem.with_canvas_item( CanvasItemType.ARROW ) );
+    _current_item.set( CanvasItemCategory.SHAPE, new CurrentItem.with_canvas_item( CanvasItemType.RECT_STROKE ) );
+
+    create_shapes( CanvasItemCategory.ARROW, _( "Add Arrow" ), _( "Custom Arrows" ) );
+    create_shapes( CanvasItemCategory.SHAPE, _( "Add Shape" ), _( "Custom Shapes" ) );
     create_sticker();
     create_sequence();
     create_pencil();
@@ -65,29 +73,8 @@ public class CanvasToolbar : Toolbar {
 
   }
 
-  private void create_arrow() {
-
-    var btn = new ToolButton( null, null );
-    btn.set_tooltip_markup( CanvasItemType.ARROW.tooltip() );
-    btn.icon_name    = "arrow-symbolic";
-    btn.margin_left  = margin;
-    btn.margin_right = margin;
-    btn.clicked.connect(() => {
-      _canvas.items.add_shape_item( CanvasItemType.ARROW );
-    });
-    btn.button_press_event.connect((e) => {
-      if( e.button == Gdk.BUTTON_SECONDARY ) {
-        show_custom_menu( btn, CanvasItemCategory.ARROW );
-      }
-      return( true );
-    });
-
-    add( btn );
-
-  }
-
   /* Creates the shape toolbar item */
-  private void create_shapes() {
+  private void create_shapes( CanvasItemCategory category, string tooltip, string custom_label ) {
 
     var box = new Box( Orientation.VERTICAL, 5 );
     box.margin = 5;
@@ -97,41 +84,66 @@ public class CanvasToolbar : Toolbar {
     fb.min_children_per_line = 4;
     fb.max_children_per_line = 4;
 
-    var btn = new ToolButton( null, null );
-    var popover = new Popover( btn );
+    var btn     = new ToolButton( null, null );
+    var mb      = new ToolButton( null, null );
+    var popover = new Popover( mb );
 
-    for( int i=0; i<_canvas.items.num_shapes(); i++ ) {
-      var b          = new Button();
+    for( int i=0; i<CanvasItemType.NUM; i++ ) {
       var shape_type = (CanvasItemType)i;
-      b.set_tooltip_markup( shape_type.tooltip() );
-      b.image  = _canvas.items.get_shape_icon( i );
-      b.relief = ReliefStyle.NONE;
-      b.margin = 5;
-      b.clicked.connect(() => {
-        _canvas.items.add_shape_item( shape_type );
-        stdout.printf( "Setting btn.icon_widget to shape_type: %d (%s)\n", i, shape_type.to_string() );
-        btn.icon_widget = _canvas.items.get_shape_icon( shape_type );
-        btn.show();
-        Utils.hide_popover( popover );
-      });
-      fb.add( b );
+      if( shape_type.category() == category ) {
+        var b = new Button();
+        b.set_tooltip_markup( shape_type.tooltip() );
+        b.image  = new Image.from_icon_name( shape_type.icon_name(), IconSize.LARGE_TOOLBAR );
+        b.relief = ReliefStyle.NONE;
+        b.margin = 5;
+        b.clicked.connect(() => {
+          _current_item.get( category ).canvas_item( shape_type );
+          _current_item.get( category ).add_item( _canvas.items );
+          btn.icon_widget = _current_item.get( category ).get_image();
+          btn.show_all();
+          Utils.hide_popover( popover );
+        });
+        fb.add( b );
+      }
     }
 
     box.pack_start( fb, false, false, 0 );
-    _canvas.items.custom_items.create_menu( _canvas.items, CanvasItemCategory.SHAPE, popover, box, _( "Custom Shapes" ), 4 );
+    _canvas.items.custom_items.create_menu( category, popover, box, custom_label, 4 );
+    _canvas.items.custom_items.item_selected.connect((cat, item) => {
+      if( cat == category ) {
+        _current_item.get( cat ).custom_item( item );
+        _current_item.get( cat ).add_item( _canvas.items );
+        btn.icon_widget = _current_item.get( cat ).get_image();
+        btn.show_all();
+        Utils.hide_popover( popover );
+      }
+    });
     box.show_all();
 
     popover.add( box );
 
-    btn.set_tooltip_text( _( "Shapes" ) );
-    btn.icon_widget  = _canvas.items.get_shape_icon( 0 );
+    btn.set_tooltip_text( tooltip );
+    btn.icon_widget  = _current_item.get( category ).get_image();
     btn.margin_left  = margin;
-    btn.margin_right = margin;
+    btn.margin_right = 0;
     btn.clicked.connect(() => {
+      _current_item.get( category ).add_item( _canvas.items );
+    });
+
+    var lbl = new Label( "\u25bc" );
+    lbl.max_width_chars = 1;
+    lbl.margin = 0;
+
+    mb.set_tooltip_text( _( "More" ) );
+    mb.label_widget = lbl;
+    mb.margin_left  = 0;
+    mb.margin_right = margin;
+    mb.clicked.connect(() => {
       Utils.show_popover( popover );
     });
 
     add( btn );
+    add( mb );
 
   }
 
@@ -274,12 +286,14 @@ public class CanvasToolbar : Toolbar {
     btn.clicked.connect(() => {
       _canvas.items.add_shape_item( CanvasItemType.TEXT );
     });
+    /*
     btn.button_press_event.connect((e) => {
       if( e.button == Gdk.BUTTON_SECONDARY ) {
         show_custom_menu( btn, CanvasItemCategory.TEXT );
       }
       return( true );
     });
+    */
 
     add( btn );
 
@@ -687,6 +701,7 @@ public class CanvasToolbar : Toolbar {
    Displays the custom menu for the specified item category type
    relative to the given widget.
   */
+  /*
   private void show_custom_menu( Widget w, CanvasItemCategory category ) {
 
     var fb = new FlowBox();
@@ -695,7 +710,7 @@ public class CanvasToolbar : Toolbar {
     fb.max_children_per_line = 4;
 
     var popover = new Popover( w );
-    _canvas.items.custom_items.populate_menu( _canvas.items, category, popover, fb );
+    _canvas.items.custom_items.populate_menu( category, null, popover, fb );
 
     if( fb.get_children().length() > 0 ) {
       popover.add( fb );
@@ -703,6 +718,7 @@ public class CanvasToolbar : Toolbar {
     }
 
   }
+  */
 
 }
 
