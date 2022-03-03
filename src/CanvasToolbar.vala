@@ -50,8 +50,8 @@ public class CanvasToolbar : Toolbar {
     _current_item.set( CanvasItemCategory.ARROW, new CurrentItem.with_canvas_item( CanvasItemType.ARROW ) );
     _current_item.set( CanvasItemCategory.SHAPE, new CurrentItem.with_canvas_item( CanvasItemType.RECT_STROKE ) );
 
-    create_shapes( CanvasItemCategory.ARROW, _( "Add Arrow" ), _( "Custom Arrows" ) );
-    create_shapes( CanvasItemCategory.SHAPE, _( "Add Shape" ), _( "Custom Shapes" ) );
+    create_shapes( CanvasItemCategory.ARROW, _( "Add Arrow" ), _( "More Arrows" ), _( "Custom Arrows" ) );
+    create_shapes( CanvasItemCategory.SHAPE, _( "Add Shape" ), _( "More Shapes" ), _( "Custom Shapes" ) );
     create_sticker();
     create_sequence();
     create_pencil();
@@ -74,7 +74,7 @@ public class CanvasToolbar : Toolbar {
   }
 
   /* Creates the shape toolbar item */
-  private void create_shapes( CanvasItemCategory category, string tooltip, string custom_label ) {
+  private void create_shapes( CanvasItemCategory category, string tooltip, string mb_tooltip, string custom_label ) {
 
     var box = new Box( Orientation.VERTICAL, 5 );
     box.margin = 5;
@@ -134,7 +134,7 @@ public class CanvasToolbar : Toolbar {
     lbl.max_width_chars = 1;
     lbl.margin = 0;
 
-    mb.set_tooltip_text( _( "More" ) );
+    mb.set_tooltip_text( mb_tooltip );
     mb.label_widget = lbl;
     mb.margin_left  = 0;
     mb.margin_right = margin;
