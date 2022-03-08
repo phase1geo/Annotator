@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.annotator\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-03-07 19:20-0600\n"
+"POT-Creation-Date: 2022-03-07 19:21-0600\n"
 "PO-Revision-Date: 2021-10-10 14:15+0100\n"
 "Last-Translator: MartinIIOT <https://www.github.com/MartinIIOT>\n"
 "Language-Team: SLOVAKIA\n"
@@ -182,6 +182,11 @@ msgid "Add Arrow"
 msgstr "Šípka"
 
 #: src/CanvasToolbar.vala:53
+#, fuzzy
+msgid "More Arrows"
+msgstr "Nová šípka"
+
+#: src/CanvasToolbar.vala:53
 msgid "Custom Arrows"
 msgstr ""
 
@@ -192,12 +197,13 @@ msgstr "Tvary"
 
 #: src/CanvasToolbar.vala:54
 #, fuzzy
-msgid "Custom Shapes"
+msgid "More Shapes"
 msgstr "Tvary"
 
-#: src/CanvasToolbar.vala:137
-msgid "More"
-msgstr ""
+#: src/CanvasToolbar.vala:54
+#, fuzzy
+msgid "Custom Shapes"
+msgstr "Tvary"
 
 #: src/CanvasToolbar.vala:337
 msgid "Crop Image"

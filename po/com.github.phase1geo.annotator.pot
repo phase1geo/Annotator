@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.annotator\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-03-07 19:20-0600\n"
+"POT-Creation-Date: 2022-03-07 19:21-0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -173,6 +173,10 @@ msgid "Add Arrow"
 msgstr ""
 
 #: src/CanvasToolbar.vala:53
+msgid "More Arrows"
+msgstr ""
+
+#: src/CanvasToolbar.vala:53
 msgid "Custom Arrows"
 msgstr ""
 
@@ -181,11 +185,11 @@ msgid "Add Shape"
 msgstr ""
 
 #: src/CanvasToolbar.vala:54
-msgid "Custom Shapes"
+msgid "More Shapes"
 msgstr ""
 
-#: src/CanvasToolbar.vala:137
-msgid "More"
+#: src/CanvasToolbar.vala:54
+msgid "Custom Shapes"
 msgstr ""
 
 #: src/CanvasToolbar.vala:337
