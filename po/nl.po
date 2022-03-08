@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.annotator\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-01-19 23:03-0600\n"
+"POT-Creation-Date: 2022-03-07 19:20-0600\n"
 "PO-Revision-Date: 2021-09-30 18:25+0200\n"
 "Last-Translator: Heimen Stoffels <vistausss@fastmail.com>\n"
 "Language-Team: \n"
@@ -84,129 +84,161 @@ msgstr "Reeksnummer:"
 msgid "Points:"
 msgstr "Punten:"
 
-#: src/canvas_items/CanvasItemText.vala:109 src/CanvasItems.vala:96
+#: src/canvas_items/CanvasItemText.vala:109 src/CanvasItems.vala:119
 msgid "Text"
 msgstr "Tekst"
 
-#: src/CanvasItems.vala:88
+#: src/CanvasItems.vala:111
 msgid "Rectangle Outline"
 msgstr "Rechthoek met contour"
 
-#: src/CanvasItems.vala:89
+#: src/CanvasItems.vala:112
 msgid "Rectangle"
 msgstr "Rechthoek"
 
-#: src/CanvasItems.vala:90
+#: src/CanvasItems.vala:113
 msgid "Oval Outline"
 msgstr "Ovaal met contour"
 
-#: src/CanvasItems.vala:91
+#: src/CanvasItems.vala:114
 msgid "Oval"
 msgstr "Ovaal"
 
-#: src/CanvasItems.vala:92
+#: src/CanvasItems.vala:115
 msgid "Star Outline"
 msgstr "Ster met contour"
 
-#: src/CanvasItems.vala:93
+#: src/CanvasItems.vala:116
 msgid "Star"
 msgstr "Ster"
 
-#: src/CanvasItems.vala:94
+#: src/CanvasItems.vala:117
 msgid "Line"
 msgstr "Lijn"
 
-#: src/CanvasItems.vala:95
+#: src/CanvasItems.vala:118
 msgid "Arrow"
 msgstr "Pijl"
 
-#: src/CanvasItems.vala:97
+#: src/CanvasItems.vala:120
 msgid "Blur"
 msgstr "Vervagen"
 
-#: src/CanvasItems.vala:98
+#: src/CanvasItems.vala:121
 msgid "Magnifier"
 msgstr "Vergrootglas"
 
-#: src/CanvasItems.vala:99
+#: src/CanvasItems.vala:122
 msgid "Pencil Tool"
 msgstr "Potlood"
 
-#: src/CanvasItems.vala:100
+#: src/CanvasItems.vala:123
 msgid "Sequence Number"
 msgstr "Reeksnummer"
 
-#: src/CanvasItems.vala:101
+#: src/CanvasItems.vala:124
 msgid "Sticker"
 msgstr "Sticker"
 
-#: src/CanvasItems.vala:828
+#: src/CanvasItems.vala:870
 msgid "move items"
 msgstr "Items verplaatsen"
 
-#: src/CanvasItems.vala:904 src/FormatBar.vala:55
+#: src/CanvasItems.vala:946 src/FormatBar.vala:55
 msgid "Copy"
 msgstr "Kopiëren"
 
-#: src/CanvasItems.vala:905 src/FormatBar.vala:60
+#: src/CanvasItems.vala:947 src/FormatBar.vala:60
 msgid "Cut"
 msgstr "Knippen"
 
-#: src/CanvasItems.vala:907
+#: src/CanvasItems.vala:949
 msgid "Delete"
 msgstr "Verwijderen"
 
-#: src/CanvasItems.vala:909
+#: src/CanvasItems.vala:951
 msgid "Send to Front"
 msgstr "Tonen op voorgrond"
 
-#: src/CanvasItems.vala:910
+#: src/CanvasItems.vala:952
 msgid "Send to Back"
 msgstr "Tonen op achtergrond"
 
-#: src/CanvasItem.vala:258
+#: src/CanvasItems.vala:956
+msgid "Save As Custom"
+msgstr ""
+
+#: src/CanvasItem.vala:260
 msgid "resize item"
 msgstr "Grootte aanpassen"
 
-#: src/CanvasToolbar.vala:87
-msgid "Shapes"
+#: src/CanvasToolbar.vala:53
+#, fuzzy
+msgid "Add Arrow"
+msgstr "Pijl"
+
+#: src/CanvasToolbar.vala:53
+msgid "Custom Arrows"
+msgstr ""
+
+#: src/CanvasToolbar.vala:54
+#, fuzzy
+msgid "Add Shape"
 msgstr "Vormen"
 
-#: src/CanvasToolbar.vala:302
+#: src/CanvasToolbar.vala:54
+#, fuzzy
+msgid "Custom Shapes"
+msgstr "Vormen"
+
+#: src/CanvasToolbar.vala:137
+msgid "More"
+msgstr ""
+
+#: src/CanvasToolbar.vala:337
 msgid "Crop Image"
 msgstr "Afbeelding bijsnijden"
 
-#: src/CanvasToolbar.vala:330 src/Resizer.vala:155
+#: src/CanvasToolbar.vala:365 src/Resizer.vala:155
 msgid "Resize Image"
 msgstr "Afbeeldingsgrootte aanpassen"
 
-#: src/CanvasToolbar.vala:349
+#: src/CanvasToolbar.vala:384
 msgid "Shape Color"
 msgstr "Vormkleur"
 
-#: src/CanvasToolbar.vala:374
+#: src/CanvasToolbar.vala:409
 msgid "Item Color"
 msgstr "Itemkleur"
 
-#: src/CanvasToolbar.vala:413
+#: src/CanvasToolbar.vala:448
 msgid "Add Transparency"
 msgstr "Doorzichtigheid toevoegen"
 
-#: src/CanvasToolbar.vala:435
+#: src/CanvasToolbar.vala:470
 msgid "Shape Border"
 msgstr "Vormkader"
 
-#: src/CanvasToolbar.vala:444
+#: src/CanvasToolbar.vala:479
 msgid "Border Width"
 msgstr "Kaderbreedte"
 
-#: src/CanvasToolbar.vala:470
+#: src/CanvasToolbar.vala:505
 msgid "Dash Pattern"
 msgstr "Streepjespatroon"
 
-#: src/CanvasToolbar.vala:512
+#: src/CanvasToolbar.vala:547
 msgid "Font Properties"
 msgstr "Lettertype-eigenschappen"
+
+#: src/CustomItems.vala:31 src/CustomItems.vala:49 src/CustomItems.vala:62
+#, fuzzy
+msgid "Edit"
+msgstr "Bewerken"
+
+#: src/CustomItems.vala:57
+msgid "Done"
+msgstr ""
 
 #: src/Exporter.vala:49
 msgid "JPEG Image (JPEG)"

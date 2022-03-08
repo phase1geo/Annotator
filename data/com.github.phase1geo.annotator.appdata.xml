@@ -34,14 +34,12 @@
     <p xml:lang="nl">Communiceer met afbeeldingen. Bétere afbeeldingen.</p>
     <p xml:lang="it">Comunica con le immagini. Meglio.</p>
     <ul>
-      <li>Load image from the file system or clipboard.</li>
-      <li xml:lang="pt_BR">Carregue a imagem do sistema de arquivos ou da área de transferência.</li>
-      <li xml:lang="nl">Laad een afbeelding van het bestandssysteem of klembord.</li>
-      <li xml:lang="it">Carica l'immagine dal file system o dagli appunti.</li>
+      <li>Load image from the file system, clipboard or a screenshot.</li>
       <li>Add shapes, stickers, text, drawings, and other callouts to highlight image details.</li>
       <li xml:lang="pt_BR">Adicione formas, adesivos, texto, desenhos ou outros textos explicativos para destacar os detalhes da imagem.</li>
       <li xml:lang="nl">Voeg vormen, stickers, tekst, tekeningen en andere items toe om afbeeldingen te verduidelijken.</li>
       <li xml:lang="it">Aggiungi forme, adesivi, testo, disegni e altri richiami per evidenziare i particolari dell'immagine.</li>
+      <li>Save custom shapes for easy reuse.</li>
       <li>Add magnifiers to enhance image details.</li>
       <li xml:lang="pt_BR">Adicione uma lupa para melhorar os detalhes da imagem.</li>
       <li xml:lang="nl">Voeg vergrotingen toe om details te verduidelijken.</li>
@@ -118,6 +116,27 @@
     <value key="x-appcenter-stripe">pk_live_51Ccoj4BJm4hDdHaF1YKGdyGLCLtShzElKsr4GM9hJDJAoZArcWrNHsjL9b8SBs01GQBYpakj0l1tYenVJOqke93300TULHWdph</value>
   </custom>
   <releases>
+    <release version="1.2.0" date="2022-03-02">
+      <p>New</p>
+      <ul>
+        <li>Adding support for taking screenshots from within the application (screen, window and area).</li>
+        <li>Adding command-line options for taking screenshots.</li>
+        <li>Adding support for creating and saving custom arrows and shapes.</li>
+      </ul>
+      <p>Changes</p>
+      <ul>
+        <li>Updated Dutch translation (thanks to Heimen Stoffels).</li>
+        <li>Updated Italian translation (thanks to @albanobattistella).</li>
+        <li>Updated Flatpak SDK from version 6 to 6.1.</li>
+        <li>Modified .gitignore to ignore .swp files from anywhere in the codebase.</li>
+        <li>Changed shape dropdown to display four shapes per row instead of two.</li>
+      </ul>
+      <p>Bug Fixes</p>
+      <ul>
+        <li>Improved ability to click on shapes that only have borders.</li>
+        <li>Fixed issues with copying the contents of one shape into another.</li>
+      </ul>
+    </release>
     <release version="1.1.0" date="2022-01-14">
       <p>New</p>
       <ul>

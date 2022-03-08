@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.annotator\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-01-19 23:03-0600\n"
+"POT-Creation-Date: 2022-03-07 19:20-0600\n"
 "PO-Revision-Date: 2022-02-17 20:30+0100\n"
 "Last-Translator: Albano Battistella <albano_battistella@hotmail.com>\n"
 "Language-Team: ITALIAN <LL@li.org>\n"
@@ -37,14 +37,15 @@ msgid ""
 "Delay (in seconds) before screenshot capture occurs.  Only valid when --"
 "screenshot is set.  Default is 0."
 msgstr ""
-"Ritardo (in secondi) prima dell'acquisizione dello screenshot. Valido solo quando --"
-"lo screenshot è impostato. Il valore predefinito è 0."
+"Ritardo (in secondi) prima dell'acquisizione dello screenshot. Valido solo "
+"quando --lo screenshot è impostato. Il valore predefinito è 0."
 
 #: src/Application.vala:121
 msgid ""
 "Include Annotator window in screenshot.  Only valid when --screenshot is set."
 msgstr ""
-"Includi la finestra Annotator nello screenshot. Valido solo quando --lo screenshot è impostato."
+"Includi la finestra Annotator nello screenshot. Valido solo quando --lo "
+"screenshot è impostato."
 
 #: src/CanvasImage.vala:95 src/CanvasImage.vala:118
 msgid "change image"
@@ -82,129 +83,161 @@ msgstr "Numero di sequenza:"
 msgid "Points:"
 msgstr "Punti:"
 
-#: src/canvas_items/CanvasItemText.vala:109 src/CanvasItems.vala:96
+#: src/canvas_items/CanvasItemText.vala:109 src/CanvasItems.vala:119
 msgid "Text"
 msgstr "Testo"
 
-#: src/CanvasItems.vala:88
+#: src/CanvasItems.vala:111
 msgid "Rectangle Outline"
 msgstr "Contorno Rettangolo"
 
-#: src/CanvasItems.vala:89
+#: src/CanvasItems.vala:112
 msgid "Rectangle"
 msgstr "Rettangolo"
 
-#: src/CanvasItems.vala:90
+#: src/CanvasItems.vala:113
 msgid "Oval Outline"
 msgstr "Contorno Ovale"
 
-#: src/CanvasItems.vala:91
+#: src/CanvasItems.vala:114
 msgid "Oval"
 msgstr "Ovale"
 
-#: src/CanvasItems.vala:92
+#: src/CanvasItems.vala:115
 msgid "Star Outline"
 msgstr "Contorno Stella"
 
-#: src/CanvasItems.vala:93
+#: src/CanvasItems.vala:116
 msgid "Star"
 msgstr "Stella"
 
-#: src/CanvasItems.vala:94
+#: src/CanvasItems.vala:117
 msgid "Line"
 msgstr "Linea"
 
-#: src/CanvasItems.vala:95
+#: src/CanvasItems.vala:118
 msgid "Arrow"
 msgstr "Freccia"
 
-#: src/CanvasItems.vala:97
+#: src/CanvasItems.vala:120
 msgid "Blur"
 msgstr "Sfocatura"
 
-#: src/CanvasItems.vala:98
+#: src/CanvasItems.vala:121
 msgid "Magnifier"
 msgstr "Lente ingrandimento"
 
-#: src/CanvasItems.vala:99
+#: src/CanvasItems.vala:122
 msgid "Pencil Tool"
 msgstr "Strumento Matita"
 
-#: src/CanvasItems.vala:100
+#: src/CanvasItems.vala:123
 msgid "Sequence Number"
 msgstr "Numero di sequenza"
 
-#: src/CanvasItems.vala:101
+#: src/CanvasItems.vala:124
 msgid "Sticker"
 msgstr "Adesivo"
 
-#: src/CanvasItems.vala:828
+#: src/CanvasItems.vala:870
 msgid "move items"
 msgstr "sposta oggetti"
 
-#: src/CanvasItems.vala:904 src/FormatBar.vala:55
+#: src/CanvasItems.vala:946 src/FormatBar.vala:55
 msgid "Copy"
 msgstr "Copia"
 
-#: src/CanvasItems.vala:905 src/FormatBar.vala:60
+#: src/CanvasItems.vala:947 src/FormatBar.vala:60
 msgid "Cut"
 msgstr "Taglia"
 
-#: src/CanvasItems.vala:907
+#: src/CanvasItems.vala:949
 msgid "Delete"
 msgstr "Cancella"
 
-#: src/CanvasItems.vala:909
+#: src/CanvasItems.vala:951
 msgid "Send to Front"
 msgstr "Manda in primo piano"
 
-#: src/CanvasItems.vala:910
+#: src/CanvasItems.vala:952
 msgid "Send to Back"
 msgstr "Rimandare indietro"
 
-#: src/CanvasItem.vala:258
+#: src/CanvasItems.vala:956
+msgid "Save As Custom"
+msgstr ""
+
+#: src/CanvasItem.vala:260
 msgid "resize item"
 msgstr "ridimensiona oggetto"
 
-#: src/CanvasToolbar.vala:87
-msgid "Shapes"
+#: src/CanvasToolbar.vala:53
+#, fuzzy
+msgid "Add Arrow"
+msgstr "Freccia"
+
+#: src/CanvasToolbar.vala:53
+msgid "Custom Arrows"
+msgstr ""
+
+#: src/CanvasToolbar.vala:54
+#, fuzzy
+msgid "Add Shape"
 msgstr "Forma"
 
-#: src/CanvasToolbar.vala:302
+#: src/CanvasToolbar.vala:54
+#, fuzzy
+msgid "Custom Shapes"
+msgstr "Forma"
+
+#: src/CanvasToolbar.vala:137
+msgid "More"
+msgstr ""
+
+#: src/CanvasToolbar.vala:337
 msgid "Crop Image"
 msgstr "Ritaglia Immagine"
 
-#: src/CanvasToolbar.vala:330 src/Resizer.vala:155
+#: src/CanvasToolbar.vala:365 src/Resizer.vala:155
 msgid "Resize Image"
 msgstr "Ridimensiona Immagine"
 
-#: src/CanvasToolbar.vala:349
+#: src/CanvasToolbar.vala:384
 msgid "Shape Color"
 msgstr "Colore Forma"
 
-#: src/CanvasToolbar.vala:374
+#: src/CanvasToolbar.vala:409
 msgid "Item Color"
 msgstr "Colore Elemento"
 
-#: src/CanvasToolbar.vala:413
+#: src/CanvasToolbar.vala:448
 msgid "Add Transparency"
 msgstr "Aggiungi Trasparenza"
 
-#: src/CanvasToolbar.vala:435
+#: src/CanvasToolbar.vala:470
 msgid "Shape Border"
 msgstr "Bordo Forma"
 
-#: src/CanvasToolbar.vala:444
+#: src/CanvasToolbar.vala:479
 msgid "Border Width"
 msgstr "Larghezza del bordo"
 
-#: src/CanvasToolbar.vala:470
+#: src/CanvasToolbar.vala:505
 msgid "Dash Pattern"
 msgstr "Modello tratto"
 
-#: src/CanvasToolbar.vala:512
+#: src/CanvasToolbar.vala:547
 msgid "Font Properties"
 msgstr "Proprietà Carattere"
+
+#: src/CustomItems.vala:31 src/CustomItems.vala:49 src/CustomItems.vala:62
+#, fuzzy
+msgid "Edit"
+msgstr "Modifica"
+
+#: src/CustomItems.vala:57
+msgid "Done"
+msgstr ""
 
 #: src/Exporter.vala:49
 msgid "JPEG Image (JPEG)"
