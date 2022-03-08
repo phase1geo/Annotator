@@ -119,7 +119,7 @@ public class Exporter {
     /* Create file filters */
     var filter = new FileFilter();
     filter.set_filter_name( type.description() );
-    filter.add_pattern( "*" + type.to_string() );
+    filter.add_pattern( "*" + type.extension() );
     dialog.add_filter( filter );
 
     if( dialog.run() == ResponseType.ACCEPT ) {
