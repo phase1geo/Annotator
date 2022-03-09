@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2020-2021 (https://github.com/phase1geo/Annotator)
+* Copyright (c) 2020 (https://github.com/phase1geo/Annotator)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -20,274 +20,147 @@
 */
 
 using Gtk;
-using Gdk;
-using Cairo;
 
-public enum ExportType {
-  JPEG,
-  PNG,
-  TIFF,
-  BMP,
-  PDF,
-  SVG,
-  NUM;
+public class Exporter : Box {
 
-  public string to_string() {
-    switch( this ) {
-      case JPEG :  return( "jpeg" );
-      case PNG  :  return( "png" );
-      case TIFF :  return( "tiff" );
-      case BMP  :  return( "bmp" );
-      case PDF  :  return( "pdf" );
-      case SVG  :  return( "svg" );
-      default   :  assert_not_reached();
-    }
-  }
+  private MenuButton _mb;
+  private Revealer   _stack_reveal;
+  private Stack      _stack;
 
-  public string description() {
-    switch( this ) {
-      case JPEG :  return( _( "JPEG Image (JPEG)" ) );
-      case PNG  :  return( _( "Portable Network Graphics (PNG)" ) );
-      case TIFF :  return( _( "Tag Image File Format (TIFF)" ) );
-      case BMP  :  return( _( "Bitmap Image (BMP)" ) );
-      case PDF  :  return( _( "Portable Document Format (PDF)" ) );
-      case SVG  :  return( _( "Scalable Vector Graphics (SVG)" ) );
-      default   :  assert_not_reached();
-    }
-  }
-
-  public string label() {
-    switch( this ) {
-      case JPEG :  return( _( "Export As JPEG…" ) );
-      case PNG  :  return( _( "Export As PNG…" ) );
-      case TIFF :  return( _( "Export As TIFF…" ) );
-      case BMP  :  return( _( "Export As BMP…" ) );
-      case PDF  :  return( _( "Export As PDF…" ) );
-      case SVG  :  return( _( "Export As SVG…" ) );
-      default   :  assert_not_reached();
-    }
-  }
-
-  public string extension() {
-    switch( this ) {
-      case JPEG :  return( _( ".jpg" ) );
-      case PNG  :  return( _( ".png" ) );
-      case TIFF :  return( _( ".tiff" ) );
-      case BMP  :  return( _( ".bmp" ) );
-      case PDF  :  return( _( ".pdf" ) );
-      case SVG  :  return( _( ".svg" ) );
-      default   :  assert_not_reached();
-    }
-  }
-
-}
-
-public class Exporter {
-
-  private Canvas       _canvas;
-  private ImageSurface _surface;
+  public signal void export_done();
 
   /* Constructor */
-  public Exporter( Canvas canvas ) {
-    _canvas = canvas;
+  public Exporter( MainWindow win ) {
+
+    Object( orientation: Orientation.VERTICAL, spacing: 0 );
+
+    _mb       = new MenuButton();
+    _mb.popup = new Gtk.Menu();
+    _mb.image = new Image.from_icon_name( "pan-down-symbolic", IconSize.SMALL_TOOLBAR );
+    _mb.image_position = PositionType.RIGHT;
+    _mb.always_show_image = true;
+
+    var export = new Button.with_label( _( "Export…" ) );
+    export.set_tooltip_markup( Utils.tooltip_with_accel( _( "Export With Current Settings" ), "<Control>e" ) );
+    export.clicked.connect(() => {
+      do_export( win );
+      export_done();
+    });
+
+    var bbox = new Box( Orientation.HORIZONTAL, 5 );
+    bbox.pack_start( _mb,    true,  true );
+    bbox.pack_end(   export, false, false );
+
+    _stack = new Stack();
+    _stack.transition_type = StackTransitionType.NONE;
+    _stack.hhomogeneous    = true;
+    _stack.vhomogeneous    = false;
+
+    _stack_reveal = new Revealer();
+    _stack_reveal.add( _stack );
+
+    populate( win );
+
+    _mb.popup.show_all();
+
+    pack_start( bbox,          false, true, 0 );
+    pack_start( _stack_reveal, true,  true, 0 );
+    show_all();
+
+    /* Initialize the UI */
+    var last    = win.settings.get_string( "last-export" );
+    var current = win.exports.get_by_name( last );
+    handle_mb_change( win, current );
+
   }
 
-  /* Exports to a user chosen file */
-  public void export_image( ImageSurface source, ExportType type, string? filename = null ) {
-
-    var fname = (filename == null) ? get_filename( type ) : filename;
-
-    /* If the user cancelled the export, return now */
-    if( fname == null ) return;
-
-    /* Perform the export */
-    switch( type ) {
-      case ExportType.PDF :  export_pdf( fname, source );  break;
-      case ExportType.SVG :  export_svg( fname, source );  break;
-      default             :  export_other( fname, source, type );  break;
+  /* Populates the exporter widget with the available export types */
+  private void populate( MainWindow win ) {
+    for( int i=0; i<win.exports.length(); i++ ) {
+      if( win.exports.index( i ).exportable ) {
+        add_export( win, win.exports.index( i ) );
+      }
     }
+  }
+
+  private void handle_mb_change( MainWindow win, Export export ) {
+    _mb.label                  = export.label;
+    _stack.visible_child_name  = export.name;
+    _stack_reveal.reveal_child = export.settings_available();
+    win.settings.set_string( "last-export", export.name );
+  }
+
+  /* Add the given export */
+  private void add_export( MainWindow win, Export export ) {
+
+    /* Add menu option to the menubutton */
+    var mnu = new Gtk.MenuItem.with_label( export.label );
+    mnu.activate.connect(() => {
+      handle_mb_change( win, export );
+    });
+    _mb.popup.add( mnu );
+
+    /* Add the page */
+    var opts = new Grid();
+    opts.margin         = 5;
+    opts.column_spacing = 5;
+    opts.expand         = true;
+    export.add_settings( opts );
+
+    var label = new Label( "<i>" + _( "Export Options" ) + "</i>" );
+    label.use_markup = true;
+
+    var frame = new Frame( null );
+    frame.label_widget  = label;
+    frame.label_xalign  = (float)0.5;
+    frame.margin_top    = 5;
+    frame.margin_bottom = 5;
+    frame.add( opts );
+
+    /* Add the options to the options stack */
+    _stack.add_named( frame, export.name );
 
   }
 
-  /* Returns a filename from the user through a save dialog */
-  private string? get_filename( ExportType type ) {
+  /* Perform the export */
+  public void do_export( MainWindow win ) {
 
-    /* Get the file to open from the user */
-    var dialog   = new FileChooserNative( _( "Export Image" ), _canvas.win, FileChooserAction.SAVE, _( "Export" ), _( "Cancel" ) );
+    var name   = _stack.visible_child_name;
+    var export = win.exports.get_by_name( name );
+
+    var dialog = new FileChooserDialog( _( "Export As %s" ).printf( export.label ), win, FileChooserAction.SAVE,
+      _( "Cancel" ), ResponseType.CANCEL, _( "Export" ), ResponseType.ACCEPT );
     Utils.set_chooser_folder( dialog );
 
-    /* Create file filters */
-    var filter = new FileFilter();
-    filter.set_filter_name( type.description() );
-    filter.add_pattern( "*" + type.extension() );
-    dialog.add_filter( filter );
+    /* Set the filter */
+    FileFilter filter = new FileFilter();
+    filter.set_filter_name( export.label );
+    foreach( string extension in export.extensions ) {
+      filter.add_pattern( "*" + extension );
+    }
+    dialog.set_filter( filter );
 
     if( dialog.run() == ResponseType.ACCEPT ) {
-      var filename = dialog.get_filename();
-      if( !filename.has_suffix( type.extension() ) ) {
-        filename += type.extension();
-      }
-      Utils.store_chooser_folder( filename );
-      return( filename );
+
+      /* Close the dialog and parent window */
+      dialog.close();
+
+      /* Perform the export */
+      var fname = dialog.get_filename();
+      export.export( fname = win.repair_filename( fname, export.extensions ), win.get_current_da() );
+      Utils.store_chooser_folder( fname );
+
+      /* Generate notification to indicate that the export completed */
+      win.notification( _( "Minder Export Completed" ), fname );
+
+    } else {
+
+      dialog.close();
+
     }
-
-    return( null );
-
-  }
-
-  /* Exports the given image type to file */
-  private void export_other( string filename, ImageSurface source, ExportType type ) {
-
-    string[] opt_keys   = {};
-    string[] opt_values = {};
-
-    /* Create the drawing surface */
-    var surface = new ImageSurface( Format.RGB24, source.get_width(), source.get_height() );
-    var context = new Context( surface );
-    _canvas.draw_all( context );
-
-    try {
-      var pixbuf = pixbuf_get_from_surface( surface, 0, 0, surface.get_width(), surface.get_height() );
-      pixbuf.savev( filename, type.to_string(), opt_keys, opt_values );
-    } catch( Error e ) {
-      stdout.printf( "%s\n", e.message );
-    }
-
-  }
-
-  /* Exports the current image in PDF format */
-  private void export_pdf( string filename, ImageSurface source ) {
-
-    /* Get the width and height of the page */
-    double page_width  = 8.5 * 72;
-    double page_height = 11  * 72;
-    double margin      = 0.5 * 72;
-
-    /* Create the drawing surface */
-    var surface = new PdfSurface( filename, page_width, page_height );
-    var context = new Context( surface );
-    var x       = 0;
-    var y       = 0;
-    var w       = source.get_width();
-    var h       = source.get_height();
-
-    /* Calculate the required scaling factor to get the document to fit */
-    double width  = (page_width  - (2 * margin)) / w;
-    double height = (page_height - (2 * margin)) / h;
-    double sf     = (width < height) ? width : height;
-
-    /* Scale and translate the image */
-    context.scale( sf, sf );
-    context.translate( ((0 - x) + (margin / sf)), ((0 - y) + (margin / sf)) );
-
-    /* Recreate the image */
-    _canvas.draw_all( context );
-
-    /* Draw the page to the PDF file */
-    context.show_page();
-
-  }
-
-  /* Exports the current image in SVG format */
-  private void export_svg( string filename, ImageSurface source ) {
-
-    /* Get the rectangle holding the entire document */
-    var x = 0;
-    var y = 0;
-    var w = source.get_width();
-    var h = source.get_height();
-
-    /* Create the drawing surface */
-    var surface = new SvgSurface( filename, w, h );
-    var context = new Context( surface );
-
-    surface.restrict_to_version( SvgVersion.VERSION_1_1 );
-
-    /* Recreate the image */
-    _canvas.draw_all( context );
-
-    /* Draw the page to the PDF file */
-    context.show_page();
-
-  }
-
-  /* Exports to the clipboard */
-  public void export_clipboard( ImageSurface source ) {
-
-    /* Create the drawing surface */
-    var surface = new ImageSurface( Format.RGB24, source.get_width(), source.get_height() );
-    var context = new Context( surface );
-    _canvas.draw_all( context );
-
-    /* Get the pixbuf */
-    var pixbuf = pixbuf_get_from_surface( surface, 0, 0, surface.get_width(), surface.get_height() );
-
-    /* Copy the image to the clipboard */
-    AnnotatorClipboard.copy_image( pixbuf );
-
-  }
-
-  public void export_print( ImageSurface source ) {
-
-    _surface = source;
-
-    var op       = new PrintOperation();
-    var settings = new PrintSettings();
-    op.set_print_settings( settings );
-    op.set_n_pages( 1 );
-    op.set_unit( Unit.MM );
-
-    /* Connect to the draw_page signal */
-    op.draw_page.connect( draw_page );
-
-    try {
-      var res = op.run( PrintOperationAction.PRINT_DIALOG, _canvas.win );
-      switch( res ) {
-        case PrintOperationResult.APPLY :
-          settings = op.get_print_settings();
-          // Save the settings to a file - settings.to_file( fname );
-          break;
-        case PrintOperationResult.ERROR :
-          /* TBD - Display the print error */
-          break;
-        case PrintOperationResult.IN_PROGRESS :
-          /* TBD */
-          break;
-      }
-    } catch( GLib.Error e ) {
-      /* TBD */
-    }
-
-  }
-
-  /* Draws the page */
-  public void draw_page( PrintOperation op, PrintContext context, int page_nr ) {
-
-    var ctx         = context.get_cairo_context();
-    var page_width  = context.get_width();
-    var page_height = context.get_height();
-    var margin_x    = 0.5 * context.get_dpi_x();
-    var margin_y    = 0.5 * context.get_dpi_y();
-
-    /* Get the rectangle holding the entire document */
-    var x = 0;
-    var y = 0;
-    var w = _surface.get_width();
-    var h = _surface.get_height();
-
-    /* Calculate the required scaling factor to get the document to fit */
-    double width  = (page_width  - (2 * margin_x)) / w;
-    double height = (page_height - (2 * margin_y)) / h;
-    double sf     = (width < height) ? width : height;
-
-    /* Scale and translate the image */
-    ctx.scale( sf, sf );
-    ctx.translate( ((0 - x) + margin_x), ((0 - y) + margin_y) );
-
-    /* Set the source */
-    _canvas.draw_all( ctx );
 
   }
 
 }
+
 

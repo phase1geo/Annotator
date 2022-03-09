@@ -15,6 +15,8 @@ sources += files(
     'CustomItem.vala',
     'CustomItems.vala',
     'Editor.vala',
+    'Export.vala',
+    'Exports.vala',
     'Exporter.vala',
     'FormatBar.vala',
     'FormattedText.vala',
@@ -31,4 +33,5 @@ sources += files(
 )
 
 subdir('canvas_items')
+subdir('exports')
 subdir('undo_actions')

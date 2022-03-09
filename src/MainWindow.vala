@@ -38,6 +38,7 @@ public class MainWindow : Hdy.ApplicationWindow {
   private Editor            _editor;
   private Stack             _stack;
   private SList<FileFilter> _image_filters;
+  private Exports           _exports;
 
   private const GLib.ActionEntry[] action_entries = {
     { "action_open",            do_open },
@@ -60,6 +61,12 @@ public class MainWindow : Hdy.ApplicationWindow {
     { "action_contextual_menu", do_contextual_menu },
     { "action_print",           do_print }
   };
+
+  public Exports exports {
+    get {
+      return( _exports );
+    }
+  }
 
   /* Constructor */
   public MainWindow( Gtk.Application app ) {
@@ -102,6 +109,10 @@ public class MainWindow : Hdy.ApplicationWindow {
 
     /* Gather the image filters */
     gather_image_filters();
+
+    /* Load the export settings */
+    _exports = new Exports();
+    _exports.load();
 
     /* Handle the application closing */
     destroy.connect( Gtk.main_quit );
@@ -256,18 +267,9 @@ public class MainWindow : Hdy.ApplicationWindow {
 
     var box = new Box( Orientation.VERTICAL, 0 );
 
-    for( int i=0; i<ExportType.NUM; i++ ) {
-      var type = (ExportType)i;
-      var btn  = new ModelButton();
-      btn.halign = Align.START;
-      btn.text   = type.label();
-      btn.clicked.connect(() => {
-        _editor.canvas.image.export_image( type );
-      });
-      box.pack_start( btn );
-    }
-
-    box.pack_start( new Separator( Orientation.HORIZONTAL ) );
+    /* Add the export UI */
+    var export_ui = new Exporter( _editor.canvas.image );
+    box.pack_start( export_ui, false, false, 0 );
 
     /* Copy to clipboard option */
     var clip_btn = new ModelButton();
