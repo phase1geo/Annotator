@@ -48,6 +48,16 @@ public class Export {
     return( false );
   }
 
+  /* Returns filename with the export extension */
+  public string repair_filename( string fname ) {
+    foreach( string ext in extensions ) {
+      if( fname.has_suffix( ext ) ) {
+        return( fname );
+      }
+    }
+    return( fname + extensions[0] );
+  }
+
   public bool settings_available() {
     return( _settings.size > 0 );
   }

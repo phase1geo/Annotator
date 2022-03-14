@@ -33,10 +33,13 @@ public class ExportPNG : Export {
   /* Default constructor */
   public override bool export( string filename, ImageSurface source ) {
 
+    /* Make sure that the filename is sane */
+    var fname = repair_filename( filename );
+
     /* Create the drawing surface */
     var surface = new ImageSurface( Format.RGB24, source.get_width(), source.get_height() );
     var context = new Context( surface );
-    _canvas.draw_all( context );
+    canvas.draw_all( context );
 
     string[] option_keys   = {};
     string[] option_values = {};
@@ -46,7 +49,7 @@ public class ExportPNG : Export {
 
     try {
       var pixbuf = pixbuf_get_from_surface( surface, 0, 0, surface.get_width(), surface.get_height() );
-      pixbuf.savev( filename, name, option_keys, option_values );
+      pixbuf.savev( fname, name, option_keys, option_values );
     } catch( Error e ) {
       stdout.printf( "Error writing %s: %s\n", name, e.message );
       return( false );

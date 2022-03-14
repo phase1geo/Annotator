@@ -68,18 +68,16 @@ public class Exporter : Box {
     show_all();
 
     /* Initialize the UI */
-    var last    = win.settings.get_string( "last-export" );
-    var current = win.exports.get_by_name( last );
+    var last    = Annotator.settings.get_string( "last-export" );
+    var current = win.editor.canvas.image.exports.get_by_name( last );
     handle_mb_change( win, current );
 
   }
 
   /* Populates the exporter widget with the available export types */
   private void populate( MainWindow win ) {
-    for( int i=0; i<win.exports.length(); i++ ) {
-      if( win.exports.index( i ).exportable ) {
-        add_export( win, win.exports.index( i ) );
-      }
+    for( int i=0; i<win.editor.canvas.image.exports.length(); i++ ) {
+      add_export( win, win.editor.canvas.image.exports.index( i ) );
     }
   }
 
@@ -87,7 +85,7 @@ public class Exporter : Box {
     _mb.label                  = export.label;
     _stack.visible_child_name  = export.name;
     _stack_reveal.reveal_child = export.settings_available();
-    win.settings.set_string( "last-export", export.name );
+    Annotator.settings.set_string( "last-export", export.name );
   }
 
   /* Add the given export */
@@ -126,7 +124,7 @@ public class Exporter : Box {
   public void do_export( MainWindow win ) {
 
     var name   = _stack.visible_child_name;
-    var export = win.exports.get_by_name( name );
+    var export = win.editor.canvas.image.exports.get_by_name( name );
 
     var dialog = new FileChooserDialog( _( "Export As %s" ).printf( export.label ), win, FileChooserAction.SAVE,
       _( "Cancel" ), ResponseType.CANCEL, _( "Export" ), ResponseType.ACCEPT );
@@ -146,12 +144,12 @@ public class Exporter : Box {
       dialog.close();
 
       /* Perform the export */
-      var fname = dialog.get_filename();
-      export.export( fname = win.repair_filename( fname, export.extensions ), win.get_current_da() );
+      var fname = export.repair_filename( dialog.get_filename() );
+      win.editor.canvas.image.export_image( name, fname );
       Utils.store_chooser_folder( fname );
 
       /* Generate notification to indicate that the export completed */
-      win.notification( _( "Minder Export Completed" ), fname );
+      win.notification( _( "Export Completed" ), fname );
 
     } else {
 

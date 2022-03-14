@@ -38,7 +38,6 @@ public class MainWindow : Hdy.ApplicationWindow {
   private Editor            _editor;
   private Stack             _stack;
   private SList<FileFilter> _image_filters;
-  private Exports           _exports;
 
   private const GLib.ActionEntry[] action_entries = {
     { "action_open",            do_open },
@@ -62,9 +61,9 @@ public class MainWindow : Hdy.ApplicationWindow {
     { "action_print",           do_print }
   };
 
-  public Exports exports {
+  public Editor editor {
     get {
-      return( _exports );
+      return( _editor );
     }
   }
 
@@ -86,11 +85,11 @@ public class MainWindow : Hdy.ApplicationWindow {
     /* Position the window size and position */
     position_window();
 
-    /* Create the header */
-    create_header();
-
     /* Create editor */
     create_editor( box );
+
+    /* Create the header */
+    create_header();
 
     var top_box = new Box( Orientation.VERTICAL, 0 );
     top_box.pack_start( _header, false, true, 0 );
@@ -109,10 +108,6 @@ public class MainWindow : Hdy.ApplicationWindow {
 
     /* Gather the image filters */
     gather_image_filters();
-
-    /* Load the export settings */
-    _exports = new Exports();
-    _exports.load();
 
     /* Handle the application closing */
     destroy.connect( Gtk.main_quit );
@@ -268,7 +263,7 @@ public class MainWindow : Hdy.ApplicationWindow {
     var box = new Box( Orientation.VERTICAL, 0 );
 
     /* Add the export UI */
-    var export_ui = new Exporter( _editor.canvas.image );
+    var export_ui = new Exporter( this );
     box.pack_start( export_ui, false, false, 0 );
 
     /* Copy to clipboard option */
@@ -367,7 +362,7 @@ public class MainWindow : Hdy.ApplicationWindow {
       var file = File.new_tmp( "annotator-XXXXXX.png", out iostream );
 
       /* Create a PNG file */
-      _editor.canvas.image.export_image( ExportType.PNG, file.get_path() );
+      _editor.canvas.image.export_image( "png", file.get_path() );
 
       /* Run the contract with the generated file */
       contract.execute_with_file( file );
@@ -697,6 +692,11 @@ public class MainWindow : Hdy.ApplicationWindow {
   /* Displays the contextual menu for the item under the cursor */
   private void do_contextual_menu() {
     _editor.canvas.show_contextual_menu();
+  }
+
+  /* Performs an image export */
+  public void do_export( string type, string filename ) {
+    _editor.canvas.image.export_image( type, filename );
   }
 
   /* Prints the current image */

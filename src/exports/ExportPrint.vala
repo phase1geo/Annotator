@@ -33,7 +33,7 @@ public class ExportPrint : Object {
   }
 
   /* Perform print operation */
-  public void print( ImageSurface source ) {
+  public void export( ImageSurface source ) {
 
     _surface = source;
 

@@ -31,6 +31,9 @@ public class ExportSVG : Export {
   /* Default constructor */
   public override bool export( string filename, ImageSurface source ) {
 
+    /* Make sure that the filename is sane */
+    var fname = repair_filename( filename );
+
     /* Get the rectangle holding the entire document */
     var x = 0;
     var y = 0;
@@ -38,13 +41,13 @@ public class ExportSVG : Export {
     var h = source.get_height();
 
     /* Create the drawing surface */
-    var surface = new SvgSurface( filename, w, h );
+    var surface = new SvgSurface( fname, w, h );
     var context = new Context( surface );
 
     surface.restrict_to_version( SvgVersion.VERSION_1_1 );
 
     /* Recreate the image */
-    _canvas.draw_all( context );
+    canvas.draw_all( context );
 
     /* Draw the page to the PDF file */
     context.show_page();

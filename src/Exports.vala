@@ -23,18 +23,24 @@ public class Exports {
 
   private Array<Export> _exports;
 
+  public ExportClipboard clipboard { get; private set; }
+  public ExportPrint     printer   { get; private set; }
+
   /* Constructor */
-  public Exports() {
+  public Exports( Canvas canvas ) {
 
     _exports = new Array<Export>();
 
     /* Add the exports */
-    add( new ExportImage( "jpeg", _( "JPEG" ), { ".jpg", ".jpeg" } ) );
-    add( new ExportImage( "tiff", _( "TIFF" ), { ".tiff" } ) );
-    add( new ExportImage( "bmp",  _( "BMP" ), { ".bmp" } ) );
-    add( new ExportPDF() );
-    add( new ExportPNG() );
-    add( new ExportSVG() );
+    add( new ExportImage( canvas, "jpeg", _( "JPEG" ), { ".jpg", ",.jpeg" } ) );
+    add( new ExportImage( canvas, "tiff", _( "TIFF" ), { ".tiff" } ) );
+    add( new ExportImage( canvas, "bmp",  _( "BMP" ),  { ".bmp" } ) );
+    add( new ExportPDF( canvas ) );
+    add( new ExportPNG( canvas ) );
+    add( new ExportSVG( canvas ) );
+
+    clipboard = new ExportClipboard( canvas );
+    printer   = new ExportPrint( canvas );
 
   }
 
@@ -70,7 +76,7 @@ public class Exports {
 
   /* Gets the save filename and creates the parent directory if it doesn't exist */
   private string? settings_file( bool make_dir ) {
-    var dir = GLib.Path.build_filename( Environment.get_user_data_dir(), "minder" );
+    var dir = GLib.Path.build_filename( Environment.get_user_data_dir(), "annotator" );
     if( make_dir && DirUtils.create_with_parents( dir, 0775 ) != 0 ) {
       return( null );
     }
@@ -85,7 +91,7 @@ public class Exports {
     }
     Xml.Doc*  doc  = new Xml.Doc( "1.0" );
     Xml.Node* root = new Xml.Node( null, "exports" );
-    root->set_prop( "version", Minder.version );
+    root->set_prop( "version", Annotator.version );
     doc->set_root_element( root );
     for( int i=0; i<_exports.length; i++ ) {
       root->add_child( _exports.index( i ).save() );

@@ -20,6 +20,7 @@
 */
 
 using Gtk;
+using Gdk;
 using Cairo;
 
 public class ExportClipboard : Object {

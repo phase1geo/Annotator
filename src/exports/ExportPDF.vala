@@ -31,13 +31,16 @@ public class ExportPDF : Export {
   /* Default constructor */
   public override bool export( string filename, ImageSurface source ) {
 
+    /* Make sure that the filename is sane */
+    var fname = repair_filename( filename );
+
     /* Get the width and height of the page */
     double page_width  = 8.5 * 72;
     double page_height = 11  * 72;
     double margin      = 0.5 * 72;
 
     /* Create the drawing surface */
-    var surface = new PdfSurface( filename, page_width, page_height );
+    var surface = new PdfSurface( fname, page_width, page_height );
     var context = new Context( surface );
     var x       = 0;
     var y       = 0;
@@ -54,7 +57,7 @@ public class ExportPDF : Export {
     context.translate( ((0 - x) + (margin / sf)), ((0 - y) + (margin / sf)) );
 
     /* Recreate the image */
-    _canvas.draw_all( context );
+    canvas.draw_all( context );
 
     /* Draw the page to the PDF file */
     context.show_page();
