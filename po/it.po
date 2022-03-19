@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: com.github.phase1geo.annotator\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-03-07 19:21-0600\n"
-"PO-Revision-Date: 2022-02-17 20:30+0100\n"
+"PO-Revision-Date: 2022-03-19 17:30+0100\n"
 "Last-Translator: Albano Battistella <albano_battistella@hotmail.com>\n"
 "Language-Team: ITALIAN <LL@li.org>\n"
 "Language: It\n"
@@ -165,40 +165,35 @@ msgstr "Rimandare indietro"
 
 #: src/CanvasItems.vala:956
 msgid "Save As Custom"
-msgstr ""
+msgstr "Salva come personalizzato"
 
 #: src/CanvasItem.vala:260
 msgid "resize item"
 msgstr "ridimensiona oggetto"
 
 #: src/CanvasToolbar.vala:53
-#, fuzzy
 msgid "Add Arrow"
-msgstr "Freccia"
+msgstr "Aggiungi Freccia"
 
 #: src/CanvasToolbar.vala:53
-#, fuzzy
 msgid "More Arrows"
-msgstr "Nuova freccia"
+msgstr "Più frecce"
 
 #: src/CanvasToolbar.vala:53
 msgid "Custom Arrows"
-msgstr ""
+msgstr "Frecce personalizzate"
 
 #: src/CanvasToolbar.vala:54
-#, fuzzy
 msgid "Add Shape"
-msgstr "Forma"
+msgstr "Aggiungi Forma"
 
 #: src/CanvasToolbar.vala:54
-#, fuzzy
 msgid "More Shapes"
-msgstr "Forma"
+msgstr "Più Forme"
 
 #: src/CanvasToolbar.vala:54
-#, fuzzy
 msgid "Custom Shapes"
-msgstr "Forma"
+msgstr "Forme Personalizzate"
 
 #: src/CanvasToolbar.vala:337
 msgid "Crop Image"
@@ -237,13 +232,12 @@ msgid "Font Properties"
 msgstr "Proprietà Carattere"
 
 #: src/CustomItems.vala:31 src/CustomItems.vala:49 src/CustomItems.vala:62
-#, fuzzy
 msgid "Edit"
 msgstr "Modifica"
 
 #: src/CustomItems.vala:57
 msgid "Done"
-msgstr ""
+msgstr "Fatto"
 
 #: src/Exporter.vala:49
 msgid "JPEG Image (JPEG)"
