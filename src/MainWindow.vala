@@ -112,6 +112,9 @@ public class MainWindow : Hdy.ApplicationWindow {
     /* Handle the application closing */
     destroy.connect( Gtk.main_quit );
 
+    /* Load the exports */
+    _editor.canvas.image.exports.load();
+
   }
 
   static construct {
@@ -261,6 +264,7 @@ public class MainWindow : Hdy.ApplicationWindow {
     export_btn.set_sensitive( false );
 
     var box = new Box( Orientation.VERTICAL, 0 );
+    box.margin = 5;
 
     /* Add the export UI */
     var export_ui = new Exporter( this );
@@ -284,9 +288,6 @@ public class MainWindow : Hdy.ApplicationWindow {
       _editor.canvas.image.export_print();
     });
     box.pack_start( print_btn );
-
-    /* Add contracts */
-    add_contracts( box );
 
     box.show_all();
     export_btn.popover.add( box );
@@ -325,51 +326,6 @@ public class MainWindow : Hdy.ApplicationWindow {
     zoom_btn.popover.add( box );
 
     return( zoom_btn );
-
-  }
-
-  /* Adds the Contractor items that can operate on pixbufs */
-  private void add_contracts( Box box ) {
-
-    var contracts = Granite.Services.ContractorProxy.get_contracts_by_mime( "image/png" );
-
-    if( contracts.size > 0 ) {
-      box.pack_start( new Separator( Orientation.HORIZONTAL ) );
-    }
-
-    foreach( Granite.Services.Contract contract in contracts ) {
-      var name = contract.get_display_name();
-      if( (name != _( "Send by Email")) && (name != _( "Send files via Bluetooth" )) ) continue;
-      var ct  = contract;
-      var btn = new ModelButton();
-      btn.halign = Align.START;
-      btn.text   = contract.get_display_name();
-      btn.clicked.connect(() => {
-        run_contract( ct );
-      });
-      box.pack_start( btn );
-    }
-
-  }
-
-  /* Runs the given contract with a generated PNG file */
-  private void run_contract( Granite.Services.Contract contract ) {
-
-    try {
-
-      /* Create a filename to store the PNG image data */
-      FileIOStream iostream;
-      var file = File.new_tmp( "annotator-XXXXXX.png", out iostream );
-
-      /* Create a PNG file */
-      _editor.canvas.image.export_image( "png", file.get_path() );
-
-      /* Run the contract with the generated file */
-      contract.execute_with_file( file );
-
-    } catch( Error e ) {
-      stdout.printf( e.message );
-    }
 
   }
 

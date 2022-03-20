@@ -61,7 +61,6 @@ public class CanvasImage {
   public CanvasImage( Canvas canvas ) {
     _canvas = canvas;
     exports = new Exports( canvas );
-    exports.load();
   }
 
   /* Returns true if the surface image has been set */
