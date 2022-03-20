@@ -74,7 +74,7 @@
     <value key="x-appcenter-stripe">pk_live_51Ccoj4BJm4hDdHaF1YKGdyGLCLtShzElKsr4GM9hJDJAoZArcWrNHsjL9b8SBs01GQBYpakj0l1tYenVJOqke93300TULHWdph</value>
   </custom>
   <releases>
-    <release version="1.2.0" date="2022-03-02">
+    <release version="1.2.0" date="2022-03-20">
       <p>New</p>
       <ul>
         <li>Adding support for taking screenshots from within the application (screen, window and area).</li>
@@ -88,6 +88,8 @@
         <li>Updated Flatpak SDK from version 6 to 6.1.</li>
         <li>Modified .gitignore to ignore .swp files from anywhere in the codebase.</li>
         <li>Changed shape dropdown to display four shapes per row instead of two.</li>
+        <li>Enhanced export UI and adding export options for PNG and JPEG types.</li>
+        <li>Changed JPEG export to use both .jpeg and .jpg file extensions (defaults to .jpg now).</li>
       </ul>
       <p>Bug Fixes</p>
       <ul>
