@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.annotator\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-03-07 19:21-0600\n"
+"POT-Creation-Date: 2022-03-20 14:43-0500\n"
 "PO-Revision-Date: 2021-09-30 18:25+0200\n"
 "Last-Translator: Heimen Stoffels <vistausss@fastmail.com>\n"
 "Language-Team: \n"
@@ -246,89 +246,69 @@ msgstr "Bewerken"
 msgid "Done"
 msgstr ""
 
-#: src/Exporter.vala:49
-msgid "JPEG Image (JPEG)"
-msgstr "JPEG-afbeelding (jpeg)"
+#: src/Exporter.vala:43
+#, fuzzy
+msgid "Export…"
+msgstr "Exporteren"
 
-#: src/Exporter.vala:50
-msgid "Portable Network Graphics (PNG)"
-msgstr "Portable Network Graphics (png)"
+#: src/Exporter.vala:44
+msgid "Export With Current Settings"
+msgstr ""
 
-#: src/Exporter.vala:51
-msgid "Tag Image File Format (TIFF)"
-msgstr "Tag Image File Format (tiff)"
+#: src/Exporter.vala:108
+#, fuzzy
+msgid "Export Options"
+msgstr "Exporteren"
 
-#: src/Exporter.vala:52
-msgid "Bitmap Image (BMP)"
-msgstr "Bitmap-afbeelding (bmp)"
-
-#: src/Exporter.vala:53
-msgid "Portable Document Format (PDF)"
-msgstr "Portable Document Format (pdf)"
-
-#: src/Exporter.vala:54
-msgid "Scalable Vector Graphics (SVG)"
-msgstr "Scalable Vector Graphics (svg)"
-
-#: src/Exporter.vala:61
-msgid "Export As JPEG…"
-msgstr "Exporteren naar jpeg…"
-
-#: src/Exporter.vala:62
-msgid "Export As PNG…"
+#: src/Exporter.vala:129
+#, fuzzy, c-format
+msgid "Export As %s"
 msgstr "Exporteren naar png…"
 
-#: src/Exporter.vala:63
-msgid "Export As TIFF…"
-msgstr "Exporteren naar tiff…"
+#: src/Exporter.vala:130 src/MainWindow.vala:437 src/Resizer.vala:160
+msgid "Cancel"
+msgstr "Annuleren"
 
-#: src/Exporter.vala:64
-msgid "Export As BMP…"
-msgstr "Exporteren naar bmp…"
-
-#: src/Exporter.vala:65
-msgid "Export As PDF…"
-msgstr "Exporteren naar pdf…"
-
-#: src/Exporter.vala:66
-msgid "Export As SVG…"
-msgstr "Exporteren naar svg…"
-
-#: src/Exporter.vala:73
-msgid ".jpg"
-msgstr ".jpg"
-
-#: src/Exporter.vala:74
-msgid ".png"
-msgstr ".png"
-
-#: src/Exporter.vala:75
-msgid ".tiff"
-msgstr ".tiff"
-
-#: src/Exporter.vala:76
-msgid ".bmp"
-msgstr ".bmp"
-
-#: src/Exporter.vala:77
-msgid ".pdf"
-msgstr ".pdf"
-
-#: src/Exporter.vala:78
-msgid ".svg"
-msgstr ".svg"
-
-#: src/Exporter.vala:116 src/MainWindow.vala:253
-msgid "Export Image"
-msgstr "Afbeelding exporteren"
-
-#: src/Exporter.vala:116
+#: src/Exporter.vala:130
 msgid "Export"
 msgstr "Exporteren"
 
-#: src/Exporter.vala:116 src/MainWindow.vala:484 src/Resizer.vala:160
-msgid "Cancel"
-msgstr "Annuleren"
+#: src/Exporter.vala:152
+#, fuzzy
+msgid "Export Completed"
+msgstr "Afbeelding exporteren"
+
+#: src/exports/ExportImage.vala:72
+msgid "Quality"
+msgstr ""
+
+#: src/exports/ExportPDF.vala:28
+msgid "PDF"
+msgstr ""
+
+#: src/exports/ExportPNG.vala:30
+msgid "PNG"
+msgstr ""
+
+#: src/exports/ExportPNG.vala:64
+msgid "Compression"
+msgstr ""
+
+#: src/exports/ExportSVG.vala:28
+msgid "SVG"
+msgstr ""
+
+#: src/Exports.vala:35
+msgid "JPEG"
+msgstr ""
+
+#: src/Exports.vala:36
+msgid "TIFF"
+msgstr ""
+
+#: src/Exports.vala:37
+msgid "BMP"
+msgstr ""
 
 #: src/FormatBar.vala:66
 msgid "Bold"
@@ -386,113 +366,109 @@ msgstr "Lettertypekleur aanpassen"
 msgid "Clear all formatting"
 msgstr "Alle opmaak wissen"
 
-#: src/MainWindow.vala:172
+#: src/MainWindow.vala:181
 msgid "Open Image"
 msgstr "Afbeelding openen"
 
-#: src/MainWindow.vala:177
+#: src/MainWindow.vala:186
 msgid "Take Screeshot"
 msgstr ""
 
-#: src/MainWindow.vala:201 src/UndoBuffer.vala:84
+#: src/MainWindow.vala:210 src/UndoBuffer.vala:84
 msgid "Undo"
 msgstr "Ongedaan maken"
 
-#: src/MainWindow.vala:207 src/UndoBuffer.vala:90
+#: src/MainWindow.vala:216 src/UndoBuffer.vala:90
 msgid "Redo"
 msgstr "Opnieuw uitvoeren"
 
-#: src/MainWindow.vala:221
+#: src/MainWindow.vala:230
 msgid "Annotator"
 msgstr "Aantekeningen"
 
-#: src/MainWindow.vala:229
+#: src/MainWindow.vala:238
 msgid "Properties"
 msgstr "Eigenschappen"
 
-#: src/MainWindow.vala:236
+#: src/MainWindow.vala:245
 msgid "Shortcuts Cheatsheet"
 msgstr "Sneltoetsoverzicht"
 
-#: src/MainWindow.vala:275
+#: src/MainWindow.vala:262
+msgid "Export Image"
+msgstr "Afbeelding exporteren"
+
+#: src/MainWindow.vala:276
 msgid "Copy To Clipboard"
 msgstr "Kopiëren naar klembord"
 
-#: src/MainWindow.vala:284
+#: src/MainWindow.vala:285
 msgid "Print…"
 msgstr "Afdrukken…"
 
-#: src/MainWindow.vala:307
+#: src/MainWindow.vala:305
 #, c-format
 msgid "Zoom (%d%%)"
 msgstr "Zoomen (%d%%)"
 
-#: src/MainWindow.vala:319
+#: src/MainWindow.vala:317
 msgid "Zoom to Fit Window"
 msgstr "Passend zoomen"
 
-#: src/MainWindow.vala:345
-msgid "Send by Email"
-msgstr "Delen via e-mail"
-
-#: src/MainWindow.vala:345
-msgid "Send files via Bluetooth"
-msgstr "Delen via bluetooth"
-
-#: src/MainWindow.vala:382
+#: src/MainWindow.vala:335
 msgid "Welcome to Annotator"
 msgstr "Welkom bij Aantekeningen"
 
-#: src/MainWindow.vala:382
+#: src/MainWindow.vala:335
 msgid "Let's get started annotating an image"
 msgstr "Laten we aan de slag gaan"
 
-#: src/MainWindow.vala:383
+#: src/MainWindow.vala:336
 msgid "Open Image From File"
 msgstr "Afbeelding laden uit bestand"
 
-#: src/MainWindow.vala:383
+#: src/MainWindow.vala:336
 msgid "Open a PNG, JPEG, TIFF or BMP file"
 msgstr "Open een png-, jpeg-, tiff- of bmp-bestand"
 
-#: src/MainWindow.vala:384
+#: src/MainWindow.vala:337
 msgid "Paste Image From Clipboard"
 msgstr "Afbeelding laden van klembord"
 
-#: src/MainWindow.vala:384
+#: src/MainWindow.vala:337
 msgid "Open an image from the clipboard"
 msgstr "Open een afbeelding van het klembord"
 
-#: src/MainWindow.vala:385
+#: src/MainWindow.vala:338
 msgid "Take A Screenshot"
 msgstr ""
 
-#: src/MainWindow.vala:385
+#: src/MainWindow.vala:338
 #, fuzzy
 msgid "Open an image from a screenshot"
 msgstr "Open een afbeelding van het klembord"
 
-#: src/MainWindow.vala:421
+#: src/MainWindow.vala:374
 msgid "Font:"
 msgstr "Lettertype:"
 
-#: src/MainWindow.vala:472
+#: src/MainWindow.vala:425
 msgid "All Image Formats  (*)"
 msgstr "Alle afbeeldingen  (*)"
 
-#: src/MainWindow.vala:484
+#: src/MainWindow.vala:437
 msgid "Open Image File"
 msgstr "Afbeeldingsbestand openen"
 
-#: src/MainWindow.vala:484
+#: src/MainWindow.vala:437
 msgid "Open"
 msgstr "Openen"
 
-#: src/MainWindow.vala:545
+#: src/MainWindow.vala:498
 msgid "Delay (in seconds)"
 msgstr ""
 
-#: src/MainWindow.vala:556
+#: src/MainWindow.vala:509
 msgid "Include Annotator window"
 msgstr ""
 
@@ -909,3 +885,68 @@ msgstr "Tekst boven cursor opnemen in selectie"
 #: data/com.github.phase1geo.annotator.shortcuts.ui:454
 msgid "Add Text Below Cursor To Selection"
 msgstr "Tekst onder cursor opnemen in selectie"
+
+#, fuzzy
+#~ msgid "Copy All"
+#~ msgstr "Kopiëren"
+
+#, fuzzy
+#~ msgid "Save File"
+#~ msgstr "Bestand"
+
+#~ msgid "Send by Email"
+#~ msgstr "Delen via e-mail"
+
+#~ msgid "Send files via Bluetooth"
+#~ msgstr "Delen via bluetooth"
+
+#~ msgid "JPEG Image (JPEG)"
+#~ msgstr "JPEG-afbeelding (jpeg)"
+
+#~ msgid "Portable Network Graphics (PNG)"
+#~ msgstr "Portable Network Graphics (png)"
+
+#~ msgid "Tag Image File Format (TIFF)"
+#~ msgstr "Tag Image File Format (tiff)"
+
+#~ msgid "Bitmap Image (BMP)"
+#~ msgstr "Bitmap-afbeelding (bmp)"
+
+#~ msgid "Portable Document Format (PDF)"
+#~ msgstr "Portable Document Format (pdf)"
+
+#~ msgid "Scalable Vector Graphics (SVG)"
+#~ msgstr "Scalable Vector Graphics (svg)"
+
+#~ msgid "Export As JPEG…"
+#~ msgstr "Exporteren naar jpeg…"
+
+#~ msgid "Export As TIFF…"
+#~ msgstr "Exporteren naar tiff…"
+
+#~ msgid "Export As BMP…"
+#~ msgstr "Exporteren naar bmp…"
+
+#~ msgid "Export As PDF…"
+#~ msgstr "Exporteren naar pdf…"
+
+#~ msgid "Export As SVG…"
+#~ msgstr "Exporteren naar svg…"
+
+#~ msgid ".jpg"
+#~ msgstr ".jpg"
+
+#~ msgid ".png"
+#~ msgstr ".png"
+
+#~ msgid ".tiff"
+#~ msgstr ".tiff"
+
+#~ msgid ".bmp"
+#~ msgstr ".bmp"
+
+#~ msgid ".pdf"
+#~ msgstr ".pdf"
+
+#~ msgid ".svg"
+#~ msgstr ".svg"

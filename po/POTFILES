@@ -10,6 +10,11 @@ src/CanvasItem.vala
 src/CanvasToolbar.vala
 src/CustomItems.vala
 src/Exporter.vala
+src/exports/ExportImage.vala
+src/exports/ExportPDF.vala
+src/exports/ExportPNG.vala
+src/exports/ExportSVG.vala
+src/Exports.vala
 src/FormatBar.vala
 src/MainWindow.vala
 src/Resizer.vala
