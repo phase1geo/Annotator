@@ -61,6 +61,12 @@ public class MainWindow : Hdy.ApplicationWindow {
     { "action_print",           do_print }
   };
 
+  public Editor editor {
+    get {
+      return( _editor );
+    }
+  }
+
   /* Constructor */
   public MainWindow( Gtk.Application app ) {
 
@@ -79,11 +85,11 @@ public class MainWindow : Hdy.ApplicationWindow {
     /* Position the window size and position */
     position_window();
 
-    /* Create the header */
-    create_header();
-
     /* Create editor */
     create_editor( box );
+
+    /* Create the header */
+    create_header();
 
     var top_box = new Box( Orientation.VERTICAL, 0 );
     top_box.pack_start( _header, false, true, 0 );
@@ -105,6 +111,9 @@ public class MainWindow : Hdy.ApplicationWindow {
 
     /* Handle the application closing */
     destroy.connect( Gtk.main_quit );
+
+    /* Load the exports */
+    _editor.canvas.image.exports.load();
 
   }
 
@@ -255,19 +264,11 @@ public class MainWindow : Hdy.ApplicationWindow {
     export_btn.set_sensitive( false );
 
     var box = new Box( Orientation.VERTICAL, 0 );
+    box.margin = 5;
 
-    for( int i=0; i<ExportType.NUM; i++ ) {
-      var type = (ExportType)i;
-      var btn  = new ModelButton();
-      btn.halign = Align.START;
-      btn.text   = type.label();
-      btn.clicked.connect(() => {
-        _editor.canvas.image.export_image( type );
-      });
-      box.pack_start( btn );
-    }
-
-    box.pack_start( new Separator( Orientation.HORIZONTAL ) );
+    /* Add the export UI */
+    var export_ui = new Exporter( this );
+    box.pack_start( export_ui, false, false, 0 );
 
     /* Copy to clipboard option */
     var clip_btn = new ModelButton();
@@ -287,9 +288,6 @@ public class MainWindow : Hdy.ApplicationWindow {
       _editor.canvas.image.export_print();
     });
     box.pack_start( print_btn );
-
-    /* Add contracts */
-    add_contracts( box );
 
     box.show_all();
     export_btn.popover.add( box );
@@ -328,51 +326,6 @@ public class MainWindow : Hdy.ApplicationWindow {
     zoom_btn.popover.add( box );
 
     return( zoom_btn );
-
-  }
-
-  /* Adds the Contractor items that can operate on pixbufs */
-  private void add_contracts( Box box ) {
-
-    var contracts = Granite.Services.ContractorProxy.get_contracts_by_mime( "image/png" );
-
-    if( contracts.size > 0 ) {
-      box.pack_start( new Separator( Orientation.HORIZONTAL ) );
-    }
-
-    foreach( Granite.Services.Contract contract in contracts ) {
-      var name = contract.get_display_name();
-      if( (name != _( "Send by Email")) && (name != _( "Send files via Bluetooth" )) ) continue;
-      var ct  = contract;
-      var btn = new ModelButton();
-      btn.halign = Align.START;
-      btn.text   = contract.get_display_name();
-      btn.clicked.connect(() => {
-        run_contract( ct );
-      });
-      box.pack_start( btn );
-    }
-
-  }
-
-  /* Runs the given contract with a generated PNG file */
-  private void run_contract( Granite.Services.Contract contract ) {
-
-    try {
-
-      /* Create a filename to store the PNG image data */
-      FileIOStream iostream;
-      var file = File.new_tmp( "annotator-XXXXXX.png", out iostream );
-
-      /* Create a PNG file */
-      _editor.canvas.image.export_image( ExportType.PNG, file.get_path() );
-
-      /* Run the contract with the generated file */
-      contract.execute_with_file( file );
-
-    } catch( Error e ) {
-      stdout.printf( e.message );
-    }
 
   }
 
@@ -695,6 +648,11 @@ public class MainWindow : Hdy.ApplicationWindow {
   /* Displays the contextual menu for the item under the cursor */
   private void do_contextual_menu() {
     _editor.canvas.show_contextual_menu();
+  }
+
+  /* Performs an image export */
+  public void do_export( string type, string filename ) {
+    _editor.canvas.image.export_image( type, filename );
   }
 
   /* Prints the current image */

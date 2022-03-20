@@ -76,5 +76,10 @@
       <summary>Set to true to allow the Annotator window to be included in the screenshot.</summary>
       <description>Set to true to allow the Annotator window to be included in the screenshot.  Set to false to hide the Annotator window during the screenshot.</description>
     </key>
+    <key name="last-export" type="s">
+      <default>""</default>
+      <summary>Name of the last exported type</summary>
+      <description>Name of the last exported type.  Supported values are: jpeg, tiff, bmp, png, pdf, svg.</description>
+    </key>
   </schema>
 </schemalist>

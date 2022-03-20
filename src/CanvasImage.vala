@@ -46,12 +46,12 @@ public class CanvasImage {
 
   public Pixbuf?          pixbuf        { get; private set; default = null; }  // Original pixbuf of image
   public bool             cropping      { get; private set; default = false; }
-  public Exporter         exporter      { get; private set; }
   public CanvasRect       crop_rect     { get; private set; default = new CanvasRect(); }
   public RGBA             average_color { get; private set; default = {1.0, 1.0, 1.0, 1.0}; }
   public CanvasImageInfo? info          { get; private set; default = null; }
   public double           width_scale   { get; private set; default = 1.0; }
   public double           height_scale  { get; private set; default = 1.0; }
+  public Exports          exports       { get; private set; }
 
   public signal void crop_started();
   public signal void crop_ended();
@@ -59,8 +59,8 @@ public class CanvasImage {
 
   /* Constructor */
   public CanvasImage( Canvas canvas ) {
-    _canvas  = canvas;
-    exporter = new Exporter( canvas );
+    _canvas = canvas;
+    exports = new Exports( canvas );
   }
 
   /* Returns true if the surface image has been set */
@@ -345,21 +345,22 @@ public class CanvasImage {
   }
 
   /* Exports to the given image type */
-  public void export_image( ExportType type, string? filename = null ) {
+  public void export_image( string type, string filename ) {
     clean_image();
-    exporter.export_image( _surface, type, filename );
+    var export = exports.get_by_name( type );
+    export.export( filename, _surface );
   }
 
   /* Exports the image to the clipboard */
   public void export_clipboard() {
     clean_image();
-    exporter.export_clipboard( _surface );
+    exports.clipboard.export( _surface );
   }
 
   /* Exports the image to the printer */
   public void export_print() {
     clean_image();
-    exporter.export_print( _surface );
+    exports.printer.export( _surface );
   }
 
   /****************************************************************************/
