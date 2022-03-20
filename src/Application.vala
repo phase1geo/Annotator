@@ -33,7 +33,7 @@ public class Annotator : Granite.Application {
   public  static CaptureType   screenshot_type   = CaptureType.NONE;
   public  static int           screenshot_delay  = 0;
   public  static bool          screenshot_incwin = false;
-  public  static string        version           = "1.1.0";
+  public  static string        version           = "1.2.0";
 
   public Annotator () {
 
