@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: extra\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-03-20 14:46-0500\n"
+"POT-Creation-Date: 2022-03-20 21:37-0500\n"
 "PO-Revision-Date: 2020-12-27 19:30-0600\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -48,60 +48,60 @@ msgstr ""
 msgid "Trevor Williams"
 msgstr ""
 
-#: data/com.github.phase1geo.annotator.appdata.xml.in:23
+#: data/com.github.phase1geo.annotator.appdata.xml.in:26
 msgid "Communicate with images. Better."
 msgstr ""
 
-#: data/com.github.phase1geo.annotator.appdata.xml.in:25
+#: data/com.github.phase1geo.annotator.appdata.xml.in:28
 msgid "Load image from the file system, clipboard or a screenshot."
 msgstr ""
 
-#: data/com.github.phase1geo.annotator.appdata.xml.in:26
+#: data/com.github.phase1geo.annotator.appdata.xml.in:29
 msgid ""
 "Add shapes, stickers, text, drawings, and other callouts to highlight image "
 "details."
 msgstr ""
 
-#: data/com.github.phase1geo.annotator.appdata.xml.in:27
+#: data/com.github.phase1geo.annotator.appdata.xml.in:30
 msgid "Save custom shapes for easy reuse."
 msgstr ""
 
-#: data/com.github.phase1geo.annotator.appdata.xml.in:28
+#: data/com.github.phase1geo.annotator.appdata.xml.in:31
 msgid "Add magnifiers to enhance image details."
 msgstr ""
 
-#: data/com.github.phase1geo.annotator.appdata.xml.in:29
+#: data/com.github.phase1geo.annotator.appdata.xml.in:32
 msgid "Blur out portions of the image to obfuscate data."
 msgstr ""
 
-#: data/com.github.phase1geo.annotator.appdata.xml.in:30
+#: data/com.github.phase1geo.annotator.appdata.xml.in:33
 msgid "Crop, resize and add image borders."
 msgstr ""
 
-#: data/com.github.phase1geo.annotator.appdata.xml.in:31
+#: data/com.github.phase1geo.annotator.appdata.xml.in:34
 msgid "Control colors, line thickness and font details."
 msgstr ""
 
-#: data/com.github.phase1geo.annotator.appdata.xml.in:32
+#: data/com.github.phase1geo.annotator.appdata.xml.in:35
 msgid "Zoom support."
 msgstr ""
 
-#: data/com.github.phase1geo.annotator.appdata.xml.in:33
+#: data/com.github.phase1geo.annotator.appdata.xml.in:36
 msgid "Unlimited undo/redo of any change."
 msgstr ""
 
-#: data/com.github.phase1geo.annotator.appdata.xml.in:34
+#: data/com.github.phase1geo.annotator.appdata.xml.in:37
 msgid "Export to JPEG, PNG, TIFF, BMP, PDF and SVG image formats."
 msgstr ""
 
-#: data/com.github.phase1geo.annotator.appdata.xml.in:35
+#: data/com.github.phase1geo.annotator.appdata.xml.in:38
 msgid "Support for copying annotated image to clipboard."
 msgstr ""
 
-#: data/com.github.phase1geo.annotator.appdata.xml.in:36
+#: data/com.github.phase1geo.annotator.appdata.xml.in:39
 msgid "Printer support."
 msgstr ""
 
-#: data/com.github.phase1geo.annotator.appdata.xml.in:131
+#: data/com.github.phase1geo.annotator.appdata.xml.in:134
 msgid "Initial release."
 msgstr ""
