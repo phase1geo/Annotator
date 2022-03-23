@@ -143,7 +143,7 @@ public class CanvasItemSequence : CanvasItem {
   }
 
   /* Draw the rectangle */
-  public override void draw_item( Context ctx ) {
+  public override void draw_item( Context ctx, CanvasItemColor color ) {
 
     var seq_color = Granite.contrasting_foreground_color( props.color );
     var alpha     = mode.alpha( props.alpha );

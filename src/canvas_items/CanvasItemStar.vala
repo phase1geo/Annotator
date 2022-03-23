@@ -180,13 +180,13 @@ public class CanvasItemStar : CanvasItem {
   }
 
   /* Draw the rectangle */
-  public override void draw_item( Context ctx ) {
+  public override void draw_item( Context ctx, CanvasItemColor color ) {
 
     var outline = Granite.contrasting_foreground_color( props.color );
     var alpha   = mode.alpha( props.alpha );
     var point   = new CanvasPoint();
 
-    Utils.set_context_color_with_alpha( ctx, props.color, alpha );
+    set_color( ctx, color, props.color, alpha );
     ctx.move_to( points.index( 0 ).x, points.index( 0 ).y );
     for( int i=1; i<(num_points * 2); i++ ) {
       calculate_point( i, point );
@@ -199,7 +199,7 @@ public class CanvasItemStar : CanvasItem {
       save_path( ctx, CanvasItemPathType.FILL );
       ctx.fill_preserve();
 
-      Utils.set_context_color_with_alpha( ctx, outline, 0.5 );
+      set_color( ctx, color, outline, 0.5 );
       ctx.set_line_width( 1 );
       ctx.stroke();
 
@@ -207,13 +207,13 @@ public class CanvasItemStar : CanvasItem {
 
       var sw = props.stroke_width.width();
 
-      Utils.set_context_color_with_alpha( ctx, outline, 0.5 );
+      set_color( ctx, color, outline, 0.5 );
       ctx.set_line_width( sw + 2 );
       props.dash.set_bg_pattern( ctx );
       save_path( ctx, CanvasItemPathType.STROKE );
       ctx.stroke_preserve();
 
-      Utils.set_context_color_with_alpha( ctx, props.color, alpha );
+      set_color( ctx, color, props.color, alpha );
       ctx.set_line_width( sw );
       props.dash.set_fg_pattern( ctx );
       ctx.stroke();

@@ -278,11 +278,11 @@ public class CanvasItemArrow : CanvasItem {
   }
 
   /* Draw the rectangle */
-  public override void draw_item( Context ctx ) {
+  public override void draw_item( Context ctx, CanvasItemColor color ) {
 
     var alpha = mode.alpha( props.alpha );
 
-    Utils.set_context_color_with_alpha( ctx, props.color, alpha );
+    set_color( ctx, color, props.color, alpha );
 
     ctx.set_line_width( 1 );
     ctx.new_path();
@@ -295,7 +295,7 @@ public class CanvasItemArrow : CanvasItem {
     ctx.fill_preserve();
 
     var outline = Granite.contrasting_foreground_color( props.color );
-    Utils.set_context_color_with_alpha( ctx, outline, (alpha / 2) );
+    set_color( ctx, color, outline, (alpha / 2) );
     ctx.stroke();
 
   }

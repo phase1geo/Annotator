@@ -302,7 +302,7 @@ public class CanvasItemMagnifier : CanvasItem {
   }
 
   /* Draw the rectangle */
-  public override void draw_item( Context ctx ) {
+  public override void draw_item( Context ctx, CanvasItemColor color ) {
 
     var surface = _image.get_surface_for_rect( _zoom_rect );
 

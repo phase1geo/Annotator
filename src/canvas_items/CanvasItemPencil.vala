@@ -84,7 +84,7 @@ public class CanvasItemPencil : CanvasItem {
   }
 
   /* Draw the rectangle */
-  public override void draw_item( Context ctx ) {
+  public override void draw_item( Context ctx, CanvasItemColor color ) {
 
     if( _edit_points.length == 0 ) return;
 
@@ -93,7 +93,7 @@ public class CanvasItemPencil : CanvasItem {
     var sw      = props.stroke_width.width();
 
     /* Draw the outline */
-    Utils.set_context_color_with_alpha( ctx, outline, (alpha / 2) );
+    set_color( ctx, color, outline, (alpha / 2) );
     ctx.set_line_width( sw + 2 );
     ctx.set_line_cap( LineCap.ROUND );
     props.dash.set_bg_pattern( ctx );
@@ -107,7 +107,7 @@ public class CanvasItemPencil : CanvasItem {
 
     ctx.stroke_preserve();
 
-    Utils.set_context_color_with_alpha( ctx, props.color, alpha );
+    set_color( ctx, color, props.color, alpha );
     ctx.set_line_width( sw );
     props.dash.set_fg_pattern( ctx );
     ctx.stroke();

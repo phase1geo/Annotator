@@ -145,6 +145,12 @@ public class CanvasToolbar : Toolbar {
     add( btn );
     add( mb );
 
+    /* If the system dark mode changes, hide the popover */
+    var granite_settings = Granite.Settings.get_default();
+    granite_settings.notify["prefers-color-scheme"].connect (() => {
+      popover.hide();
+    });
+
   }
 
   /* Creates the sticker toolbar item */

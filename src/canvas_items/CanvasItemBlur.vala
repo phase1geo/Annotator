@@ -143,7 +143,7 @@ public class CanvasItemBlur : CanvasItem {
   }
 
   /* Draw the rectangle */
-  public override void draw_item( Context ctx ) {
+  public override void draw_item( Context ctx, CanvasItemColor color ) {
 
     Utils.set_context_color_with_alpha( ctx, canvas.image.average_color, mode.alpha() );
     ctx.set_line_width( 0 );

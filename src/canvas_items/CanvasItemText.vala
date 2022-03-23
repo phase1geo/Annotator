@@ -882,7 +882,7 @@ public class CanvasItemText : CanvasItem {
   }
 
   /* Draws the node font to the screen */
-  public override void draw_item( Cairo.Context ctx ) {
+  public override void draw_item( Cairo.Context ctx, CanvasItemColor color ) {
 
     var layout = _pango_layout;
     var fd     = _pango_layout.get_font_description();

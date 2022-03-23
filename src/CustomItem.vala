@@ -5,14 +5,16 @@ public class CustomItem {
 
   private static const int icon_size = 24;
 
-  private ImageSurface? _surface = null;
+  private ImageSurface? _light_surface = null;
+  private ImageSurface? _dark_surface  = null;
 
   public CanvasItem? item { get; private set; default = null; }
 
   /* Default constructor */
   public CustomItem() {
-    item     = null;
-    _surface = null;
+    item           = null;
+    _light_surface = null;
+    _dark_surface  = null;
   }
 
   /* Constructor */
@@ -22,21 +24,29 @@ public class CustomItem {
     this.item = item.duplicate();
     this.item.move_item( (0 - x1), (0 - y1), false );
     this.item.mode = CanvasItemMode.NONE;
-    create_surface();
+    create_surface( true );
+    create_surface( false );
   }
 
   /* Returns the image associated with this item */
   public Image get_image() {
-    var surface = new ImageSurface.for_data( _surface.get_data(), _surface.get_format(), _surface.get_width(),
-                                             _surface.get_height(), _surface.get_stride() );
-    var image   = new Image.from_surface( surface );
+    Surface surface;
+    var gtk_settings = Gtk.Settings.get_default();
+    if( gtk_settings.gtk_application_prefer_dark_theme ) {
+      surface = new ImageSurface.for_data( _dark_surface.get_data(), _dark_surface.get_format(), _dark_surface.get_width(),
+                                           _dark_surface.get_height(), _dark_surface.get_stride() );
+    } else {
+      surface = new ImageSurface.for_data( _light_surface.get_data(), _light_surface.get_format(), _light_surface.get_width(),
+                                           _light_surface.get_height(), _light_surface.get_stride() );
+    }
+    var image = new Image.from_surface( surface );
     return( image );
   }
 
   /* Create an icon from the item */
-  private void create_surface() {
+  private void create_surface( bool light ) {
     if( item != null ) {
-      var src = new ImageSurface( Format.A8, icon_size, icon_size );
+      var src = new ImageSurface( Format.ARGB32, icon_size, icon_size );
      	var ctx = new Context( src );
       var it  = item.duplicate();
       double x1, y1, x2, y2;
@@ -50,9 +60,13 @@ public class CustomItem {
         ctx.scale( scale_y, scale_y );
         ctx.translate( (icon_size - ((x2 - x1) * scale_x)), 0 );
       }
-      it.draw_item( ctx );
-      _surface = src;
-
+      if( light ) {
+        it.draw_item( ctx, CanvasItemColor.LIGHT );
+        _light_surface = src;
+      } else {
+        it.draw_item( ctx, CanvasItemColor.DARK );
+        _dark_surface = src;
+      }
     }
   }
 
@@ -68,7 +82,8 @@ public class CustomItem {
     for( Xml.Node* it=node->children; it!=null; it=it->next ) {
       if( (it->type == Xml.ElementType.ELEMENT_NODE) && (it->name == "item") ) {
         item = canvas_items.load_item( it );
-        create_surface();
+        create_surface( true );
+        create_surface( false );
       }
     }
   }

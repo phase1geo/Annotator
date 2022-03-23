@@ -77,6 +77,12 @@ public enum CanvasItemMode {
 
 }
 
+public enum CanvasItemColor {
+  COLOR,
+  DARK,
+  LIGHT
+}
+
 public enum CanvasItemPathType {
   STROKE,
   FILL,
@@ -447,7 +453,7 @@ public class CanvasItem {
   /****************************************************************************/
 
   /* Draw the current item */
-  public virtual void draw_item( Context ctx ) {}
+  public virtual void draw_item( Context ctx, CanvasItemColor color = CanvasItemColor.COLOR ) {}
 
   public void draw_extents( Context ctx ) {
     double x1, y1, x2, y2;
@@ -488,6 +494,15 @@ public class CanvasItem {
 
     }
 
+  }
+
+  /* Sets the color of the given Context based on the provided color attribute, property color and alpha value. */
+  protected void set_color( Context ctx, CanvasItemColor color_type, Gdk.RGBA color, double alpha ) {
+    switch( color_type ) {
+      case CanvasItemColor.COLOR :  Utils.set_context_color_with_alpha( ctx, color, alpha );  break;
+      case CanvasItemColor.DARK  :  Utils.set_context_color( ctx, Utils.color_from_string( "white" ) );  break;
+      case CanvasItemColor.LIGHT :  Utils.set_context_color( ctx, Utils.color_from_string( "black" ) );  break;
+    }
   }
 
   /****************************************************************************/

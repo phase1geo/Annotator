@@ -111,7 +111,7 @@ public class CanvasItemOval : CanvasItem {
   }
 
   /* Draw the rectangle */
-  public override void draw_item( Context ctx ) {
+  public override void draw_item( Context ctx, CanvasItemColor color ) {
 
     var scale_width  = (bbox.width < bbox.height) ? (bbox.width / bbox.height) : 1.0;
     var scale_height = (bbox.width < bbox.height) ? 1.0 : (bbox.height / bbox.width);
@@ -119,7 +119,7 @@ public class CanvasItemOval : CanvasItem {
     var outline      = Granite.contrasting_foreground_color( props.color );
     var alpha        = mode.alpha( props.alpha );
 
-    Utils.set_context_color_with_alpha( ctx, props.color, alpha );
+    set_color( ctx, color, props.color, alpha );
 
     var save_matrix = ctx.get_matrix();
     ctx.translate( bbox.mid_x(), bbox.mid_y() );
@@ -135,7 +135,7 @@ public class CanvasItemOval : CanvasItem {
 
       ctx.fill_preserve();
 
-      Utils.set_context_color_with_alpha( ctx, outline, 0.5 );
+      set_color( ctx, color, outline, 0.5 );
       ctx.set_line_width( 1 );
       ctx.stroke();
 
@@ -143,12 +143,12 @@ public class CanvasItemOval : CanvasItem {
 
       var sw = props.stroke_width.width();
 
-      Utils.set_context_color_with_alpha( ctx, outline, 0.5 );
+      set_color( ctx, color, outline, 0.5 );
       ctx.set_line_width( sw + 2 );
       props.dash.set_bg_pattern( ctx );
       ctx.stroke_preserve();
 
-      Utils.set_context_color_with_alpha( ctx, props.color, alpha );
+      set_color( ctx, color, props.color, alpha );
       ctx.set_line_width( sw );
       props.dash.set_fg_pattern( ctx );
       ctx.stroke();

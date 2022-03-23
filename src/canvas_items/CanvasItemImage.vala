@@ -141,7 +141,7 @@ public class CanvasItemImage : CanvasItem {
   }
 
   /* Draw the rectangle */
-  public override void draw_item( Context ctx ) {
+  public override void draw_item( Context ctx, CanvasItemColor color ) {
 
     ctx.set_line_width( 0 );
     ctx.rectangle( bbox.x, bbox.y, bbox.width, bbox.height );
