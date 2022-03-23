@@ -119,7 +119,7 @@
     <value key="x-appcenter-stripe">pk_live_51Ccoj4BJm4hDdHaF1YKGdyGLCLtShzElKsr4GM9hJDJAoZArcWrNHsjL9b8SBs01GQBYpakj0l1tYenVJOqke93300TULHWdph</value>
   </custom>
   <releases>
-    <release version="1.2.0" date="2022-03-20">
+    <release version="1.2.0" date="2022-03-23">
       <p>New</p>
       <ul>
         <li>Adding support for taking screenshots from within the application (screen, window and area).</li>
@@ -135,11 +135,13 @@
         <li>Changed shape dropdown to display four shapes per row instead of two.</li>
         <li>Enhanced export UI and adding export options for PNG and JPEG types.</li>
         <li>Changed JPEG export to use both .jpeg and .jpg file extensions (defaults to .jpg now).</li>
+        <li>Improved arrow icon in toolbar.</li>
       </ul>
       <p>Bug Fixes</p>
       <ul>
         <li>Improved ability to click on shapes that only have borders.</li>
         <li>Fixed issues with copying the contents of one shape into another.</li>
+        <li>Fixed issue with displaying star and line icons in shapes toolbar for dark mode.</li>
       </ul>
     </release>
     <release version="1.1.0" date="2022-01-14">

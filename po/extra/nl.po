@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: extra\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-03-23 06:59-0500\n"
+"POT-Creation-Date: 2022-03-23 07:05-0500\n"
 "PO-Revision-Date: 2021-10-01 14:46+0200\n"
 "Last-Translator: Heimen Stoffels <vistausss@fastmail.com>\n"
 "Language-Team: \n"
@@ -106,6 +106,6 @@ msgstr "Ondersteuning voor het kopiëren van afbeeldingen naar het klembord."
 msgid "Printer support."
 msgstr "Afdrukondersteuning."
 
-#: data/com.github.phase1geo.annotator.appdata.xml.in:134
+#: data/com.github.phase1geo.annotator.appdata.xml.in:136
 msgid "Initial release."
 msgstr "Eerste uitgave."
