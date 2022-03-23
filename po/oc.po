@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.annotator\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-03-20 21:37-0500\n"
+"POT-Creation-Date: 2022-03-23 06:59-0500\n"
 "PO-Revision-Date: 2021-10-08 09:11+0200\n"
 "Last-Translator: Quentin PAGÈS\n"
 "Language-Team: \n"
@@ -172,7 +172,7 @@ msgstr "Enviar enrèire"
 msgid "Save As Custom"
 msgstr ""
 
-#: src/CanvasItem.vala:260
+#: src/CanvasItem.vala:266
 msgid "resize item"
 msgstr "retalhar element"
 
@@ -205,39 +205,39 @@ msgstr "Apondre fòrma"
 msgid "Custom Shapes"
 msgstr "Apondre fòrma"
 
-#: src/CanvasToolbar.vala:337
+#: src/CanvasToolbar.vala:343
 msgid "Crop Image"
 msgstr "Retalhar l'imatge"
 
-#: src/CanvasToolbar.vala:365 src/Resizer.vala:155
+#: src/CanvasToolbar.vala:371 src/Resizer.vala:155
 msgid "Resize Image"
 msgstr "Redimensionar l'imatge"
 
-#: src/CanvasToolbar.vala:384
+#: src/CanvasToolbar.vala:390
 msgid "Shape Color"
 msgstr "Color de fòrma"
 
-#: src/CanvasToolbar.vala:409
+#: src/CanvasToolbar.vala:415
 msgid "Item Color"
 msgstr "Color d’element"
 
-#: src/CanvasToolbar.vala:448
+#: src/CanvasToolbar.vala:454
 msgid "Add Transparency"
 msgstr "Apondre transparéncia"
 
-#: src/CanvasToolbar.vala:470
+#: src/CanvasToolbar.vala:476
 msgid "Shape Border"
 msgstr "Bordadura de fòrma"
 
-#: src/CanvasToolbar.vala:479
+#: src/CanvasToolbar.vala:485
 msgid "Border Width"
 msgstr "Largor de la bordadura"
 
-#: src/CanvasToolbar.vala:505
+#: src/CanvasToolbar.vala:511
 msgid "Dash Pattern"
 msgstr ""
 
-#: src/CanvasToolbar.vala:547
+#: src/CanvasToolbar.vala:553
 msgid "Font Properties"
 msgstr "Proprietats de poliça"
 

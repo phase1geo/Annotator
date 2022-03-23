@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.annotator\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-03-20 21:37-0500\n"
+"POT-Creation-Date: 2022-03-23 06:59-0500\n"
 "PO-Revision-Date: 2021-10-10 14:15+0100\n"
 "Last-Translator: MartinIIOT <https://www.github.com/MartinIIOT>\n"
 "Language-Team: SLOVAKIA\n"
@@ -172,7 +172,7 @@ msgstr "Presunúť dozadu"
 msgid "Save As Custom"
 msgstr ""
 
-#: src/CanvasItem.vala:260
+#: src/CanvasItem.vala:266
 msgid "resize item"
 msgstr "zmeniť veľkosť položky"
 
@@ -205,39 +205,39 @@ msgstr "Tvary"
 msgid "Custom Shapes"
 msgstr "Tvary"
 
-#: src/CanvasToolbar.vala:337
+#: src/CanvasToolbar.vala:343
 msgid "Crop Image"
 msgstr "Orezať obrázok"
 
-#: src/CanvasToolbar.vala:365 src/Resizer.vala:155
+#: src/CanvasToolbar.vala:371 src/Resizer.vala:155
 msgid "Resize Image"
 msgstr "Zmeniť veľkosť obrázku"
 
-#: src/CanvasToolbar.vala:384
+#: src/CanvasToolbar.vala:390
 msgid "Shape Color"
 msgstr "Farba tvaru"
 
-#: src/CanvasToolbar.vala:409
+#: src/CanvasToolbar.vala:415
 msgid "Item Color"
 msgstr "Farba položky"
 
-#: src/CanvasToolbar.vala:448
+#: src/CanvasToolbar.vala:454
 msgid "Add Transparency"
 msgstr "Pridať priehľadnosť"
 
-#: src/CanvasToolbar.vala:470
+#: src/CanvasToolbar.vala:476
 msgid "Shape Border"
 msgstr "Orámovanie tvaru"
 
-#: src/CanvasToolbar.vala:479
+#: src/CanvasToolbar.vala:485
 msgid "Border Width"
 msgstr "Hrúbka orámovania"
 
-#: src/CanvasToolbar.vala:505
+#: src/CanvasToolbar.vala:511
 msgid "Dash Pattern"
 msgstr "Prerušovaný vzor"
 
-#: src/CanvasToolbar.vala:547
+#: src/CanvasToolbar.vala:553
 msgid "Font Properties"
 msgstr "Vlastnosti písma"
 

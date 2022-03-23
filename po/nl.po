@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.annotator\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-03-20 21:37-0500\n"
+"POT-Creation-Date: 2022-03-23 06:59-0500\n"
 "PO-Revision-Date: 2021-09-30 18:25+0200\n"
 "Last-Translator: Heimen Stoffels <vistausss@fastmail.com>\n"
 "Language-Team: \n"
@@ -168,7 +168,7 @@ msgstr "Tonen op achtergrond"
 msgid "Save As Custom"
 msgstr ""
 
-#: src/CanvasItem.vala:260
+#: src/CanvasItem.vala:266
 msgid "resize item"
 msgstr "Grootte aanpassen"
 
@@ -201,39 +201,39 @@ msgstr "Vormen"
 msgid "Custom Shapes"
 msgstr "Vormen"
 
-#: src/CanvasToolbar.vala:337
+#: src/CanvasToolbar.vala:343
 msgid "Crop Image"
 msgstr "Afbeelding bijsnijden"
 
-#: src/CanvasToolbar.vala:365 src/Resizer.vala:155
+#: src/CanvasToolbar.vala:371 src/Resizer.vala:155
 msgid "Resize Image"
 msgstr "Afbeeldingsgrootte aanpassen"
 
-#: src/CanvasToolbar.vala:384
+#: src/CanvasToolbar.vala:390
 msgid "Shape Color"
 msgstr "Vormkleur"
 
-#: src/CanvasToolbar.vala:409
+#: src/CanvasToolbar.vala:415
 msgid "Item Color"
 msgstr "Itemkleur"
 
-#: src/CanvasToolbar.vala:448
+#: src/CanvasToolbar.vala:454
 msgid "Add Transparency"
 msgstr "Doorzichtigheid toevoegen"
 
-#: src/CanvasToolbar.vala:470
+#: src/CanvasToolbar.vala:476
 msgid "Shape Border"
 msgstr "Vormkader"
 
-#: src/CanvasToolbar.vala:479
+#: src/CanvasToolbar.vala:485
 msgid "Border Width"
 msgstr "Kaderbreedte"
 
-#: src/CanvasToolbar.vala:505
+#: src/CanvasToolbar.vala:511
 msgid "Dash Pattern"
 msgstr "Streepjespatroon"
 
-#: src/CanvasToolbar.vala:547
+#: src/CanvasToolbar.vala:553
 msgid "Font Properties"
 msgstr "Lettertype-eigenschappen"
 
