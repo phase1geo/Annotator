@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: com.github.phase1geo.annotator\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-03-23 07:05-0500\n"
-"PO-Revision-Date: 2022-03-19 17:30+0100\n"
+"PO-Revision-Date: 2022-03-24 23:30+0100\n"
 "Last-Translator: Albano Battistella <albano_battistella@hotmail.com>\n"
 "Language-Team: ITALIAN <LL@li.org>\n"
 "Language: It\n"
@@ -240,23 +240,20 @@ msgid "Done"
 msgstr "Fatto"
 
 #: src/Exporter.vala:43
-#, fuzzy
 msgid "Export…"
-msgstr "Esporta"
+msgstr "Esporta…"
 
 #: src/Exporter.vala:44
 msgid "Export With Current Settings"
-msgstr ""
+msgstr "Esporta con le impostazioni correnti"
 
 #: src/Exporter.vala:108
-#, fuzzy
 msgid "Export Options"
-msgstr "Esporta"
+msgstr "Esporta opzioni"
 
 #: src/Exporter.vala:129
-#, fuzzy, c-format
 msgid "Export As %s"
-msgstr "Esporta come PNG…"
+msgstr "Esporta come %s"
 
 #: src/Exporter.vala:130 src/MainWindow.vala:437 src/Resizer.vala:160
 msgid "Cancel"
@@ -267,41 +264,40 @@ msgid "Export"
 msgstr "Esporta"
 
 #: src/Exporter.vala:152
-#, fuzzy
 msgid "Export Completed"
-msgstr "Esporta Immagine"
+msgstr "Esportazione completata"
 
 #: src/exports/ExportImage.vala:72
 msgid "Quality"
-msgstr ""
+msgstr "Qualità"
 
 #: src/exports/ExportPDF.vala:28
 msgid "PDF"
-msgstr ""
+msgstr "PDF"
 
 #: src/exports/ExportPNG.vala:30
 msgid "PNG"
-msgstr ""
+msgstr "PNG"
 
 #: src/exports/ExportPNG.vala:64
 msgid "Compression"
-msgstr ""
+msgstr "Compressione"
 
 #: src/exports/ExportSVG.vala:28
 msgid "SVG"
-msgstr ""
+msgstr "SVG"
 
 #: src/Exports.vala:35
 msgid "JPEG"
-msgstr ""
+msgstr "JPEG"
 
 #: src/Exports.vala:36
 msgid "TIFF"
-msgstr ""
+msgstr "TIFF"
 
 #: src/Exports.vala:37
 msgid "BMP"
-msgstr ""
+msgstr "BMP"
 
 #: src/FormatBar.vala:66
 msgid "Bold"
@@ -878,13 +874,11 @@ msgstr "Aggiungi testo sopra il cursore alla selezione"
 msgid "Add Text Below Cursor To Selection"
 msgstr "Aggiungi testo sotto il cursore alla selezione"
 
-#, fuzzy
 #~ msgid "Copy All"
-#~ msgstr "Copia"
+#~ msgstr "Copia Tutto"
 
-#, fuzzy
 #~ msgid "Save File"
-#~ msgstr "File"
+#~ msgstr "Salva File"
 
 #~ msgid "Send by Email"
 #~ msgstr "Inviare per Email"
