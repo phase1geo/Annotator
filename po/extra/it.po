@@ -1,14 +1,14 @@
 # ITALIAN TRANSLATION FOR ANNOTATOR.
 # Copyright (C) 2021
 # This file is distributed under the same license as the extra package.
-# ALBANO BATTISTELLA <albano_battistellaòhotmail.com>, 2021.
+# ALBANO BATTISTELLA <albano_battistellaòhotmail.com>, 2021,2022.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: extra\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-03-23 07:05-0500\n"
-"PO-Revision-Date: 2021-10-10 15:13+0100\n"
+"PO-Revision-Date: 2022-03-26 11:13+0100\n"
 "Last-Translator: Albano Battistella <albano_battistella@hotmail.com>\n"
 "Language-Team: ITALIAN <LL@li.org>\n"
 "Language: It\n"
@@ -41,7 +41,7 @@ msgstr "Modifica Immagine negli Appunti"
 
 #: data/com.github.phase1geo.annotator.desktop.in:22
 msgid "Take Screenshot"
-msgstr ""
+msgstr "Fai uno Screenshot"
 
 #: data/com.github.phase1geo.annotator.appdata.xml.in:9
 msgid "Trevor Williams"
@@ -52,9 +52,8 @@ msgid "Communicate with images. Better."
 msgstr "Comunica con le immagini. Meglio."
 
 #: data/com.github.phase1geo.annotator.appdata.xml.in:28
-#, fuzzy
 msgid "Load image from the file system, clipboard or a screenshot."
-msgstr "Carica l'immagine dal file system o dagli appunti."
+msgstr "Carica l'immagine dal file system, dagli appunti o da uno screenshot."
 
 #: data/com.github.phase1geo.annotator.appdata.xml.in:29
 msgid ""
@@ -66,7 +65,7 @@ msgstr ""
 
 #: data/com.github.phase1geo.annotator.appdata.xml.in:30
 msgid "Save custom shapes for easy reuse."
-msgstr ""
+msgstr "Salva forme personalizzate per un facile riutilizzo."
 
 #: data/com.github.phase1geo.annotator.appdata.xml.in:31
 msgid "Add magnifiers to enhance image details."
