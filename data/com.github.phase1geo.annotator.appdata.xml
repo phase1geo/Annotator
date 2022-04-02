@@ -38,11 +38,13 @@
     <p xml:lang="it">Comunica con le immagini. Meglio.</p>
     <ul>
       <li>Load image from the file system, clipboard or a screenshot.</li>
+      <li xml:lang="it">Carica l'immagine dal file system, dagli appunti o da uno screenshot.</li>
       <li>Add shapes, stickers, text, drawings, and other callouts to highlight image details.</li>
       <li xml:lang="pt_BR">Adicione formas, adesivos, texto, desenhos ou outros textos explicativos para destacar os detalhes da imagem.</li>
       <li xml:lang="nl">Voeg vormen, stickers, tekst, tekeningen en andere items toe om afbeeldingen te verduidelijken.</li>
       <li xml:lang="it">Aggiungi forme, adesivi, testo, disegni e altri richiami per evidenziare i particolari dell'immagine.</li>
       <li>Save custom shapes for easy reuse.</li>
+      <li xml:lang="it">Salva forme personalizzate per un facile riutilizzo.</li>
       <li>Add magnifiers to enhance image details.</li>
       <li xml:lang="pt_BR">Adicione uma lupa para melhorar os detalhes da imagem.</li>
       <li xml:lang="nl">Voeg vergrotingen toe om details te verduidelijken.</li>
@@ -120,58 +122,62 @@
   </custom>
   <releases>
     <release version="1.2.0" date="2022-03-23">
-      <p>New</p>
-      <ul>
-        <li>Adding support for taking screenshots from within the application (screen, window and area).</li>
-        <li>Adding command-line options for taking screenshots.</li>
-        <li>Adding support for creating and saving custom arrows and shapes.</li>
-      </ul>
-      <p>Changes</p>
-      <ul>
-        <li>Updated Dutch translation (thanks to Heimen Stoffels).</li>
-        <li>Updated Italian translation (thanks to @albanobattistella).</li>
-        <li>Updated Flatpak SDK from version 6 to 6.1.</li>
-        <li>Modified .gitignore to ignore .swp files from anywhere in the codebase.</li>
-        <li>Changed shape dropdown to display four shapes per row instead of two.</li>
-        <li>Enhanced export UI and adding export options for PNG and JPEG types.</li>
-        <li>Changed JPEG export to use both .jpeg and .jpg file extensions (defaults to .jpg now).</li>
-        <li>Improved arrow icon in toolbar.</li>
-      </ul>
-      <p>Bug Fixes</p>
-      <ul>
-        <li>Improved ability to click on shapes that only have borders.</li>
-        <li>Fixed issues with copying the contents of one shape into another.</li>
-        <li>Fixed issue with displaying star and line icons in shapes toolbar for dark mode.</li>
-      </ul>
+      <description>
+        <p>New</p>
+        <ul>
+          <li>Adding support for taking screenshots from within the application (screen, window and area).</li>
+          <li>Adding command-line options for taking screenshots.</li>
+          <li>Adding support for creating and saving custom arrows and shapes.</li>
+        </ul>
+        <p>Changes</p>
+        <ul>
+          <li>Updated Dutch translation (thanks to Heimen Stoffels).</li>
+          <li>Updated Italian translation (thanks to @albanobattistella).</li>
+          <li>Updated Flatpak SDK from version 6 to 6.1.</li>
+          <li>Modified .gitignore to ignore .swp files from anywhere in the codebase.</li>
+          <li>Changed shape dropdown to display four shapes per row instead of two.</li>
+          <li>Enhanced export UI and adding export options for PNG and JPEG types.</li>
+          <li>Changed JPEG export to use both .jpeg and .jpg file extensions (defaults to .jpg now).</li>
+          <li>Improved arrow icon in toolbar.</li>
+        </ul>
+        <p>Bug Fixes</p>
+        <ul>
+          <li>Improved ability to click on shapes that only have borders.</li>
+          <li>Fixed issues with copying the contents of one shape into another.</li>
+          <li>Fixed issue with displaying star and line icons in shapes toolbar for dark mode.</li>
+        </ul>
+      </description>
     </release>
     <release version="1.1.0" date="2022-01-14">
-      <p>New</p>
-      <ul>
-        <li>Added keyboard shortcuts for creating annotation items, printing and displaying contextual menus.</li>
-        <li>Added keyboard shortcut cheatsheet.</li>
-        <li>Added keyboard shortcut support for non-English keyboards.</li>
-        <li>Added Brazilian Portugese translation (thanks to Fúlvio Alves).</li>
-        <li>Added Slovakia translation (thanks to @MartinIIOT)</li>
-        <li>Added support for hitting the escape key to deselect all items on the canvas.</li>
-      </ul>
-      <h3>Changes</h3>
-      <ul>
-        <li>Updated Italian translation (thanks to @albanobattistella).</li>
-        <li>Updated German translation (thanks to Hannes Fritz).</li>
-        <li>Updated zoom UI to make it more consistent with other elementary apps.</li>
-        <li>Improved accuracy of the list of translatable files.</li>
-        <li>Moved arrow annotation to its own button in the toolbar.</li>
-        <li>Removed Accounts permissions from Flatpak manifest as it is no longer needed.</li>
-        <li>Removed text grab selector when editing text.</li>
-        <li>Changed behavior of Return key when text is edited to keep the text item selected.</li>
-      </ul>
-      <h3>Bug Fixes</h3>
-      <ul>
-        <li>Fixed icons8_cup sticker issue (thanks to Jan Tojnar).</li>
-        <li>Fixed issue where the toolbar state did not update to match the currently selected item.</li>
-        <li>Fixed issue where dragging a blur rectangle outside of the image caused application crash.</li>
-        <li>Fixed issue where a text widget could be deleted but remain on the canvas.</li>
-      </ul>
+      <description>
+        <p>New</p>
+        <ul>
+          <li>Added keyboard shortcuts for creating annotation items, printing and displaying contextual menus.</li>
+          <li>Added keyboard shortcut cheatsheet.</li>
+          <li>Added keyboard shortcut support for non-English keyboards.</li>
+          <li>Added Brazilian Portugese translation (thanks to Fúlvio Alves).</li>
+          <li>Added Slovakia translation (thanks to @MartinIIOT)</li>
+          <li>Added support for hitting the escape key to deselect all items on the canvas.</li>
+        </ul>
+        <p>Changes</p>
+        <ul>
+          <li>Updated Italian translation (thanks to @albanobattistella).</li>
+          <li>Updated German translation (thanks to Hannes Fritz).</li>
+          <li>Updated zoom UI to make it more consistent with other elementary apps.</li>
+          <li>Improved accuracy of the list of translatable files.</li>
+          <li>Moved arrow annotation to its own button in the toolbar.</li>
+          <li>Removed Accounts permissions from Flatpak manifest as it is no longer needed.</li>
+          <li>Removed text grab selector when editing text.</li>
+          <li>Changed behavior of Return key when text is edited to keep the text item selected.</li>
+        </ul>
+        <p>Bug Fixes</p>
+        <ul>
+          <li>Fixed icons8_cup sticker issue (thanks to Jan Tojnar).</li>
+          <li>Fixed issue where the toolbar state did not update to match the currently selected item.</li>
+          <li>Fixed issue where dragging a blur rectangle outside of the image caused application crash.</li>
+          <li>Fixed issue where a text widget could be deleted but remain on the canvas.</li>
+        </ul>
+      </description>
     </release>
     <release version="1.0.0" date="2021-09-08">
       <description>

@@ -13,9 +13,6 @@ Comment[pt_BR]=Comunique-se melhor com imagens
 Comment=Communicate with images better
 Categories=Utility;Graphics;
 Exec=com.github.phase1geo.annotator %f
-Icon[it]=com.github.phase1geo.annotator
-Icon[nl]=com.github.phase1geo.annotator
-Icon[pt_BR]=com.github.phase1geo.annotator
 Icon=com.github.phase1geo.annotator
 Terminal=false
 Type=Application
@@ -36,5 +33,6 @@ Name=Edit Clipboard Image
 Exec=com.github.phase1geo.annotator --use-clipboard
 
 [Desktop Action EditScreenshot]
+Name[it]=Fai uno Screenshot
 Name=Take Screenshot
 Exec=com.github.phase1geo.annotator --screenshot-area
