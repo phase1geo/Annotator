@@ -81,7 +81,8 @@ public class Exporter : Box {
     }
   }
 
-  private void handle_mb_change( MainWindow win, Export export ) {
+  private void handle_mb_change( MainWindow win, Export? export ) {
+    if( export == null ) return;
     _mb.label                  = export.label;
     _stack.visible_child_name  = export.name;
     _stack_reveal.reveal_child = export.settings_available();
