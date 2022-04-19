@@ -61,6 +61,8 @@ public class MainWindow : Hdy.ApplicationWindow {
     { "action_print",           do_print }
   };
 
+  private bool on_elementary = Gtk.Settings.get_default().gtk_icon_theme_name == "elementary";
+
   public Editor editor {
     get {
       return( _editor );
@@ -121,6 +123,16 @@ public class MainWindow : Hdy.ApplicationWindow {
     Hdy.init();
   }
 
+  /* Returns the name of the icon to use for a headerbar icon */
+  private string get_icon_name( string icon_name ) {
+    return( "%s%s".printf( icon_name, (on_elementary ? "" : "-symbolic") ) );
+  }
+
+  /* Returns the size of the icon to use for a headerbar icon */
+  private IconSize get_icon_size() {
+    return( on_elementary ? IconSize.LARGE_TOOLBAR : IconSize.SMALL_TOOLBAR );
+  }
+
   /* Adds keyboard shortcuts for the menu actions */
   private void add_keyboard_shortcuts( Gtk.Application app ) {
     app.set_accels_for_action( "win.action_open",            { "<Control>o" } );
@@ -177,12 +189,12 @@ public class MainWindow : Hdy.ApplicationWindow {
     _header = new Hdy.HeaderBar();
     _header.set_show_close_button( true );
 
-    _open_btn = new Button.from_icon_name( "document-open", IconSize.LARGE_TOOLBAR );
+    _open_btn = new Button.from_icon_name( get_icon_name( "document-open" ), get_icon_size() );
     _open_btn.set_tooltip_markup( Utils.tooltip_with_accel( _( "Open Image" ), "<Control>o" ) );
     _open_btn.clicked.connect( do_open );
     _header.pack_start( _open_btn );
 
-    _screenshot_btn = new Button.from_icon_name( "insert-image", IconSize.LARGE_TOOLBAR );
+    _screenshot_btn = new Button.from_icon_name( get_icon_name( "insert-image" ), get_icon_size() );
     _screenshot_btn.set_tooltip_markup( Utils.tooltip_with_accel( _( "Take Screeshot" ), "<Control>t" ) );
     _screenshot_btn.clicked.connect(() => {
       show_screenshot_popover( _screenshot_btn );
@@ -190,29 +202,29 @@ public class MainWindow : Hdy.ApplicationWindow {
     _header.pack_start( _screenshot_btn );
 
     /*
-    _save_btn = new Button.from_icon_name( "document-save", IconSize.LARGE_TOOLBAR );
+    _save_btn = new Button.from_icon_name( get_icon_name( "document-save" ), get_icon_size() );
     _save_btn.set_tooltip_markup( Utils.tooltip_with_accel( _( "Save File" ), "<Control>s" ) );
     _save_btn.clicked.connect( do_save );
     _header.pack_start( _save_btn );
 
-    _paste_btn = new Button.from_icon_name( "edit-paste", IconSize.LARGE_TjOOLBAR );
+    _paste_btn = new Button.from_icon_name( get_icon_name( "edit-paste" ), get_icon_size() );
     _paste_btn.set_tooltip_markup( Utils.tooltip_with_accel( _( "Paste Over" ), "<Shift><Control>v" ) );
     _paste_btn.clicked.connect( do_paste_over );
     _header.pack_start( _paste_btn );
 
-    _copy_btn = new Button.from_icon_name( "edit-copy", IconSize.LARGE_TOOLBAR );
+    _copy_btn = new Button.from_icon_name( get_icon_name( "edit-copy" ), get_icon_size() );
     _copy_btn.set_tooltip_markup( Utils.tooltip_with_accel( _( "Copy All" ), "<Shift><Control>c" ) );
     _copy_btn.clicked.connect( do_copy_all );
     _header.pack_start( _copy_btn );
     */
 
-    _undo_btn = new Button.from_icon_name( "edit-undo", IconSize.LARGE_TOOLBAR );
+    _undo_btn = new Button.from_icon_name( get_icon_name( "edit-undo" ), get_icon_size() );
     _undo_btn.set_tooltip_markup( Utils.tooltip_with_accel( _( "Undo" ), "<Control>z" ) );
     _undo_btn.set_sensitive( false );
     _undo_btn.clicked.connect( do_undo );
     _header.pack_start( _undo_btn );
 
-    _redo_btn = new Button.from_icon_name( "edit-redo", IconSize.LARGE_TOOLBAR );
+    _redo_btn = new Button.from_icon_name( get_icon_name( "edit-redo" ), get_icon_size() );
     _redo_btn.set_tooltip_markup( Utils.tooltip_with_accel( _( "Redo" ), "<Control><Shift>z" ) );
     _redo_btn.set_sensitive( false );
     _redo_btn.clicked.connect( do_redo );
@@ -234,7 +246,7 @@ public class MainWindow : Hdy.ApplicationWindow {
   private MenuButton create_preferences() {
 
     var pref_btn = new MenuButton();
-    pref_btn.image = new Image.from_icon_name( "open-menu", IconSize.LARGE_TOOLBAR );
+    pref_btn.image = new Image.from_icon_name( get_icon_name( "open-menu" ), get_icon_size() );
     pref_btn.set_tooltip_text( _( "Properties" ) );
     pref_btn.popover = new Popover( null );
 
@@ -258,7 +270,7 @@ public class MainWindow : Hdy.ApplicationWindow {
   private MenuButton create_exports() {
 
     var export_btn = new MenuButton();
-    export_btn.image   = new Image.from_icon_name( "document-export", IconSize.LARGE_TOOLBAR );
+    export_btn.image   = new Image.from_icon_name( (on_elementary ? "document-export" : "document-send-symbolic"), get_icon_size() );
     export_btn.set_tooltip_text( _( "Export Image" ) );
     export_btn.popover = new Popover( null );
     export_btn.set_sensitive( false );
@@ -301,7 +313,7 @@ public class MainWindow : Hdy.ApplicationWindow {
 
     /* Add the button */
     var zoom_btn = new MenuButton();
-    zoom_btn.set_image( new Image.from_icon_name( "zoom-fit-best", IconSize.LARGE_TOOLBAR ) );
+    zoom_btn.set_image( new Image.from_icon_name( get_icon_name( "zoom-fit-best" ), get_icon_size() ) );
     zoom_btn.set_tooltip_text( _( "Zoom (%d%%)".printf( 100 ) ) );
     zoom_btn.popover = new Popover( null );
     zoom_btn.set_sensitive( false );
@@ -572,9 +584,9 @@ public class MainWindow : Hdy.ApplicationWindow {
         _editor.paste_image( pixbuf );
         _zoom_btn.set_sensitive( true );
         _export_btn.set_sensitive( true );
-        if( !include ) {
-          show();
-        }
+      }
+      if( !include ) {
+        show();
       }
     });
 
