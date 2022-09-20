@@ -54,13 +54,7 @@ public class ScreenshotBackend : Object {
   }
 
   private void get_capabilities () throws Error {
-    var introspectable = Bus.get_proxy_sync<IntrospectableProxy> (
-      BusType.SESSION,
-      "org.gnome.Shell.Screenshot",
-      "/org/gnome/Shell/Screenshot"
-      );
-    var xml = introspectable.introspect ();
-
+    var xml = get_instrospectable();
     var node = new DBusNodeInfo.for_xml (xml);
     var iface = node.lookup_interface ("org.gnome.Shell.Screenshot");
     if (iface.lookup_method ("ConcealText") != null) {
@@ -72,14 +66,18 @@ public class ScreenshotBackend : Object {
     }
   }
 
+  private static string get_instrospectable() throws Error {
+    var introspectable = Bus.get_proxy_sync<IntrospectableProxy> (
+      BusType.SESSION,
+      "org.gnome.Shell.Screenshot",
+      "/org/gnome/Shell/Screenshot"
+      );
+    return introspectable.introspect ();
+  }
+
   public static bool can_do_screenshots() {
     try {
-      var introspectable = Bus.get_proxy_sync<IntrospectableProxy> (
-        BusType.SESSION,
-        "org.gnome.Shell.Screenshot",
-        "/org/gnome/Shell/Screenshot"
-        );
-      var xml = introspectable.introspect ();
+      var introspectable = get_instrospectable();
       return true;
     } catch (Error e) {
       warning ("Can not take screenshots on this system: %s\n", e.message);
