@@ -47,7 +47,6 @@ public class ScreenshotBackend : Object {
       proxy = Bus.get_proxy_sync<ScreenshotProxy> (BusType.SESSION,
                                                    "org.gnome.Shell.Screenshot",
                                                    "/org/gnome/Shell/Screenshot");
-
       get_capabilities ();
     } catch (Error e) {
       error ("Couldn't get dbus proxy: %s\n", e.message);
@@ -71,6 +70,21 @@ public class ScreenshotBackend : Object {
     if (iface.lookup_method ("ScreenshotAreaWithCursor") != null) {
       can_screenshot_area_with_cursor = true;
     }
+  }
+
+  public static bool can_do_screenshots() {
+    try {
+      var introspectable = Bus.get_proxy_sync<IntrospectableProxy> (
+        BusType.SESSION,
+        "org.gnome.Shell.Screenshot",
+        "/org/gnome/Shell/Screenshot"
+        );
+      var xml = introspectable.introspect ();
+      return true;
+    } catch (Error e) {
+      warning ("Can not take screenshots on this system: %s\n", e.message);
+    }
+    return false;
   }
 
   public async Gdk.Pixbuf? capture (CaptureType type, int delay, bool include_pointer, bool redact) throws Error {
