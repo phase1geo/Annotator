@@ -62,7 +62,7 @@ public class MainWindow : Hdy.ApplicationWindow {
   };
 
   private bool on_elementary = Gtk.Settings.get_default().gtk_icon_theme_name == "elementary";
-
+  private bool can_do_screenshots = ScreenshotBackend.can_do_screenshots();
   public Editor editor {
     get {
       return( _editor );
@@ -136,10 +136,12 @@ public class MainWindow : Hdy.ApplicationWindow {
   /* Adds keyboard shortcuts for the menu actions */
   private void add_keyboard_shortcuts( Gtk.Application app ) {
     app.set_accels_for_action( "win.action_open",            { "<Control>o" } );
-    app.set_accels_for_action( "win.action_screenshot",      { "<Control>t" } );
-    app.set_accels_for_action( "win.action_screenshot_all",  { "<Control>1" } );
-    app.set_accels_for_action( "win.action_screenshot_win",  { "<Control>2" } );
-    app.set_accels_for_action( "win.action_screenshot_area", { "<Control>3" } );
+    if (can_do_screenshots) {
+      app.set_accels_for_action( "win.action_screenshot",      { "<Control>t" } );
+      app.set_accels_for_action( "win.action_screenshot_all",  { "<Control>1" } );
+      app.set_accels_for_action( "win.action_screenshot_win",  { "<Control>2" } );
+      app.set_accels_for_action( "win.action_screenshot_area", { "<Control>3" } );
+    }
     app.set_accels_for_action( "win.action_save",            { "<Control>s" } );
     app.set_accels_for_action( "win.action_quit",            { "<Control>q" } );
     app.set_accels_for_action( "win.action_undo",            { "<Control>z" } );
@@ -194,12 +196,15 @@ public class MainWindow : Hdy.ApplicationWindow {
     _open_btn.clicked.connect( do_open );
     _header.pack_start( _open_btn );
 
-    _screenshot_btn = new Button.from_icon_name( get_icon_name( "insert-image" ), get_icon_size() );
-    _screenshot_btn.set_tooltip_markup( Utils.tooltip_with_accel( _( "Take Screeshot" ), "<Control>t" ) );
-    _screenshot_btn.clicked.connect(() => {
-      show_screenshot_popover( _screenshot_btn );
-    });
-    _header.pack_start( _screenshot_btn );
+    
+    if (can_do_screenshots) {
+      _screenshot_btn = new Button.from_icon_name( get_icon_name( "insert-image" ), get_icon_size() );
+      _screenshot_btn.set_tooltip_markup( Utils.tooltip_with_accel( _( "Take Screeshot" ), "<Control>t" ) );
+      _screenshot_btn.clicked.connect(() => {
+        show_screenshot_popover( _screenshot_btn );
+      });
+      _header.pack_start( _screenshot_btn );
+    }
 
     /*
     _save_btn = new Button.from_icon_name( get_icon_name( "document-save" ), get_icon_size() );
@@ -347,12 +352,18 @@ public class MainWindow : Hdy.ApplicationWindow {
     var welcome = new Granite.Widgets.Welcome( _( "Welcome to Annotator" ), _( "Let's get started annotating an image" ) );
     welcome.append( "document-open", _( "Open Image From File" ), _( "Open a PNG, JPEG, TIFF or BMP file" ) );
     welcome.append( "edit-paste", _( "Paste Image From Clipboard" ), _( "Open an image from the clipboard" ) );
-    welcome.append( "insert-image", _( "Take A Screenshot" ), _( "Open an image from a screenshot" ) );
+    if (can_do_screenshots) {
+      welcome.append( "insert-image", _( "Take A Screenshot" ), _( "Open an image from a screenshot" ) );
+    }
     welcome.activated.connect((index) => {
       switch( index ) {
         case 0  :  do_open();   break;
         case 1  :  do_paste();  break;
-        case 2  :  show_screenshot_popover( welcome.get_button_from_index( 2 ) );  break;
+        case 2  :  
+          if (can_do_screenshots) {
+            show_screenshot_popover( welcome.get_button_from_index( 2 ) );  
+          }
+          break;
         default :  assert_not_reached();
       }
     });
