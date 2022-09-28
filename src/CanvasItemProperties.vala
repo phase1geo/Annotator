@@ -116,6 +116,7 @@ public class CanvasItemProperties {
   private RGBA                  _color        = Utils.color_from_string( "black" );
   private double                _alpha        = 1.0;
   private CanvasItemStrokeWidth _stroke_width = CanvasItemStrokeWidth.WIDTH1;
+  private bool                  _outline      = true;
   private CanvasItemDashPattern _dash         = CanvasItemDashPattern.NONE;
   private int                   _blur_radius  = 10;
   private FontDescription       _font;
@@ -157,6 +158,20 @@ public class CanvasItemProperties {
         _stroke_width = value;
         if( _use_settings ) {
           Annotator.settings.set_string( "stroke-width", _stroke_width.to_string() );
+        }
+        changed();
+      }
+    }
+  }
+  public bool outline {
+    get {
+      return( _outline );
+    }
+    set {
+      if( _outline != value ) {
+        _outline = value;
+        if( _use_settings ) {
+          Annotator.settings.set_boolean( "show-outline", _outline );
         }
         changed();
       }
@@ -214,6 +229,7 @@ public class CanvasItemProperties {
       _color        = Utils.color_from_string( Annotator.settings.get_string( "item-color" ) );
       _alpha        = Annotator.settings.get_double( "item-alpha" );
       _stroke_width = CanvasItemStrokeWidth.parse( Annotator.settings.get_string( "stroke-width" ) );
+      _outline      = Annotator.settings.get_boolean( "show-outline" );
       _dash         = CanvasItemDashPattern.parse( Annotator.settings.get_string( "dash-pattern" ) );
       _blur_radius  = Annotator.settings.get_int( "blur-radius" );
       _font         = FontDescription.from_string( Annotator.settings.get_string( "font" ) );
@@ -228,6 +244,7 @@ public class CanvasItemProperties {
     color         = props.color;
     alpha         = props.alpha;
     stroke_width  = props.stroke_width;
+    outline       = props.outline;
     dash          = props.dash;
     blur_radius   = props.blur_radius;
     font          = props.font.copy();
@@ -239,6 +256,7 @@ public class CanvasItemProperties {
       color.equal( props.color ) &&
       (alpha == props.alpha) &&
       (stroke_width == props.stroke_width) &&
+      (outline == props.outline) &&
       (dash == props.dash) &&
       (blur_radius == props.blur_radius) &&
       font.equal( props.font)
@@ -247,7 +265,9 @@ public class CanvasItemProperties {
 
   /* Outputs the contents of the class for debugging purposes in string format */
   public string to_string() {
-    return( "color: %s, alpha: %g, stroke: %d, dash: %s, blur: %d, font: %s\n".printf( Utils.color_to_string( color ), alpha, stroke_width, dash.to_string(), blur_radius, font.to_string() ) );
+    return( "color: %s, alpha: %g, stroke: %d, outline: %s, dash: %s, blur: %d, font: %s\n".printf(
+      Utils.color_to_string( color ), alpha, stroke_width, outline.to_string(), dash.to_string(),
+      blur_radius, font.to_string() ) );
   }
 
   /* Saves the contents of this properties class as XML */
@@ -256,6 +276,7 @@ public class CanvasItemProperties {
     node->set_prop( "color",        Utils.color_to_string( color ) );
     node->set_prop( "alpha",        alpha.to_string() );
     node->set_prop( "stroke-width", stroke_width.to_string() );
+    node->set_prop( "show-outline", outline.to_string() );
     node->set_prop( "dash",         dash.to_string() );
     node->set_prop( "blur-radius",  blur_radius.to_string() );
     node->set_prop( "font",         font.to_string() );
@@ -275,6 +296,10 @@ public class CanvasItemProperties {
     var sw = node->get_prop( "stroke-width" );
     if( sw != null ) {
       stroke_width = CanvasItemStrokeWidth.parse( sw );
+    }
+    var o = node->get_prop( "show-outline" );
+    if( o != null ) {
+      outline = bool.parse( o );
     }
     var d = node->get_prop( "dash" );
     if( d != null ) {

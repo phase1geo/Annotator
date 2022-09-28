@@ -46,6 +46,11 @@
       <summary>Last used stroke width</summary>
       <description>Last used stroke width displayed in toolbar.  Valid values are "width1", "width2", "width3", "width4".</description>
     </key>
+    <key name="show-outline" type="b">
+      <default>true</default>
+      <summary>Last used show outline indicator</summary>
+      <description>Last used show outline indicator in toolbar.</description>
+    </key>
     <key name="dash-pattern" type="s">
       <default>"none"</default>
       <summary>Last used stroke dash pattern</summary>

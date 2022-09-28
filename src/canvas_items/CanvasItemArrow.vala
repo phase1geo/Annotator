@@ -292,11 +292,17 @@ public class CanvasItemArrow : CanvasItem {
     }
     ctx.close_path();
     save_path( ctx, CanvasItemPathType.FILL );
-    ctx.fill_preserve();
+    if( props.outline ) {
+      ctx.fill_preserve();
+    } else {
+      ctx.fill();
+    }
 
-    var outline = Granite.contrasting_foreground_color( props.color );
-    set_color( ctx, color, outline, (alpha / 2) );
-    ctx.stroke();
+    if( props.outline ) {
+      var outline = Granite.contrasting_foreground_color( props.color );
+      set_color( ctx, color, outline, (alpha / 2) );
+      ctx.stroke();
+    }
 
   }
 
