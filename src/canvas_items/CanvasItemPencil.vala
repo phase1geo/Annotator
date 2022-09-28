@@ -93,10 +93,13 @@ public class CanvasItemPencil : CanvasItem {
     var sw      = props.stroke_width.width();
 
     /* Draw the outline */
-    set_color( ctx, color, outline, (alpha / 2) );
-    ctx.set_line_width( sw + 2 );
-    ctx.set_line_cap( LineCap.ROUND );
-    props.dash.set_bg_pattern( ctx );
+    if( props.outline ) {
+      set_color( ctx, color, outline, (alpha / 2) );
+      ctx.set_line_width( sw + 2 );
+      ctx.set_line_cap( LineCap.ROUND );
+      props.dash.set_bg_pattern( ctx );
+    }
+
     ctx.move_to( _edit_points.index( 0 ).x, _edit_points.index( 0 ).y );
 
     for( int i=1; i<_edit_points.length; i++ ) {
@@ -105,7 +108,9 @@ public class CanvasItemPencil : CanvasItem {
 
     save_path( ctx, CanvasItemPathType.STROKE );
 
-    ctx.stroke_preserve();
+    if( props.outline ) {
+      ctx.stroke_preserve();
+    }
 
     set_color( ctx, color, props.color, alpha );
     ctx.set_line_width( sw );

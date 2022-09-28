@@ -150,18 +150,29 @@ public class CanvasItemLine : CanvasItem {
     var sw      = props.stroke_width.width();
 
     /* Draw the outline */
-    set_color( ctx, color, outline, (alpha / 2) );
-    ctx.set_line_width( sw + 2 );
-    props.dash.set_bg_pattern( ctx );
+    if( props.outline ) {
+      set_color( ctx, color, outline, (alpha / 2) );
+      ctx.set_line_width( sw + 2 );
+      props.dash.set_bg_pattern( ctx );
+    } else {
+      set_color( ctx, color, props.color, alpha );
+      ctx.set_line_width( sw );
+      props.dash.set_fg_pattern( ctx );
+    }
+
     ctx.move_to( points.index( 0 ).x, points.index( 0 ).y );
     ctx.line_to( points.index( 1 ).x, points.index( 1 ).y );
     save_path( ctx, CanvasItemPathType.STROKE );
-    ctx.stroke_preserve();
 
-    set_color( ctx, color, props.color, alpha );
-    ctx.set_line_width( sw );
-    props.dash.set_fg_pattern( ctx );
-    ctx.stroke();
+    if( props.outline ) {
+      ctx.stroke_preserve();
+      set_color( ctx, color, props.color, alpha );
+      ctx.set_line_width( sw );
+      props.dash.set_fg_pattern( ctx );
+      ctx.stroke();
+    } else {
+      ctx.stroke();
+    }
 
   }
 

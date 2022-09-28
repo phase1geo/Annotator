@@ -102,7 +102,7 @@ public enum CanvasItemPathType {
 public delegate void CanvasItemClickAction( CanvasItem item );
 public delegate void CanvasItemScaleAction( CanvasItem item, double value );
 public delegate void CanvasItemSpinnerAction( CanvasItem item, int value );
-public delegate void CanvasItemSwitchAction( CanvasItem item, bool value );
+public delegate void CanvasItemSwitchAction( CanvasItem item );
 public delegate void CanvasItemScaleComplete( CanvasItem item, double old_value, double new_value );
 public delegate void CanvasItemSpinnerComplete( CanvasItem item, int old_value, int new_value );
 
@@ -433,12 +433,14 @@ public class CanvasItem {
 
     var sw = new Switch();
     sw.set_active( dflt );
-    sw.activate.connect(() => {
-      action( this, sw.get_active() );
+    sw.button_press_event.connect(() => {
+      action( this );
+      return( false );
     });
 
     var sw_box = new Box( Orientation.HORIZONTAL, 10 );
     sw_box.border_width = 10;
+    sw_box.homogeneous  = false;
     sw_box.pack_start( lbl, false, false );
     sw_box.pack_start( sw,  false, false );
 

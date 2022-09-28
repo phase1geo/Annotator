@@ -123,20 +123,26 @@ public class CanvasItemRect : CanvasItem {
     if( itype == CanvasItemType.RECT_FILL ) {
 
       set_color( ctx, color, props.color, alpha );
-      ctx.fill_preserve();
 
-      set_color( ctx, color, outline, 0.5 );
-      ctx.set_line_width( 1 );
-      ctx.stroke();
-
+      if( props.outline ) {
+        ctx.fill_preserve();
+        set_color( ctx, color, outline, 0.5 );
+        ctx.set_line_width( 1 );
+        ctx.stroke();
+      } else {
+        ctx.fill();
+      }
+  
     } else {
 
       var sw = props.stroke_width.width();
 
-      set_color( ctx, color, outline, 0.5 );
-      ctx.set_line_width( sw + 2 );
-      props.dash.set_bg_pattern( ctx );
-      ctx.stroke_preserve();
+      if( props.outline ) {
+        set_color( ctx, color, outline, 0.5 );
+        ctx.set_line_width( sw + 2 );
+        props.dash.set_bg_pattern( ctx );
+        ctx.stroke_preserve();
+      }
 
       set_color( ctx, color, props.color, alpha );
       ctx.set_line_width( sw );

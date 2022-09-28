@@ -534,6 +534,23 @@ public class CanvasToolbar : Toolbar {
       box.pack_start( btn, false, false, 5 );
     }
 
+    /* Add outline */
+    var outline_title = new Label( Utils.make_title( _( "Show Outline" ) ) );
+    outline_title.halign     = Align.START;
+    outline_title.use_markup = true;
+    var outline_sw = new Switch();
+    outline_sw.set_active( _canvas.items.props.outline );
+    outline_sw.button_release_event.connect((e) => {
+      _canvas.items.props.outline = !_canvas.items.props.outline;
+      return( false );
+    });
+    var outline_box = new Box( Orientation.HORIZONTAL, 10 );
+    outline_box.homogeneous = false;
+    outline_box.margin_top = 20;
+    outline_box.pack_start( outline_title, false, false );
+    outline_box.pack_end( outline_sw, false, false );
+    box.pack_start( outline_box, true, false, 5 );
+
     box.show_all();
     mb.popover.add( box );
 
