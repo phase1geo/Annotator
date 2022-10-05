@@ -86,5 +86,10 @@
       <summary>Name of the last exported type</summary>
       <description>Name of the last exported type.  Supported values are: jpeg, tiff, bmp, png, pdf, svg.</description>
     </key>
+    <key name="maximum-image-size" type="i">
+      <default>50</default>
+      <summary>Maximum supported image size in MB</summary>
+      <description>Maximum supported image size in megabytes (MB)</description>
+    </key>
   </schema>
 </schemalist>

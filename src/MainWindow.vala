@@ -491,6 +491,22 @@ public class MainWindow : Hdy.ApplicationWindow {
     // TBD
   }
 
+  /* Parses image data from standard output to use as pixbuf */
+  public bool handle_standard_input() {
+    var max_size  = Annotator.settings.get_int( "maximum-image-size" ) * (1 << 20);
+    var buf       = new uint8[max_size];
+    var read_size = stdin.read( buf );
+    if( read_size > 0 ) {
+      var stream = new MemoryInputStream.from_data( buf, GLib.free );
+      try {
+        var pixbuf = new Gdk.Pixbuf.from_stream( stream );
+        _editor.paste_image( pixbuf );
+        return( true );
+      } catch( Error e ) {}
+    }
+    return( false );
+  }
+
   /* Pastes text or images to the editor */
   public void do_paste() {
     AnnotatorClipboard.paste( _editor );
