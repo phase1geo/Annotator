@@ -179,6 +179,11 @@ public class CanvasItems {
 
   }
 
+  /* Returns true if at least one item exists in the canvas */
+  public bool items_exist() {
+    return( _items.length() > 0 );
+  }
+
   /* Returns the box to place a canvas item into */
   public CanvasRect center_box( double width, double height ) {
     var rect = _canvas.editor.get_displayed_rect();

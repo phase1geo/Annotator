@@ -136,12 +136,46 @@ public class Canvas : DrawingArea {
 
   }
 
+  /* Returns true if the image paste operation should be cancelled */
+  private bool cancel_paste() {
+
+    if( items.items_exist() ) {
+
+      var dialog = new Granite.MessageDialog.with_image_from_icon_name(
+        _( "Annotate new image?" ),
+        _( "Pasting a new image to annotate will destroy the current annotation." ),
+        "dialog-warning",
+        ButtonsType.NONE
+      );
+      var dont = new Button.with_label( _( "Yes" ) );
+      dialog.add_action_widget( dont, ResponseType.ACCEPT );
+
+      var cancel = new Button.with_label( _( "No" ) );
+      dialog.add_action_widget( cancel, ResponseType.CANCEL );
+
+      dialog.set_transient_for( win );
+      dialog.set_default_response( ResponseType.CANCEL );
+      dialog.set_title( "" );
+      dialog.show_all();
+
+      var res = dialog.run();
+      dialog.destroy();
+      return( res == ResponseType.CANCEL );
+
+    }
+
+    return( false );
+
+  }
+
   /* Pastes an image from the given pixbuf to the canvas */
   public void paste_image( Pixbuf buf ) {
-    image.set_image( buf );
-    queue_draw();
-    image_loaded();
-    grab_focus();
+    if( !cancel_paste() ) {
+      image.set_image( buf );
+      queue_draw();
+      image_loaded();
+      grab_focus();
+    }
   }
 
   /* Pastes a text from the given string to the canvas (only valid when editing a text item */

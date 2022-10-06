@@ -117,11 +117,18 @@ public class CanvasImage {
   /* Pastes an image from the given pixbuf to the canvas */
   public void set_image( Pixbuf buf, string? undo_name = _( "change image" ) ) {
 
+    var items_removed = _canvas.items.items_exist();
+
     /* Delete the canvas items */
     _canvas.items.clear();
 
     /* Update the image */
     change_image( buf, undo_name );
+
+    /* If we removed items, clear the undo buffer */
+    if( items_removed ) {
+      _canvas.undo_buffer.clear();
+    }
 
   }
 
