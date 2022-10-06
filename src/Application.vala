@@ -33,6 +33,7 @@ public class Annotator : Granite.Application {
   public  static CaptureType   screenshot_type   = CaptureType.NONE;
   public  static int           screenshot_delay  = 0;
   public  static bool          screenshot_incwin = false;
+  public  static bool          std_input         = false;
   public  static string        version           = "1.2.0";
 
   public Annotator () {
@@ -58,7 +59,12 @@ public class Annotator : Granite.Application {
     appwin = new MainWindow( this );
 
     /* Attempt to paste from the clipboard */
-    if( use_clipboard ) {
+    if( std_input ) {
+      if( !appwin.handle_standard_input() ) {
+        stderr.printf( _( "\nERROR:  Unable to read image from standard input\n" ) );
+        Process.exit( 1 );
+      }
+    } else if( use_clipboard ) {
       appwin.do_paste();
     } else if( screenshot_type != CaptureType.NONE ) {
       appwin.do_screenshot( screenshot_type, true, screenshot_delay, screenshot_incwin );
@@ -102,7 +108,7 @@ public class Annotator : Granite.Application {
   private void parse_arguments( ref unowned string[] args ) {
 
     var context     = new OptionContext( "- Annotator Options" );
-    var options     = new OptionEntry[6];
+    var options     = new OptionEntry[7];
     var screenshot  = "";
     string[] sshots = {};
 
@@ -119,7 +125,8 @@ public class Annotator : Granite.Application {
     options[2] = {"screenshot",              0, 0, OptionArg.STRING, ref screenshot,        _( "Take and annotate a screenshot." ), sshot_type};
     options[3] = {"screenshot-delay",        0, 0, OptionArg.INT,    ref screenshot_delay,  _( "Delay (in seconds) before screenshot capture occurs.  Only valid when --screenshot is set.  Default is 0." ), "INT"};
     options[4] = {"screenshot-include-win",  0, 0, OptionArg.NONE,   ref screenshot_incwin, _( "Include Annotator window in screenshot.  Only valid when --screenshot is set." ), null};
-    options[5] = {null};
+    options[5] = {"standard-input",        'i', 0, OptionArg.NONE,   ref std_input,         _( "Uses image data from standard input" ), null};
+    options[6] = {null};
 
     /* Parse the arguments */
     try {
