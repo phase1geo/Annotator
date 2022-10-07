@@ -160,6 +160,7 @@ public class Canvas : DrawingArea {
 
       var res = dialog.run();
       dialog.destroy();
+
       return( res == ResponseType.CANCEL );
 
     }
@@ -172,6 +173,7 @@ public class Canvas : DrawingArea {
   public void paste_image( Pixbuf buf ) {
     if( !cancel_paste() ) {
       image.set_image( buf );
+      CanvasItemSequence.reset();
       queue_draw();
       image_loaded();
       grab_focus();

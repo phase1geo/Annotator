@@ -38,6 +38,11 @@ public class CanvasItemSequence : CanvasItem {
     create_points();
   }
 
+  /* Called when the canvas is used to annotate a new image */
+  public static void reset() {
+    _next_seq_num = 1;
+  }
+
   /* Creates the item points */
   private void create_points() {
     points.append_val( new CanvasPoint( CanvasPointType.RESIZER0 ) );  // Resizer
