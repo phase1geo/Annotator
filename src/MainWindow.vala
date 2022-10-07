@@ -500,7 +500,7 @@ public class MainWindow : Hdy.ApplicationWindow {
       var stream = new MemoryInputStream.from_data( buf, GLib.free );
       try {
         var pixbuf = new Gdk.Pixbuf.from_stream( stream );
-        _editor.paste_image( pixbuf );
+        _editor.paste_image( pixbuf, true );
         return( true );
       } catch( Error e ) {}
     }
@@ -608,7 +608,7 @@ public class MainWindow : Hdy.ApplicationWindow {
         // TBD
       }
       if (pixbuf != null) {
-        _editor.paste_image( pixbuf );
+        _editor.paste_image( pixbuf, false );
         _zoom_btn.set_sensitive( true );
         _export_btn.set_sensitive( true );
       }

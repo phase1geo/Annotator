@@ -163,7 +163,7 @@ public class AnnotatorClipboard {
       clipboard.request_contents( image_atom, (c, raw_data) => {
         var data = raw_data.get_pixbuf();
         if( data == null ) return;
-        editor.paste_image( data );
+        editor.paste_image( data, true );
       });
 
     /* If we need to handle pasting an image, do it here */

@@ -125,6 +125,7 @@ public class Canvas : DrawingArea {
     try {
       var buf = new Pixbuf.from_file( filename );
       image.set_image( buf );
+      CanvasItemSequence.reset();
       queue_draw();
       image_loaded();
       grab_focus();
@@ -170,8 +171,8 @@ public class Canvas : DrawingArea {
   }
 
   /* Pastes an image from the given pixbuf to the canvas */
-  public void paste_image( Pixbuf buf ) {
-    if( !cancel_paste() ) {
+  public void paste_image( Pixbuf buf, bool confirm ) {
+    if( !confirm || !cancel_paste() ) {
       image.set_image( buf );
       CanvasItemSequence.reset();
       queue_draw();

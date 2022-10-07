@@ -91,8 +91,8 @@ public class Editor : Box {
   }
 
   /* Pastes the given image pixbuf to the canvas */
-  public void paste_image( Gdk.Pixbuf buf ) {
-    canvas.paste_image( buf );
+  public void paste_image( Gdk.Pixbuf buf, bool confirm ) {
+    canvas.paste_image( buf, confirm );
   }
 
   /* Pastes the given text to the canvas */
