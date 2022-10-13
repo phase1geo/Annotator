@@ -501,6 +501,8 @@ public class MainWindow : Hdy.ApplicationWindow {
       try {
         var pixbuf = new Gdk.Pixbuf.from_stream( stream );
         _editor.paste_image( pixbuf, true );
+        _zoom_btn.set_sensitive( true );
+        _export_btn.set_sensitive( true );
         return( true );
       } catch( Error e ) {}
     }
