@@ -13,6 +13,8 @@ add_project_arguments([
 gnome = import('gnome')
 i18n = import('i18n')
 
+po_dir = join_paths(meson.project_source_root(), 'po')
+
 gresource = gnome.compile_resources(
     'annotator-resources', 'data/' + meson.project_name() + '.gresource.xml',
     source_dir: 'data',
