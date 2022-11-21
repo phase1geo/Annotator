@@ -1,6 +1,7 @@
 project('com.github.phase1geo.annotator', ['vala', 'c'],
     version : '1.2.0',
-    license: 'GPL-3.0'
+    license: 'GPL-2.0-or-later',
+    meson_version: '>= 0.59.0',
 )
 
 add_project_arguments([
@@ -11,6 +12,8 @@ add_project_arguments([
 
 gnome = import('gnome')
 i18n = import('i18n')
+
+po_dir = join_paths(meson.project_source_root(), 'po')
 
 gresource = gnome.compile_resources(
     'annotator-resources', 'data/' + meson.project_name() + '.gresource.xml',
@@ -71,4 +74,8 @@ e = executable('com.github.phase1geo.annotator',
 
 #test('tests', e, args : ['--run-tests'])
 
-meson.add_install_script('meson/post_install.py')
+gnome.post_install(
+    glib_compile_schemas: true,
+    gtk_update_icon_cache: true,
+    update_desktop_database: true,
+)
