@@ -965,7 +965,7 @@ public class CanvasItems {
 
     /* Create the popover */
     var menu = new Popover( _canvas );
-    menu.pointing_to = item.bbox.to_rectangle();
+    menu.pointing_to = item.bbox.to_rectangle( _canvas.zoom_factor );
     menu.position    = PositionType.RIGHT;
     menu.add( box );
 
