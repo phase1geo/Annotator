@@ -58,12 +58,12 @@ public class CanvasRect {
   }
 
   /* Converts this rectangle into a Gdk.Rectangle and returns the result */
-  public Gdk.Rectangle to_rectangle() {
+  public Gdk.Rectangle to_rectangle( double zoom_factor = 1.0 ) {
     Gdk.Rectangle rect = {0, 0, 0, 0};
-    rect.x      = (int)x;
-    rect.y      = (int)y;
-    rect.width  = (int)width;
-    rect.height = (int)height;
+    rect.x      = (int)(x * zoom_factor);
+    rect.y      = (int)(y * zoom_factor);
+    rect.width  = (int)(width * zoom_factor);
+    rect.height = (int)(height * zoom_factor);
     return( rect );
   }
 
