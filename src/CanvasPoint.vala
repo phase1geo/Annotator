@@ -87,6 +87,12 @@ public enum CanvasPointType {
       default       :  return( Utils.color_from_string( "white" ) );
     }
   }
+
+  /* Returns true if the kind is hidden */
+  public bool is_hidden() {
+    return( (this == HIDDEN0) || (this == HIDDEN1) || (this == HIDDEN2) || (this == HIDDEN3) );
+  }
+
 }
 
 public class CanvasPoint {
@@ -128,6 +134,11 @@ public class CanvasPoint {
   public void adjust( double diffx, double diffy ) {
     this.x += diffx;
     this.y += diffy;
+  }
+
+  /* Resets the visual aspect of this point to non-hidden state */
+  public void reset_visual() {
+    kind = kind.version( false );
   }
 
   /* Updates the visual status of this point kind */

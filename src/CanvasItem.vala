@@ -146,6 +146,12 @@ public class CanvasItem {
     }
     set {
       if( _mode != value ) {
+        if( (_mode == CanvasItemMode.NONE) && (value == CanvasItemMode.SELECTED) ) {
+          if( any_selectors_hidden() ) {
+            reset_selectors();
+            set_selector_visual( 0, true );
+          }
+        }
         _mode = value;
         if( _mode.moving() ) {
           last_bbox.copy( bbox );
@@ -231,6 +237,22 @@ public class CanvasItem {
       diffx = diffy;
     } else {
       diffy = diffx;
+    }
+  }
+
+  /* Returns true if any of the selectors are hidden */
+  private bool any_selectors_hidden() {
+    bool hidden = false;
+    for( int i=0; i<points.length; i++ ) {
+      hidden |= points.index( i ).kind.is_hidden();
+    }
+    return( hidden );
+  }
+
+  /* Resets all selectors to be shown */
+  private void reset_selectors() {
+    for( int i=0; i<points.length; i++ ) {
+      points.index( i ).reset_visual();
     }
   }
 
