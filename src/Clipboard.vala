@@ -120,6 +120,12 @@ public class AnnotatorClipboard {
 
   }
 
+  /* Returns true if text is pasteable from the clipboard */
+  public static bool text_pasteable() {
+    var clipboard = Clipboard.get_default( Gdk.Display.get_default() );
+    return( clipboard.wait_is_text_available() );
+  }
+
   /* Returns true if CanvasItems are pasteable from the clipboard */
   public static bool items_pasteable() {
     var clipboard = Clipboard.get_default( Gdk.Display.get_default() );

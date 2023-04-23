@@ -344,6 +344,7 @@ public class CanvasItems {
   /* Removes the item at the given position without undo addition */
   public void remove_item( CanvasItem item ) {
     _items.remove( item );
+    hide_format_bar();
   }
 
   /* Adds the given item at the top of the item stack */
@@ -364,6 +365,11 @@ public class CanvasItems {
       }
     }
     return( false );
+  }
+
+  /* Returns the currently selected item */
+  public CanvasItem? get_selected_item() {
+    return( _active );
   }
 
   /* Deletes all of the selected items */
@@ -943,22 +949,26 @@ public class CanvasItems {
     /* Add the item's contextual menu items */
     item.add_contextual_menu_items( box );
 
-    /* Add a separator if there is anything existing in the box */
-    if( box.get_children().length() > 0 ) {
-      item.add_contextual_separator( box );
-    }
+    if( !in_edit_mode() ) {
 
-    item.add_contextual_menuitem( box, _( "Copy" ), "<Control>c", true, do_copy );
-    item.add_contextual_menuitem( box, _( "Cut" ),  "<Control>x", true, do_cut );
-    item.add_contextual_separator( box );
-    item.add_contextual_menuitem( box, _( "Delete" ), "Delete", true, do_delete );
-    item.add_contextual_separator( box );
-    item.add_contextual_menuitem( box, _( "Send to Front" ), null, (pos != last), do_send_to_front );
-    item.add_contextual_menuitem( box, _( "Send to Back" ),  null, (pos != 0),    do_send_to_back );
+      /* Add a separator if there is anything existing in the box */
+      if( box.get_children().length() > 0 ) {
+        item.add_contextual_separator( box );
+      }
 
-    if( item.itype.category() != CanvasItemCategory.NONE ) {
+      item.add_contextual_menuitem( box, _( "Copy" ), "<Control>c", true, do_copy );
+      item.add_contextual_menuitem( box, _( "Cut" ),  "<Control>x", true, do_cut );
       item.add_contextual_separator( box );
-      item.add_contextual_menuitem( box, _( "Save As Custom" ), null, true, do_save_custom );
+      item.add_contextual_menuitem( box, _( "Delete" ), "Delete", true, do_delete );
+      item.add_contextual_separator( box );
+      item.add_contextual_menuitem( box, _( "Send to Front" ), null, (pos != last), do_send_to_front );
+      item.add_contextual_menuitem( box, _( "Send to Back" ),  null, (pos != 0),    do_send_to_back );
+  
+      if( item.itype.category() != CanvasItemCategory.NONE ) {
+        item.add_contextual_separator( box );
+        item.add_contextual_menuitem( box, _( "Save As Custom" ), null, true, do_save_custom );
+      }
+
     }
 
     box.show_all();
@@ -975,14 +985,21 @@ public class CanvasItems {
   }
 
   /* Creates a copy of the item and sends it to the clipboard */
-  private void do_copy( CanvasItem item ) {
-    var items = new Array<CanvasItem>();
-    items.append_val( item );
-    AnnotatorClipboard.copy_items( serialize_for_copy( items ) );
+  public void do_copy( CanvasItem item ) {
+    if( in_edit_mode() ) {
+      var text = get_active_text();
+      if( text.is_selected() ) {
+        AnnotatorClipboard.copy_text( text.get_selected_text() );
+      }
+    } else {
+      var items = new Array<CanvasItem>();
+      items.append_val( item );
+      AnnotatorClipboard.copy_items( serialize_for_copy( items ) );
+    }
   }
 
   /* Creates a copy of the item, sends it to the clipboard, and removes the item */
-  private void do_cut( CanvasItem item ) {
+  public void do_cut( CanvasItem item ) {
     do_copy( item );
     do_delete( item );
   }
@@ -994,16 +1011,23 @@ public class CanvasItems {
 
   /* Deletes the item */
   private void do_delete( CanvasItem item ) {
-    var position  = 0;
-    var undo_item = new UndoItemDelete();
-    for( unowned List<CanvasItem> it=_items.first(); it!=null; it=it.next ) {
-      if( it.data == item ) {
-        undo_item.add( item, position );
-        _items.delete_link( it );
-        _canvas.undo_buffer.add_item( undo_item );
-        return;
+    if( in_edit_mode() ) {
+      var text = get_active_text();
+      if( text.is_selected() ) {
+        text.backspace( _canvas.undo_text );
       }
-      position++;
+    } else {
+      var position  = 0;
+      var undo_item = new UndoItemDelete();
+      for( unowned List<CanvasItem> it=_items.first(); it!=null; it=it.next ) {
+        if( it.data == item ) {
+          undo_item.add( item, position );
+          _items.delete_link( it );
+          _canvas.undo_buffer.add_item( undo_item );
+          return;
+        }
+        position++;
+      }
     }
   }
 

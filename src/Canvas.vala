@@ -137,6 +137,43 @@ public class Canvas : DrawingArea {
 
   }
 
+  /* Undoes the last change */
+  public void do_undo() {
+    if( items.in_edit_mode() && undo_text.undoable() ) {
+      undo_text.undo();
+    } else {
+      undo_buffer.undo();
+    }
+    grab_focus();
+  }
+
+  /* Redoes the last change */
+  public void do_redo() {
+    if( items.in_edit_mode() ) {
+      undo_text.redo();
+    } else {
+      undo_buffer.redo();
+    }
+    grab_focus();
+  }
+
+  /* Copies the selected item to the clipboard */
+  public void do_copy() {
+    var item = items.get_selected_item();
+    if( item != null ) {
+      items.do_copy( item );
+    }
+  }
+
+  /* Cuts the selected item to the clipboard */
+  public void do_cut() {
+    var item = items.get_selected_item();
+    if( item != null ) {
+      items.do_cut( item );
+      queue_draw();
+    }
+  }
+
   /* Returns true if the image paste operation should be cancelled */
   private bool cancel_paste() {
 
