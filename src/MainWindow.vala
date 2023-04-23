@@ -58,7 +58,8 @@ public class MainWindow : Hdy.ApplicationWindow {
     { "action_zoom_fit",        do_zoom_fit },
     { "action_shortcuts",       do_shortcuts },
     { "action_contextual_menu", do_contextual_menu },
-    { "action_print",           do_print }
+    { "action_print",           do_print },
+    { "action_emoji",           do_emoji }
   };
 
   private bool on_elementary = Gtk.Settings.get_default().gtk_icon_theme_name == "elementary";
@@ -155,6 +156,7 @@ public class MainWindow : Hdy.ApplicationWindow {
     app.set_accels_for_action( "win.action_shortcuts",       { "<Control>question" } );
     app.set_accels_for_action( "win.action_contextual_menu", { "<Shift>F10", "Menu" } );
     app.set_accels_for_action( "win.action_print",           { "<Control>p" } );
+    app.set_accels_for_action( "win.action_emoji",           { "<Control>slash" } );
   }
 
   /* Handles any changes to the dark mode preference gsettings for the desktop */
@@ -699,6 +701,10 @@ public class MainWindow : Hdy.ApplicationWindow {
   /* Prints the current image */
   private void do_print() {
     _editor.canvas.image.export_print();
+  }
+
+  private void do_emoji() {
+    _editor.canvas.insert_emoji();
   }
 
   /* Called whenever the undo buffer changes */

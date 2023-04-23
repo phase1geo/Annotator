@@ -258,6 +258,27 @@ public class Canvas : DrawingArea {
     return( value / (image.height_scale * zoom_factor) );
   }
 
+  /* Handles the emoji insertion process for the given text item */
+  public void insert_emoji() {
+    if( items.in_edit_mode() ) {
+      var overlay = (Overlay)get_parent();
+      var entry   = new Entry();
+      var text    = items.get_active_text();
+      int x, ytop, ybot;
+      text.get_cursor_pos( out x, out ytop, out ybot );
+      entry.margin_start = x;
+      entry.margin_top   = ytop + ((ybot - ytop) / 2);
+      entry.changed.connect(() => {
+        text.insert( entry.text, undo_text );
+        queue_draw();
+        entry.unparent();
+        grab_focus();
+      });
+      overlay.add_overlay( entry );
+      entry.insert_emoji();
+    }
+  }
+
   /* Handles keypress events */
   private bool on_keypress( EventKey e ) {
 
