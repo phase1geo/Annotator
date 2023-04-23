@@ -147,6 +147,8 @@ public class MainWindow : Hdy.ApplicationWindow {
     app.set_accels_for_action( "win.action_quit",            { "<Control>q" } );
     app.set_accels_for_action( "win.action_undo",            { "<Control>z" } );
     app.set_accels_for_action( "win.action_redo",            { "<Control><Shift>z" } );
+    app.set_accels_for_action( "win.action_copy",            { "<Control>c" } );
+    app.set_accels_for_action( "win.action_cut",             { "<Control>x" } );
     app.set_accels_for_action( "win.action_paste",           { "<Control>v" } );
     app.set_accels_for_action( "win.action_zoom_in",         { "<Control>plus" } );
     app.set_accels_for_action( "win.action_zoom_in",         { "<Control>equal" } );
@@ -485,14 +487,6 @@ public class MainWindow : Hdy.ApplicationWindow {
     _export_btn.set_sensitive( true );
   }
 
-  public void do_copy() {
-    // TBD - AnnotatorClipboard.copy_
-  }
-
-  public void do_cut() {
-    // TBD
-  }
-
   /* Parses image data from standard output to use as pixbuf */
   public bool handle_standard_input() {
     var max_size  = Annotator.settings.get_int( "maximum-image-size" ) * (1 << 20);
@@ -509,6 +503,16 @@ public class MainWindow : Hdy.ApplicationWindow {
       } catch( Error e ) {}
     }
     return( false );
+  }
+
+  /* Copies the relevant part of the currently selected item (if it exists) */
+  public void do_copy() {
+    _editor.canvas.do_copy();
+  }
+
+  /* Cuts the relevant part of the currently selected item (if it exists) */
+  public void do_cut() {
+    _editor.canvas.do_cut();
   }
 
   /* Pastes text or images to the editor */
@@ -636,14 +640,12 @@ public class MainWindow : Hdy.ApplicationWindow {
 
   /* Performs an undo operation */
   private void do_undo() {
-    _editor.canvas.undo_buffer.undo();
-    _editor.canvas.grab_focus();
+    _editor.canvas.do_undo();
   }
 
   /* Performs a redo operation */
   private void do_redo() {
-    _editor.canvas.undo_buffer.redo();
-    _editor.canvas.grab_focus();
+    _editor.canvas.do_redo();
   }
 
   /* Zooms in by one */

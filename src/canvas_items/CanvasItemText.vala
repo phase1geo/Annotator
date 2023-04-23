@@ -881,6 +881,36 @@ public class CanvasItemText : CanvasItem {
     return( bbox.contains( x, y ) );
   }
 
+  /* Adds the contextual menu item values */
+  protected override void add_contextual_menu_items( Box box ) {
+
+    if( edit ) {
+
+      var selected  = is_selected();
+      var pasteable = AnnotatorClipboard.text_pasteable();
+
+      add_contextual_menuitem( box, _( "Copy" ), "<Control>c", selected, (item) => {
+        AnnotatorClipboard.copy_text( get_selected_text() );
+      });
+      add_contextual_menuitem( box, _( "Cut" ), "<Control>x", selected, (item) => {
+        AnnotatorClipboard.copy_text( get_selected_text() );
+        backspace( canvas.undo_text );
+      });
+      add_contextual_menuitem( box, _( "Paste" ), "<Control>v", pasteable, (item) => {
+        AnnotatorClipboard.paste( canvas.editor );
+      });
+      add_contextual_menuitem( box, _( "Select All" ), "<Control>a", true, (item) => {
+        set_cursor_all( false );
+      });
+      add_contextual_separator( box );
+      add_contextual_menuitem( box, _( "Insert Emoji" ), "<Control>slash", true, (item) => {
+        canvas.insert_emoji();
+      });
+
+    }
+
+  }
+
   /* Draws the node font to the screen */
   public override void draw_item( Cairo.Context ctx, CanvasItemColor color ) {
 
