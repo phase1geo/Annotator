@@ -40,6 +40,11 @@ public class Annotator : Granite.Application {
 
     Object( application_id: "com.github.phase1geo.annotator", flags: ApplicationFlags.HANDLES_OPEN );
 
+    Intl.setlocale( LocaleCategory.ALL, "" );
+    Intl.bindtextdomain( GETTEXT_PACKAGE, LOCALEDIR );
+    Intl.bind_textdomain_codeset( GETTEXT_PACKAGE, "UTF-8" );
+    Intl.textdomain( GETTEXT_PACKAGE );
+
     startup.connect( start_application );
     open.connect( open_files );
 
