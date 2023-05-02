@@ -29,12 +29,22 @@ public class CanvasItemSequence : CanvasItem {
 
   private int  _font_size;
   private bool _recalc_font_size = true;
+  private int  _seq_num;
 
-  public int seq_num { get; set; default = _next_seq_num++; }
+  public int seq_num {
+    get {
+      return( _seq_num );
+    }
+    set {
+      _seq_num = value;
+      _next_seq_num = value + 1;
+    }
+  }
 
   /* Constructor */
   public CanvasItemSequence( Canvas canvas, CanvasItemProperties props ) {
     base( CanvasItemType.SEQUENCE, canvas, props );
+    seq_num = _next_seq_num;
     create_points();
   }
 
