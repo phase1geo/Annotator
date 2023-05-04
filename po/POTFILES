@@ -8,6 +8,7 @@ src/canvas_items/CanvasItemText.vala
 src/CanvasItems.vala
 src/CanvasItem.vala
 src/CanvasToolbar.vala
+src/Canvas.vala
 src/CustomItems.vala
 src/Exporter.vala
 src/exports/ExportImage.vala

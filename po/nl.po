@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.annotator\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-04-02 13:19-0500\n"
+"POT-Creation-Date: 2023-05-03 22:16-0500\n"
 "PO-Revision-Date: 2021-09-30 18:25+0200\n"
 "Last-Translator: Heimen Stoffels <vistausss@fastmail.com>\n"
 "Language-Team: \n"
@@ -18,41 +18,51 @@ msgstr ""
 "X-Generator: Poedit 3.0\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: src/Application.vala:87
+#: src/Application.vala:69
+msgid ""
+"\n"
+"ERROR:  Unable to read image from standard input\n"
+msgstr ""
+
+#: src/Application.vala:98
 msgid "Opening file"
 msgstr "Bestand openen"
 
-#: src/Application.vala:117
+#: src/Application.vala:128
 #, fuzzy
 msgid "Display version number."
 msgstr "Toon het versienummer"
 
-#: src/Application.vala:118
+#: src/Application.vala:129
 #, fuzzy
 msgid "Annotate clipboard image."
 msgstr "Voorzie een klembordafbeelding van een aantekening"
 
-#: src/Application.vala:119
+#: src/Application.vala:130
 #, fuzzy
 msgid "Take and annotate a screenshot."
 msgstr "Open een afbeelding van het klembord"
 
-#: src/Application.vala:120
+#: src/Application.vala:131
 msgid ""
 "Delay (in seconds) before screenshot capture occurs.  Only valid when --"
 "screenshot is set.  Default is 0."
 msgstr ""
 
-#: src/Application.vala:121
+#: src/Application.vala:132
 msgid ""
 "Include Annotator window in screenshot.  Only valid when --screenshot is set."
+msgstr ""
+
+#: src/Application.vala:133
+msgid "Uses image data from standard input"
 msgstr ""
 
 #: src/CanvasImage.vala:95 src/CanvasImage.vala:118
 msgid "change image"
 msgstr "Afbeelding wijzigen"
 
-#: src/CanvasImage.vala:329
+#: src/CanvasImage.vala:336
 msgid "image crop"
 msgstr "Afbeelding bijsnijden"
 
@@ -76,7 +86,7 @@ msgstr "Vergroting:"
 msgid "Reset Focal Point"
 msgstr "Focuspunt herstellen"
 
-#: src/canvas_items/CanvasItemSequence.vala:95
+#: src/canvas_items/CanvasItemSequence.vala:110
 msgid "Sequence Number:"
 msgstr "Reeksnummer:"
 
@@ -87,6 +97,29 @@ msgstr "Punten:"
 #: src/canvas_items/CanvasItemText.vala:109 src/CanvasItems.vala:119
 msgid "Text"
 msgstr "Tekst"
+
+#: src/canvas_items/CanvasItemText.vala:892 src/CanvasItems.vala:959
+#: src/FormatBar.vala:55
+msgid "Copy"
+msgstr "Kopiëren"
+
+#: src/canvas_items/CanvasItemText.vala:895 src/CanvasItems.vala:960
+#: src/FormatBar.vala:60
+msgid "Cut"
+msgstr "Knippen"
+
+#: src/canvas_items/CanvasItemText.vala:899
+msgid "Paste"
+msgstr ""
+
+#: src/canvas_items/CanvasItemText.vala:902
+#, fuzzy
+msgid "Select All"
+msgstr "Alle tekst selecteren"
+
+#: src/canvas_items/CanvasItemText.vala:906
+msgid "Insert Emoji"
+msgstr ""
 
 #: src/CanvasItems.vala:111
 msgid "Rectangle Outline"
@@ -140,35 +173,27 @@ msgstr "Reeksnummer"
 msgid "Sticker"
 msgstr "Sticker"
 
-#: src/CanvasItems.vala:870
+#: src/CanvasItems.vala:881
 msgid "move items"
 msgstr "Items verplaatsen"
 
-#: src/CanvasItems.vala:946 src/FormatBar.vala:55
-msgid "Copy"
-msgstr "Kopiëren"
-
-#: src/CanvasItems.vala:947 src/FormatBar.vala:60
-msgid "Cut"
-msgstr "Knippen"
-
-#: src/CanvasItems.vala:949
+#: src/CanvasItems.vala:962
 msgid "Delete"
 msgstr "Verwijderen"
 
-#: src/CanvasItems.vala:951
+#: src/CanvasItems.vala:964
 msgid "Send to Front"
 msgstr "Tonen op voorgrond"
 
-#: src/CanvasItems.vala:952
+#: src/CanvasItems.vala:965
 msgid "Send to Back"
 msgstr "Tonen op achtergrond"
 
-#: src/CanvasItems.vala:956
+#: src/CanvasItems.vala:969
 msgid "Save As Custom"
 msgstr ""
 
-#: src/CanvasItem.vala:266
+#: src/CanvasItem.vala:288
 msgid "resize item"
 msgstr "Grootte aanpassen"
 
@@ -233,9 +258,32 @@ msgstr "Kaderbreedte"
 msgid "Dash Pattern"
 msgstr "Streepjespatroon"
 
-#: src/CanvasToolbar.vala:553
+#: src/CanvasToolbar.vala:538
+#, fuzzy
+msgid "Show Outline"
+msgstr "Ster met contour"
+
+#: src/CanvasToolbar.vala:570
 msgid "Font Properties"
 msgstr "Lettertype-eigenschappen"
+
+#: src/Canvas.vala:183
+#, fuzzy
+msgid "Annotate new image?"
+msgstr "Voorzie een klembordafbeelding van een aantekening"
+
+#: src/Canvas.vala:184
+msgid "Pasting a new image to annotate will destroy the current annotation."
+msgstr ""
+
+#: src/Canvas.vala:188
+msgid "Yes"
+msgstr ""
+
+#: src/Canvas.vala:191
+#, fuzzy
+msgid "No"
+msgstr "Niets"
 
 #: src/CustomItems.vala:31 src/CustomItems.vala:49 src/CustomItems.vala:62
 #, fuzzy
@@ -255,25 +303,25 @@ msgstr "Exporteren"
 msgid "Export With Current Settings"
 msgstr ""
 
-#: src/Exporter.vala:108
+#: src/Exporter.vala:109
 #, fuzzy
 msgid "Export Options"
 msgstr "Exporteren"
 
-#: src/Exporter.vala:129
+#: src/Exporter.vala:130
 #, fuzzy, c-format
 msgid "Export As %s"
 msgstr "Exporteren naar png…"
 
-#: src/Exporter.vala:130 src/MainWindow.vala:437 src/Resizer.vala:160
+#: src/Exporter.vala:131 src/MainWindow.vala:464 src/Resizer.vala:160
 msgid "Cancel"
 msgstr "Annuleren"
 
-#: src/Exporter.vala:130
+#: src/Exporter.vala:131
 msgid "Export"
 msgstr "Exporteren"
 
-#: src/Exporter.vala:152
+#: src/Exporter.vala:153
 #, fuzzy
 msgid "Export Completed"
 msgstr "Afbeelding exporteren"
@@ -366,109 +414,109 @@ msgstr "Lettertypekleur aanpassen"
 msgid "Clear all formatting"
 msgstr "Alle opmaak wissen"
 
-#: src/MainWindow.vala:181
+#: src/MainWindow.vala:199
 msgid "Open Image"
 msgstr "Afbeelding openen"
 
-#: src/MainWindow.vala:186
+#: src/MainWindow.vala:206
 msgid "Take Screeshot"
 msgstr ""
 
-#: src/MainWindow.vala:210 src/UndoBuffer.vala:84
+#: src/MainWindow.vala:231 src/UndoBuffer.vala:84
 msgid "Undo"
 msgstr "Ongedaan maken"
 
-#: src/MainWindow.vala:216 src/UndoBuffer.vala:90
+#: src/MainWindow.vala:237 src/UndoBuffer.vala:90
 msgid "Redo"
 msgstr "Opnieuw uitvoeren"
 
-#: src/MainWindow.vala:230
+#: src/MainWindow.vala:251
 msgid "Annotator"
 msgstr "Aantekeningen"
 
-#: src/MainWindow.vala:238
+#: src/MainWindow.vala:259
 msgid "Properties"
 msgstr "Eigenschappen"
 
-#: src/MainWindow.vala:245
+#: src/MainWindow.vala:266
 msgid "Shortcuts Cheatsheet"
 msgstr "Sneltoetsoverzicht"
 
-#: src/MainWindow.vala:262
+#: src/MainWindow.vala:283
 msgid "Export Image"
 msgstr "Afbeelding exporteren"
 
-#: src/MainWindow.vala:276
+#: src/MainWindow.vala:297
 msgid "Copy To Clipboard"
 msgstr "Kopiëren naar klembord"
 
-#: src/MainWindow.vala:285
+#: src/MainWindow.vala:306
 msgid "Print…"
 msgstr "Afdrukken…"
 
-#: src/MainWindow.vala:305
+#: src/MainWindow.vala:326
 #, c-format
 msgid "Zoom (%d%%)"
 msgstr "Zoomen (%d%%)"
 
-#: src/MainWindow.vala:317
+#: src/MainWindow.vala:338
 msgid "Zoom to Fit Window"
 msgstr "Passend zoomen"
 
-#: src/MainWindow.vala:335
+#: src/MainWindow.vala:356
 msgid "Welcome to Annotator"
 msgstr "Welkom bij Aantekeningen"
 
-#: src/MainWindow.vala:335
+#: src/MainWindow.vala:356
 msgid "Let's get started annotating an image"
 msgstr "Laten we aan de slag gaan"
 
-#: src/MainWindow.vala:336
+#: src/MainWindow.vala:357
 msgid "Open Image From File"
 msgstr "Afbeelding laden uit bestand"
 
-#: src/MainWindow.vala:336
+#: src/MainWindow.vala:357
 msgid "Open a PNG, JPEG, TIFF or BMP file"
 msgstr "Open een png-, jpeg-, tiff- of bmp-bestand"
 
-#: src/MainWindow.vala:337
+#: src/MainWindow.vala:358
 msgid "Paste Image From Clipboard"
 msgstr "Afbeelding laden van klembord"
 
-#: src/MainWindow.vala:337
+#: src/MainWindow.vala:358
 msgid "Open an image from the clipboard"
 msgstr "Open een afbeelding van het klembord"
 
-#: src/MainWindow.vala:338
+#: src/MainWindow.vala:360
 msgid "Take A Screenshot"
 msgstr ""
 
-#: src/MainWindow.vala:338
+#: src/MainWindow.vala:360
 #, fuzzy
 msgid "Open an image from a screenshot"
 msgstr "Open een afbeelding van het klembord"
 
-#: src/MainWindow.vala:374
+#: src/MainWindow.vala:401
 msgid "Font:"
 msgstr "Lettertype:"
 
-#: src/MainWindow.vala:425
+#: src/MainWindow.vala:452
 msgid "All Image Formats  (*)"
 msgstr "Alle afbeeldingen  (*)"
 
-#: src/MainWindow.vala:437
+#: src/MainWindow.vala:464
 msgid "Open Image File"
 msgstr "Afbeeldingsbestand openen"
 
-#: src/MainWindow.vala:437
+#: src/MainWindow.vala:464
 msgid "Open"
 msgstr "Openen"
 
-#: src/MainWindow.vala:498
+#: src/MainWindow.vala:545
 msgid "Delay (in seconds)"
 msgstr ""
 
-#: src/MainWindow.vala:509
+#: src/MainWindow.vala:556
 msgid "Include Annotator window"
 msgstr ""
 
