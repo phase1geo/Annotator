@@ -15,48 +15,51 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 3.0\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 3.2.2\n"
 
 #: src/Application.vala:69
 msgid ""
 "\n"
 "ERROR:  Unable to read image from standard input\n"
 msgstr ""
+"\n"
+"FOUTMELDING:  de afbeelding kan niet worden ingelezen\n"
 
 #: src/Application.vala:98
 msgid "Opening file"
 msgstr "Bestand openen"
 
 #: src/Application.vala:128
-#, fuzzy
 msgid "Display version number."
-msgstr "Toon het versienummer"
+msgstr "Toon het versienummer."
 
 #: src/Application.vala:129
-#, fuzzy
 msgid "Annotate clipboard image."
-msgstr "Voorzie een klembordafbeelding van een aantekening"
+msgstr "Voorzie een klembordafbeelding van een aantekening."
 
 #: src/Application.vala:130
-#, fuzzy
 msgid "Take and annotate a screenshot."
-msgstr "Open een afbeelding van het klembord"
+msgstr "Maak een schermfoto en aantekening."
 
 #: src/Application.vala:131
 msgid ""
 "Delay (in seconds) before screenshot capture occurs.  Only valid when --"
 "screenshot is set.  Default is 0."
 msgstr ""
+"De wachttijd (in seconden) alvorens het maken van een schermfoto.  Alleen "
+"geldig in combinatie met --screenshot.  Standaard: 0."
 
 #: src/Application.vala:132
 msgid ""
 "Include Annotator window in screenshot.  Only valid when --screenshot is set."
 msgstr ""
+"Toon het aantekeningenvenster op de schermfoto.  Alleen geldig in combinatie "
+"met --screenshot."
 
 #: src/Application.vala:133
 msgid "Uses image data from standard input"
-msgstr ""
+msgstr "Gebruikt afbeeldingsgegevens uit de standaardinvoer"
 
 #: src/CanvasImage.vala:95 src/CanvasImage.vala:118
 msgid "change image"
@@ -110,16 +113,15 @@ msgstr "Knippen"
 
 #: src/canvas_items/CanvasItemText.vala:899
 msgid "Paste"
-msgstr ""
+msgstr "Plakken"
 
 #: src/canvas_items/CanvasItemText.vala:902
-#, fuzzy
 msgid "Select All"
-msgstr "Alle tekst selecteren"
+msgstr "Alles selecteren"
 
 #: src/canvas_items/CanvasItemText.vala:906
 msgid "Insert Emoji"
-msgstr ""
+msgstr "Emoji invoegen"
 
 #: src/CanvasItems.vala:111
 msgid "Rectangle Outline"
@@ -191,40 +193,35 @@ msgstr "Tonen op achtergrond"
 
 #: src/CanvasItems.vala:969
 msgid "Save As Custom"
-msgstr ""
+msgstr "Opslaan als aangepast"
 
 #: src/CanvasItem.vala:288
 msgid "resize item"
 msgstr "Grootte aanpassen"
 
 #: src/CanvasToolbar.vala:53
-#, fuzzy
 msgid "Add Arrow"
-msgstr "Pijl"
+msgstr "Pijl toevoegen"
 
 #: src/CanvasToolbar.vala:53
-#, fuzzy
 msgid "More Arrows"
-msgstr "Nieuwe pijl"
+msgstr "Meer pijlen"
 
 #: src/CanvasToolbar.vala:53
 msgid "Custom Arrows"
-msgstr ""
+msgstr "Aangepaste pijlen"
 
 #: src/CanvasToolbar.vala:54
-#, fuzzy
 msgid "Add Shape"
-msgstr "Vormen"
+msgstr "Vorm toevoegen"
 
 #: src/CanvasToolbar.vala:54
-#, fuzzy
 msgid "More Shapes"
-msgstr "Vormen"
+msgstr "Meer vormen"
 
 #: src/CanvasToolbar.vala:54
-#, fuzzy
 msgid "Custom Shapes"
-msgstr "Vormen"
+msgstr "Aangepaste vormen"
 
 #: src/CanvasToolbar.vala:343
 msgid "Crop Image"
@@ -259,59 +256,55 @@ msgid "Dash Pattern"
 msgstr "Streepjespatroon"
 
 #: src/CanvasToolbar.vala:538
-#, fuzzy
 msgid "Show Outline"
-msgstr "Ster met contour"
+msgstr "Contour tonen"
 
 #: src/CanvasToolbar.vala:570
 msgid "Font Properties"
 msgstr "Lettertype-eigenschappen"
 
 #: src/Canvas.vala:183
-#, fuzzy
 msgid "Annotate new image?"
-msgstr "Voorzie een klembordafbeelding van een aantekening"
+msgstr "Afbeelding van aantekening voorzien?"
 
 #: src/Canvas.vala:184
 msgid "Pasting a new image to annotate will destroy the current annotation."
 msgstr ""
+"Let op: door het plakken van een afbeelding wordt de huidige aantekening "
+"gewist."
 
 #: src/Canvas.vala:188
 msgid "Yes"
-msgstr ""
+msgstr "Ja"
 
 #: src/Canvas.vala:191
-#, fuzzy
 msgid "No"
-msgstr "Niets"
+msgstr "Nee"
 
 #: src/CustomItems.vala:31 src/CustomItems.vala:49 src/CustomItems.vala:62
-#, fuzzy
 msgid "Edit"
 msgstr "Bewerken"
 
 #: src/CustomItems.vala:57
 msgid "Done"
-msgstr ""
+msgstr "Voltooid"
 
 #: src/Exporter.vala:43
-#, fuzzy
 msgid "Export…"
-msgstr "Exporteren"
+msgstr "Exporteren…"
 
 #: src/Exporter.vala:44
 msgid "Export With Current Settings"
-msgstr ""
+msgstr "Exporteren met huidige voorkeuren"
 
 #: src/Exporter.vala:109
-#, fuzzy
 msgid "Export Options"
-msgstr "Exporteren"
+msgstr "Exportopties"
 
 #: src/Exporter.vala:130
-#, fuzzy, c-format
+#, c-format
 msgid "Export As %s"
-msgstr "Exporteren naar png…"
+msgstr "Exporteren naar %s"
 
 #: src/Exporter.vala:131 src/MainWindow.vala:464 src/Resizer.vala:160
 msgid "Cancel"
@@ -322,41 +315,40 @@ msgid "Export"
 msgstr "Exporteren"
 
 #: src/Exporter.vala:153
-#, fuzzy
 msgid "Export Completed"
-msgstr "Afbeelding exporteren"
+msgstr "Het exporteren is voltooid"
 
 #: src/exports/ExportImage.vala:72
 msgid "Quality"
-msgstr ""
+msgstr "Kwaliteit"
 
 #: src/exports/ExportPDF.vala:28
 msgid "PDF"
-msgstr ""
+msgstr "Pdf"
 
 #: src/exports/ExportPNG.vala:30
 msgid "PNG"
-msgstr ""
+msgstr "Png"
 
 #: src/exports/ExportPNG.vala:64
 msgid "Compression"
-msgstr ""
+msgstr "Compressie"
 
 #: src/exports/ExportSVG.vala:28
 msgid "SVG"
-msgstr ""
+msgstr "Svg"
 
 #: src/Exports.vala:35
 msgid "JPEG"
-msgstr ""
+msgstr "Jpeg"
 
 #: src/Exports.vala:36
 msgid "TIFF"
-msgstr ""
+msgstr "Tiff"
 
 #: src/Exports.vala:37
 msgid "BMP"
-msgstr ""
+msgstr "Bmp"
 
 #: src/FormatBar.vala:66
 msgid "Bold"
@@ -420,7 +412,7 @@ msgstr "Afbeelding openen"
 
 #: src/MainWindow.vala:206
 msgid "Take Screeshot"
-msgstr ""
+msgstr "Schermfoto maken"
 
 #: src/MainWindow.vala:231 src/UndoBuffer.vala:84
 msgid "Undo"
@@ -469,7 +461,7 @@ msgstr "Welkom bij Aantekeningen"
 
 #: src/MainWindow.vala:356
 msgid "Let's get started annotating an image"
-msgstr "Laten we aan de slag gaan"
+msgstr "Tijd om aan de slag te gaan"
 
 #: src/MainWindow.vala:357
 msgid "Open Image From File"
@@ -489,12 +481,11 @@ msgstr "Open een afbeelding van het klembord"
 
 #: src/MainWindow.vala:360
 msgid "Take A Screenshot"
-msgstr ""
+msgstr "Schermfoto maken"
 
 #: src/MainWindow.vala:360
-#, fuzzy
 msgid "Open an image from a screenshot"
-msgstr "Open een afbeelding van het klembord"
+msgstr "Open een schermfoto"
 
 #: src/MainWindow.vala:401
 msgid "Font:"
@@ -514,11 +505,11 @@ msgstr "Openen"
 
 #: src/MainWindow.vala:545
 msgid "Delay (in seconds)"
-msgstr ""
+msgstr "Wachttijd (in seconden)"
 
 #: src/MainWindow.vala:556
 msgid "Include Annotator window"
-msgstr ""
+msgstr "Aantekeningenvenster tonen"
 
 #: src/Resizer.vala:161
 msgid "Resize"
