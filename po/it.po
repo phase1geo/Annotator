@@ -22,7 +22,7 @@ msgid ""
 "ERROR:  Unable to read image from standard input\n"
 msgstr ""
 "\n"
-"ERRORE: Impossibile leggere l'immagine dall'input standard\n
+"ERRORE: Impossibile leggere l'immagine dall'input standard\n"
 
 #: src/Application.vala:98
 msgid "Opening file"
