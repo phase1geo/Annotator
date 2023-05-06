@@ -1,16 +1,16 @@
 # ITALIAN TRANSLATION FOR ANNOTATOR.
 # Copyright (C) 2021
 # This file is distributed under the same license as the com.github.phase1geo.annotator package.
-# ALBANO BATTISTELLA <albano_battistella@hotmail.com>, 2021,2022.
+# ALBANO BATTISTELLA <albano_battistella@hotmail.com>, 2021,2022,2023.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.annotator\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-05 19:40-0500\n"
-"PO-Revision-Date: 2022-03-24 23:30+0100\n"
-"Last-Translator: Albano Battistella <albano_battistella@hotmail.com>\n"
-"Language-Team: ITALIAN <LL@li.org>\n"
+"PO-Revision-Date: 2023-05-06 08:30+0100\n"
+"Last-Translator: Albano Battistella <albano_battistella@gmail.com>\n"
+"Language-Team: Italian <LL@li.org>\n"
 "Language: It\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,6 +21,8 @@ msgid ""
 "\n"
 "ERROR:  Unable to read image from standard input\n"
 msgstr ""
+"\n"
+"ERRORE: Impossibile leggere l'immagine dall'input standard\n
 
 #: src/Application.vala:98
 msgid "Opening file"
@@ -55,7 +57,7 @@ msgstr ""
 
 #: src/Application.vala:133
 msgid "Uses image data from standard input"
-msgstr ""
+msgstr "Utilizza i dati dell'immagine dall'input standard"
 
 #: src/CanvasImage.vala:95 src/CanvasImage.vala:118
 msgid "change image"
@@ -109,16 +111,15 @@ msgstr "Taglia"
 
 #: src/canvas_items/CanvasItemText.vala:899
 msgid "Paste"
-msgstr ""
+msgstr "Incolla"
 
 #: src/canvas_items/CanvasItemText.vala:902
-#, fuzzy
 msgid "Select All"
-msgstr "Seleziona tutto il testo"
+msgstr "Seleziona tutto"
 
 #: src/canvas_items/CanvasItemText.vala:906
 msgid "Insert Emoji"
-msgstr ""
+msgstr "Inserisci Emoji"
 
 #: src/CanvasItems.vala:111
 msgid "Rectangle Outline"
@@ -253,31 +254,28 @@ msgid "Dash Pattern"
 msgstr "Modello tratto"
 
 #: src/CanvasToolbar.vala:538
-#, fuzzy
 msgid "Show Outline"
-msgstr "Contorno Stella"
+msgstr "Mostra contorno"
 
 #: src/CanvasToolbar.vala:570
 msgid "Font Properties"
 msgstr "Proprietà Carattere"
 
 #: src/Canvas.vala:183
-#, fuzzy
 msgid "Annotate new image?"
-msgstr "Annota l'immagine negli appunti."
+msgstr "Annotare nuova immagine?"
 
 #: src/Canvas.vala:184
 msgid "Pasting a new image to annotate will destroy the current annotation."
-msgstr ""
+msgstr "Incollando una nuova immagine da annotare distruggerà l'annotazione corrente."
 
 #: src/Canvas.vala:188
 msgid "Yes"
-msgstr ""
+msgstr "Si"
 
 #: src/Canvas.vala:191
-#, fuzzy
 msgid "No"
-msgstr "Nessuna"
+msgstr "No"
 
 #: src/CustomItems.vala:31 src/CustomItems.vala:49 src/CustomItems.vala:62
 msgid "Edit"
