@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: com.github.phase1geo.annotator\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-07 07:53-0500\n"
-"PO-Revision-Date: 2023-05-06 23:12+0900\n"
+"PO-Revision-Date: 2023-05-08 00:13+0900\n"
 "Last-Translator: lenemter <lenemter@gmail.com>\n"
 "Language-Team: none\n"
 "Language: ru\n"
@@ -287,7 +287,7 @@ msgstr "Готово"
 
 #: src/Exporter.vala:43
 msgid "Export…"
-msgstr "Экспорт…"
+msgstr "Экспортировать…"
 
 #: src/Exporter.vala:44
 msgid "Export With Current Settings"
@@ -505,7 +505,7 @@ msgstr "Задержка (в секундах)"
 
 #: src/MainWindow.vala:556
 msgid "Include Annotator window"
-msgstr "Показывать окно аннотатора"
+msgstr "Показывать окно Annotator"
 
 #: src/Resizer.vala:161
 msgid "Resize"
@@ -558,17 +558,15 @@ msgstr "%d на %d пикселей"
 
 #: src/ScreenshotBackend.vala:20
 msgid "Entire Screen"
-msgstr ""
+msgstr "Весь экран"
 
 #: src/ScreenshotBackend.vala:21
-#, fuzzy
 msgid "Current Window"
-msgstr "Текущий объект"
+msgstr "Текущее окно"
 
 #: src/ScreenshotBackend.vala:22
-#, fuzzy
 msgid "Selectable Area"
-msgstr "Выбрать всё"
+msgstr "Область"
 
 #: src/undo_actions/UndoImageResize.vala:31
 msgid "image resize"
@@ -665,7 +663,7 @@ msgstr "Отдалить"
 
 #: src/ZoomWidget.vala:97
 msgid "Zoom Actual"
-msgstr "Фактический масштаб"
+msgstr "Сбросить масштаб"
 
 #: src/ZoomWidget.vala:102 data/com.github.phase1geo.annotator.shortcuts.ui:68
 msgid "Zoom In"
