@@ -323,7 +323,7 @@ public class MainWindow : Hdy.ApplicationWindow {
     /* Add the button */
     var zoom_btn = new MenuButton();
     zoom_btn.set_image( new Image.from_icon_name( get_icon_name( "zoom-fit-best" ), get_icon_size() ) );
-    zoom_btn.set_tooltip_text( _( "Zoom (%d%%)".printf( 100 ) ) );
+    zoom_btn.set_tooltip_text( _( "Zoom (%d%%)" ).printf( 100 ) );
     zoom_btn.popover = new Popover( null );
     zoom_btn.set_sensitive( false );
 
@@ -720,7 +720,7 @@ public class MainWindow : Hdy.ApplicationWindow {
   /* Called whenever the zoom value changes */
   private void do_zoom_changed( double zoom_factor ) {
     _zoom.value = (int)(zoom_factor * 100);
-    _zoom_btn.set_tooltip_text( "Zoom (%d%%)".printf( (int)_zoom.value ) );
+    _zoom_btn.set_tooltip_text( _( "Zoom (%d%%)" ).printf( (int)_zoom.value ) );
   }
 
   /* Generate a notification */

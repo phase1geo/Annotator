@@ -17,9 +17,9 @@ public enum CaptureType {
 
   public string label() {
     switch( this ) {
-      case SCREEN         :  return( "Entire Screen" );
-      case CURRENT_WINDOW :  return( "Current Window" );
-      case AREA           :  return( "Selectable Area" );
+      case SCREEN         :  return _( "Entire Screen" );
+      case CURRENT_WINDOW :  return _( "Current Window" );
+      case AREA           :  return _( "Selectable Area" );
       default             :  assert_not_reached();
     }
   }
