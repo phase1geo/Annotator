@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.annotator\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-06 07:16-0500\n"
+"POT-Creation-Date: 2023-05-07 07:53-0500\n"
 "PO-Revision-Date: 2020-12-27 19:30-0600\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -437,7 +437,7 @@ msgstr ""
 msgid "Print…"
 msgstr ""
 
-#: src/MainWindow.vala:326
+#: src/MainWindow.vala:326 src/MainWindow.vala:723
 #, c-format
 msgid "Zoom (%d%%)"
 msgstr ""
@@ -549,6 +549,18 @@ msgstr ""
 #: src/Resizer.vala:416
 #, c-format
 msgid "%d x %d pixels"
+msgstr ""
+
+#: src/ScreenshotBackend.vala:20
+msgid "Entire Screen"
+msgstr ""
+
+#: src/ScreenshotBackend.vala:21
+msgid "Current Window"
+msgstr ""
+
+#: src/ScreenshotBackend.vala:22
+msgid "Selectable Area"
 msgstr ""
 
 #: src/undo_actions/UndoImageResize.vala:31

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: extra\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-07 21:00+0900\n"
+"POT-Creation-Date: 2023-05-07 07:53-0500\n"
 "PO-Revision-Date: 2023-05-07 20:35+0900\n"
 "Last-Translator: lenemter <lenemter@gmail.com>\n"
 "Language-Team: none\n"
@@ -206,11 +206,13 @@ msgid "Added keyboard shortcut support for non-English keyboards."
 msgstr "Добавлена поддержка сочетаний клавиш для неанглийских клавиатур."
 
 #: data/com.github.phase1geo.annotator.appdata.xml.in:114
-msgid "Added Brazilian Portugese translation (thanks to Fúlvio Alves)."
+#, fuzzy
+msgid "Added Brazilian Portuguese translation (thanks to Fúlvio Alves)."
 msgstr "Добавлен бразильский португальский перевод (спасибо Fúlvio Alves)."
 
 #: data/com.github.phase1geo.annotator.appdata.xml.in:115
-msgid "Added Slovakia translation (thanks to @MartinIIOT)"
+#, fuzzy
+msgid "Added Slovak translation (thanks to @MartinIIOT)"
 msgstr "Добавлен словацкий перевод (спасибо @MartinIIOT)"
 
 #: data/com.github.phase1geo.annotator.appdata.xml.in:116

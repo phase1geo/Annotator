@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.annotator\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-06 07:16-0500\n"
+"POT-Creation-Date: 2023-05-07 07:53-0500\n"
 "PO-Revision-Date: 2023-05-06 08:30+0100\n"
 "Last-Translator: Albano Battistella <albano_battistella@gmail.com>\n"
 "Language-Team: Italian <LL@li.org>\n"
@@ -443,7 +443,7 @@ msgstr "Copia negli appunti"
 msgid "Print…"
 msgstr "Stampa…"
 
-#: src/MainWindow.vala:326
+#: src/MainWindow.vala:326 src/MainWindow.vala:723
 #, c-format
 msgid "Zoom (%d%%)"
 msgstr "Zoom (%d%%)"
@@ -556,6 +556,20 @@ msgstr "Anteprima"
 #, c-format
 msgid "%d x %d pixels"
 msgstr "%d x %d pixel"
+
+#: src/ScreenshotBackend.vala:20
+msgid "Entire Screen"
+msgstr ""
+
+#: src/ScreenshotBackend.vala:21
+#, fuzzy
+msgid "Current Window"
+msgstr "Elemento corrente"
+
+#: src/ScreenshotBackend.vala:22
+#, fuzzy
+msgid "Selectable Area"
+msgstr "Seleziona tutto"
 
 #: src/undo_actions/UndoImageResize.vala:31
 msgid "image resize"

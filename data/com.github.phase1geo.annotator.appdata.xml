@@ -6,14 +6,17 @@
   <project_license>GPL-3.0+</project_license>
   <name>Annotator</name>
   <name xml:lang="pt_BR">Annotator</name>
+  <name xml:lang="ru">Annotator</name>
   <name xml:lang="nl">Aantekeningen</name>
   <name xml:lang="it">Annotator</name>
   <summary>Communicate with images better</summary>
   <summary xml:lang="pt_BR">Comunique-se melhor com imagens</summary>
+  <summary xml:lang="ru">Общайтесь с изображениями лучше</summary>
   <summary xml:lang="nl">Communiceer met betere afbeeldingen</summary>
   <summary xml:lang="it">Comunica meglio con le immagini</summary>
   <developer_name>Trevor Williams</developer_name>
   <developer_name xml:lang="pt_BR">Trevor Williams</developer_name>
+  <developer_name xml:lang="ru">Trevor Williams</developer_name>
   <developer_name xml:lang="nl">Trevor Williams</developer_name>
   <developer_name xml:lang="it">Trevor Williams</developer_name>
   <update_contact>phase1geo@gmail.com</update_contact>
@@ -34,51 +37,64 @@
   <description>
     <p>Communicate with images. Better.</p>
     <p xml:lang="pt_BR">Comunique-se com imagens. Melhor.</p>
+    <p xml:lang="ru">Общайтесь с изображениями. Лучше.</p>
     <p xml:lang="nl">Communiceer met afbeeldingen. Bétere afbeeldingen.</p>
     <p xml:lang="it">Comunica con le immagini. Meglio.</p>
     <ul>
       <li>Load image from the file system, clipboard or a screenshot.</li>
+      <li xml:lang="ru">Загружайте изображения из файловой системы, буфера обмена или снимка экрана.</li>
       <li xml:lang="it">Carica l'immagine dal file system, dagli appunti o da uno screenshot.</li>
       <li>Add shapes, stickers, text, drawings, and other callouts to highlight image details.</li>
       <li xml:lang="pt_BR">Adicione formas, adesivos, texto, desenhos ou outros textos explicativos para destacar os detalhes da imagem.</li>
+      <li xml:lang="ru">Добавляйте фигуры, стикеры, текст, рисунки и другие выноски, чтобы подчеркнуть важные детали изображения.</li>
       <li xml:lang="nl">Voeg vormen, stickers, tekst, tekeningen en andere items toe om afbeeldingen te verduidelijken.</li>
       <li xml:lang="it">Aggiungi forme, adesivi, testo, disegni e altri richiami per evidenziare i particolari dell'immagine.</li>
       <li>Save custom shapes for easy reuse.</li>
+      <li xml:lang="ru">Сохраняйте пользовательские фигуры для повторного использования.</li>
       <li xml:lang="it">Salva forme personalizzate per un facile riutilizzo.</li>
       <li>Add magnifiers to enhance image details.</li>
       <li xml:lang="pt_BR">Adicione uma lupa para melhorar os detalhes da imagem.</li>
+      <li xml:lang="ru">Добавляйте лупы, чтобы улучшить детали изображения.</li>
       <li xml:lang="nl">Voeg vergrotingen toe om details te verduidelijken.</li>
       <li xml:lang="it">Aggiungi lenti di ingrandimento per migliorare i dettagli dell'immagine.</li>
       <li>Blur out portions of the image to obfuscate data.</li>
       <li xml:lang="pt_BR">Desfoque partes da imagem para ofuscar os dados.</li>
+      <li xml:lang="ru">Размывайте части изображения, чтобы скрыть данные.</li>
       <li xml:lang="nl">Vervaag privédelen van afbeeldingen.</li>
       <li xml:lang="it">Sfoca porzioni dell'immagine per offuscare i dati.</li>
       <li>Crop, resize and add image borders.</li>
       <li xml:lang="pt_BR">Corte, redimensione e adicione bordas de imagem.</li>
+      <li xml:lang="ru">Обрезайте, меняйте размер и добавляйте границы изображения.</li>
       <li xml:lang="nl">Snijd afbeeldingen bij, verklein ze of voeg kaders toe.</li>
       <li xml:lang="it">Ritaglia, ridimensiona e aggiungi bordi dell'immagine.</li>
       <li>Control colors, line thickness and font details.</li>
       <li xml:lang="pt_BR">Controle as cores, a espessura da linha e os detalhes da fonte.</li>
+      <li xml:lang="ru">Управляйте цветами, толщиной линий и шрифтами.</li>
       <li xml:lang="nl">Bepaal kleuren, lijndikten en lettertypen.</li>
       <li xml:lang="it">Controlla i colori, lo spessore della linea e i dettagli dei caratteri.</li>
       <li>Zoom support.</li>
       <li xml:lang="pt_BR">Suporte para zoom.</li>
+      <li xml:lang="ru">Поддержка приближения.</li>
       <li xml:lang="nl">Zoomondersteuning.</li>
       <li xml:lang="it">Supporto per lo zoom.</li>
       <li>Unlimited undo/redo of any change.</li>
       <li xml:lang="pt_BR">Desfazer/refazer ilimitado de qualquer alteração.</li>
+      <li xml:lang="ru">Неограниченное количество отмен/повторов любых изменений.</li>
       <li xml:lang="nl">Ongelimiteerd ongedaan maken/opnieuw uitvoeren van aanpassingen.</li>
       <li xml:lang="it">Annulla/ripeti illimitati di qualsiasi modifica.</li>
       <li>Export to JPEG, PNG, TIFF, BMP, PDF and SVG image formats.</li>
       <li xml:lang="pt_BR">Exporte para os formatos de imagem JPEG, PNG, TIFF, BMP, PDF e SVG.</li>
+      <li xml:lang="ru">Экспорт в JPEG, PNG, TIFF, BMP, PDF и SVG.</li>
       <li xml:lang="nl">Exporteer naar jpeg-, png-, tiff-, bmp-, pdf- en svg-formaat.</li>
       <li xml:lang="it">Esporta in formati immagine JPEG, PNG, TIFF, BMP, PDF e SVG.</li>
       <li>Support for copying annotated image to clipboard.</li>
       <li xml:lang="pt_BR">Suporte para copiar imagens anotadas para a área de transferência.</li>
+      <li xml:lang="ru">Поддержка копирования отредактированного изображения в буфер обмена.</li>
       <li xml:lang="nl">Ondersteuning voor het kopiëren van afbeeldingen naar het klembord.</li>
       <li xml:lang="it">Supporto per la copia di immagini annotate negli appunti.</li>
       <li>Printer support.</li>
       <li xml:lang="pt_BR">Suporte a impressoras.</li>
+      <li xml:lang="ru">Поддержка принтеров.</li>
       <li xml:lang="nl">Afdrukondersteuning.</li>
       <li xml:lang="it">Supporto stampante.</li>
     </ul>
@@ -124,58 +140,93 @@
     <release version="1.2.0" date="2022-03-23">
       <description>
         <p>New</p>
+        <p xml:lang="ru">Новое</p>
         <ul>
           <li>Adding support for taking screenshots from within the application (screen, window and area).</li>
           <li>Adding command-line options for taking screenshots.</li>
+          <li xml:lang="ru">Добавлен параметр командной строки для создания скриншотов.</li>
           <li>Adding support for creating and saving custom arrows and shapes.</li>
+          <li xml:lang="ru">Добавлена поддержка создания и сохранения пользовательских стрелок и фигур.</li>
         </ul>
         <p>Changes</p>
+        <p xml:lang="ru">Изменения</p>
         <ul>
           <li>Updated Dutch translation (thanks to Heimen Stoffels).</li>
+          <li xml:lang="ru">Обновлён голландский перевод (спасибо Heimen Stoffels).</li>
           <li>Updated Italian translation (thanks to @albanobattistella).</li>
+          <li xml:lang="ru">Обновлён итальянский перевод (спасибо @albanobattistella).</li>
           <li>Updated Flatpak SDK from version 6 to 6.1.</li>
+          <li xml:lang="ru">Обновлена версия Flatpak SDK с 6 до 6.1.</li>
           <li>Modified .gitignore to ignore .swp files from anywhere in the codebase.</li>
+          <li xml:lang="ru">В .gitignore были добавлены файлы .swp для удаления их из кода.</li>
           <li>Changed shape dropdown to display four shapes per row instead of two.</li>
+          <li xml:lang="ru">Изменено раскрывающееся меню фигур, чтобы отображать четыре фигуры в строке вместо двух.</li>
           <li>Enhanced export UI and adding export options for PNG and JPEG types.</li>
+          <li xml:lang="ru">Улучшен пользовательский интерфейс экспорта и добавлены параметры экспорта в PNG и JPEG.</li>
           <li>Changed JPEG export to use both .jpeg and .jpg file extensions (defaults to .jpg now).</li>
+          <li xml:lang="ru">Изменён экспорт JPEG для использования файлов с расширениями .jpeg и .jpg (теперь по умолчанию используется .jpg).</li>
           <li>Improved arrow icon in toolbar.</li>
+          <li xml:lang="ru">Улучшен значок стрелки на панели инструментов.</li>
         </ul>
         <p>Bug Fixes</p>
+        <p xml:lang="ru">Исправления ошибок</p>
         <ul>
           <li>Improved ability to click on shapes that only have borders.</li>
+          <li xml:lang="ru">Улучшена возможность нажимать на фигуры, которые имеют только границы.</li>
           <li>Fixed issues with copying the contents of one shape into another.</li>
+          <li xml:lang="ru">Исправлены проблемы с копированием содержимого одной фигуры в другую.</li>
           <li>Fixed issue with displaying star and line icons in shapes toolbar for dark mode.</li>
+          <li xml:lang="ru">Исправлена проблема с отображением значков звёздочек и линий на панели инструментов фигур в тёмном режиме.</li>
         </ul>
       </description>
     </release>
     <release version="1.1.0" date="2022-01-14">
       <description>
         <p>New</p>
+        <p xml:lang="ru">Новое</p>
         <ul>
           <li>Added keyboard shortcuts for creating annotation items, printing and displaying contextual menus.</li>
+          <li xml:lang="ru">Добавлены сочетания клавиш для создания элементов аннотаций, печати и отображения контекстных меню.</li>
           <li>Added keyboard shortcut cheatsheet.</li>
+          <li xml:lang="ru">Добавлена шпаргалка по сочетаниям клавиш.</li>
           <li>Added keyboard shortcut support for non-English keyboards.</li>
-          <li>Added Brazilian Portugese translation (thanks to Fúlvio Alves).</li>
-          <li>Added Slovakia translation (thanks to @MartinIIOT)</li>
+          <li xml:lang="ru">Добавлена поддержка сочетаний клавиш для неанглийских клавиатур.</li>
+          <li>Added Brazilian Portuguese translation (thanks to Fúlvio Alves).</li>
+          <li>Added Slovak translation (thanks to @MartinIIOT)</li>
           <li>Added support for hitting the escape key to deselect all items on the canvas.</li>
+          <li xml:lang="ru">Добавлена поддержка нажатия клавиши выхода для отмены выбора всех элементов на холсте.</li>
         </ul>
         <p>Changes</p>
+        <p xml:lang="ru">Изменения</p>
         <ul>
           <li>Updated Italian translation (thanks to @albanobattistella).</li>
+          <li xml:lang="ru">Обновлён итальянский перевод (спасибо @albanobattistella).</li>
           <li>Updated German translation (thanks to Hannes Fritz).</li>
+          <li xml:lang="ru">Обновлён немецкий перевод (спасибо Hannes Fritz).</li>
           <li>Updated zoom UI to make it more consistent with other elementary apps.</li>
+          <li xml:lang="ru">Обновлйн пользовательский интерфейс масштабирования, чтобы сделать его более совместимым с другими приложениями elementary.</li>
           <li>Improved accuracy of the list of translatable files.</li>
+          <li xml:lang="ru">Улучшена точность списка переводимых файлов.</li>
           <li>Moved arrow annotation to its own button in the toolbar.</li>
+          <li xml:lang="ru">Аннотация со стрелкой перемещена в собственную кнопку на панели инструментов.</li>
           <li>Removed Accounts permissions from Flatpak manifest as it is no longer needed.</li>
+          <li xml:lang="ru">Удалены разрешения учетных записей из манифеста Flatpak, так как они больше не нужны.</li>
           <li>Removed text grab selector when editing text.</li>
+          <li xml:lang="ru">Удалён селектор захвата текста при редактировании текста.</li>
           <li>Changed behavior of Return key when text is edited to keep the text item selected.</li>
+          <li xml:lang="ru">Изменено поведение клавиши Enter при редактировании текста, чтобы текстовый элемент оставался выделенным.</li>
         </ul>
         <p>Bug Fixes</p>
+        <p xml:lang="ru">Исправления ошибок</p>
         <ul>
           <li>Fixed icons8_cup sticker issue (thanks to Jan Tojnar).</li>
+          <li xml:lang="ru">Исправлена ​​проблема со стикером icons8_cup (спасибо Jan Tojnar).</li>
           <li>Fixed issue where the toolbar state did not update to match the currently selected item.</li>
+          <li xml:lang="ru">Исправлена проблема, из-за которой состояние панели инструментов не обновлялось в соответствии с текущим выбранным элементом.</li>
           <li>Fixed issue where dragging a blur rectangle outside of the image caused application crash.</li>
+          <li xml:lang="ru">Исправлена проблема, из-за которой перетаскивание прямоугольника размытия за пределы изображения приводило к вылету приложения.</li>
           <li>Fixed issue where a text widget could be deleted but remain on the canvas.</li>
+          <li xml:lang="ru">Исправлена ошибка, из-за которой текстовый виджет мог быть удалён, но он оставался на холсте.</li>
         </ul>
       </description>
     </release>
@@ -183,6 +234,7 @@
       <description>
         <p>Initial release.</p>
         <p xml:lang="pt_BR">Lançamento inicial.</p>
+        <p xml:lang="ru">Начальный выпуск.</p>
         <p xml:lang="nl">Eerste uitgave.</p>
         <p xml:lang="it">Versione iniziale.</p>
       </description>
