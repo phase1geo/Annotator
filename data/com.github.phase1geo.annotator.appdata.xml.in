@@ -111,8 +111,8 @@
           <li>Added keyboard shortcuts for creating annotation items, printing and displaying contextual menus.</li>
           <li>Added keyboard shortcut cheatsheet.</li>
           <li>Added keyboard shortcut support for non-English keyboards.</li>
-          <li>Added Brazilian Portugese translation (thanks to Fúlvio Alves).</li>
-          <li>Added Slovakia translation (thanks to @MartinIIOT)</li>
+          <li>Added Brazilian Portuguese translation (thanks to Fúlvio Alves).</li>
+          <li>Added Slovak translation (thanks to @MartinIIOT)</li>
           <li>Added support for hitting the escape key to deselect all items on the canvas.</li>
         </ul>
         <p>Changes</p>
