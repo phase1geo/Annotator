@@ -34,7 +34,7 @@ public class Annotator : Granite.Application {
   public  static int           screenshot_delay  = 0;
   public  static bool          screenshot_incwin = false;
   public  static bool          std_input         = false;
-  public  static string        version           = "1.2.0";
+  public  static string        version           = "1.2.1";
 
   public Annotator () {
 

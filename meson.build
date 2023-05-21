@@ -1,7 +1,7 @@
 project('com.github.phase1geo.annotator', ['vala', 'c'],
-    version : '1.2.0',
+    version : '1.2.1',
     license: 'GPL-2.0-or-later',
-    meson_version: '>= 0.59.0',
+    meson_version: '>= 0.61.0',
 )
 
 add_project_arguments([

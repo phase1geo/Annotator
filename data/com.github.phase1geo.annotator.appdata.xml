@@ -137,6 +137,27 @@
     <value key="x-appcenter-stripe">pk_live_51Ccoj4BJm4hDdHaF1YKGdyGLCLtShzElKsr4GM9hJDJAoZArcWrNHsjL9b8SBs01GQBYpakj0l1tYenVJOqke93300TULHWdph</value>
   </custom>
   <releases>
+    <release version="1.2.1" date="2023-05-20">
+      <description>
+        <p>New</p>
+        <p xml:lang="ru">Новое</p>
+        <ul>
+          <li>Added Russian translation (thanks to @lenemter).</li>
+        </ul>
+        <p>Changes</p>
+        <p xml:lang="ru">Изменения</p>
+        <ul>
+          <li>Updated Italian translations (thanks to @albanobattistella).</li>
+          <li>Updated Dutch translation (thanks to Heimen Stoffels).</li>
+          <li xml:lang="ru">Обновлён голландский перевод (спасибо Heimen Stoffels).</li>
+        </ul>
+        <p>Bug Fixes</p>
+        <p xml:lang="ru">Исправления ошибок</p>
+        <ul>
+          <li>Fixed translation string issues related to Zoom and Screenshot (thanks to @lenemter).</li>
+        </ul>
+      </description>
+    </release>
     <release version="1.2.0" date="2022-03-23">
       <description>
         <p>New</p>
@@ -192,7 +213,9 @@
           <li>Added keyboard shortcut support for non-English keyboards.</li>
           <li xml:lang="ru">Добавлена поддержка сочетаний клавиш для неанглийских клавиатур.</li>
           <li>Added Brazilian Portuguese translation (thanks to Fúlvio Alves).</li>
+          <li xml:lang="ru">Добавлен бразильский португальский перевод (спасибо Fúlvio Alves).</li>
           <li>Added Slovak translation (thanks to @MartinIIOT)</li>
+          <li xml:lang="ru">Добавлен словацкий перевод (спасибо @MartinIIOT)</li>
           <li>Added support for hitting the escape key to deselect all items on the canvas.</li>
           <li xml:lang="ru">Добавлена поддержка нажатия клавиши выхода для отмены выбора всех элементов на холсте.</li>
         </ul>
