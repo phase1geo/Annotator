@@ -37,7 +37,8 @@ public class ExportPNG : Export {
     var fname = repair_filename( filename );
 
     /* Create the drawing surface */
-    var surface = new ImageSurface( Format.RGB24, source.get_width(), source.get_height() );
+    var format = get_bool( "transparency" ) ? Format.ARGB32 : Format.RGB24;
+    var surface = new ImageSurface( format, source.get_width(), source.get_height() );
     var context = new Context( surface );
     canvas.draw_all( context );
 
@@ -62,11 +63,13 @@ public class ExportPNG : Export {
   /* Add the PNG settings */
   public override void add_settings( Grid grid ) {
     add_setting_scale( "compression", grid, _( "Compression" ), null, 0, 9, 1, 5 );
+    add_setting_bool( "transparency", grid, _( "Transparency"), null, false);
   }
 
   /* Save the settings */
   public override void save_settings( Xml.Node* node ) {
     node->set_prop( "compression", get_scale( "compression" ).to_string() );
+    node->set_prop( "transparency", get_bool( "transparency" ).to_string() );
   }
 
   /* Load the settings */
@@ -77,6 +80,10 @@ public class ExportPNG : Export {
       set_scale( "compression", int.parse( c ) );
     }
 
+    var t = node->get_prop( "transparency" );
+    if( t != null ) {
+      set_bool( "transparency", bool.parse( t ) );
+    }
   }
 
 }

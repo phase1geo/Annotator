@@ -91,7 +91,7 @@ public class Export {
     var sw  = new Switch();
     sw.halign = Align.END;
     sw.expand = true;
-    sw.activate.connect(() => {
+    sw.notify["active"].connect(() => {
       settings_changed();
     });
 
