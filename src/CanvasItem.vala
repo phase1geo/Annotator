@@ -115,6 +115,7 @@ public class CanvasItem {
   private CanvasItemProperties _props     = new CanvasItemProperties();
   private Cairo.Path?          _path      = null;
   private CanvasItemPathType   _path_type = CanvasItemPathType.FILL;
+  private Cursor               _sel_cursor;
 
   protected Array<CanvasPoint> points { get; set; default = new Array<CanvasPoint>(); }
   protected Canvas             canvas { get; private set; }
@@ -181,6 +182,8 @@ public class CanvasItem {
 
     this.itype = type;
     this.props.copy( props );
+
+    _sel_cursor = new Cursor.from_name( "grab", null );
 
   }
 
@@ -271,8 +274,8 @@ public class CanvasItem {
   public virtual void draw( double x, double y ) {}
 
   /* Returns the type of cursor to use for the given selection cursor */
-  public virtual CursorType? get_selector_cursor( int index ) {
-    return( CursorType.HAND2 );
+  public virtual Cursor? get_selector_cursor( int index ) {
+    return( _sel_cursor );
   }
 
   /*
@@ -347,22 +350,14 @@ public class CanvasItem {
   public virtual void add_contextual_menu_items( Box box ) {}
 
   /* Returns a menuitem with the given label, action and (optional) keyboard shortcut */
-  public ModelButton add_contextual_menuitem( Box box, string label, string? shortcut, bool sensitive, CanvasItemClickAction action ) {
+  public Button add_contextual_menuitem( Box box, string label, string action_name, bool sensitive ) {
 
-    var btn = new ModelButton();
-    btn.set_sensitive( sensitive );
-    btn.clicked.connect(() => {
-      action( this );
-    });
+    var btn = new Button.with_label( label ) {
+      sensitive = sensitive,
+      action_name = action_name
+    };
 
-    if( shortcut != null ) {
-      btn.get_child().destroy();
-      btn.add( new Granite.AccelLabel( label, shortcut ) );
-    } else {
-      btn.text = label;
-    }
-
-    box.pack_start( btn, false, false );
+    box.append( btn );
 
     return( btn );
 
@@ -371,9 +366,12 @@ public class CanvasItem {
   /* Adds a horizontal separator item to the contextual menu */
   public Separator add_contextual_separator( Box box ) {
 
-    var sep = new Separator( Orientation.HORIZONTAL );
+    var sep = new Separator( Orientation.HORIZONTAL ) {
+      halign = Align.FILL,
+      hexpand = true
+    };
 
-    box.pack_start( sep, false, true );
+    box.append( sep );
 
     return( sep );
 
@@ -386,28 +384,40 @@ public class CanvasItem {
     CanvasItemScaleComplete complete
   ) {
 
-    var lbl = new Label( label );
-    lbl.use_markup = true;
-    lbl.halign     = Align.START;
+    var lbl = new Label( label ) {
+      halign     = Align.START,
+      use_markup = true
+    };
 
-    var scale = new Scale.with_range( Orientation.HORIZONTAL, min, max, step );
+    var btn_controller = new GestureClick();
+    var scale = new Scale.with_range( Orientation.HORIZONTAL, min, max, step ) {
+      halign        = Align.FILL,
+      hexpand       = true,
+      draw_value    = false,
+      width_request = 200
+    };
+    scale.add_controller( btn_controller );
     scale.set_value( dflt );
-    scale.draw_value = false;
-    scale.width_request = 200;
     scale.value_changed.connect(() => {
       action( this, scale.get_value() );
     });
-    scale.button_release_event.connect(() => {
+    btn_controller.released.connect((n_press, x, y) => {
       complete( this, dflt, scale.get_value() );
       return( false );
     });
 
-    var scale_box = new Box( Orientation.HORIZONTAL, 10 );
-    scale_box.border_width = 10;
-    scale_box.pack_start( lbl,   false, false );
-    scale_box.pack_start( scale, true, true );
+    var scale_box = new Box( Orientation.HORIZONTAL, 10 ) {
+      halign        = Align.FILL,
+      hexpand       = true,
+      margin_start  = 10,
+      margin_end    = 10,
+      margin_top    = 10,
+      margin_bottom = 10
+    };
+    scale_box.append( lbl );
+    scale_box.append( scale );
 
-    box.pack_start( scale_box, false, true );
+    box.append( scale_box );
 
     return( scale );
 
@@ -420,27 +430,39 @@ public class CanvasItem {
     CanvasItemSpinnerComplete complete
   ) {
 
-    var lbl = new Label( label );
-    lbl.use_markup = true;
-    lbl.halign     = Align.START;
+    var lbl = new Label( label ) {
+      halign     = Align.START,
+      use_markup = true
+    };
 
-    var sb = new SpinButton.with_range( (double)min, (double)max, (double)step );
+    var btn_controller = new GestureClick();
+    var sb = new SpinButton.with_range( (double)min, (double)max, (double)step ) {
+      halign = Align.FILL,
+      hexpand = true,
+      digits = 0
+    };
+    sb.add_controller( btn_controller );
     sb.set_value( (double)dflt );
-    sb.digits = 0;
     sb.value_changed.connect(() => {
       action( this, (int)sb.get_value() );
     });
-    sb.button_release_event.connect(() => {
+    btn_controller.released.connect((n_press, x, y) => {
       complete( this, dflt, (int)sb.get_value() );
       return( false );
     });
 
-    var sb_box = new Box( Orientation.HORIZONTAL, 10 );
-    sb_box.border_width = 10;
-    sb_box.pack_start( lbl, false, false );
-    sb_box.pack_start( sb,  true,  true );
+    var sb_box = new Box( Orientation.HORIZONTAL, 10 ) {
+      halign        = Align.FILL,
+      hexpand       = true,
+      margin_start  = 10,
+      margin_end    = 10,
+      margin_top    = 10,
+      margin_bottom = 10
+    };
+    sb_box.append( lbl );
+    sb_box.append( sb );
 
-    box.pack_start( sb_box, false, true );
+    box.append( sb_box );
 
     return( sb );
 
@@ -449,24 +471,33 @@ public class CanvasItem {
   /* Creates a switch widget for the contextual menu */
   protected Switch add_contextual_switch( Box box, string label, bool dflt, CanvasItemSwitchAction action ) {
 
-    var lbl = new Label( label );
-    lbl.use_markup = true;
-    lbl.halign     = Align.START;
+    var lbl = new Label( label ) {
+      halign     = Align.START,
+      use_markup = true
+    };
 
+    var btn_controller = new GestureClick();
     var sw = new Switch();
+    sw.add_controller( btn_controller );
     sw.set_active( dflt );
-    sw.button_press_event.connect(() => {
+    btn_controller.pressed.connect((n_press, x, y) => {
       action( this );
       return( false );
     });
 
-    var sw_box = new Box( Orientation.HORIZONTAL, 10 );
-    sw_box.border_width = 10;
-    sw_box.homogeneous  = false;
-    sw_box.pack_start( lbl, false, false );
-    sw_box.pack_start( sw,  false, false );
+    var sw_box = new Box( Orientation.HORIZONTAL, 10 ) {
+      halign        = Align.FILL,
+      hexpand       = true,
+      margin_start  = 10,
+      margin_end    = 10,
+      margin_top    = 10,
+      margin_bottom = 10,
+      homogeneous   = false
+    };
+    sw_box.append( lbl );
+    sw_box.append( sw );
 
-    box.pack_start( sw_box, false, true );
+    box.append( sw_box );
 
     return( sw );
 

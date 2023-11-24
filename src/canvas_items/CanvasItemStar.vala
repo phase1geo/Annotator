@@ -27,6 +27,7 @@ public class CanvasItemStar : CanvasItem {
 
   private double _inner_radius = 15;
   private double _inner_angle  = 0;
+  private Cursor _sel_cursor;
 
   public int num_points { get; set; default = 5; }
 
@@ -36,6 +37,7 @@ public class CanvasItemStar : CanvasItem {
     num_points    = point_num;
     _inner_radius = inner_radius;
     create_points();
+    _sel_cursor = new Cursor.from_name( "crosshair", null );
   }
 
   /* Creates the item points */
@@ -135,8 +137,8 @@ public class CanvasItemStar : CanvasItem {
   }
 
   /* Provides cursor to display when mouse cursor is hovering over the given selector */
-  public override CursorType? get_selector_cursor( int index ) {
-    return( CursorType.TCROSS );
+  public override Cursor? get_selector_cursor( int index ) {
+    return( _sel_cursor );
   }
 
   /* Adds the contextual menu items */

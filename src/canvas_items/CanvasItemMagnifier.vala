@@ -36,6 +36,7 @@ public class CanvasItemMagnifier : CanvasItem {
   private CanvasPoint _press0      = new CanvasPoint();
   private CanvasPoint _press2      = new CanvasPoint();
   private bool        _focus_moved = false;
+  private Cursor[]    _sel_cursors;
 
   public double zoom_factor {
     get {
@@ -60,6 +61,10 @@ public class CanvasItemMagnifier : CanvasItem {
     _image       = canvas.image;
     _zoom_factor = zoom_factor;
     create_points();
+    _sel_cursors = new Cursor[3];
+    _sel_cursors[0] = new Cursor.from_name( "grab", null );
+    _sel_cursors[1] = new Cursor.from_name( "se-resize", null );
+    _sel_cursors[2] = new Cursor.from_name( "crosshair", null );
   }
 
   /* Creates the item points */
@@ -162,11 +167,11 @@ public class CanvasItemMagnifier : CanvasItem {
   }
 
   /* Provides cursor to display when mouse cursor is hovering over the given selector */
-  public override CursorType? get_selector_cursor( int index ) {
+  public override Cursor? get_selector_cursor( int index ) {
     switch( index ) {
-      case 0  :  return( CursorType.HAND2 );
-      case 1  :  return( CursorType.BOTTOM_RIGHT_CORNER );
-      default :  return( CursorType.TCROSS );
+      case 0  :  return( _sel_cursors[0] );
+      case 1  :  return( _sel_cursors[1] );
+      default :  return( _sel_cursors[2] );
     }
   }
 

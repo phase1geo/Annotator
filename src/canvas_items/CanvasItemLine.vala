@@ -38,6 +38,7 @@ public class CanvasItemLine : CanvasItem {
   public CanvasItemLine( Canvas canvas, CanvasItemProperties props ) {
     base( CanvasItemType.LINE, canvas, props );
     create_points();
+    _sel_cursor = new Cursor.from_name( "crosshair", null );
   }
 
   /* Creates the selection points */
@@ -138,8 +139,8 @@ public class CanvasItemLine : CanvasItem {
   }
 
   /* Provides cursor to display when mouse cursor is hovering over the given selector */
-  public override CursorType? get_selector_cursor( int index ) {
-    return( CursorType.TCROSS );
+  public override Cursor? get_selector_cursor( int index ) {
+    return( _sel_cursor );
   }
 
   /* Draw the rectangle */

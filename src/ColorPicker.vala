@@ -65,8 +65,9 @@ public class ColorPicker : Box {
 
     homogeneous = true;
 
-    _toggle = new ToggleButton();
-    _toggle.relief = ReliefStyle.NONE;
+    _toggle = new ToggleButton() {
+      has_frame = false
+    };
     _toggle.toggled.connect( handle_toggle );
     _toggle.get_style_context().add_class( type.get_css_class() );
     type.set_image( _toggle );
@@ -74,14 +75,22 @@ public class ColorPicker : Box {
     _chooser = new ColorChooserWidget();
     _chooser.rgba = init_color;
 
-    var overlay = new Overlay();
-    overlay.margin = 10;
-    overlay.button_press_event.connect( handle_chooser );
-    overlay.add( _chooser );
-    overlay.show_all();
+    var btn_controller = new GestureClick();
+    var overlay = new Overlay() {
+      margin_start  = 10,
+      margin_end    = 10,
+      margin_top    = 10,
+      margin_bottom = 10,
+      child         = _chooser
+    };
+    overlay.add_controller( btn_controller );
+    btn_controller.pressed.connect((n_press, x, y) => {
+      handle_chooser();
+    });
 
-    _select = new MenuButton();
-    _select.relief = ReliefStyle.NONE;
+    _select = new MenuButton() {
+      has_frame = false
+    };
     _select.get_style_context().add_class( "color_chooser" );
 
     _select.popover = new Popover( null );
@@ -135,11 +144,11 @@ public class ColorPicker : Box {
     }
   }
 
-  private bool handle_chooser( EventButton e ) {
+  private bool handle_chooser() {
     update_css( _chooser.rgba );
     set_active( true );
     color_changed( _chooser.rgba );
-    Utils.hide_popover( _select.popover );
+    _select.popover.popdown();
     return( true );
   }
 

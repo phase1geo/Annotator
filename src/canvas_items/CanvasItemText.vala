@@ -44,6 +44,7 @@ public class CanvasItemText : CanvasItem {
   private double         _height       = 0;
   private bool           _debug        = false;
   private int            _font_size    = 16;
+  private Cursor         _sel_cursor;
 
   /* Signals */
   public signal void select_mode( bool mode );
@@ -102,6 +103,7 @@ public class CanvasItemText : CanvasItem {
     base( CanvasItemType.TEXT, canvas, props );
     initialize( canvas );
     update_size();
+    _sel_cursor = new Cursor.from_name( "e-resize", null );
   }
 
   /* Initializes this contents of this item */
@@ -172,8 +174,8 @@ public class CanvasItemText : CanvasItem {
     max_width += diffx;
   }
 
-  public override CursorType? get_selector_cursor( int index ) {
-    return( CursorType.RIGHT_SIDE );
+  public override Cursor? get_selector_cursor( int index ) {
+    return( _sel_cursor );
   }
 
   public override UndoItem? get_undo_item_for_selector( int index ) {

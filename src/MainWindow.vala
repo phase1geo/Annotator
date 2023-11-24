@@ -22,9 +22,9 @@
 using Gtk;
 using Gee;
 
-public class MainWindow : Hdy.ApplicationWindow {
+public class MainWindow : Gtk.ApplicationWindow {
 
-  private Hdy.HeaderBar     _header;
+  private HeaderBar         _header;
   private FontButton        _font;
   private Button            _open_btn;
   private Button            _screenshot_btn;
@@ -192,7 +192,7 @@ public class MainWindow : Hdy.ApplicationWindow {
   /* Create the header bar */
   private void create_header() {
 
-    _header = new Hdy.HeaderBar();
+    _header = new HeaderBar();
     _header.set_show_close_button( true );
 
     _open_btn = new Button.from_icon_name( get_icon_name( "document-open" ), get_icon_size() );
@@ -200,7 +200,6 @@ public class MainWindow : Hdy.ApplicationWindow {
     _open_btn.clicked.connect( do_open );
     _header.pack_start( _open_btn );
 
-    
     if (can_do_screenshots) {
       _screenshot_btn = new Button.from_icon_name( get_icon_name( "insert-image" ), get_icon_size() );
       _screenshot_btn.set_tooltip_markup( Utils.tooltip_with_accel( _( "Take Screeshot" ), "<Control>t" ) );
@@ -209,23 +208,6 @@ public class MainWindow : Hdy.ApplicationWindow {
       });
       _header.pack_start( _screenshot_btn );
     }
-
-    /*
-    _save_btn = new Button.from_icon_name( get_icon_name( "document-save" ), get_icon_size() );
-    _save_btn.set_tooltip_markup( Utils.tooltip_with_accel( _( "Save File" ), "<Control>s" ) );
-    _save_btn.clicked.connect( do_save );
-    _header.pack_start( _save_btn );
-
-    _paste_btn = new Button.from_icon_name( get_icon_name( "edit-paste" ), get_icon_size() );
-    _paste_btn.set_tooltip_markup( Utils.tooltip_with_accel( _( "Paste Over" ), "<Shift><Control>v" ) );
-    _paste_btn.clicked.connect( do_paste_over );
-    _header.pack_start( _paste_btn );
-
-    _copy_btn = new Button.from_icon_name( get_icon_name( "edit-copy" ), get_icon_size() );
-    _copy_btn.set_tooltip_markup( Utils.tooltip_with_accel( _( "Copy All" ), "<Shift><Control>c" ) );
-    _copy_btn.clicked.connect( do_copy_all );
-    _header.pack_start( _copy_btn );
-    */
 
     _undo_btn = new Button.from_icon_name( get_icon_name( "edit-undo" ), get_icon_size() );
     _undo_btn.set_tooltip_markup( Utils.tooltip_with_accel( _( "Undo" ), "<Control>z" ) );
@@ -249,6 +231,7 @@ public class MainWindow : Hdy.ApplicationWindow {
     _header.pack_end( _zoom_btn );
 
     set_title( _( "Annotator" ) );
+    set_titlebar( _header );
 
   }
 

@@ -23,7 +23,7 @@ using Gtk;
 using Gdk;
 using GLib;
 
-public class Annotator : Granite.Application {
+public class Annotator : Gtk.Application {
 
   private static bool       show_version  = false;
   private        MainWindow appwin;
@@ -34,7 +34,7 @@ public class Annotator : Granite.Application {
   public  static int           screenshot_delay  = 0;
   public  static bool          screenshot_incwin = false;
   public  static bool          std_input         = false;
-  public  static string        version           = "1.2.1";
+  public  static string        version           = "2.0.0";
 
   public Annotator () {
 
@@ -76,6 +76,8 @@ public class Annotator : Granite.Application {
     }
 
     /* Handle any changes to the position of the window */
+    /*
+     * TODO
     appwin.configure_event.connect(() => {
       int root_x, root_y;
       int size_w, size_h;
@@ -87,26 +89,21 @@ public class Annotator : Granite.Application {
       settings.set_int( "window-h", size_h );
       return( false );
     });
+    */
 
   }
 
   /* Called whenever files need to be opened */
   private void open_files( File[] files, string hint ) {
-    hold();
     foreach( File open_file in files ) {
       var file = open_file.get_path();
       appwin.notification( _( "Opening file" ), file );
       appwin.open_file( file );
     }
-    Gtk.main();
-    release();
   }
 
   /* Called if we have no files to open */
   protected override void activate() {
-    hold();
-    Gtk.main();
-    release();
   }
 
   /* Parse the command-line arguments */

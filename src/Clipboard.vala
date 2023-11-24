@@ -26,160 +26,72 @@ using Gdk;
 
 public class AnnotatorClipboard {
 
-  const string ITEMS_TARGET_NAME = "x-application/annotator-items";
-  static Atom  ITEMS_ATOM        = Atom.intern_static_string( ITEMS_TARGET_NAME );
-
-  private static string? text   = null;
-  private static Pixbuf? image  = null;
-  private static string? items  = null;
-  private static bool    set_internally = false;
-
-  enum Target {
-    STRING,
-    IMAGE,
-    ITEMS
-  }
-
-  const TargetEntry[] text_target_list = {
-    { "UTF8_STRING", 0, Target.STRING },
-    { "text/plain",  0, Target.STRING },
-    { "STRING",      0, Target.STRING }
-  };
-
-  const TargetEntry[] image_target_list = {
-    { "image/png", 0, Target.IMAGE }
-  };
-
-  const TargetEntry[] item_target_list = {
-    { ITEMS_TARGET_NAME, 0, Target.ITEMS }
-  };
-
-  public static void set_with_data( Clipboard clipboard, SelectionData selection_data, uint info, void* user_data_or_owner) {
-    switch( info ) {
-      case Target.STRING :
-        if( text != null ) {
-          selection_data.set_text( text, -1 );
-        }
-        break;
-      case Target.IMAGE :
-        if( image != null ) {
-          selection_data.set_pixbuf( image );
-        }
-        break;
-      case Target.ITEMS :
-        if( items != null ) {
-          selection_data.@set( ITEMS_ATOM, 0, items.data );
-        }
-        break;
-    }
-  }
-
-  /* Clears the class structure */
-  public static void clear_data( Clipboard clipboard, void* user_data_or_owner ) {
-    if( !set_internally ) {
-      text  = null;
-      image = null;
-      items = null;
-    }
-    set_internally = false;
-  }
+  const string ITEMS_MIME_TYPE = "x-application/annotator-items";
 
   /* Copies the selected text to the clipboard */
   public static void copy_text( string txt ) {
-
-    /* Store the data to copy */
-    text           = txt;
-    set_internally = true;
-
-    /* Inform the clipboard */
-    var clipboard = Clipboard.get_default( Gdk.Display.get_default() );
-    clipboard.set_with_data( text_target_list, set_with_data, clear_data, null );
-
+    var clipboard = Display.get_default().get_clipboard();
+    clipboard.set_text( txt );
   }
 
+  /* Copies the selected image to the clipboard */
   public static void copy_image( Pixbuf img ) {
-
-    /* Store the data to copy */
-    image          = img;
-    set_internally = true;
-
-    /* Inform the clipboard */
-    var clipboard = Clipboard.get_default( Gdk.Display.get_default() );
-    clipboard.set_with_data( image_target_list, set_with_data, clear_data, null );
-
+    var clipboard = Display.get_default().get_clipboard();
+    var texture   = new Texture.for_pixbuf( img );
+    clipboard.set_texture( texture );
   }
 
+  /* Copies the selected items to the clipboard */
   public static void copy_items( string it ) {
-
-    /* Store the data to copy */
-    items          = it;
-    set_internally = true;
-
-    var clipboard = Gtk.Clipboard.get_default( Gdk.Display.get_default() );
-    clipboard.set_with_data( item_target_list, set_with_data, clear_data, null );
-
+    var bytes     = new Bytes( it.data );
+    var provider  = new ContentProvider.from_bytes( "application/xml", bytes );
+    var clipboard = Display.get_default().get_clipboard();
+    clipboard.set_content( provider );
   }
 
   /* Returns true if text is pasteable from the clipboard */
   public static bool text_pasteable() {
-    var clipboard = Clipboard.get_default( Gdk.Display.get_default() );
-    return( clipboard.wait_is_text_available() );
+    var clipboard = Display.get_default().get_clipboard();
+    return( clipboard.get_formats().contain_gtype( Type.STRING ) );
+  }
+
+  /* Returns true if image is pastable from the clipboard */
+  public static bool image_pasteable() {
+    var clipboard = Display.get_default().get_clipboard();
+    return( clipboard.get_formats().contain_mime_type( "image/png" ) );
   }
 
   /* Returns true if CanvasItems are pasteable from the clipboard */
   public static bool items_pasteable() {
-    var clipboard = Clipboard.get_default( Gdk.Display.get_default() );
-    return( clipboard.wait_is_target_available( ITEMS_ATOM ) );
+    var clipboard = Display.get_default().get_clipboard();
+    return( clipboard.get_formats().contain_mime_type( "application/xml" ) );
   }
 
   /* Called to paste current item in clipboard to the given Canvas */
   public static void paste( Editor editor ) {
 
-    var clipboard   = Clipboard.get_default( Gdk.Display.get_default() );
-    var text_needed = false;  // da.is_node_editable() || da.is_connection_editable();
+    var clipboard = Display.get_default().get_clipboard();
 
-    Atom[] targets;
-    clipboard.wait_for_targets( out targets );
-
-    Atom? text_atom  = null;
-    Atom? image_atom = null;
-    Atom? items_atom  = null;
-
-    /* Get the list of targets that we will support */
-    foreach( var target in targets ) {
-      switch( target.name() ) {
-        case ITEMS_TARGET_NAME :  items_atom = items_atom ?? target;  break;
-        case "UTF8_STRING"     :
-        case "STRING"          :
-        case "text/plain"      :  text_atom  = text_atom  ?? target;  break;
-        case "image/png"       :  image_atom = image_atom ?? target;  break;
+    try {
+      if( clipboard.get_formats().contain_mime_type( "application/xml" ) ) {
+        clipboard.read_async.begin( {"application/xml"}, (obj, res) => {
+          var stream = clipboard.read_async.end( res );
+          uint8 buffer[];
+		      stream.read( buffer );
+          editor.paste_items( (string)buffer );
+        });
+      } else if( clipboard.get_formats().contain_gtype( Type.STRING ) ) {
+        clipboard.read_text_async.begin((obj, res) => {
+          var text = clipboard.read_text_async.end( res );
+        });
+      } else if( clipboard.get_formats().contain_gtype( GDK_TYPE_TEXTURE ) ) {
+        clipboard.read_async.begin( {"image/png"}, (obj, res) => {
+          var stream = clipboard.read_async.end( res );
+          var pixbuf = new Pixbuf.from_stream( stream );
+          editor.paste_image( pixbuf, true );
+        });
       }
-    }
-
-    /* If we need to handle a canvas image, do it here */
-    if( items_atom != null ) {
-      clipboard.request_contents( items_atom, (c, raw_data) => {
-        var data = (string)raw_data.get_data();
-        if( data == null ) return;
-        editor.paste_items( data );
-      });
-
-    /* If we need to handle pasting text, do it here */
-    } else if( (image_atom != null) && ((text_atom == null) || !text_needed) ) {
-      clipboard.request_contents( image_atom, (c, raw_data) => {
-        var data = raw_data.get_pixbuf();
-        if( data == null ) return;
-        editor.paste_image( data, true );
-      });
-
-    /* If we need to handle pasting an image, do it here */
-    } else if( text_atom != null ) {
-      clipboard.request_contents( text_atom, (c, raw_data) => {
-        var data = (string)raw_data.get_data();
-        if( data == null ) return;
-        editor.paste_text( data );
-      });
-    }
+    } catch( Error e ) {}
 
   }
 

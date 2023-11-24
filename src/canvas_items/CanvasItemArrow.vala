@@ -46,11 +46,13 @@ public class CanvasItemArrow : CanvasItem {
   private double             _peak_c   = 50;           // Distance from head to peak point
   private double             _peak_a   = Math.PI / 4;  // Angle between peak_c and spine
   private ArrowHeadDirection _dir      = ArrowHeadDirection.UPPER_LEFT;
+  private Cursor             _sel_cursor;
 
   /* Constructor */
   public CanvasItemArrow( Canvas canvas, CanvasItemProperties props ) {
     base( CanvasItemType.ARROW, canvas, props );
     create_points();
+    _sel_cursor = new Cursor.from_name( "crosshair", null );
   }
 
   /* Creates the selection points */
@@ -241,8 +243,8 @@ public class CanvasItemArrow : CanvasItem {
   }
 
   /* Provides cursor to display when mouse cursor is hovering over the given selector */
-  public override CursorType? get_selector_cursor( int index ) {
-    return( CursorType.TCROSS );
+  public override Cursor? get_selector_cursor( int index ) {
+    return( _sel_cursor );
   }
 
   /* Saves this item as XML */

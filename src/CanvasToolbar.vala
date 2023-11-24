@@ -22,14 +22,14 @@
 using Gtk;
 using Gee;
 
-public class CanvasToolbar : Toolbar {
+public class CanvasToolbar : Box {
 
   private const int margin = 5;
 
   private Canvas             _canvas;
   private ToggleButton       _crop_btn;
-  private Array<RadioButton> _width_btns;
-  private Array<RadioButton> _dash_btns;
+  private Array<CheckButton> _width_btns;
+  private Array<CheckButton> _dash_btns;
   private ColorChooserWidget _color_chooser;
   private Switch             _asw;
   private Revealer           _areveal;
@@ -42,8 +42,8 @@ public class CanvasToolbar : Toolbar {
   public CanvasToolbar( Canvas canvas ) {
 
     _canvas       = canvas;
-    _width_btns   = new Array<RadioButton>();
-    _dash_btns    = new Array<RadioButton>();
+    _width_btns   = new Array<CheckButton>();
+    _dash_btns    = new Array<CheckButton>();
     _current_item = new HashMap<CanvasItemCategory,CurrentItem>();
 
     /* Create current items */
@@ -66,8 +66,6 @@ public class CanvasToolbar : Toolbar {
     create_stroke();
     create_fonts();
 
-    show_all();
-
     /* If the selection changes, update the toolbar */
     _canvas.items.selection_changed.connect( selection_changed );
 
@@ -76,74 +74,76 @@ public class CanvasToolbar : Toolbar {
   /* Creates the shape toolbar item */
   private void create_shapes( CanvasItemCategory category, string tooltip, string mb_tooltip, string custom_label ) {
 
-    var box = new Box( Orientation.VERTICAL, 5 );
-    box.margin = 5;
+    var box = new Box( Orientation.VERTICAL, 5 ) {
+      margin_start  = 5,
+      margin_end    = 5,
+      margin_top    = 5,
+      margin_bottom = 5
+    };
 
-    var fb = new FlowBox();
-    fb.orientation = Orientation.HORIZONTAL;
-    fb.min_children_per_line = 4;
-    fb.max_children_per_line = 4;
+    var fb = new FlowBox() {
+      orientation = Orientation.HORIZONTAL,
+      min_children_per_line = 4,
+      max_children_per_line = 4
+    };
 
-    var btn     = new ToolButton( null, null );
-    var mb      = new ToolButton( null, null );
-    var popover = new Popover( mb );
+    var mb = new Button.with_label( "\u25bc" ) {
+      margin_start = 0,
+      margin_end   = margin,
+      tooltip_text = mb_tooltip,
+      popover      = new Popover()
+    };
+    mb.clicked.connect(() => {
+      popover.show();
+    });
+
+    var btn = new Button() {
+      margin_start = margin,
+      margin_end   = 0,
+      tooltip_text = tooltip,
+      child        = _current_item.get( category ).get_image()
+    };
+    btn.clicked.connect(() => {
+      _current_item.get( category ).add_item( _canvas.items );
+    });
 
     for( int i=0; i<CanvasItemType.NUM; i++ ) {
       var shape_type = (CanvasItemType)i;
       if( shape_type.category() == category ) {
-        var b = new Button();
-        b.set_tooltip_markup( shape_type.tooltip() );
-        b.image  = new Image.from_icon_name( shape_type.icon_name(), IconSize.LARGE_TOOLBAR );
-        b.relief = ReliefStyle.NONE;
-        b.margin = 5;
+        var b = new Button() {
+          icon_name     = shape_type.icon_name(),
+          has_frame     = false,
+          margin_start  = 5,
+          margin_end    = 5,
+          margin_top    = 5,
+          margin_bottom = 5,
+          tooltip_markup = shape_type.tooltip(),
+        };
         b.clicked.connect(() => {
           _current_item.get( category ).canvas_item( shape_type );
           _current_item.get( category ).add_item( _canvas.items );
-          btn.icon_widget = _current_item.get( category ).get_image();
-          btn.show_all();
-          Utils.hide_popover( popover );
+          btn.child = _current_item.get( category ).get_image();
+          mb.popover.popdown();
         });
-        fb.add( b );
+        fb.append( b );
       }
     }
 
-    box.pack_start( fb, false, false, 0 );
+    box.append( fb );
     _canvas.items.custom_items.create_menu( category, popover, box, custom_label, 4 );
     _canvas.items.custom_items.item_selected.connect((cat, item) => {
       if( cat == category ) {
         _current_item.get( cat ).custom_item( item );
         _current_item.get( cat ).add_item( _canvas.items );
         btn.icon_widget = _current_item.get( cat ).get_image();
-        btn.show_all();
-        Utils.hide_popover( popover );
+        popover.popdown();
       }
     });
-    box.show_all();
 
-    popover.add( box );
+    mb.popover.child = box;
 
-    btn.set_tooltip_text( tooltip );
-    btn.icon_widget  = _current_item.get( category ).get_image();
-    btn.margin_left  = margin;
-    btn.margin_right = 0;
-    btn.clicked.connect(() => {
-      _current_item.get( category ).add_item( _canvas.items );
-    });
-
-    var lbl = new Label( "\u25bc" );
-    lbl.max_width_chars = 1;
-    lbl.margin = 0;
-
-    mb.set_tooltip_text( mb_tooltip );
-    mb.label_widget = lbl;
-    mb.margin_left  = 0;
-    mb.margin_right = margin;
-    mb.clicked.connect(() => {
-      Utils.show_popover( popover );
-    });
-
-    add( btn );
-    add( mb );
+    append( btn );
+    append( mb );
 
     /* If the system dark mode changes, hide the popover */
     var granite_settings = Granite.Settings.get_default();
@@ -156,31 +156,33 @@ public class CanvasToolbar : Toolbar {
   /* Creates the sticker toolbar item */
   private void create_sticker() {
 
-    var mb = new MenuButton();
-    mb.set_tooltip_markup( CanvasItemType.STICKER.tooltip() );
-    mb.image   = new Image.from_icon_name( "sticker-symbolic", IconSize.LARGE_TOOLBAR );
-    mb.relief  = ReliefStyle.NONE;
-    mb.popover = new Popover( null );
+    var mb = new MenuButton() {
+      icon_name = "sticker-symbolic",
+      tooltip_markup = CanvasItemType.STICKER.tooltip(),
+      has_frame = false,
+      popover = new Popover()
+    };
 
     var box = new Box( Orientation.VERTICAL, 0 );
-    var sw  = new ScrolledWindow( null, null );
-    var vp  = new Viewport( null, null );
+    var vp  = new Viewport( null, null ) {
+      child = box
+    };
     vp.set_size_request( 200, 400 );
-    vp.add( box );
-    sw.add( vp );
+    var sw  = new ScrolledWindow() {
+      child = vp
+    };
 
     create_via_xml( box, mb.popover );
-    sw.set_size_request( 200, 400 );
-    sw.show_all();
 
-    mb.popover.add( sw );
+    mb.popover.child = sw;
 
-    var btn = new ToolItem();
-    btn.margin_left  = margin;
-    btn.margin_right = margin;
-    btn.add( mb );
+    var btn = new Button() {
+      margin_left  = margin,
+      margin_right = margin,
+      child        = mb
+    };
 
-    add( btn );
+    append( btn );
 
   }
 
@@ -214,18 +216,22 @@ public class CanvasToolbar : Toolbar {
   /* Creates the expander flowbox for the given category name and adds it to the sidebar */
   private FlowBox create_category( Box box, string name ) {
 
-    /* Create expander */
-    var exp  = new Expander( Utils.make_title( name ) );
-    exp.use_markup = true;
-    exp.expanded   = true;
-
     /* Create the flowbox which will contain the stickers */
-    var fbox = new FlowBox();
-    fbox.homogeneous = true;
-    fbox.selection_mode = SelectionMode.NONE;
-    exp.add( fbox );
+    var fbox = new FlowBox() {
+      homogeneous = true,
+      selection_mode = SelectionMode.NONE
+    };
 
-    box.pack_start( exp, false, false, 20 );
+    /* Create expander */
+    var exp = new Expander( Utils.make_title( name ) ) {
+      margin_start = 20,
+      margin_end   = 20,
+      use_markup   = true,
+      expanded     = true,
+      child        = fbox
+    };
+
+    box.append( exp, false, false, 20 );
 
     return( fbox );
 
@@ -472,92 +478,107 @@ public class CanvasToolbar : Toolbar {
   /* Adds the stroke dropdown */
   private void create_stroke() {
 
-    var mb     = new MenuButton();
-    mb.set_tooltip_text( _( "Shape Border" ) );
-    mb.relief  = ReliefStyle.NONE;
-    mb.image   = new Image.from_surface( make_stroke_icon() );
-    mb.popover = new Gtk.Popover( null );
+    var mb = new MenuButton() {
+      has_frame    = false,
+      tooltip_text = _( "Shape Border" ),
+      popover      = new Gtk.Popover( null ),
+      child        = new Image.from_surface( make_stroke_icon() )
+    };
 
-    var box = new Box( Orientation.VERTICAL, 0 );
-    box.border_width = 10;
+    var box = new Box( Orientation.VERTICAL, 5 ) {
+      margin_start  = 10,
+      margin_end    = 10,
+      margin_top    = 10,
+      margin_bottom = 10
+    };
 
     /* Add stroke width */
-    var width_title = new Label( Utils.make_title( _( "Border Width" ) ) );
-    width_title.halign     = Align.START;
-    width_title.use_markup = true;
-    box.pack_start( width_title, false, false, 5 );
+    var width_title = new Label( Utils.make_title( _( "Border Width" ) ) ) {
+      halign     = Align.START,
+      use_markup = true
+    };
+    box.append( width_title );
 
-    unowned RadioButton? width_group = null;
+    unowned CheckButton? width_group = null;
     for( int i=0; i<CanvasItemStrokeWidth.NUM; i++ ) {
       var sw  = (CanvasItemStrokeWidth)i;
-      var btn = new Gtk.RadioButton.from_widget( width_group );
-      btn.margin_left = 20;
-      btn.active = (_canvas.items.props.stroke_width == sw);
-      btn.add( new Image.from_surface( make_width_icon( 100, sw.width() ) ) );
+      var btn = new CheckButton() {
+        margin_left = 20,
+        active      = (_canvas.items.props.stroke_width == sw),
+        child       =  new Image.from_surface( make_width_icon( 100, sw.width() ) )
+      };
+      btn.set_group( width_group );
       btn.toggled.connect(() => {
         if( btn.get_active() ) {
           _canvas.items.props.stroke_width = sw;
-          mb.image = new Image.from_surface( make_stroke_icon() );
+          mb.child = new Image.from_surface( make_stroke_icon() );
         }
       });
       _width_btns.append_val( btn );
       if( width_group == null ) {
         width_group = btn;
       }
-      box.pack_start( btn, false, false, 5 );
+      box.append( btn );
     }
 
     /* Add dash patterns */
-    var dash_title = new Label( Utils.make_title( _( "Dash Pattern" ) ) );
-    dash_title.halign     = Align.START;
-    dash_title.margin_top = 20;
-    dash_title.use_markup = true;
-    box.pack_start( dash_title,  false, false, 5 );
+    var dash_title = new Label( Utils.make_title( _( "Dash Pattern" ) ) ) {
+      halign     = Align.START,
+      margin_top = 20,
+      use_markup = true
+    };
+    box.append( dash_title );
 
-    unowned RadioButton? dash_group = null;
+    unowned CheckButton? dash_group = null;
     for( int i=0; i<CanvasItemDashPattern.NUM; i++ ) {
       var dash = (CanvasItemDashPattern)i;
-      var btn  = new Gtk.RadioButton.from_widget( dash_group );
-      btn.margin_left = 20;
-      btn.active = (_canvas.items.props.dash == dash);
-      btn.add( new Image.from_surface( make_dash_icon( 100, dash ) ) );
+      var btn  = new CheckButton() {
+        margin_left = 20,
+        active      = (_canvas.items.props.dash == dash),
+        child       =  new Image.from_surface( make_dash_icon( 100, dash ) )
+      };
+      btn.set_group( dash_group );
       btn.toggled.connect(() => {
         if( btn.get_active() ) {
           _canvas.items.props.dash = dash;
-          mb.image = new Image.from_surface( make_stroke_icon() );
+          mb.child = new Image.from_surface( make_stroke_icon() );
         }
       });
       _dash_btns.append_val( btn );
       if( dash_group == null ) {
         dash_group = btn;
       }
-      box.pack_start( btn, false, false, 5 );
+      box.append( btn );
     }
 
     /* Add outline */
-    var outline_title = new Label( Utils.make_title( _( "Show Outline" ) ) );
-    outline_title.halign     = Align.START;
-    outline_title.use_markup = true;
-    var outline_sw = new Switch();
-    outline_sw.set_active( _canvas.items.props.outline );
+    var outline_title = new Label( Utils.make_title( _( "Show Outline" ) ) ) {
+      halign     = Align.START,
+      use_markup = true
+    };
+    var outline_sw = new Switch() {
+      halign = Align.END,
+      active = _canvas.items.props.outline
+    };
     outline_sw.button_release_event.connect((e) => {
       _canvas.items.props.outline = !_canvas.items.props.outline;
       return( false );
     });
-    var outline_box = new Box( Orientation.HORIZONTAL, 10 );
-    outline_box.homogeneous = false;
-    outline_box.margin_top = 20;
-    outline_box.pack_start( outline_title, false, false );
-    outline_box.pack_end( outline_sw, false, false );
-    box.pack_start( outline_box, true, false, 5 );
+    var outline_box = new Box( Orientation.HORIZONTAL, 10 ) {
+      homogeneous = false,
+      margin_top  = 20
+    };
+    outline_box.append( outline_title );
+    outline_box.append( outline_sw );
+    box.append( outline_box );
 
-    box.show_all();
-    mb.popover.add( box );
+    mb.popover.child = box;
 
-    var btn = new ToolItem();
-    btn.margin_left  = margin;
-    btn.margin_right = margin;
-    btn.add( mb );
+    var btn = new ToolItem() {
+      margin_left  = margin,
+      margin_right = margin,
+      child        = mb
+    };
 
     add( btn );
 
@@ -566,16 +587,21 @@ public class CanvasToolbar : Toolbar {
   /* Adds the font menubutton */
   private void create_fonts() {
 
-    var mb = new MenuButton();
-    mb.set_tooltip_text( _( "Font Properties" ) );
-    mb.image  = new Image.from_icon_name( "font-x-generic-symbolic", IconSize.LARGE_TOOLBAR );
-    mb.relief = ReliefStyle.NONE;
+    var mb = new MenuButton() {
+      icon_name    = "font-x-generic-symbolic",
+      tooltip_text = _( "Font Properties" ),
+      hash_frame   = false,
+      popover      = new Popover()
+    };
     mb.get_style_context().add_class( "color_chooser" );
-    mb.popover = new Popover( null );
 
-    _font_chooser = new FontChooserWidget();
-    _font_chooser.border_width = 10;
-    _font_chooser.font_desc    = _canvas.items.props.font;
+    _font_chooser = new FontChooserWidget() {
+      margin_start  = 10,
+      margin_end    = 10,
+      margin_top    = 10,
+      margin_bottom = 10,
+      font_desc     = _canvas.items.props.font
+    };
     _font_chooser.set_filter_func( (family, face) => {
       var fd     = face.describe();
       var weight = fd.get_weight();
@@ -587,12 +613,13 @@ public class CanvasToolbar : Toolbar {
     });
     _font_chooser.show_all();
 
-    mb.popover.add( _font_chooser );
+    mb.popover.child = _font_chooser;
 
-    var btn = new ToolItem();
-    btn.margin_left  = margin;
-    btn.margin_right = margin;
-    btn.add( mb );
+    var btn = new ToolItem() {
+      margin_left  = margin,
+      margin_right = margin,
+      child        = mb
+    };
 
     add( btn );
 

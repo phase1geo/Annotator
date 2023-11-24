@@ -58,10 +58,9 @@ dependencies = [
     dependency('gobject-2.0'),
     dependency('glib-2.0'),
     dependency('gee-0.8'),
-    dependency('granite'),
-    dependency('gtk+-3.0'),
+    dependency('granite-7'),
+    dependency('gtk4'),
     dependency('libxml-2.0'),
-    dependency('libhandy-1'),
     math_dep
 ]
 

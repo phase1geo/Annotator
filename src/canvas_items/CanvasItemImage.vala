@@ -29,12 +29,14 @@ public class CanvasItemImage : CanvasItem {
   private bool          _file = false;
   private Pixbuf?       _buf  = null;
   private ImageSurface? _surface;
+  private Cursor        _sel_cursor;
 
   /* Constructor */
   public CanvasItemImage( Canvas canvas, string? name, bool file, CanvasItemProperties props ) {
     base( (file ? CanvasItemType.IMAGE : CanvasItemType.STICKER), canvas, props );
     create_points();
     create_image( name, file );
+    _sel_cursor = new Cursor.from_name( "se-resize", null );
   }
 
   /* Creates the item points */
@@ -114,8 +116,8 @@ public class CanvasItemImage : CanvasItem {
   }
 
   /* Provides cursor to display when mouse cursor is hovering over the given selector */
-  public override CursorType? get_selector_cursor( int index ) {
-    return( CursorType.BOTTOM_RIGHT_CORNER );  // TBD
+  public override Cursor? get_selector_cursor( int index ) {
+    return( _sel_cursor );
   }
 
   /* Saves this item as XML */

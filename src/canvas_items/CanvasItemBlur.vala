@@ -29,12 +29,23 @@ public class CanvasItemBlur : CanvasItem {
   private const double max_blur  = 45;
   private const double step_blur = 5;
 
+  private Cursor[] _sel_cursors;
+
   public int blur_radius { set; get; default = 20; }
 
   /* Constructor */
   public CanvasItemBlur( Canvas canvas, CanvasItemProperties props ) {
     base( CanvasItemType.BLUR, canvas, props );
     create_points();
+    _sel_cursors = new Cursor[8];
+    _sel_cursors[0] = new Cursor.from_name( "nw-resize", null );
+    _sel_cursors[1] = new Cursor.from_name( "ne-resize", null );
+    _sel_cursors[2] = new Cursor.from_name( "sw-resize", null );
+    _sel_cursors[3] = new Cursor.from_name( "se-resize", null );
+    _sel_cursors[4] = new Cursor.from_name( "n-resize", null );
+    _sel_cursors[5] = new Cursor.from_name( "e-resize", null );
+    _sel_cursors[6] = new Cursor.from_name( "s-resize", null );
+    _sel_cursors[7] = new Cursor.from_name( "w-resize", null );
   }
 
   /* Create the points */
@@ -111,18 +122,8 @@ public class CanvasItemBlur : CanvasItem {
   }
 
   /* Provides cursor to display when mouse cursor is hovering over the given selector */
-  public override CursorType? get_selector_cursor( int index ) {
-    switch( index ) {
-      case 0  :  return( CursorType.UL_ANGLE );
-      case 1  :  return( CursorType.UR_ANGLE );
-      case 2  :  return( CursorType.LL_ANGLE );
-      case 3  :  return( CursorType.LR_ANGLE );
-      case 4  :  return( CursorType.TOP_SIDE );
-      case 5  :  return( CursorType.RIGHT_SIDE );
-      case 6  :  return( CursorType.BOTTOM_SIDE );
-      case 7  :  return( CursorType.LEFT_SIDE );
-      default :  assert_not_reached();
-    }
+  public override Cursor? get_selector_cursor( int index ) {
+    return( _sel_cursors.index( index ) );
   }
 
   /* Adds the contextual menu item values */
