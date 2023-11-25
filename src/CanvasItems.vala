@@ -491,7 +491,7 @@ public class CanvasItems {
         text.edit = value;
         if( value ) {
           text.set_cursor_all( false );
-          _canvas.set_cursor( CursorType.XTERM );
+          _canvas.set_cursor( _xterm_cursor );
           text.mode = CanvasItemMode.EDITING;
         } else {
           text.clear_selection();
@@ -1176,14 +1176,14 @@ public class CanvasItems {
     _format_bar.pointing_to = rect;
     _format_bar.position    = PositionType.TOP;
 
-    Utils.show_popover( _format_bar );
+    _format_bar.popup();
 
   }
 
   /* Hides the format bar if it is currently visible and destroys it */
   private void hide_format_bar() {
     if( _format_bar != null ) {
-      Utils.hide_popover( _format_bar );
+      _format_bar.popdown();
       _format_bar = null;
     }
   }

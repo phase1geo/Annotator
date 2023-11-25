@@ -123,7 +123,7 @@ public class CanvasItemBlur : CanvasItem {
 
   /* Provides cursor to display when mouse cursor is hovering over the given selector */
   public override Cursor? get_selector_cursor( int index ) {
-    return( _sel_cursors.index( index ) );
+    return( _sel_cursors[index] );
   }
 
   /* Adds the contextual menu item values */
@@ -160,7 +160,7 @@ public class CanvasItemBlur : CanvasItem {
       ctx.stroke();
 
       var surface = canvas.image.get_pixbuf_for_rect( bbox );
-      var buffer  = new Granite.Drawing.BufferSurface.with_surface( (int)bbox.width, (int)bbox.height, surface );
+      var buffer  = new BufferSurface.with_surface( (int)bbox.width, (int)bbox.height, surface );
 
       /* Copy the surface contents over */
       buffer.context.set_source_surface( surface, 0, 0 );

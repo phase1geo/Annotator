@@ -36,14 +36,17 @@ public enum ColorPickerType {
 
   public void set_image( ToggleButton btn ) {
     switch( this ) {
-      case HCOLOR :  btn.image = new Image.from_icon_name( "format-text-highlight", IconSize.SMALL_TOOLBAR );  break;
-      case FCOLOR :  {
+      case HCOLOR :
+        btn.icon_name = "format-text-highlight";
+        btn.child     = null;
+        break;
+      case FCOLOR : {
         var lbl = new Label( "<span size=\"large\">A</span>" );
         lbl.use_markup = true;
-        btn.image      = lbl;
+        btn.child      = lbl;
         break;
       }
-      default     :  assert_not_reached();
+      default :  assert_not_reached();
     }
   }
 
@@ -93,12 +96,12 @@ public class ColorPicker : Box {
     };
     _select.get_style_context().add_class( "color_chooser" );
 
-    _select.popover = new Popover( null );
-    _select.popover.add( overlay );
+    _select.popover = new Popover() {
+      child = overlay
+    };
 
-    pack_start( _toggle, false, true, 2 );
-    pack_start( _select, false, true, 2 );
-    show_all();
+    append( _toggle );
+    append( _select );
 
     update_css( init_color );
 
@@ -123,9 +126,9 @@ public class ColorPicker : Box {
     try {
       var color    = Utils.color_to_string( rgba );
       var css_data = ".%s { background: %s; }".printf( _type.get_css_class(), color );
-      provider.load_from_data( css_data );
-      StyleContext.add_provider_for_screen(
-        Screen.get_default(),
+      provider.load_from_data( css_data.data );
+      StyleContext.add_provider_for_display(
+        Display.get_default(),
         provider,
         STYLE_PROVIDER_PRIORITY_APPLICATION
       );

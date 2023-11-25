@@ -49,8 +49,8 @@ public class FormatBar : Gtk.Popover {
 
     _canvas = canvas;
 
-    relative_to = canvas;
-    modal       = false;
+    autohide = false;
+    set_parent( canvas );
 
     var box = new Box( Orientation.HORIZONTAL, 0 );
 
@@ -121,7 +121,7 @@ public class FormatBar : Gtk.Popover {
       tooltip_text = _( "Header" ),
       menu_model = header_menu
     };
-    add_markup( _header, "H<i>x</i>" );
+    add_markup_mb( _header, "H<i>x</i>" );
 
     for( int i=0; i<7; i++ ) {
       var label = (i == 0) ? _( "None" ) : "<H%d>".printf( i );
@@ -183,8 +183,8 @@ public class FormatBar : Gtk.Popover {
       margin_bottom = 5,
       homogeneous   = true
     };
-    box_d.append( _super, false, true, 2 );
-    box_d.append( _sub,   false, true, 2 );
+    box_d.append( _super );
+    box_d.append( _sub );
 
     var box_e = new Box( Orientation.HORIZONTAL, 2 ) {
       margin_start  = 5,
@@ -220,9 +220,17 @@ public class FormatBar : Gtk.Popover {
   }
 
   private void add_markup( Button btn, string markup ) {
-    var lbl = new Label( "<span size=\"large\">" + markup + "</span>" );
-    lbl.use_markup = true;
-    btn.image = lbl;
+    var lbl = new Label( "<span size=\"large\">" + markup + "</span>" ) {
+      use_markup = true
+    };
+    btn.child = lbl;
+  }
+
+  private void add_markup_mb( MenuButton btn, string markup ) {
+    var lbl = new Label( "<span size=\"large\">" + markup + "</span>" ) {
+      use_markup = true
+    };
+    btn.child = lbl;
   }
 
   private void format_text( FormatTag tag, string? extra=null ) {
@@ -380,7 +388,7 @@ public class FormatBar : Gtk.Popover {
     _sub.set_active( false );
     _hilite.set_active( false );
     _color.set_active( false );
-    activate_header( 0 );
+    // TODO - activate_header( 0 );
     _ignore_active = false;
     _canvas.queue_draw();
     _canvas.grab_focus();
@@ -411,7 +419,7 @@ public class FormatBar : Gtk.Popover {
     set_toggle_button( text, FormatTag.SUB,        _sub );
     set_color_picker(  text, FormatTag.HILITE,     _hilite );
     set_color_picker(  text, FormatTag.COLOR,      _color );
-    set_header( text );
+    // TODO - set_header( text );
     _ignore_active = false;
   }
 

@@ -47,7 +47,7 @@ public class Utils {
 
   /* Returns the RGBA color for the given color value */
   public static RGBA color_from_string( string value ) {
-    RGBA c = {1.0, 1.0, 1.0, 1.0};
+    RGBA c = {(float)1.0, (float)1.0, (float)1.0, (float)1.0};
     c.parse( value );
     return( c );
   }
@@ -174,9 +174,12 @@ public class Utils {
   }
 
   public static void set_chooser_folder( FileChooser chooser ) {
-    var dir = Annotator.settings.get_string( "last-directory" );
-    if( dir != "" ) {
-      chooser.set_current_folder( dir );
+    var dir_path = Annotator.settings.get_string( "last-directory" );
+    if( dir_path != "" ) {
+      try {
+        var dir = File.new_for_path( dir_path );
+        chooser.set_current_folder( dir );
+      } catch( Error e ) {}
     }
   }
 

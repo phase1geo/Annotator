@@ -403,7 +403,6 @@ public class CanvasItem {
     });
     btn_controller.released.connect((n_press, x, y) => {
       complete( this, dflt, scale.get_value() );
-      return( false );
     });
 
     var scale_box = new Box( Orientation.HORIZONTAL, 10 ) {
@@ -448,7 +447,6 @@ public class CanvasItem {
     });
     btn_controller.released.connect((n_press, x, y) => {
       complete( this, dflt, (int)sb.get_value() );
-      return( false );
     });
 
     var sb_box = new Box( Orientation.HORIZONTAL, 10 ) {
@@ -482,7 +480,6 @@ public class CanvasItem {
     sw.set_active( dflt );
     btn_controller.pressed.connect((n_press, x, y) => {
       action( this );
-      return( false );
     });
 
     var sw_box = new Box( Orientation.HORIZONTAL, 10 ) {

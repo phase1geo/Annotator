@@ -68,14 +68,15 @@ public class Export {
 
   private Label make_help( string help ) {
 
-    var lbl = new Label( help );
-    lbl.margin_left     = 10;
-    lbl.margin_bottom   = 10;
-    lbl.xalign          = (float)0;
-    lbl.justify         = Justification.LEFT;
-    lbl.max_width_chars = 40;
-    lbl.wrap_mode       = Pango.WrapMode.WORD;
-    lbl.set_line_wrap( true );
+    var lbl = new Label( help ) {
+      margin_start     = 10,
+      margin_bottom    = 10,
+      xalign           = (float)0,
+      justify          = Justification.LEFT,
+      max_width_chars  = 40,
+      wrap_mode        = Pango.WrapMode.WORD,
+      single_line_mode = false
+    };
 
     return( lbl );
 
@@ -85,13 +86,15 @@ public class Export {
 
     var row = _settings.size * 2;
 
-    var lbl = new Label( Utils.make_title( label ) );
-    lbl.halign     = Align.START;
-    lbl.use_markup = true;
+    var lbl = new Label( Utils.make_title( label ) ) {
+      halign     = Align.START,
+      use_markup = true
+    };
 
-    var sw  = new Switch();
-    sw.halign = Align.END;
-    sw.expand = true;
+    var sw  = new Switch() {
+      halign = Align.END,
+      hexpand = true
+    };
     sw.notify["active"].connect(() => {
       settings_changed();
     });
@@ -112,15 +115,17 @@ public class Export {
 
     var row = _settings.size * 2;
 
-    var lbl = new Label( Utils.make_title( label ) );
-    lbl.halign     = Align.START;
-    lbl.use_markup = true;
+    var lbl = new Label( Utils.make_title( label ) ) {
+      halign     = Align.START,
+      use_markup = true
+    };
 
-    var scale = new Scale.with_range( Orientation.HORIZONTAL, min, max, step );
-    scale.halign       = Align.END;
-    scale.expand       = true;
-    scale.draw_value   = true;
-    scale.round_digits = max.to_string().char_count();
+    var scale = new Scale.with_range( Orientation.HORIZONTAL, min, max, step ) {
+      halign       = Align.END,
+      hexpand      = true,
+      draw_value   = true,
+      round_digits = max.to_string().char_count()
+    };
     scale.value_changed.connect(() => {
       settings_changed();
     });

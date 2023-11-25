@@ -37,14 +37,14 @@ public class AnnotatorClipboard {
   /* Copies the selected image to the clipboard */
   public static void copy_image( Pixbuf img ) {
     var clipboard = Display.get_default().get_clipboard();
-    var texture   = new Texture.for_pixbuf( img );
+    var texture   = Texture.for_pixbuf( img );
     clipboard.set_texture( texture );
   }
 
   /* Copies the selected items to the clipboard */
   public static void copy_items( string it ) {
     var bytes     = new Bytes( it.data );
-    var provider  = new ContentProvider.from_bytes( "application/xml", bytes );
+    var provider  = new ContentProvider.for_bytes( "application/xml", bytes );
     var clipboard = Display.get_default().get_clipboard();
     clipboard.set_content( provider );
   }
@@ -74,19 +74,21 @@ public class AnnotatorClipboard {
 
     try {
       if( clipboard.get_formats().contain_mime_type( "application/xml" ) ) {
-        clipboard.read_async.begin( {"application/xml"}, (obj, res) => {
-          var stream = clipboard.read_async.end( res );
-          uint8 buffer[];
+        clipboard.read_async.begin( {"application/xml"}, 0, null, (obj, res) => {
+          string str;
+          var stream = clipboard.read_async.end( res, out str );
+          uint8[] buffer;
 		      stream.read( buffer );
           editor.paste_items( (string)buffer );
         });
       } else if( clipboard.get_formats().contain_gtype( Type.STRING ) ) {
-        clipboard.read_text_async.begin((obj, res) => {
+        clipboard.read_text_async.begin( null, (obj, res) => {
           var text = clipboard.read_text_async.end( res );
         });
-      } else if( clipboard.get_formats().contain_gtype( GDK_TYPE_TEXTURE ) ) {
-        clipboard.read_async.begin( {"image/png"}, (obj, res) => {
-          var stream = clipboard.read_async.end( res );
+      } else if( clipboard.get_formats().contain_mime_type( "image/png" ) ) {
+        clipboard.read_async.begin( {"image/png"}, 0, null, (obj, res) => {
+          string str;
+          var stream = clipboard.read_async.end( res, out str );
           var pixbuf = new Pixbuf.from_stream( stream );
           editor.paste_image( pixbuf, true );
         });

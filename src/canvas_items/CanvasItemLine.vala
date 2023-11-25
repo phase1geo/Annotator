@@ -33,6 +33,7 @@ public class CanvasItemLine : CanvasItem {
   }
 
   private LineStartDirection _dir = LineStartDirection.UPPER_LEFT;
+  private Cursor             _sel_cursor;
 
   /* Constructor */
   public CanvasItemLine( Canvas canvas, CanvasItemProperties props ) {
