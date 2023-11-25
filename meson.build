@@ -48,7 +48,7 @@ cc = meson.get_compiler('c')
 math_dep = cc.find_library('m', required: false)
 
 add_project_arguments([
-        '--vapidir', join_paths(meson.current_source_dir(), 'vapi'),
+  #        '--vapidir', join_paths(meson.current_source_dir(), 'vapi'),
         '--disable-warnings'
     ],
     language: 'vala',
@@ -61,7 +61,7 @@ dependencies = [
     dependency('granite-7'),
     dependency('gtk4'),
     dependency('libxml-2.0'),
-    dependency('libportal'),
+    dependency('libportal-gtk4'),
     math_dep
 ]
 
@@ -71,7 +71,7 @@ e = executable('com.github.phase1geo.annotator',
     gresource,
     dependencies: dependencies,
     vala_args: [
-        meson.current_source_dir() + '/vapi/libportal-gtk4.vapi'
+      #        meson.current_source_dir() + '/vapi/libportal-gtk4.vapi'
     ],
     install : true
 )

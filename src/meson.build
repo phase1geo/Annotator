@@ -23,8 +23,6 @@ sources += files(
     'FormattedText.vala',
     'MainWindow.vala',
     'Resizer.vala',
-    'ScreenshotBackend.vala',
-    'ScreenshotProxy.vala',
     'UndoBuffer.vala',
     'UndoItem.vala',
     'UndoTextBuffer.vala',
