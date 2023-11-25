@@ -36,10 +36,10 @@ public class CanvasImage {
       return( selector_size / height_scale );
     }
   }
+  private Cursor[] _sel_cursors = new Cursor[8];
 
   private Canvas        _canvas;
   private Pixbuf?       _buf        = null;  // Currently displayed pixbuf
-  private ImageSurface? _surface    = null;
   private int           _crop_index = -2;
   private double        _last_x     = 0;
   private double        _last_y     = 0;
@@ -47,7 +47,6 @@ public class CanvasImage {
   public Pixbuf?          pixbuf        { get; private set; default = null; }  // Original pixbuf of image
   public bool             cropping      { get; private set; default = false; }
   public CanvasRect       crop_rect     { get; private set; default = new CanvasRect(); }
-  public RGBA             average_color { get; private set; default = {1.0, 1.0, 1.0, 1.0}; }
   public CanvasImageInfo? info          { get; private set; default = null; }
   public double           width_scale   { get; private set; default = 1.0; }
   public double           height_scale  { get; private set; default = 1.0; }
@@ -61,11 +60,19 @@ public class CanvasImage {
   public CanvasImage( Canvas canvas ) {
     _canvas = canvas;
     exports = new Exports( canvas );
+    _sel_cursors[0] = new Cursor.from_name( "nw-resize", null );
+    _sel_cursors[1] = new Cursor.from_name( "ne-resize", null );
+    _sel_cursors[2] = new Cursor.from_name( "sw-resize", null );
+    _sel_cursors[3] = new Cursor.from_name( "se-resize", null );
+    _sel_cursors[4] = new Cursor.from_name( "n-resize", null );
+    _sel_cursors[5] = new Cursor.from_name( "s-resize", null );
+    _sel_cursors[6] = new Cursor.from_name( "w-resize", null );
+    _sel_cursors[7] = new Cursor.from_name( "e-resize", null );
   }
 
   /* Returns true if the surface image has been set */
   public bool is_surface_set() {
-    return( _surface != null );
+    return( _buf != null );
   }
 
   /* Returns a surface which contains the given rectangle area of the base image */
@@ -74,21 +81,6 @@ public class CanvasImage {
     rect.intersection( rect, buf_rect );
     var sub = new Pixbuf.subpixbuf( _buf, (int)rect.x, (int)rect.y, (int)rect.width, (int)rect.height );
     return( cairo_surface_create_from_pixbuf( sub, 1, null ) );
-  }
-
-  /* Returns the RGBA color value that averages the colors in the given rectangle */
-  public RGBA average_color_of_rect( CanvasRect rect ) {
-
-    var x     = (rect.x < 0) ? 0 : (int)rect.x;
-    var y     = (rect.y < 0) ? 0 : (int)rect.y;
-    var w     = ((rect.x + rect.width)  >= pixbuf.width)  ? (pixbuf.width  - (int)rect.x) : (int)rect.width;
-    var h     = ((rect.y + rect.height) >= pixbuf.height) ? (pixbuf.height - (int)rect.y) : (int)rect.height;
-    var sub   = new Pixbuf.subpixbuf( pixbuf, x, y, w, h );
-    var color = Granite.Drawing.Utilities.average_color( sub );
-
-    RGBA rgba = {color.R, color.G, color.B, color.A};
-    return( rgba );
-
   }
 
   /* Changes the stored image to the given pixbuf and performs other related tasks */
@@ -105,9 +97,6 @@ public class CanvasImage {
 
     /* Create the image information */
     info = new CanvasImageInfo( _buf );
-
-    /* Store the average color value for faster lookups */
-    average_color = average_color_of_rect( new CanvasRect.from_coords( 0, 0, _buf.width, _buf.height ) );
 
     /* Indicate that the image changed to anyone listening */
     image_changed();
@@ -137,21 +126,17 @@ public class CanvasImage {
 
     var dialog = new Resizer( _canvas, info );
 
-    if( dialog.run() == ResponseType.ACCEPT ) {
+    dialog.response.connect((id) => {
+      if( id == ResponseType.ACCEPT ) {
+        var old_info = new CanvasImageInfo.from_info( info );
+        var new_info = dialog.get_image_info();
+        _canvas.undo_buffer.add_item( new UndoImageResize( old_info, new_info ) );
+        do_resize( old_info, new_info );
+      }
+      dialog.close();
+    });
 
-      /* Get the information from the resizer */
-      var old_info = new CanvasImageInfo.from_info( info );
-      var new_info = dialog.get_image_info();
-
-      /* Add the resize to the undo buffer */
-      _canvas.undo_buffer.add_item( new UndoImageResize( old_info, new_info ) );
-
-      /* Perform resize */
-      do_resize( old_info, new_info );
-
-    }
-
-    dialog.close();
+    dialog.show();
 
   }
 
@@ -166,9 +151,6 @@ public class CanvasImage {
     _buf = new Pixbuf( pixbuf.colorspace, pixbuf.has_alpha, pixbuf.bits_per_sample, info.width, info.height );
     _buf.fill( (uint32)0xffffffff );
     sbuf.copy_area( 0, 0, (int)info.pixbuf_rect.width, (int)info.pixbuf_rect.height, _buf, (int)info.pixbuf_rect.x, (int)info.pixbuf_rect.y );
-
-    /* Set the surface that will be drawn */
-    _surface = (ImageSurface)cairo_surface_create_from_pixbuf( _buf, 1, null );
 
     /* Calculate the scaling factors */
     width_scale  = info.pixbuf_rect.width  / pixbuf.width;
@@ -279,16 +261,8 @@ public class CanvasImage {
       for( int i=0; i<8; i++ ) {
         selector_bbox( i, rect );
         if( rect.contains( x, y ) ) {
-          switch( i ) {
-            case 0 :  _canvas.set_cursor( CursorType.UL_ANGLE );     return( false );
-            case 1 :  _canvas.set_cursor( CursorType.UR_ANGLE );     return( false );
-            case 2 :  _canvas.set_cursor( CursorType.LL_ANGLE );     return( false );
-            case 3 :  _canvas.set_cursor( CursorType.LR_ANGLE );     return( false );
-            case 4 :  _canvas.set_cursor( CursorType.TOP_SIDE );     return( false );
-            case 5 :  _canvas.set_cursor( CursorType.BOTTOM_SIDE );  return( false );
-            case 6 :  _canvas.set_cursor( CursorType.LEFT_SIDE );    return( false );
-            case 7 :  _canvas.set_cursor( CursorType.RIGHT_SIDE );   return( false );
-          }
+          _canvas.set_cursor( _sel_cursors[i] );
+          return( false );
         }
       }
       _canvas.set_cursor( null );
@@ -355,19 +329,19 @@ public class CanvasImage {
   public void export_image( string type, string filename ) {
     clean_image();
     var export = exports.get_by_name( type );
-    export.export( filename, _surface );
+    export.export( filename, _buf );
   }
 
   /* Exports the image to the clipboard */
   public void export_clipboard() {
     clean_image();
-    exports.clipboard.export( _surface );
+    exports.clipboard.export( _buf );
   }
 
   /* Exports the image to the printer */
   public void export_print() {
     clean_image();
-    exports.printer.export( _surface );
+    exports.printer.export( _buf );
   }
 
   /****************************************************************************/
@@ -405,7 +379,7 @@ public class CanvasImage {
   /* Draw the image being annotated */
   private void draw_image( Context ctx ) {
 
-    ctx.set_source_surface( _surface, 0, 0 );
+    cairo_set_source_pixbuf( ctx, _buf, 0, 0 );
     ctx.paint();
 
   }
@@ -413,7 +387,9 @@ public class CanvasImage {
   /* Draws the drop_outline */
   private void draw_crop_outline( Context ctx ) {
 
-    Utils.set_context_color_with_alpha( ctx, average_color, 0.5 );
+    var black = Utils.color_from_string( "black" );
+
+    Utils.set_context_color_with_alpha( ctx, black, 0.5 );
 
     ctx.rectangle( 0, 0, crop_rect.x1(), info.height );
     ctx.fill();
@@ -434,8 +410,9 @@ public class CanvasImage {
 
     var third_width  = crop_rect.width  / 3;
     var third_height = crop_rect.height / 3;
+    var black = Utils.color_from_string( "black" );
 
-    Utils.set_context_color_with_alpha( ctx, average_color, 0.5 );
+    Utils.set_context_color_with_alpha( ctx, black, 0.5 );
     ctx.set_line_width( 1 );
 
     /* Draw vertical lines */

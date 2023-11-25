@@ -22,6 +22,7 @@
 using Gtk;
 using Gee;
 using Cairo;
+using Gdk;
 
 public class Export {
 
@@ -44,7 +45,7 @@ public class Export {
   public signal void settings_changed();
 
   /* Performs export to the given filename */
-  public virtual bool export( string filename, ImageSurface source ) {
+  public virtual bool export( string filename, Pixbuf source ) {
     return( false );
   }
 

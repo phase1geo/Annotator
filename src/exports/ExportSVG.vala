@@ -20,6 +20,7 @@
 */
 
 using Cairo;
+using Gdk;
 
 public class ExportSVG : Export {
 
@@ -29,7 +30,7 @@ public class ExportSVG : Export {
   }
 
   /* Default constructor */
-  public override bool export( string filename, ImageSurface source ) {
+  public override bool export( string filename, Pixbuf source ) {
 
     /* Make sure that the filename is sane */
     var fname = repair_filename( filename );
@@ -37,8 +38,8 @@ public class ExportSVG : Export {
     /* Get the rectangle holding the entire document */
     var x = 0;
     var y = 0;
-    var w = source.get_width();
-    var h = source.get_height();
+    var w = source.width;
+    var h = source.height;
 
     /* Create the drawing surface */
     var surface = new SvgSurface( fname, w, h );

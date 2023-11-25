@@ -310,10 +310,11 @@ public class CanvasItemMagnifier : CanvasItem {
   public override void draw_item( Context ctx, CanvasItemColor color ) {
 
     var surface = _image.get_surface_for_rect( _zoom_rect );
+    var black   = Utils.color_from_string( "black" );
 
     draw_focal_point( ctx );
 
-    Utils.set_context_color_with_alpha( ctx, _image.average_color, 0.5 );
+    Utils.set_context_color_with_alpha( ctx, black, 0.5 );
     ctx.set_line_width( 5 );
     ctx.arc( bbox.mid_x(), bbox.mid_y(), (bbox.width / 2), 0, (2 * Math.PI) );
     save_path( ctx, CanvasItemPathType.FILL );

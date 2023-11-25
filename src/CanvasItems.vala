@@ -152,6 +152,16 @@ public class CanvasItems {
   private double               _last_y;
   private int                  _press_count    = -1;
   private FormatBar?           _format_bar     = null;
+  private Cursor               _xterm_cursor   = new Cursor.from_name( "text", null );
+
+  private const GLib.ActionEntry[] action_entries = {
+    { "action_copy",          action_copy },
+    { "action_cut",           action_cut },
+    { "action_delete",        action_delete },
+    { "action_send_to_front", action_send_to_front },
+    { "action_send_to_back",  action_send_to_back },
+    { "action_save_custom",   action_save_custom }
+  };
 
   public CanvasItemProperties props        { get; private set; }
   public string               hilite_color { get; set; default = "yellow"; }
@@ -176,6 +186,11 @@ public class CanvasItems {
     /* Create the CustomItems object */
     custom_items = new CustomItems();
     custom_items.load( this );
+
+    /* Set the stage for menu actions */
+    var actions = new SimpleActionGroup ();
+    actions.add_action_entries( action_entries, this );
+    _canvas.insert_action_group( "items", actions );
 
   }
 
@@ -269,7 +284,7 @@ public class CanvasItems {
     var item = new CanvasItemPencil( _canvas, props );
     if( !loading ) {
       _active = item;
-      _canvas.set_cursor( CursorType.PENCIL );
+      _canvas.set_cursor_from_name( "pencil" );
     }
     return( item );
   }
@@ -449,7 +464,7 @@ public class CanvasItems {
 
   /* Returns true if the alt key is enabled in the given state */
   private bool alt_state( ModifierType state ) {
-    return( (bool)(state & ModifierType.MOD1_MASK) );
+    return( (bool)(state & ModifierType.ALT_MASK) );
   }
 
   /* Returns the active text item, if it is set; otherwise, returns null */
@@ -499,11 +514,10 @@ public class CanvasItems {
 
     var control = control_state( state );
     var shift   = shift_state( state );
-    var keymap  = Keymap.get_for_display( Display.get_default() );
     KeymapKey[] ks  = {};
     uint[]      kvs = {};
 
-    keymap.get_entries_for_keycode( keycode, out ks, out kvs );
+    Display.get_default().map_keycode( keycode, out ks, out kvs );
 
     if( Utils.has_key( kvs, Key.BackSpace ) )        { return( handle_backspace() ); }
     else if( Utils.has_key( kvs, Key.Delete ) )      { return( handle_delete() ); }
@@ -791,7 +805,7 @@ public class CanvasItems {
     } else if( in_edit_mode() ) {
       var text = get_active_text();
       if( text.is_within( x, y ) ) {
-        _canvas.set_cursor( CursorType.XTERM );
+        _canvas.set_cursor( _xterm_cursor );
         switch( _press_count ) {
           case 1  :  text.set_cursor_at_char( x, y, true );  break;
           case 2  :  text.set_cursor_at_word( x, y, true );  break;
@@ -836,7 +850,7 @@ public class CanvasItems {
           if( control ) {
             _canvas.set_cursor_from_name( "copy" );
           } else {
-            _canvas.set_cursor( CursorType.HAND1 );
+            _canvas.set_cursor_from_name( "grab" );
           }
           return( false );
         }
@@ -943,8 +957,12 @@ public class CanvasItems {
     var pos  = item_position( item );
     var last = (int)(_items.length() - 1);
 
-    var box  = new Box( Orientation.VERTICAL, 5 );
-    box.border_width = 5;
+    var box  = new Box( Orientation.VERTICAL, 5 ) {
+      margin_start  = 5,
+      margin_end    = 5,
+      margin_top    = 5,
+      margin_bottom = 5
+    };
 
     /* Add the item's contextual menu items */
     item.add_contextual_menu_items( box );
@@ -952,36 +970,40 @@ public class CanvasItems {
     if( !in_edit_mode() ) {
 
       /* Add a separator if there is anything existing in the box */
-      if( box.get_children().length() > 0 ) {
+      if( box.get_first_child() != null ) {
         item.add_contextual_separator( box );
       }
 
-      item.add_contextual_menuitem( box, _( "Copy" ), "<Control>c", true, do_copy );
-      item.add_contextual_menuitem( box, _( "Cut" ),  "<Control>x", true, do_cut );
+      item.add_contextual_menuitem( box, _( "Copy" ), "items.action_copy", true );  // TODO - do_copy );
+      item.add_contextual_menuitem( box, _( "Cut" ),  "items.action_cut", true );  // TODO - do_cut );
       item.add_contextual_separator( box );
-      item.add_contextual_menuitem( box, _( "Delete" ), "Delete", true, do_delete );
+      item.add_contextual_menuitem( box, _( "Delete" ), "items.action_delete", true );  // TODO - do_delete );
       item.add_contextual_separator( box );
-      item.add_contextual_menuitem( box, _( "Send to Front" ), null, (pos != last), do_send_to_front );
-      item.add_contextual_menuitem( box, _( "Send to Back" ),  null, (pos != 0),    do_send_to_back );
+      item.add_contextual_menuitem( box, _( "Send to Front" ), "items.action_send_to_front", (pos != last) );  // TODO - do_send_to_front );
+      item.add_contextual_menuitem( box, _( "Send to Back" ),  "items.action_send_to_back", (pos != 0) );  // TODO - do_send_to_back );
   
       if( item.itype.category() != CanvasItemCategory.NONE ) {
         item.add_contextual_separator( box );
-        item.add_contextual_menuitem( box, _( "Save As Custom" ), null, true, do_save_custom );
+        item.add_contextual_menuitem( box, _( "Save As Custom" ), "items.action_save_custom", true );  // TODO - do_save_custom );
       }
 
     }
 
-    box.show_all();
-
     /* Create the popover */
-    var menu = new Popover( _canvas );
-    menu.pointing_to = item.bbox.to_rectangle( _canvas.zoom_factor );
-    menu.position    = PositionType.RIGHT;
-    menu.add( box );
+    var menu = new Popover() {
+      pointing_to = item.bbox.to_rectangle( _canvas.zoom_factor ),
+      position    = PositionType.RIGHT,
+      child       = box
+    };
+    menu.set_parent( _canvas );
 
     /* Display the popover */
-    Utils.show_popover( menu );
+    menu.popup();
 
+  }
+
+  private void action_copy() {
+    do_copy( get_selected_item() );
   }
 
   /* Creates a copy of the item and sends it to the clipboard */
@@ -998,6 +1020,10 @@ public class CanvasItems {
     }
   }
 
+  private void action_cut() {
+    do_cut( get_selected_item() );
+  }
+
   /* Creates a copy of the item, sends it to the clipboard, and removes the item */
   public void do_cut( CanvasItem item ) {
     do_copy( item );
@@ -1007,6 +1033,10 @@ public class CanvasItems {
   /* Pastes the given item from the clipboard (if one exists) */
   private void do_paste( CanvasItem item ) {
     AnnotatorClipboard.paste( _canvas.editor );
+  }
+
+  private void action_delete() {
+    do_delete( get_selected_item() );
   }
 
   /* Deletes the item */
@@ -1031,6 +1061,10 @@ public class CanvasItems {
     }
   }
 
+  private void action_send_to_front() {
+    do_send_to_front( get_selected_item() );
+  }
+
   /* Moves the item to the top of the item list */
   private void do_send_to_front( CanvasItem item ) {
     _canvas.undo_buffer.add_item( new UndoItemSendFront( item, item_position( item ) ) );
@@ -1039,12 +1073,20 @@ public class CanvasItems {
     _canvas.queue_draw();
   }
 
+  private void action_send_to_back() {
+    do_send_to_back( get_selected_item() );
+  }
+
   /* Moves the item to the bottom of the item list */
   private void do_send_to_back( CanvasItem item ) {
     _canvas.undo_buffer.add_item( new UndoItemSendBack( item, item_position( item ) ) );
     remove_item( item );
     move_to_back( item );
     _canvas.queue_draw();
+  }
+
+  private void action_save_custom() {
+    do_save_custom( get_selected_item() );
   }
 
   /* Saves the given item as a custom item */

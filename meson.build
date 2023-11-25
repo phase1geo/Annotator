@@ -61,6 +61,7 @@ dependencies = [
     dependency('granite-7'),
     dependency('gtk4'),
     dependency('libxml-2.0'),
+    dependency('libportal'),
     math_dep
 ]
 

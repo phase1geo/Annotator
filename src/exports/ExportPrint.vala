@@ -21,11 +21,12 @@
 
 using Gtk;
 using Cairo;
+using Gdk;
 
 public class ExportPrint : Object {
 
-  private Canvas       _canvas;
-  private ImageSurface _surface;
+  private Canvas _canvas;
+  private Pixbuf _source;
 
   /* Default constructor */
   public ExportPrint( Canvas canvas ) {
@@ -33,9 +34,9 @@ public class ExportPrint : Object {
   }
 
   /* Perform print operation */
-  public void export( ImageSurface source ) {
+  public void export( Pixbuf source ) {
 
-    _surface = source;
+    _source = source;
 
     var op       = new PrintOperation();
     var settings = new PrintSettings();
@@ -78,8 +79,8 @@ public class ExportPrint : Object {
     /* Get the rectangle holding the entire document */
     var x = 0;
     var y = 0;
-    var w = _surface.get_width();
-    var h = _surface.get_height();
+    var w = _source.width;
+    var h = _source.height;
 
     /* Calculate the required scaling factor to get the document to fit */
     double width  = (page_width  - (2 * margin_x)) / w;

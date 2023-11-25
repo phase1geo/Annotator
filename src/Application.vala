@@ -30,9 +30,7 @@ public class Annotator : Gtk.Application {
 
   public  static GLib.Settings settings;
   public  static bool          use_clipboard     = false;
-  public  static CaptureType   screenshot_type   = CaptureType.NONE;
-  public  static int           screenshot_delay  = 0;
-  public  static bool          screenshot_incwin = false;
+  public  static bool          take_screenshot   = false;
   public  static bool          std_input         = false;
   public  static string        version           = "2.0.0";
 
@@ -57,7 +55,7 @@ public class Annotator : Gtk.Application {
     settings = new GLib.Settings( "com.github.phase1geo.annotator" );
 
     /* Add the application-specific icons */
-    weak IconTheme default_theme = IconTheme.get_default();
+    weak IconTheme default_theme = IconTheme.get_for_display( Display.get_default() );
     default_theme.add_resource_path( "/com/github/phase1geo/annotator/images" );
 
     /* Create the main window */
@@ -71,8 +69,8 @@ public class Annotator : Gtk.Application {
       }
     } else if( use_clipboard ) {
       appwin.do_paste();
-    } else if( screenshot_type != CaptureType.NONE ) {
-      appwin.do_screenshot( screenshot_type, true, screenshot_delay, screenshot_incwin );
+    } else if( take_screenshot ) {
+      appwin.do_screenshot();
     }
 
     /* Handle any changes to the position of the window */
@@ -109,25 +107,14 @@ public class Annotator : Gtk.Application {
   /* Parse the command-line arguments */
   private void parse_arguments( ref unowned string[] args ) {
 
-    var context     = new OptionContext( "- Annotator Options" );
-    var options     = new OptionEntry[7];
-    var screenshot  = "";
-    string[] sshots = {};
-
-    for( int i=0; i<CaptureType.NUM; i++ ) {
-      var type = (CaptureType)i;
-      sshots += type.to_string();
-    }
-
-    var sshot_type = "(" + string.joinv( "|", sshots ) + ")";
+    var context = new OptionContext( "- Annotator Options" );
+    var options = new OptionEntry[7];
 
     /* Create the command-line options */
-    options[0] = {"version",                 0, 0, OptionArg.NONE,   ref show_version,      _( "Display version number." ), null};
-    options[1] = {"use-clipboard",           0, 0, OptionArg.NONE,   ref use_clipboard,     _( "Annotate clipboard image." ), null};
-    options[2] = {"screenshot",              0, 0, OptionArg.STRING, ref screenshot,        _( "Take and annotate a screenshot." ), sshot_type};
-    options[3] = {"screenshot-delay",        0, 0, OptionArg.INT,    ref screenshot_delay,  _( "Delay (in seconds) before screenshot capture occurs.  Only valid when --screenshot is set.  Default is 0." ), "INT"};
-    options[4] = {"screenshot-include-win",  0, 0, OptionArg.NONE,   ref screenshot_incwin, _( "Include Annotator window in screenshot.  Only valid when --screenshot is set." ), null};
-    options[5] = {"standard-input",        'i', 0, OptionArg.NONE,   ref std_input,         _( "Uses image data from standard input" ), null};
+    options[0] = {"version",        0,   0, OptionArg.NONE, ref show_version,    _( "Display version number." ), null};
+    options[1] = {"use-clipboard",  0,   0, OptionArg.NONE, ref use_clipboard,   _( "Annotate clipboard image." ), null};
+    options[2] = {"screenshot",     0,   0, OptionArg.NONE, ref take_screenshot, _( "Take and annotate a screenshot." ), null};
+    options[5] = {"standard-input", 'i', 0, OptionArg.NONE, ref std_input,       _( "Uses image data from standard input" ), null};
     options[6] = {null};
 
     /* Parse the arguments */
@@ -145,16 +132,6 @@ public class Annotator : Gtk.Application {
     if( show_version ) {
       stdout.printf( version + "\n" );
       Process.exit( 0 );
-    }
-
-    /* Convert and check the screenshot option */
-    if( screenshot != "" ) {
-      screenshot_type = CaptureType.parse( screenshot );
-      if( screenshot_type == CaptureType.NONE ) {
-        stdout.printf( "\nERROR: --screenshot=%s is not a supported type\n\n", screenshot );
-        stdout.printf( "    Run '%s --help to see valid options\n\n", args[0] );
-        Process.exit( 1 );
-      }
     }
 
   }

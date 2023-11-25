@@ -32,10 +32,10 @@ public class ExportClipboard : Object {
     _canvas = canvas;
   }
 
-  public void export( ImageSurface source ) {
+  public void export( Pixbuf source ) {
 
     /* Create the drawing surface */
-    var surface = new ImageSurface( Format.RGB24, source.get_width(), source.get_height() );
+    var surface = new ImageSurface( Format.RGB24, source.width, source.height );
     var context = new Context( surface );
     _canvas.draw_all( context );
 

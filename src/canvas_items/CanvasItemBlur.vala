@@ -159,7 +159,7 @@ public class CanvasItemBlur : CanvasItem {
     } else {
       ctx.stroke();
 
-      var surface = canvas.image.get_surface_for_rect( bbox );
+      var surface = canvas.image.get_pixbuf_for_rect( bbox );
       var buffer  = new Granite.Drawing.BufferSurface.with_surface( (int)bbox.width, (int)bbox.height, surface );
 
       /* Copy the surface contents over */

@@ -32,7 +32,7 @@ public class CanvasItemPencil : CanvasItem {
   public CanvasItemPencil( Canvas canvas, CanvasItemProperties props ) {
     base( CanvasItemType.PENCIL, canvas, props );
     create_points();
-    _sel_cursor = new Cursor.from_name( "grab" );
+    _sel_cursor = new Cursor.from_name( "grab", null );
   }
 
   /* Creates the selection points */

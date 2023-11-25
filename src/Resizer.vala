@@ -59,6 +59,10 @@ public class ResizerMargin {
   private Entry       _entry;
   private MenuButton  _mb;
 
+  private const GLib.ActionEntry[] action_entries = {
+    { "action_format", action_format, "s" },
+  };
+
   public int value {
     get {
       return( _btn.active ? int.parse( _entry.text ) : 0 );
@@ -80,9 +84,13 @@ public class ResizerMargin {
 
   public ResizerMargin( Grid grid, int row, string label, int value, ResizerValueFormat fmt ) {
 
-    _btn = new CheckButton.with_label( label );
-    _btn.margin = 5;
-    _btn.active = (value > 0);
+    _btn = new CheckButton.with_label( label ) {
+      margin_start  = 5,
+      margin_end    = 5,
+      margin_top    = 5,
+      margin_bottom = 5,
+      active        = (value > 0)
+    };
     _btn.toggled.connect(() => {
       _entry.set_sensitive( _btn.active );
       _mb.set_sensitive( _btn.active );
@@ -92,42 +100,59 @@ public class ResizerMargin {
       changed();
     });
 
-    _entry = new Entry();
-    _entry.text   = value.to_string();
-    _entry.margin = 5;
-    _entry.width_chars = 5;
-    _entry.set_sensitive( _btn.active );
+    var focus = new EventControllerFocus();
+    _entry = new Entry() {
+      text          = value.to_string(),
+      margin_start  = 5,
+      margin_end    = 5,
+      margin_top    = 5,
+      margin_bottom = 5,
+      width_chars   = 5,
+      sensitive     = _btn.active
+    };
+    _entry.add_controller( focus );
     _entry.activate.connect(() => {
       changed();
     });
-    _entry.focus_out_event.connect((e) => {
+    focus.leave.connect(() => {
       changed();
-      return( false );
     });
 
-    _mb = new MenuButton();
-    _mb.margin = 5;
-    _mb.label = fmt.label();
-    _mb.popup = new Gtk.Menu();
-    _mb.set_sensitive( _btn.active );
+    var menu = new GLib.Menu();
+    _mb = new MenuButton() {
+      margin_start  = 5,
+      margin_end    = 5,
+      margin_top    = 5,
+      margin_bottom = 5,
+      label         = fmt.label(),
+      menu_model    = menu,
+      sensitive     = _btn.active
+    };
 
     for( int i=0; i<ResizerValueFormat.NUM; i++ ) {
       var f  = (ResizerValueFormat)i;
-      var mi = new Gtk.MenuItem.with_label( f.label() );
-      mi.activate.connect(() => {
-        _mb.label = f.label();
-        _entry.grab_focus();
-        _entry.select_region( 0, -1 );
-        changed();
-      });
-      _mb.popup.add( mi );
+      menu.append( f.label(), "resize_margin.action_format('%s')".printf( f.label() ) );
     }
-    _mb.popup.show_all();
 
     grid.attach( _btn,   0, row );
     grid.attach( _entry, 1, row );
     grid.attach( _mb,    2, row );
 
+    /* Set the stage for menu actions */
+    var actions = new SimpleActionGroup ();
+    actions.add_action_entries( action_entries, this );
+    grid.insert_action_group( "resize_margin", actions );
+
+  }
+
+  /* Performs resize format change */
+  private void action_format( SimpleAction action, Variant? variant ) {
+    if( variant != null ) {
+      _mb.label = variant.get_string();
+      _entry.grab_focus();
+      _entry.select_region( 0, -1 );
+      changed();
+    }
   }
 
 }
@@ -136,8 +161,8 @@ public class Resizer : Dialog {
 
   private Canvas               _canvas;
   private CanvasImageInfo      _info;
-  private Image                _lock_prevent = new Image.from_icon_name( "changes-prevent-symbolic", IconSize.SMALL_TOOLBAR );
-  private Image                _lock_allow   = new Image.from_icon_name( "changes-allow-symbolic",   IconSize.SMALL_TOOLBAR );
+  private string               _lock_prevent = "changes-prevent-symbolic";
+  private string               _lock_allow   = "changes-allow-symbolic";
   private Entry                _width;
   private Entry                _height;
   private ToggleButton         _lock;
@@ -145,6 +170,10 @@ public class Resizer : Dialog {
   private Label                _size;
   private Array<ResizerMargin> _margins;
   private Image                _preview;
+
+  private const GLib.ActionEntry[] action_entries = {
+    { "action_resize", action_resize, "s" },
+  };
 
   /* Constructor */
   public Resizer( Canvas canvas, CanvasImageInfo info ) {
@@ -168,16 +197,23 @@ public class Resizer : Dialog {
     var margins = create_margins();
     var preview = create_preview();
 
-    var grid = new Grid();
+    var grid = new Grid() {
+      hexpand = true,
+      vexpand = true
+    };
     grid.attach( size,    0, 0 );
     grid.attach( margins, 0, 1 );
     grid.attach( preview, 1, 0, 1, 2 );
 
     var box = get_content_area();
-    box.pack_start( grid, true, true );
-    box.show_all();
+    box.append( grid );
 
     update_preview();
+
+    /* Set the stage for menu actions */
+    var actions = new SimpleActionGroup ();
+    actions.add_action_entries( action_entries, this );
+    insert_action_group( "resizer", actions );
 
   }
 
@@ -237,78 +273,99 @@ public class Resizer : Dialog {
 
   }
 
+  /* Performs resize */
+  private void action_resize( SimpleAction action, Variant? variant ) {
+    if( variant != null ) {
+      _format.label = variant.get_string();
+      _width.grab_focus();
+      _width.select_region( 0, -1 );
+      format_changed();
+    }
+  }
+
   /* Create the sizing options */
   private Widget create_size() {
 
-    var wlbl = new Label( _( "Width:" ) );
-    wlbl.margin = 5;
-    wlbl.halign = Align.START;
+    var wlbl = new Label( _( "Width:" ) ) {
+      halign = Align.START,
+      margin_start  = 5,
+      margin_end    = 5,
+      margin_top    = 5,
+      margin_bottom = 5
+    };
 
-    _width = new Entry();
-    _width.margin        = 5;
-    _width.text          = ((int)_info.pixbuf_rect.width).to_string();
-    _width.width_chars   = 5;
-    _width.input_purpose = InputPurpose.DIGITS;
+    var width_focus = new EventControllerFocus();
+    _width = new Entry() {
+      margin_start  = 5,
+      margin_end    = 5,
+      margin_top    = 5,
+      margin_bottom = 5,
+      text          = ((int)_info.pixbuf_rect.width).to_string(),
+      width_chars   = 5,
+      input_purpose = InputPurpose.DIGITS
+    };
+    _width.add_controller( width_focus );
     _width.activate.connect( commit_width );
-    _width.focus_out_event.connect((e) => {
-      commit_width();
-      return( false );
-    });
+    width_focus.leave.connect( commit_width );
 
-    var hlbl = new Label( _( "Height:" ) );
-    hlbl.margin = 5;
-    hlbl.halign = Align.START;
+    var hlbl = new Label( _( "Height:" ) ) {
+      halign        = Align.START,
+      margin_start  = 5,
+      margin_end    = 5,
+      margin_top    = 5,
+      margin_bottom = 5
+    };
 
-    _height = new Entry();
-    _height.margin        = 5;
-    _height.text          = ((int)_info.pixbuf_rect.height).to_string();
-    _height.width_chars   = 5;
-    _height.input_purpose = InputPurpose.DIGITS;
+    var height_focus = new EventControllerFocus();
+    _height = new Entry() {
+      margin_start  = 5,
+      margin_end    = 5,
+      margin_top    = 5,
+      margin_bottom = 5,
+      text          = ((int)_info.pixbuf_rect.height).to_string(),
+      width_chars   = 5,
+      input_purpose = InputPurpose.DIGITS
+    };
+    _height.add_controller( height_focus );
     _height.activate.connect( commit_height );
-    _height.focus_out_event.connect((e) => {
-      commit_height();
-      return( false );
-    });
+    height_focus.leave.connect( commit_height );
 
     /* Create the proportion control */
-    _lock = new ToggleButton();
-    _lock.set_tooltip_text( _( "Scale proportionally" ) );
-    _lock.image  = _lock_prevent;
-    _lock.active = true;
+    _lock = new ToggleButton() {
+      icon_name    = _lock_prevent,
+      tooltip_text = _( "Scale proportionally" ),
+      active       = true
+    };
     _lock.clicked.connect(() => {
-      _lock.image = _lock.active ? _lock_prevent : _lock_allow;
+      _lock.icon_name = _lock.active ? _lock_prevent : _lock_allow;
       _width.grab_focus();
       _width.select_region( 0, -1 );
     });
 
-    var lock_box = new Box( Orientation.VERTICAL, 0 );
-    lock_box.margin_left = 10;
-    lock_box.valign = Align.CENTER;
-    lock_box.pack_start( _lock, false, false );
+    var lock_box = new Box( Orientation.VERTICAL, 0 ) {
+      margin_start = 10,
+      valign       = Align.CENTER
+    };
+    lock_box.append( _lock );
 
     var dflt_format = ResizerValueFormat.PIXELS;
-    _format = new MenuButton();
-    _format.label = dflt_format.label();
-    _format.popup = new Gtk.Menu();
+    var menu = new GLib.Menu();
+    _format = new MenuButton() {
+      label      = dflt_format.label(),
+      menu_model = menu
+    };
 
     for( int i=0; i<ResizerValueFormat.NUM; i++ ) {
       var f  = (ResizerValueFormat)i;
-      var mi = new Gtk.MenuItem.with_label( f.label() );
-      mi.activate.connect(() => {
-        _format.label = f.label();
-        _width.grab_focus();
-        _width.select_region( 0, -1 );
-        format_changed();
-      });
-      _format.popup.add( mi );
+      menu.append( f.label(), "resizer.action_resize('%s')".printf( f.label() ) );
     }
-    _format.popup.show_all();
 
-    var format_box = new Box( Orientation.VERTICAL, 0 );
-    format_box.margin_left  = 10;
-    format_box.margin_right = 10;
-    format_box.valign       = Align.CENTER;
-    format_box.pack_start( _format, false, false );
+    var format_box = new Box( Orientation.VERTICAL, 0 ) {
+      margin_start = 10,
+      margin_end   = 10,
+      valign       = Align.CENTER
+    };
+    format_box.append( _format );
 
     var grid = new Grid();
     grid.attach( wlbl,       0, 0 );
@@ -318,12 +375,18 @@ public class Resizer : Dialog {
     grid.attach( lock_box,   2, 0, 1, 2 );
     grid.attach( format_box, 3, 0, 1, 2 );
 
-    var frame = new Frame( null );
-    var lbl   = new Label( Utils.make_title( _( "Image Size" ) ) );
-    lbl.use_markup     = true;
-    frame.label_widget = lbl;
-    frame.margin       = 5;
-    frame.add( grid );
+    var lbl   = new Label( Utils.make_title( _( "Image Size" ) ) ) {
+      use_markup = true
+    };
+
+    var frame = new Frame( null ) {
+      label_widget  = lbl,
+      margin_start  = 5,
+      margin_end    = 5,
+      margin_top    = 5,
+      margin_bottom = 5,
+      child         = grid
+    };
 
     return( frame );
 
@@ -367,12 +430,18 @@ public class Resizer : Dialog {
       _margins.append_val( margin );
     }
 
-    var frame = new Frame( null );
-    var lbl   = new Label( Utils.make_title( _( "Margins" ) ) );
-    lbl.use_markup     = true;
-    frame.label_widget = lbl;
-    frame.margin       = 5;
-    frame.add( grid );
+    var lbl = new Label( Utils.make_title( _( "Margins" ) ) ) {
+      use_markup = true
+    };
+
+    var frame = new Frame( null ) {
+      label_widget  = lbl,
+      margin_start  = 5,
+      margin_end    = 5,
+      margin_top    = 5,
+      margin_bottom = 5,
+      child         = grid
+    };
 
     return( frame );
 
@@ -381,25 +450,39 @@ public class Resizer : Dialog {
   /* Create the preview panel */
   private Widget create_preview() {
 
-    _preview = new Image();
-    _preview.margin = 5;
+    _preview = new Image() {
+      valign        = Align.START,
+      margin_start  = 5,
+      margin_end    = 5,
+      margin_top    = 5,
+      margin_bottom = 5
+    };
     _preview.set_size_request( 200, 200 );
 
-    _size = new Label( "" );
-    _size.halign = Align.END;
-    _size.margin = 5;
+    _size = new Label( "" ) {
+      valign        = Align.END,
+      margin_start  = 5,
+      margin_end    = 5,
+      margin_top    = 5,
+      margin_bottom = 5
+    };
 
     var box = new Box( Orientation.VERTICAL, 0 );
-    box.pack_start( _preview, false, false );
-    box.pack_end(   _size,    false, false );
-    box.show_all();
+    box.append( _preview );
+    box.append( _size );
 
-    var frame = new Frame( null );
-    var lbl   = new Label( Utils.make_title( _( "Preview" ) ) );
-    lbl.use_markup     = true;
-    frame.label_widget = lbl;
-    frame.margin       = 5;
-    frame.add( box );
+    var lbl = new Label( Utils.make_title( _( "Preview" ) ) ) {
+      use_markup = true
+    };
+
+    var frame = new Frame( null ) {
+      label_widget  = lbl,
+      margin_start  = 5,
+      margin_end    = 5,
+      margin_top    = 5,
+      margin_bottom = 5,
+      child         = box
+    };
 
     return( frame );
 
@@ -408,9 +491,11 @@ public class Resizer : Dialog {
   /* Draw image in the proper location at the correct position */
   private void update_preview() {
 
-    var current = get_image_info();
-    var surface = new ImageSurface( Cairo.Format.ARGB32, 200, 200 );
-    var ctx     = new Context( surface );
+    var current  = get_image_info();
+    var snapshot = new Gtk.Snapshot();
+    var rect     = Graphene.Rect.alloc();
+    rect.init( 0, 0, (float)200, (float)200 );
+    var ctx      = snapshot.append_cairo( rect );
 
     /* Update the resulting image size */
     _size.label = _( "%d x %d pixels" ).printf( current.width, current.height );
@@ -432,7 +517,7 @@ public class Resizer : Dialog {
     ctx.paint();
 
     /* Update the surface */
-    _preview.set_from_surface( surface );
+    _preview.paintable = snapshot.free_to_paintable( null );
 
   }
 

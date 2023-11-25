@@ -36,28 +36,34 @@ public class Editor : Box {
     Object( orientation: Orientation.VERTICAL, spacing: 0 );
 
     /* Create the canvas */
-    canvas = new Canvas( win, this );
-    canvas.halign = Align.CENTER;
-    canvas.valign = Align.CENTER;
+    canvas = new Canvas( win, this ) {
+      halign = Align.CENTER,
+      valign = Align.CENTER
+    };
     canvas.image_loaded.connect(() => {
       image_loaded();
     });
 
     /* Create the overlay that will hold the canvas so that we can add emoji support */
-    var overlay = new Overlay();
-    overlay.add( canvas );
+    var overlay = new Overlay() {
+      child = canvas
+    };
 
-    _sw = new ScrolledWindow( null, null );
-    _sw.min_content_width  = 600;
-    _sw.min_content_height = 400;
-    _sw.vscrollbar_policy  = PolicyType.AUTOMATIC;
-    _sw.hscrollbar_policy  = PolicyType.AUTOMATIC;
+    _sw = new ScrolledWindow() {
+      hexpand            = true,
+      vexpand            = true,
+      min_content_width  = 600,
+      min_content_height = 400,
+      vscrollbar_policy  = PolicyType.AUTOMATIC,
+      hscrollbar_policy  = PolicyType.AUTOMATIC,
+      child = overlay
+    };
     _sw.get_style_context().add_class( Granite.STYLE_CLASS_CHECKERBOARD );
-    _sw.add( overlay );
 
     /* Create the toolbar */
-    var toolbar = new CanvasToolbar( canvas );
-    toolbar.halign = Align.CENTER;
+    var toolbar = new CanvasToolbar( canvas ) {
+      halign = Align.CENTER
+    };
     canvas.image.crop_started.connect(() => {
       _sw.vscrollbar_policy = PolicyType.EXTERNAL;
       _sw.hscrollbar_policy = PolicyType.EXTERNAL;
@@ -66,21 +72,27 @@ public class Editor : Box {
       toolbar.crop_ended();
       _sw.vscrollbar_policy = PolicyType.AUTOMATIC;
       _sw.hscrollbar_policy = PolicyType.AUTOMATIC;
-      show_all();
     });
 
-    var sep = new Separator( Orientation.HORIZONTAL );
+    var sep = new Separator( Orientation.HORIZONTAL ) {
+      halign = Align.FILL,
+      hexpand = true
+    };
 
-    var box = new Box( Orientation.HORIZONTAL, 0 );
-    box.margin = 10;
-    box.pack_start( toolbar, true, true );
+    var box = new Box( Orientation.HORIZONTAL, 0 ) {
+      halign        = Align.FILL,
+      hexpand       = true,
+      margin_start  = 10,
+      margin_end    = 10,
+      margin_top    = 10,
+      margin_bottom = 10
+    };
+    box.append( toolbar );
 
     /* Pack the box */
-    pack_start( box, false, true, 0 );
-    pack_start( sep, false, true, 0 );
-    pack_start( _sw, true,  true, 0 );
-
-    show_all();
+    append( box );
+    append( sep );
+    append( _sw );
 
   }
 

@@ -1,5 +1,6 @@
 sources += files(
     'Application.vala',
+    'BufferSurface.vala',
     'Canvas.vala',
     'CanvasImage.vala',
     'CanvasImageInfo.vala',

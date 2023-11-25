@@ -23,98 +23,127 @@ using Gtk;
 
 public class Exporter : Box {
 
+  private MainWindow _win;
   private MenuButton _mb;
   private Revealer   _stack_reveal;
   private Stack      _stack;
 
   public signal void export_done();
 
+  private const GLib.ActionEntry[] action_entries = {
+    { "action_export_changed", action_export_changed, "%s" },
+  };
+
   /* Constructor */
   public Exporter( MainWindow win ) {
 
     Object( orientation: Orientation.VERTICAL, spacing: 0 );
 
-    _mb       = new MenuButton();
-    _mb.popup = new Gtk.Menu();
-    _mb.image = new Image.from_icon_name( "pan-down-symbolic", IconSize.SMALL_TOOLBAR );
-    _mb.image_position = PositionType.RIGHT;
-    _mb.always_show_image = true;
+    _win = win;
 
-    var export = new Button.with_label( _( "Export…" ) );
-    export.set_tooltip_markup( Utils.tooltip_with_accel( _( "Export With Current Settings" ), "<Control>e" ) );
+    _mb = new MenuButton() {
+      halign     = Align.START,
+      hexpand    = true,
+      icon_name  = "pan-down-symbolic",
+      menu_model = new GLib.Menu()
+    };
+
+    var export = new Button.with_label( _( "Export…" ) ) {
+      halign         = Align.END,
+      tooltip_markup = Utils.tooltip_with_accel( _( "Export With Current Settings" ), "<Control>e" )
+    };
     export.clicked.connect(() => {
       do_export( win );
       export_done();
     });
 
-    var bbox = new Box( Orientation.HORIZONTAL, 5 );
-    bbox.pack_start( _mb,    true,  true );
-    bbox.pack_end(   export, false, false );
+    var bbox = new Box( Orientation.HORIZONTAL, 5 ) {
+      hexpand = true
+    };
+    bbox.append( _mb );
+    bbox.append( export );
 
-    _stack = new Stack();
-    _stack.transition_type = StackTransitionType.NONE;
-    _stack.hhomogeneous    = true;
-    _stack.vhomogeneous    = false;
+    _stack = new Stack() {
+      transition_type = StackTransitionType.NONE,
+      hhomogeneous    = true,
+      vhomogeneous    = false
+    };
 
-    _stack_reveal = new Revealer();
-    _stack_reveal.add( _stack );
+    _stack_reveal = new Revealer() {
+      child = _stack
+    };
 
-    populate( win );
+    populate();
 
-    _mb.popup.show_all();
-
-    pack_start( bbox,          false, true, 0 );
-    pack_start( _stack_reveal, true,  true, 0 );
-    show_all();
+    append( bbox );
+    append( _stack_reveal );
 
     /* Initialize the UI */
-    var last    = Annotator.settings.get_string( "last-export" );
-    var current = win.editor.canvas.image.exports.get_by_name( last );
-    handle_mb_change( win, current );
+    change_export( Annotator.settings.get_string( "last-export" ) );
+
+    /* Set the stage for menu actions */
+    var actions = new SimpleActionGroup ();
+    actions.add_action_entries( action_entries, this );
+    insert_action_group( "exporter", actions );
 
   }
 
   /* Populates the exporter widget with the available export types */
-  private void populate( MainWindow win ) {
-    for( int i=0; i<win.editor.canvas.image.exports.length(); i++ ) {
-      add_export( win, win.editor.canvas.image.exports.index( i ) );
+  private void populate() {
+    for( int i=0; i<_win.editor.canvas.image.exports.length(); i++ ) {
+      add_export( _win.editor.canvas.image.exports.index( i ) );
     }
   }
 
-  private void handle_mb_change( MainWindow win, Export? export ) {
-    if( export == null ) return;
+  /* Updates the UI to show the export features for the given export name */
+  private void change_export( string name ) {
+
+    var export = _win.editor.canvas.image.exports.get_by_name( name );
+
     _mb.label                  = export.label;
     _stack.visible_child_name  = export.name;
     _stack_reveal.reveal_child = export.settings_available();
     Annotator.settings.set_string( "last-export", export.name );
+
+  }
+
+  /* Called whenever the user changes the selected export option */
+  private void action_export_changed( SimpleAction action, Variant? variant ) {
+    if( variant != null ) {
+      change_export( variant.get_string() );
+    }
   }
 
   /* Add the given export */
-  private void add_export( MainWindow win, Export export ) {
+  private void add_export( Export export ) {
 
     /* Add menu option to the menubutton */
-    var mnu = new Gtk.MenuItem.with_label( export.label );
-    mnu.activate.connect(() => {
-      handle_mb_change( win, export );
-    });
-    _mb.popup.add( mnu );
+    var menu = (GLib.Menu)_mb.menu_model;
+    menu.append( export.label, "exporter.action_export_changed('%s')".printf( export.name ) );
 
     /* Add the page */
-    var opts = new Grid();
-    opts.margin         = 5;
-    opts.column_spacing = 5;
-    opts.expand         = true;
+    var opts = new Grid() {
+      margin_start   = 5,
+      margin_end     = 5,
+      margin_top     = 5,
+      margin_bottom  = 5,
+      column_spacing = 5,
+      hexpand        = true,
+      vexpand        = true
+    };
     export.add_settings( opts );
 
-    var label = new Label( "<i>" + _( "Export Options" ) + "</i>" );
-    label.use_markup = true;
+    var label = new Label( "<i>" + _( "Export Options" ) + "</i>" ) {
+      use_markup = true
+    };
 
-    var frame = new Frame( null );
-    frame.label_widget  = label;
-    frame.label_xalign  = (float)0.5;
-    frame.margin_top    = 5;
-    frame.margin_bottom = 5;
-    frame.add( opts );
+    var frame = new Frame( null ) {
+      label_widget  = label,
+      label_xalign  = (float)0.5,
+      margin_top    = 5,
+      margin_bottom = 5,
+      child         = opts
+    };
 
     /* Add the options to the options stack */
     _stack.add_named( frame, export.name );
@@ -139,24 +168,25 @@ public class Exporter : Box {
     }
     dialog.set_filter( filter );
 
-    if( dialog.run() == ResponseType.ACCEPT ) {
+    dialog.response.connect((id) => {
+      if( id == ResponseType.ACCEPT ) {
 
-      /* Close the dialog and parent window */
-      dialog.close();
+        /* Close the dialog and parent window */
+        dialog.close();
 
-      /* Perform the export */
-      var fname = export.repair_filename( dialog.get_filename() );
-      win.editor.canvas.image.export_image( name, fname );
-      Utils.store_chooser_folder( fname );
+        /* Perform the export */
+        var fname = export.repair_filename( dialog.get_file().get_path() );
+        win.editor.canvas.image.export_image( name, fname );
+        Utils.store_chooser_folder( fname );
 
-      /* Generate notification to indicate that the export completed */
-      win.notification( _( "Export Completed" ), fname );
+        /* Generate notification to indicate that the export completed */
+        win.notification( _( "Export Completed" ), fname );
 
-    } else {
+      }
+      dialog.destroy();
+    });
 
-      dialog.close();
-
-    }
+    dialog.show();
 
   }
 
