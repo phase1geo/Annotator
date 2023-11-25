@@ -974,17 +974,17 @@ public class CanvasItems {
         item.add_contextual_separator( box );
       }
 
-      item.add_contextual_menuitem( box, _( "Copy" ), "items.action_copy", true );  // TODO - do_copy );
-      item.add_contextual_menuitem( box, _( "Cut" ),  "items.action_cut", true );  // TODO - do_cut );
+      item.add_contextual_menuitem( box, _( "Copy" ), "<Control>c", true, do_copy );
+      item.add_contextual_menuitem( box, _( "Cut" ),  "<Control>x", true, do_cut );
       item.add_contextual_separator( box );
-      item.add_contextual_menuitem( box, _( "Delete" ), "items.action_delete", true );  // TODO - do_delete );
+      item.add_contextual_menuitem( box, _( "Delete" ), "Delete", true, do_delete );
       item.add_contextual_separator( box );
-      item.add_contextual_menuitem( box, _( "Send to Front" ), "items.action_send_to_front", (pos != last) );  // TODO - do_send_to_front );
-      item.add_contextual_menuitem( box, _( "Send to Back" ),  "items.action_send_to_back", (pos != 0) );  // TODO - do_send_to_back );
+      item.add_contextual_menuitem( box, _( "Send to Front" ), null, (pos != last), do_send_to_front );
+      item.add_contextual_menuitem( box, _( "Send to Back" ),  null, (pos != 0), do_send_to_back );
   
       if( item.itype.category() != CanvasItemCategory.NONE ) {
         item.add_contextual_separator( box );
-        item.add_contextual_menuitem( box, _( "Save As Custom" ), "items.action_save_custom", true );  // TODO - do_save_custom );
+        item.add_contextual_menuitem( box, _( "Save As Custom" ), null, true, do_save_custom );
       }
 
     }

@@ -70,7 +70,9 @@ e = executable('com.github.phase1geo.annotator',
     config_file,
     gresource,
     dependencies: dependencies,
-    vala_args: [],
+    vala_args: [
+        meson.current_source_dir() + '/vapi/libportal-gtk4.vapi'
+    ],
     install : true
 )
 

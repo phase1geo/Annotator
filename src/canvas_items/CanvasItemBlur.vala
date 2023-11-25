@@ -146,7 +146,10 @@ public class CanvasItemBlur : CanvasItem {
   /* Draw the rectangle */
   public override void draw_item( Context ctx, CanvasItemColor color ) {
 
-    Utils.set_context_color_with_alpha( ctx, canvas.image.average_color, mode.alpha() );
+    var black = Utils.color_from_string( "black" );
+
+    // TODO - Utils.set_context_color_with_alpha( ctx, canvas.image.average_color, mode.alpha() );
+    Utils.set_context_color_with_alpha( ctx, black, mode.alpha() );
     ctx.set_line_width( 0 );
     ctx.rectangle( bbox.x, bbox.y, bbox.width, bbox.height );
     save_path( ctx, CanvasItemPathType.FILL );
@@ -159,18 +162,18 @@ public class CanvasItemBlur : CanvasItem {
     } else {
       ctx.stroke();
 
-      var surface = canvas.image.get_pixbuf_for_rect( bbox );
-      var buffer  = new BufferSurface.with_surface( (int)bbox.width, (int)bbox.height, surface );
+      var pixbuf = canvas.image.get_pixbuf_for_rect( bbox );
+      var buffer = new BufferSurface.with_pixbuf( (int)bbox.width, (int)bbox.height, pixbuf );
 
       /* Copy the surface contents over */
-      buffer.context.set_source_surface( surface, 0, 0 );
+      cairo_set_source_pixbuf( buffer.context, pixbuf, 0, 0 );
       buffer.context.paint();
 
       /* Perform the blur */
       buffer.exponential_blur( blur_radius );
 
       /* Draw the blurred pixbuf onto the context */
-      ctx.set_source_surface( buffer.surface, bbox.x, bbox.y );
+      cairo_set_source_pixbuf( ctx, buffer.pixbuf, bbox.x, bbox.y );
       ctx.paint();
 
     }

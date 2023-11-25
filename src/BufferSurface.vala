@@ -6,6 +6,7 @@
  */
 
 using Cairo;
+using Gdk;
 // using Posix;
 
 /**
@@ -13,20 +14,21 @@ using Cairo;
  * for usage with large, rarely updated draw operations.
  */
 public class BufferSurface : GLib.Object {
-    private Surface _surface;
+    private Pixbuf _pixbuf;
     /**
      * The {@link Cairo.Surface} which will store the results of all drawing operations
      * made with {@link Granite.Drawing.BufferSurface.context}.
      */
-    public Surface surface {
+    public Pixbuf pixbuf {
         get {
-            if (_surface == null) {
-                _surface = new ImageSurface (Format.ARGB32, width, height);
+            if (_pixbuf == null) {
+                _pixbuf = new Pixbuf( Colorspace.RGB, true, 8, width, height );
+                _pixbuf.fill( 0 );
             }
 
-            return _surface;
+            return _pixbuf;
         }
-        private set { _surface = value; }
+        private set { _pixbuf = value; }
     }
 
     /**
@@ -46,7 +48,10 @@ public class BufferSurface : GLib.Object {
     public Cairo.Context context {
         get {
             if (_context == null) {
-                _context = new Cairo.Context (surface);
+                var snapshot = new Gtk.Snapshot();
+                var rect     = Graphene.Rect.alloc();
+                rect.init( 0, 0, (float)30, (float)24 );
+                _context     = snapshot.append_cairo( rect );
             }
 
             return _context;
@@ -72,9 +77,9 @@ public class BufferSurface : GLib.Object {
      * @param height the height of the new {@link Granite.Drawing.BufferSurface}, in pixels
      * @param model the {@link Cairo.Surface} to use as a model for the internal {@link Cairo.Surface}
      */
-    public BufferSurface.with_surface (int width, int height, Surface model) requires (model != null) {
+    public BufferSurface.with_pixbuf (int width, int height, Pixbuf buf) requires (buf != null) {
         this (width, height);
-        surface = new Surface.similar (model, Content.COLOR_ALPHA, width, height);
+        pixbuf = buf.copy();
     }
 
     /**
@@ -87,7 +92,7 @@ public class BufferSurface : GLib.Object {
      */
     public BufferSurface.with_buffer_surface (int width, int height, BufferSurface model) requires (model != null) {
         this (width, height);
-        surface = new Surface.similar (model.surface, Content.COLOR_ALPHA, width, height);
+        pixbuf = model.pixbuf.copy();
     }
 
     /**
@@ -113,7 +118,7 @@ public class BufferSurface : GLib.Object {
         var cr = new Cairo.Context (image_surface);
 
         cr.set_operator (Operator.SOURCE);
-        cr.set_source_surface (surface, 0, 0);
+        cairo_set_source_pixbuf( cr, pixbuf, 0, 0 );
         cr.paint ();
 
         var width = image_surface.get_width ();
@@ -230,7 +235,7 @@ public class BufferSurface : GLib.Object {
         var cr = new Cairo.Context (original);
 
         cr.set_operator (Operator.SOURCE);
-        cr.set_source_surface (surface, 0, 0);
+        cairo_set_source_pixbuf( cr, pixbuf, 0, 0 );
         cr.paint ();
 
         uint8 *pixels = original.get_data ();
@@ -367,7 +372,7 @@ public class BufferSurface : GLib.Object {
         var cr = new Cairo.Context (original);
 
         cr.set_operator (Operator.SOURCE);
-        cr.set_source_surface (surface, 0, 0);
+        cairo_set_source_pixbuf( cr, pixbuf, 0, 0);
         cr.paint ();
 
         uint8 *pixels = original.get_data ();
@@ -501,7 +506,7 @@ public class BufferSurface : GLib.Object {
         var cr = new Cairo.Context (original);
 
         cr.set_operator (Operator.SOURCE);
-        cr.set_source_surface (surface, 0, 0);
+        cairo_set_source_pixbuf( cr, pixbuf, 0, 0 );
         cr.paint ();
 
         uint8 *src = original.get_data ();

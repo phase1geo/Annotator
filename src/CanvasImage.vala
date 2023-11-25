@@ -76,11 +76,11 @@ public class CanvasImage {
   }
 
   /* Returns a surface which contains the given rectangle area of the base image */
-  public Cairo.Surface get_surface_for_rect( CanvasRect rect ) {
+  public Pixbuf get_pixbuf_for_rect( CanvasRect rect ) {
     var buf_rect = new CanvasRect.from_coords( 0, 0, _buf.width, _buf.height );
     rect.intersection( rect, buf_rect );
     var sub = new Pixbuf.subpixbuf( _buf, (int)rect.x, (int)rect.y, (int)rect.width, (int)rect.height );
-    return( cairo_surface_create_from_pixbuf( sub, 1, null ) );
+    return( sub );
   }
 
   /* Changes the stored image to the given pixbuf and performs other related tasks */
@@ -90,9 +90,8 @@ public class CanvasImage {
       _canvas.undo_buffer.add_item( new UndoImageChange( undo_name, _buf, buf ) );
     }
 
-    pixbuf   = buf.copy();
-    _buf     = buf.copy();
-    _surface = (ImageSurface)cairo_surface_create_from_pixbuf( _buf, 1, null );
+    pixbuf = buf.copy();
+    _buf   = buf.copy();
     _canvas.set_size_request( _buf.width, _buf.height );
 
     /* Create the image information */

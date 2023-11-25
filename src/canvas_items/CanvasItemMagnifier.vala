@@ -309,8 +309,8 @@ public class CanvasItemMagnifier : CanvasItem {
   /* Draw the rectangle */
   public override void draw_item( Context ctx, CanvasItemColor color ) {
 
-    var surface = _image.get_surface_for_rect( _zoom_rect );
-    var black   = Utils.color_from_string( "black" );
+    var pixbuf = _image.get_pixbuf_for_rect( _zoom_rect );
+    var black  = Utils.color_from_string( "black" );
 
     draw_focal_point( ctx );
 
@@ -324,7 +324,7 @@ public class CanvasItemMagnifier : CanvasItem {
     ctx.clip();
     ctx.new_path();
    	ctx.scale( _zoom_factor, _zoom_factor );
-   	ctx.set_source_surface( surface, (bbox.x / _zoom_factor), (bbox.y / _zoom_factor) );
+    cairo_set_source_pixbuf( ctx, pixbuf, (bbox.x / _zoom_factor), (bbox.y / _zoom_factor) );
    	ctx.paint();
    	ctx.restore();
 

@@ -77,7 +77,7 @@ public class AnnotatorClipboard {
         clipboard.read_async.begin( {"application/xml"}, 0, null, (obj, res) => {
           string str;
           var stream = clipboard.read_async.end( res, out str );
-          uint8[] buffer;
+          uint8[] buffer = {};
 		      stream.read( buffer );
           editor.paste_items( (string)buffer );
         });

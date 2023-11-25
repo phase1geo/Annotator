@@ -468,7 +468,7 @@ public class MainWindow : Gtk.ApplicationWindow {
   public void do_screenshot() {
 
     var portal = new Xdp.Portal();
-    var parent = xdp_parent_new_gtk( this );
+    var parent = Xdp.parent_new_gtk( this );
 
     try {
       portal.take_screenshot.begin( parent, Xdp.ScreenshotFlags.INTERACTIVE, null, (obj, res) => {

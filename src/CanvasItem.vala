@@ -350,12 +350,17 @@ public class CanvasItem {
   public virtual void add_contextual_menu_items( Box box ) {}
 
   /* Returns a menuitem with the given label, action and (optional) keyboard shortcut */
-  public Button add_contextual_menuitem( Box box, string label, string action_name, bool sensitive ) {
+  public Button add_contextual_menuitem( Box box, string label, string? shortcut, bool sensitive, CanvasItemClickAction action ) {
 
     var btn = new Button.with_label( label ) {
-      sensitive = sensitive,
-      action_name = action_name
+      sensitive = sensitive
     };
+
+    // TODO - Not sure what we can do about the shortcut at this point
+
+    btn.clicked.connect(() => {
+      action( this );
+    });
 
     box.append( btn );
 
