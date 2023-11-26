@@ -80,6 +80,8 @@ public class MainWindow : Gtk.ApplicationWindow {
     /* Handle any changes to the dark mode preference setting */
     handle_prefer_dark_changes();
 
+    can_focus = true;
+
     /* Create editor */
     create_editor( box );
 
@@ -191,6 +193,7 @@ public class MainWindow : Gtk.ApplicationWindow {
   private MenuButton create_preferences() {
 
     var pref_btn = new MenuButton() {
+      has_frame    = false,
       child        = new Image.from_icon_name( get_icon_name( "open-menu" ) ),
       tooltip_text = _( "Properties" ),
       popover      = new Popover()
@@ -199,8 +202,12 @@ public class MainWindow : Gtk.ApplicationWindow {
     var box = new Box( Orientation.VERTICAL, 0 );
 
     var shortcuts = new Button.with_label( _( "Shortcuts Cheatsheet" ) ) {
-      action_name = "win.action_shortcuts"
+      has_frame = false
     };
+    shortcuts.clicked.connect(() => {
+      do_shortcuts();
+      pref_btn.popover.popdown();
+    });
 
     box.append( shortcuts );
 
@@ -213,18 +220,16 @@ public class MainWindow : Gtk.ApplicationWindow {
   /* Create the exports menubutton and associated menu */
   private MenuButton create_exports() {
 
-    var export_btn = new MenuButton() {
-      child        = new Image.from_icon_name( (on_elementary ? "document-export" : "document-send-symbolic") ),
-      sensitive    = false,
-      tooltip_text = _( "Export Image" ),
-      popover      = new Popover()
-    };
-
     var box = new Box( Orientation.VERTICAL, 0 ) {
       margin_start  = 5,
       margin_end    = 5,
       margin_top    = 5,
       margin_bottom = 5
+    };
+
+    var popover = new Popover() {
+      autohide = true,
+      child    = box
     };
 
     /* Add the export UI */
@@ -233,23 +238,33 @@ public class MainWindow : Gtk.ApplicationWindow {
 
     /* Copy to clipboard option */
     var clip_btn = new Button.with_label( _( "Copy To Clipboard" ) ) {
-      halign = Align.START
+      halign = Align.START,
+      has_frame = false
     };
     clip_btn.clicked.connect(() => {
       _editor.canvas.image.export_clipboard();
+      popover.popdown();
     });
     box.append( clip_btn );
 
     /* Print option */
     var print_btn = new Button.with_label( _( "Print…" ) ) {
-      action_name = "win.action_print"
+      halign = Align.START,
+      has_frame = false
     };
     print_btn.clicked.connect(() => {
-      _editor.canvas.image.export_print();
+      do_print();
+      popover.popdown();
     });
     box.append( print_btn );
 
-    export_btn.popover.child = box;
+    var export_btn = new MenuButton() {
+      has_frame    = false,
+      child        = new Image.from_icon_name( (on_elementary ? "document-export" : "document-send-symbolic") ),
+      sensitive    = false,
+      tooltip_text = _( "Export Image" ),
+      popover      = popover
+    };
 
     return( export_btn );
 
@@ -258,12 +273,20 @@ public class MainWindow : Gtk.ApplicationWindow {
   /* Creates the zoom menu */
   private MenuButton create_zoom() {
 
+    var box = new Box( Orientation.VERTICAL, 0 );
+
+    var popover = new Popover() {
+      autohide = true,
+      child = box
+    };
+
     /* Add the button */
     var zoom_btn = new MenuButton() {
+      has_frame    = false,
       icon_name    = get_icon_name( "zoom-fit-best" ),
       tooltip_text = _( "Zoom (%d%%)" ).printf( 100 ),
       sensitive    = false,
-      popover      = new Popover()
+      popover      = popover
     };
 
     _zoom = new ZoomWidget( (int)(_editor.canvas.zoom_min * 100), (int)(_editor.canvas.zoom_max * 100), (int)(_editor.canvas.zoom_step * 100) ) {
@@ -277,10 +300,10 @@ public class MainWindow : Gtk.ApplicationWindow {
     });
 
     var zoom_fit = new Button.with_label( _( "Zoom to Fit Window" ) ) {
+      has_frame = false,
       action_name = "win.action_zoom_fit"
     };
 
-    var box = new Box( Orientation.VERTICAL, 0 );
     box.append( _zoom );
     box.append( zoom_fit );
 
@@ -470,13 +493,18 @@ public class MainWindow : Gtk.ApplicationWindow {
     var portal = new Xdp.Portal();
     var parent = Xdp.parent_new_gtk( this );
 
+    hide();
+
     try {
       portal.take_screenshot.begin( parent, Xdp.ScreenshotFlags.INTERACTIVE, null, (obj, res) => {
         var screenshot = portal.take_screenshot.end( res );
-        stdout.printf( "screenshot: %s\n", screenshot );
+        var file       = File.new_for_uri( screenshot );
+        _editor.open_image( file.get_path() );
+        show();
       });
     } catch( Error e ) {
       stderr.printf( "ERROR: %s\n", e.message );
+      show();
     }
 
   }

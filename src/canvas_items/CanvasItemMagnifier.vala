@@ -201,9 +201,9 @@ public class CanvasItemMagnifier : CanvasItem {
   }
 
   /* Creates the contextual menu items */
-  protected override void add_contextual_menu_items( Box box ) {
+  protected override void add_contextual_menu_items( Box box, Popover popover ) {
 
-    add_contextual_scale( box, _( "Magnification:" ), min_zoom, max_zoom, step_zoom, _zoom_factor,
+    add_contextual_scale( box, popover, _( "Magnification:" ), min_zoom, max_zoom, step_zoom, _zoom_factor,
       (item, value) => {
         _zoom_factor = value;
         bbox_changed();
@@ -216,7 +216,7 @@ public class CanvasItemMagnifier : CanvasItem {
       }
     );
 
-    add_contextual_menuitem( box, _( "Reset Focal Point" ), null, _focus_moved, (item) => {
+    add_contextual_menuitem( box, popover, _( "Reset Focal Point" ), null, _focus_moved, (item) => {
       var old_point = new CanvasPoint.from_point( points.index( 2 ) );
       _focus_moved = false;
       bbox_changed();

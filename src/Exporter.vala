@@ -31,7 +31,7 @@ public class Exporter : Box {
   public signal void export_done();
 
   private const GLib.ActionEntry[] action_entries = {
-    { "action_export_changed", action_export_changed, "%s" },
+    { "action_export_changed", action_export_changed, "s" },
   };
 
   /* Constructor */
@@ -100,10 +100,12 @@ public class Exporter : Box {
 
     var export = _win.editor.canvas.image.exports.get_by_name( name );
 
-    _mb.label                  = export.label;
-    _stack.visible_child_name  = export.name;
-    _stack_reveal.reveal_child = export.settings_available();
-    Annotator.settings.set_string( "last-export", export.name );
+    if( export != null ) {
+      _mb.label                  = export.label;
+      _stack.visible_child_name  = export.name;
+      _stack_reveal.reveal_child = export.settings_available();
+      Annotator.settings.set_string( "last-export", export.name );
+    }
 
   }
 

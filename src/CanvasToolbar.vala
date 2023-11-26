@@ -88,7 +88,8 @@ public class CanvasToolbar : Box {
     };
 
     var mb = new MenuButton() {
-      label        = "\u25bc",
+      // label        = "\u25bc",
+      has_frame    = false,
       margin_start = 0,
       margin_end   = margin,
       tooltip_text = mb_tooltip,
@@ -96,6 +97,7 @@ public class CanvasToolbar : Box {
     };
 
     var btn = new Button() {
+      has_frame    = false,
       margin_start = margin,
       margin_end   = 0,
       tooltip_text = tooltip,
@@ -174,13 +176,15 @@ public class CanvasToolbar : Box {
 
     mb.popover.child = sw;
 
+    /*
     var btn = new Button() {
       margin_start = margin,
       margin_end   = margin,
       child        = mb
     };
+    */
 
-    append( btn );
+    append( mb );
 
   }
 
@@ -498,10 +502,11 @@ public class CanvasToolbar : Box {
     unowned CheckButton? width_group = null;
     for( int i=0; i<CanvasItemStrokeWidth.NUM; i++ ) {
       var sw  = (CanvasItemStrokeWidth)i;
-      var btn = new CheckButton() {
+      // var btn = new CheckButton() {
+      var btn = new CheckButton.with_label( sw.to_string() ) {
         margin_start = 20,
         active       = (_canvas.items.props.stroke_width == sw),
-        child        = make_width_icon( 100, sw.width() )
+// TODO        child        = make_width_icon( 100, sw.width() )
       };
       btn.set_group( width_group );
       btn.toggled.connect(() => {
@@ -528,10 +533,11 @@ public class CanvasToolbar : Box {
     unowned CheckButton? dash_group = null;
     for( int i=0; i<CanvasItemDashPattern.NUM; i++ ) {
       var dash = (CanvasItemDashPattern)i;
-      var btn  = new CheckButton() {
+      // var btn  = new CheckButton() {
+      var btn  = new CheckButton.with_label( dash.to_string() ) {
         margin_start = 20,
         active       = (_canvas.items.props.dash == dash),
-        child        = make_dash_icon( 100, dash )
+// TODO        child        = make_dash_icon( 100, dash )
       };
       btn.set_group( dash_group );
       btn.toggled.connect(() => {
@@ -598,7 +604,9 @@ public class CanvasToolbar : Box {
       return( (weight == Pango.Weight.NORMAL) && (style == Pango.Style.NORMAL) );
     });
     _font_chooser.notify.connect((p) => {
-      _canvas.items.props.font = Pango.FontDescription.from_string( _font_chooser.get_font() );
+      if( p.name == "font" ) {
+        _canvas.items.props.font = Pango.FontDescription.from_string( _font_chooser.get_font() );
+      }
     });
 
     mb.popover.child = _font_chooser;

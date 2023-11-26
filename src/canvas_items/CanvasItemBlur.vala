@@ -127,9 +127,9 @@ public class CanvasItemBlur : CanvasItem {
   }
 
   /* Adds the contextual menu item values */
-  protected override void add_contextual_menu_items( Box box ) {
+  protected override void add_contextual_menu_items( Box box, Popover popover ) {
 
-    add_contextual_scale( box, _( "Blur Amount:" ), min_blur, max_blur, step_blur, (double)blur_radius,
+    add_contextual_scale( box, popover, _( "Blur Amount:" ), min_blur, max_blur, step_blur, (double)blur_radius,
       (item, value) => {
         blur_radius = (int)value;
         canvas.queue_draw();
@@ -173,7 +173,7 @@ public class CanvasItemBlur : CanvasItem {
       buffer.exponential_blur( blur_radius );
 
       /* Draw the blurred pixbuf onto the context */
-      cairo_set_source_pixbuf( ctx, buffer.pixbuf, bbox.x, bbox.y );
+      ctx.set_source_surface( buffer.surface, bbox.x, bbox.y );
       ctx.paint();
 
     }

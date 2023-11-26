@@ -165,7 +165,7 @@ public class CanvasImage {
   /****************************************************************************/
 
   /* Handles a keypress event */
-  public bool key_pressed( uint keyval, ModifierType state ) {
+  public bool key_pressed( uint keyval, uint keycode, ModifierType state ) {
 
     switch( keyval ) {
       case Key.Return :  return( end_crop() );

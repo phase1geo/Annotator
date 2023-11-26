@@ -64,20 +64,26 @@ public class Canvas : DrawingArea {
     undo_buffer = new UndoBuffer( this );
     undo_text   = new UndoTextBuffer( this );
 
+    /* Make sure the drawing area can receive keyboard focus */
+    can_focus = true;
+    focusable = true;
     set_draw_func( on_draw );
 
     var key_controller = new EventControllerKey();
     var pri_btn_controller = new GestureClick() {
-      button = 1
+      button = Gdk.BUTTON_PRIMARY
     };
     var sec_btn_controller = new GestureClick() {
-      button = 3
+      button = Gdk.BUTTON_SECONDARY
     };
     var motion_controller = new EventControllerMotion();
+    var focus_controller = new EventControllerFocus();
 
     add_controller( key_controller );
     add_controller( pri_btn_controller );
     add_controller( sec_btn_controller );
+    add_controller( motion_controller );
+    add_controller( focus_controller );
 
     key_controller.key_pressed.connect( on_keypress );
     key_controller.key_released.connect( on_keyrelease );
@@ -85,12 +91,17 @@ public class Canvas : DrawingArea {
 
     pri_btn_controller.pressed.connect( on_primary_press );
     pri_btn_controller.released.connect( on_primary_release );
+
     sec_btn_controller.pressed.connect( on_secondary_press );
 
     motion_controller.motion.connect( on_motion );
 
-    /* Make sure the drawing area can receive keyboard focus */
-    this.can_focus = true;
+    focus_controller.enter.connect(() => {
+      stdout.printf( "Canvas received focus, contains: %s, is: %s\n", focus_controller.contains_focus.to_string(), focus_controller.is_focus.to_string() );
+    });
+    focus_controller.leave.connect(() => {
+      stdout.printf( "Canvas lost focus, contains: %s, is: %s\n", focus_controller.contains_focus.to_string(), focus_controller.is_focus.to_string() );
+    });
 
     /* Make sure that we us the IMMulticontext input method when editing text only */
     /* TODO
@@ -327,20 +338,24 @@ public class Canvas : DrawingArea {
 
     var c = (unichar)keyval;
 
+    stdout.printf( "In on_keypress, keyval: %u\n", keyval );
+
     /* If the character is printable, pass the value through the input method filter */
-    if( items.in_edit_mode() && c.isprint() ) {
+    if( items.in_edit_mode() && c.isprint() && false ) {
+      stdout.printf( "HERE A\n" );
       return( false );
       // TODO - Not sure how to deal with IM contexts
       // _im_context.filter_keypress( e );
 
     /* If we are cropping the image, pass key presses to the image */
     } else if( image.cropping ) {
-      if( image.key_pressed( keyval, state ) ) {
+      stdout.printf( "HERE B\n" );
+      if( image.key_pressed( keyval, keycode, state ) ) {
         queue_draw();
       }
 
     /* Otherwise, allow the canvas item handler to deal with it immediately */
-    } else if( items.key_pressed( keycode, state ) ) {
+    } else if( items.key_pressed( keyval, keycode, state ) ) {
       _im_context.reset();
       queue_draw();
     }
@@ -380,7 +395,8 @@ public class Canvas : DrawingArea {
     var x = scale_x( ex );
     var y = scale_y( ey );
 
-    grab_focus();
+    var retval = grab_focus();
+    stdout.printf( "Grabbing focus, retval: %s, sensitive: %s, can_focus: %s, focusable: %s\n", retval.to_string(), sensitive.to_string(), can_focus.to_string(), focusable.to_string() );
     if( image.cropping ) {
       if( image.cursor_pressed( x, y, _state, n_press ) ) {
         queue_draw();

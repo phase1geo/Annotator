@@ -142,9 +142,9 @@ public class CanvasItemStar : CanvasItem {
   }
 
   /* Adds the contextual menu items */
-  protected override void add_contextual_menu_items( Box box ) {
+  protected override void add_contextual_menu_items( Box box, Popover popover ) {
 
-    add_contextual_spinner( box, _( "Points:" ), 3, 50, 1, num_points,
+    add_contextual_spinner( box, popover, _( "Points:" ), 3, 50, 1, num_points,
       (item, value) => {
         num_points = value;
         create_points();

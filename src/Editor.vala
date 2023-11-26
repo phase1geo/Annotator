@@ -33,7 +33,7 @@ public class Editor : Box {
   /* Constructor */
   public Editor( MainWindow win ) {
 
-    Object( orientation: Orientation.VERTICAL, spacing: 0 );
+    Object( orientation: Orientation.VERTICAL, spacing: 0, can_focus: true );
 
     /* Create the canvas */
     canvas = new Canvas( win, this ) {
@@ -44,11 +44,6 @@ public class Editor : Box {
       image_loaded();
     });
 
-    /* Create the overlay that will hold the canvas so that we can add emoji support */
-    var overlay = new Overlay() {
-      child = canvas
-    };
-
     _sw = new ScrolledWindow() {
       hexpand            = true,
       vexpand            = true,
@@ -56,7 +51,7 @@ public class Editor : Box {
       min_content_height = 400,
       vscrollbar_policy  = PolicyType.AUTOMATIC,
       hscrollbar_policy  = PolicyType.AUTOMATIC,
-      child = overlay
+      child = canvas
     };
     _sw.get_style_context().add_class( Granite.STYLE_CLASS_CHECKERBOARD );
 

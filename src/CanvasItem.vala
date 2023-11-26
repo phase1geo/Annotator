@@ -347,19 +347,26 @@ public class CanvasItem {
   /****************************************************************************/
 
   /* Add contextual menu fields from the associated item */
-  public virtual void add_contextual_menu_items( Box box ) {}
+  public virtual void add_contextual_menu_items( Box box, Popover popover ) {}
 
   /* Returns a menuitem with the given label, action and (optional) keyboard shortcut */
-  public Button add_contextual_menuitem( Box box, string label, string? shortcut, bool sensitive, CanvasItemClickAction action ) {
+  public Button add_contextual_menuitem( Box box, Popover popover, string label, string? shortcut, bool sensitive, CanvasItemClickAction action ) {
 
-    var btn = new Button.with_label( label ) {
-      sensitive = sensitive
+    var lbl = new Label( label ) {
+      xalign = (float)0
+    };
+    var btn = new Button() {
+      has_frame = false,
+      halign    = Align.FILL,
+      sensitive = sensitive,
+      child     = lbl
     };
 
     // TODO - Not sure what we can do about the shortcut at this point
 
     btn.clicked.connect(() => {
       action( this );
+      popover.popdown();
     });
 
     box.append( btn );
@@ -384,7 +391,7 @@ public class CanvasItem {
 
   /* Creates a scale widget for the contextual menu */
   protected Scale add_contextual_scale(
-    Box box, string label, double min, double max, double step, double dflt,
+    Box box, Popover popover, string label, double min, double max, double step, double dflt,
     CanvasItemScaleAction   action,
     CanvasItemScaleComplete complete
   ) {
@@ -429,7 +436,7 @@ public class CanvasItem {
 
   /* Creates a scale widget for the contextual menu */
   protected SpinButton add_contextual_spinner(
-    Box box, string label, int min, int max, int step, int dflt,
+    Box box, Popover popover, string label, int min, int max, int step, int dflt,
     CanvasItemSpinnerAction   action,
     CanvasItemSpinnerComplete complete
   ) {
@@ -472,7 +479,7 @@ public class CanvasItem {
   }
 
   /* Creates a switch widget for the contextual menu */
-  protected Switch add_contextual_switch( Box box, string label, bool dflt, CanvasItemSwitchAction action ) {
+  protected Switch add_contextual_switch( Box box, Popover popover, string label, bool dflt, CanvasItemSwitchAction action ) {
 
     var lbl = new Label( label ) {
       halign     = Align.START,

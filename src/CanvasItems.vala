@@ -510,12 +510,16 @@ public class CanvasItems {
   /*****************************/
 
   /* Handles keypress events.  Returns true if the canvas should be redrawn. */
-  public bool key_pressed( uint keycode, ModifierType state ) {
+  public bool key_pressed( uint keyval, uint keycode, ModifierType state ) {
+
+    stdout.printf( "In key_pressed\n" );
 
     var control = control_state( state );
     var shift   = shift_state( state );
     KeymapKey[] ks  = {};
     uint[]      kvs = {};
+
+    stdout.printf( "keycode: %u, keyval: %u, name: %s\n", keycode, keyval, Gdk.keyval_name( keyval ) );
 
     Display.get_default().map_keycode( keycode, out ks, out kvs );
 
@@ -964,8 +968,17 @@ public class CanvasItems {
       margin_bottom = 5
     };
 
+    /* Create the popover */
+    var menu = new Popover() {
+      autohide    = true,
+      pointing_to = item.bbox.to_rectangle( _canvas.zoom_factor ),
+      position    = PositionType.RIGHT,
+      child       = box
+    };
+    menu.set_parent( _canvas );
+
     /* Add the item's contextual menu items */
-    item.add_contextual_menu_items( box );
+    item.add_contextual_menu_items( box, menu );
 
     if( !in_edit_mode() ) {
 
@@ -974,28 +987,20 @@ public class CanvasItems {
         item.add_contextual_separator( box );
       }
 
-      item.add_contextual_menuitem( box, _( "Copy" ), "<Control>c", true, do_copy );
-      item.add_contextual_menuitem( box, _( "Cut" ),  "<Control>x", true, do_cut );
+      item.add_contextual_menuitem( box, menu, _( "Copy" ), "<Control>c", true, do_copy );
+      item.add_contextual_menuitem( box, menu, _( "Cut" ),  "<Control>x", true, do_cut );
       item.add_contextual_separator( box );
-      item.add_contextual_menuitem( box, _( "Delete" ), "Delete", true, do_delete );
+      item.add_contextual_menuitem( box, menu, _( "Delete" ), "Delete", true, do_delete );
       item.add_contextual_separator( box );
-      item.add_contextual_menuitem( box, _( "Send to Front" ), null, (pos != last), do_send_to_front );
-      item.add_contextual_menuitem( box, _( "Send to Back" ),  null, (pos != 0), do_send_to_back );
+      item.add_contextual_menuitem( box, menu, _( "Send to Front" ), null, (pos != last), do_send_to_front );
+      item.add_contextual_menuitem( box, menu, _( "Send to Back" ),  null, (pos != 0), do_send_to_back );
   
       if( item.itype.category() != CanvasItemCategory.NONE ) {
         item.add_contextual_separator( box );
-        item.add_contextual_menuitem( box, _( "Save As Custom" ), null, true, do_save_custom );
+        item.add_contextual_menuitem( box, menu, _( "Save As Custom" ), null, true, do_save_custom );
       }
 
     }
-
-    /* Create the popover */
-    var menu = new Popover() {
-      pointing_to = item.bbox.to_rectangle( _canvas.zoom_factor ),
-      position    = PositionType.RIGHT,
-      child       = box
-    };
-    menu.set_parent( _canvas );
 
     /* Display the popover */
     menu.popup();
