@@ -512,14 +512,10 @@ public class CanvasItems {
   /* Handles keypress events.  Returns true if the canvas should be redrawn. */
   public bool key_pressed( uint keyval, uint keycode, ModifierType state ) {
 
-    stdout.printf( "In key_pressed\n" );
-
     var control = control_state( state );
     var shift   = shift_state( state );
     KeymapKey[] ks  = {};
     uint[]      kvs = {};
-
-    stdout.printf( "keycode: %u, keyval: %u, name: %s\n", keycode, keyval, Gdk.keyval_name( keyval ) );
 
     Display.get_default().map_keycode( keycode, out ks, out kvs );
 

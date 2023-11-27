@@ -29,11 +29,12 @@ public class Canvas : DrawingArea {
   public const double zoom_min  = 0.25;
   public const double zoom_step = 0.25;
 
-  private ImageSurface?  _surface = null;
-  private IMMulticontext _im_context;
-  private double         _last_x = 0;
-  private double         _last_y = 0;
-  private ModifierType   _state;
+  private ImageSurface?      _surface = null;
+  private EventControllerKey _key_controller;
+  private IMMulticontext     _im_context;
+  private double             _last_x = 0;
+  private double             _last_y = 0;
+  private ModifierType       _state;
 
   public MainWindow     win          { get; private set; }
   public Editor         editor       { get; private set; }
@@ -69,7 +70,7 @@ public class Canvas : DrawingArea {
     focusable = true;
     set_draw_func( on_draw );
 
-    var key_controller = new EventControllerKey();
+    _key_controller = new EventControllerKey();
     var pri_btn_controller = new GestureClick() {
       button = Gdk.BUTTON_PRIMARY
     };
@@ -77,17 +78,15 @@ public class Canvas : DrawingArea {
       button = Gdk.BUTTON_SECONDARY
     };
     var motion_controller = new EventControllerMotion();
-    var focus_controller = new EventControllerFocus();
 
-    add_controller( key_controller );
+    add_controller( _key_controller );
     add_controller( pri_btn_controller );
     add_controller( sec_btn_controller );
     add_controller( motion_controller );
-    add_controller( focus_controller );
 
-    key_controller.key_pressed.connect( on_keypress );
-    key_controller.key_released.connect( on_keyrelease );
-    key_controller.modifiers.connect( on_modifier_change );
+    _key_controller.key_pressed.connect( on_keypress );
+    _key_controller.key_released.connect( on_keyrelease );
+    _key_controller.modifiers.connect( on_modifier_change );
 
     pri_btn_controller.pressed.connect( on_primary_press );
     pri_btn_controller.released.connect( on_primary_release );
@@ -96,22 +95,15 @@ public class Canvas : DrawingArea {
 
     motion_controller.motion.connect( on_motion );
 
-    focus_controller.enter.connect(() => {
-      stdout.printf( "Canvas received focus, contains: %s, is: %s\n", focus_controller.contains_focus.to_string(), focus_controller.is_focus.to_string() );
-    });
-    focus_controller.leave.connect(() => {
-      stdout.printf( "Canvas lost focus, contains: %s, is: %s\n", focus_controller.contains_focus.to_string(), focus_controller.is_focus.to_string() );
-    });
 
     /* Make sure that we us the IMMulticontext input method when editing text only */
-    /* TODO
     _im_context = new IMMulticontext();
-    _im_context.set_client_window( this.get_window() );
+    _im_context.set_client_widget( this );
     _im_context.set_use_preedit( false );
     _im_context.commit.connect( handle_im_commit );
     _im_context.retrieve_surrounding.connect( handle_im_retrieve_surrounding );
     _im_context.delete_surrounding.connect( handle_im_delete_surrounding );
-    */
+    _key_controller.set_im_context( _im_context );
 
   }
 
@@ -338,18 +330,12 @@ public class Canvas : DrawingArea {
 
     var c = (unichar)keyval;
 
-    stdout.printf( "In on_keypress, keyval: %u\n", keyval );
-
     /* If the character is printable, pass the value through the input method filter */
     if( items.in_edit_mode() && c.isprint() && false ) {
-      stdout.printf( "HERE A\n" );
-      return( false );
-      // TODO - Not sure how to deal with IM contexts
-      // _im_context.filter_keypress( e );
+      _im_context.filter_keypress( _key_controller.get_current_event() );
 
     /* If we are cropping the image, pass key presses to the image */
     } else if( image.cropping ) {
-      stdout.printf( "HERE B\n" );
       if( image.key_pressed( keyval, keycode, state ) ) {
         queue_draw();
       }
@@ -396,7 +382,6 @@ public class Canvas : DrawingArea {
     var y = scale_y( ey );
 
     var retval = grab_focus();
-    stdout.printf( "Grabbing focus, retval: %s, sensitive: %s, can_focus: %s, focusable: %s\n", retval.to_string(), sensitive.to_string(), can_focus.to_string(), focusable.to_string() );
     if( image.cropping ) {
       if( image.cursor_pressed( x, y, _state, n_press ) ) {
         queue_draw();
