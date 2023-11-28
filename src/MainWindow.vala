@@ -237,10 +237,7 @@ public class MainWindow : Gtk.ApplicationWindow {
     box.append( export_ui );
 
     /* Copy to clipboard option */
-    var clip_btn = new Button.with_label( _( "Copy To Clipboard" ) ) {
-      halign = Align.START,
-      has_frame = false
-    };
+    var clip_btn = Utils.make_menu_item( _( "Copy To Clipboard" ) );
     clip_btn.clicked.connect(() => {
       _editor.canvas.image.export_clipboard();
       popover.popdown();
@@ -248,10 +245,7 @@ public class MainWindow : Gtk.ApplicationWindow {
     box.append( clip_btn );
 
     /* Print option */
-    var print_btn = new Button.with_label( _( "Print…" ) ) {
-      halign = Align.START,
-      has_frame = false
-    };
+    var print_btn = Utils.make_menu_item( _( "Print…" ) );
     print_btn.clicked.connect(() => {
       do_print();
       popover.popdown();
@@ -500,6 +494,8 @@ public class MainWindow : Gtk.ApplicationWindow {
         var screenshot = portal.take_screenshot.end( res );
         var file       = File.new_for_uri( screenshot );
         _editor.open_image( file.get_path() );
+        _zoom_btn.set_sensitive( true );
+        _export_btn.set_sensitive( true );
         show();
       });
     } catch( Error e ) {

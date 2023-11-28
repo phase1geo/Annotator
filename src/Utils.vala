@@ -197,6 +197,19 @@ public class Utils {
     return( child );
   }
 
+  /* Creates a menu item for a popover */
+  public static Button make_menu_item( string label ) {
+    var lbl = new Label( label ) {
+      xalign = (float)0
+    };
+    var btn = new Button() {
+      halign = Align.FILL,
+      has_frame = false,
+      child = lbl
+    };
+    return( btn );
+  }
+
   /*
    Returns true if the following key was found to be pressed (regardless of
    keyboard layout).

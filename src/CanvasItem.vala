@@ -352,15 +352,8 @@ public class CanvasItem {
   /* Returns a menuitem with the given label, action and (optional) keyboard shortcut */
   public Button add_contextual_menuitem( Box box, Popover popover, string label, string? shortcut, bool sensitive, CanvasItemClickAction action ) {
 
-    var lbl = new Label( label ) {
-      xalign = (float)0
-    };
-    var btn = new Button() {
-      has_frame = false,
-      halign    = Align.FILL,
-      sensitive = sensitive,
-      child     = lbl
-    };
+    var btn = Utils.make_menu_item( label );
+    btn.sensitive = sensitive;
 
     // TODO - Not sure what we can do about the shortcut at this point
 
