@@ -57,7 +57,8 @@ public class Editor : Box {
 
     /* Create the toolbar */
     var toolbar = new CanvasToolbar( canvas ) {
-      halign = Align.CENTER
+      halign = Align.CENTER,
+      hexpand = true
     };
     canvas.image.crop_started.connect(() => {
       _sw.vscrollbar_policy = PolicyType.EXTERNAL;
