@@ -153,6 +153,8 @@ public class CanvasItems {
   private int                  _press_count    = -1;
   private FormatBar?           _format_bar     = null;
   private Cursor               _xterm_cursor   = new Cursor.from_name( "text", null );
+  private bool                 _control_set    = false;
+  private bool                 _shift_set      = false;
 
   private const GLib.ActionEntry[] action_entries = {
     { "action_copy",          action_copy },
@@ -550,6 +552,7 @@ public class CanvasItems {
     else if( !shift && Utils.has_key( kvs, Key.m ) ) { add_shape_item( CanvasItemType.MAGNIFIER );    return( true ); }
     else if( !shift && Utils.has_key( kvs, Key.p ) ) { add_shape_item( CanvasItemType.PENCIL );       return( true ); }
     else if( !shift && Utils.has_key( kvs, Key.q ) ) { add_shape_item( CanvasItemType.SEQUENCE );     return( true ); }
+    else if( !shift && Utils.has_key( kvs, Key.Shift_L ) ) { return( handle_shift() ); }
     else if( !shift && Utils.has_key( kvs, Key.Control_L ) ) { return( handle_control() ); }
 
     return( false );
@@ -663,6 +666,7 @@ public class CanvasItems {
 
   /* Handles the control key */
   private bool handle_control() {
+    _control_set = true;
     foreach( CanvasItem item in _items ) {
       if( item.is_within( _last_x, _last_y ) ) {
         _canvas.set_cursor_from_name( "copy" );
@@ -672,16 +676,23 @@ public class CanvasItems {
     return( false );
   }
 
+  private bool handle_shift() {
+    _shift_set = true;
+    return( false );
+  }
+
   /* Handles key release events.  Returns true if the canvas should be redrawn. */
   public bool key_released( uint keyval, ModifierType state ) {
     switch( keyval ) {
       case Key.Control_L :  return( handle_release_control() );
+      case Key.Shift_L   :  return( handle_release_shift() );
     }
     return( false );
   }
 
   /* Called when the control key is released */
   private bool handle_release_control() {
+    _control_set = false;
     foreach( CanvasItem item in _items ) {
       if( item.is_within( _last_x, _last_y ) ) {
         _canvas.set_cursor_from_name( "grabbing" );
@@ -689,6 +700,11 @@ public class CanvasItems {
       }
     }
     _canvas.set_cursor( null );
+    return( false );
+  }
+
+  private bool handle_release_shift() {
+    _shift_set = false;
     return( false );
   }
 
@@ -700,10 +716,9 @@ public class CanvasItems {
    Called whenever the cursor is pressed.  Returns true if the canvas should
    draw itself.
   */
-  public bool cursor_pressed( double x, double y, ModifierType state, int press_count ) {
+  public bool cursor_pressed( double x, double y, int press_count ) {
 
     var retval  = false;
-    var control = control_state( state );
 
     /* Keep track of the press count */
     _press_count = press_count;
@@ -742,7 +757,7 @@ public class CanvasItems {
             case 2 :  text.set_cursor_at_word( x, y, false );  break;
             case 3 :  text.set_cursor_all( false );            break;
           }
-        } else if( control && (press_count == 1) ) {  // Make a duplicate of the clicked on item
+        } else if( _control_set && (press_count == 1) ) {  // Make a duplicate of the clicked on item
           _active = item.duplicate();
           _active.mode = CanvasItemMode.SELECTED;
           _canvas.set_cursor_from_name( "grabbing" );
@@ -786,19 +801,17 @@ public class CanvasItems {
    Called whenever the cursor is moved.  Returns true if the canvas should draw
    itself.
   */
-  public bool cursor_moved( double x, double y, ModifierType state ) {
+  public bool cursor_moved( double x, double y ) {
 
     var diff_x  = x - _last_x;
     var diff_y  = y - _last_y;
-    var control = control_state( state );
-    var shift   = shift_state( state );
 
     _last_x = x;
     _last_y = y;
 
     /* Since we pressed on a selector, move the selector */
     if( _selector_index != -1 ) {
-      _active.move_selector( _selector_index, diff_x, diff_y, shift );
+      _active.move_selector( _selector_index, diff_x, diff_y, _shift_set );
       return( true );
 
     /* If we are in edit mode, drag out the selection */
@@ -847,7 +860,7 @@ public class CanvasItems {
       _canvas.set_tooltip_text( null );
       foreach( CanvasItem item in _items ) {
         if( item.is_within( x, y ) ) {
-          if( control ) {
+          if( _control_set ) {
             _canvas.set_cursor_from_name( "copy" );
           } else {
             _canvas.set_cursor_from_name( "grab" );
@@ -866,7 +879,7 @@ public class CanvasItems {
    Called whenever the cursor button is released.  Returns true if the canvas
    should draw itself.
   */
-  public bool cursor_released( double x, double y, ModifierType state ) {
+  public bool cursor_released( double x, double y ) {
 
     var retval = false;
 

@@ -181,7 +181,7 @@ public class CanvasImage {
   /****************************************************************************/
 
   /* Handles a cursor press event */
-  public bool cursor_pressed( double x, double y, ModifierType state, int press_count ) {
+  public bool cursor_pressed( double x, double y, int press_count ) {
 
     var rect = new CanvasRect();
 
@@ -210,7 +210,7 @@ public class CanvasImage {
   }
 
   /* Handles a cursor motion event */
-  public bool cursor_moved( double x, double y, ModifierType state ) {
+  public bool cursor_moved( double x, double y ) {
 
     var diffx = x - _last_x;
     var diffy = y - _last_y;
@@ -272,7 +272,7 @@ public class CanvasImage {
   }
 
   /* Handles a cursor release event */
-  public bool cursor_released( double x, double y, ModifierType state ) {
+  public bool cursor_released( double x, double y ) {
 
     _crop_index = -2;
     _canvas.set_cursor( null );

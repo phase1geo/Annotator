@@ -34,7 +34,6 @@ public class Canvas : DrawingArea {
   private IMMulticontext     _im_context;
   private double             _last_x = 0;
   private double             _last_y = 0;
-  private ModifierType       _state;
 
   public MainWindow     win          { get; private set; }
   public Editor         editor       { get; private set; }
@@ -86,7 +85,6 @@ public class Canvas : DrawingArea {
 
     _key_controller.key_pressed.connect( on_keypress );
     _key_controller.key_released.connect( on_keyrelease );
-    _key_controller.modifiers.connect( on_modifier_change );
 
     pri_btn_controller.pressed.connect( on_primary_press );
     pri_btn_controller.released.connect( on_primary_release );
@@ -362,12 +360,6 @@ public class Canvas : DrawingArea {
 
   }
 
-  /* Called whenever the modifier state changes */
-  private bool on_modifier_change( ModifierType state ) {
-    _state = state;
-    return( true );
-  }
-
   /* Displays the contextual menu (if any) for the currently selected item */
   public void show_contextual_menu() {
     if( !image.cropping ) {
@@ -383,10 +375,10 @@ public class Canvas : DrawingArea {
 
     var retval = grab_focus();
     if( image.cropping ) {
-      if( image.cursor_pressed( x, y, _state, n_press ) ) {
+      if( image.cursor_pressed( x, y, n_press ) ) {
         queue_draw();
       }
-    } else if( items.cursor_pressed( x, y, _state, n_press ) ) {
+    } else if( items.cursor_pressed( x, y, n_press ) ) {
       queue_draw();
     }
 
@@ -407,10 +399,10 @@ public class Canvas : DrawingArea {
     _last_y = y;
 
     if( image.cropping ) {
-      if( image.cursor_moved( x, y, _state ) ) {
+      if( image.cursor_moved( x, y ) ) {
         queue_draw();
       }
-    } else if( items.cursor_moved( x, y, _state ) ) {
+    } else if( items.cursor_moved( x, y ) ) {
       queue_draw();
     }
 
@@ -423,10 +415,10 @@ public class Canvas : DrawingArea {
     var y = scale_y( ey );
 
     if( image.cropping ) {
-      if( image.cursor_released( x, y, _state ) ) {
+      if( image.cursor_released( x, y ) ) {
         queue_draw();
       }
-    } else if( items.cursor_released( x, y, _state ) ) {
+    } else if( items.cursor_released( x, y ) ) {
       queue_draw();
     }
 
