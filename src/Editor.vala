@@ -45,6 +45,8 @@ public class Editor : Box {
     });
 
     _sw = new ScrolledWindow() {
+      halign             = Align.FILL,
+      valign             = Align.FILL,
       hexpand            = true,
       vexpand            = true,
       min_content_width  = 600,
