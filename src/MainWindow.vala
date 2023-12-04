@@ -22,9 +22,8 @@
 using Gtk;
 using Gee;
 
-public class MainWindow : Hdy.ApplicationWindow {
+public class MainWindow : Gtk.ApplicationWindow {
 
-  private Hdy.HeaderBar     _header;
   private FontButton        _font;
   private Button            _open_btn;
   private Button            _screenshot_btn;
@@ -41,10 +40,7 @@ public class MainWindow : Hdy.ApplicationWindow {
 
   private const GLib.ActionEntry[] action_entries = {
     { "action_open",            do_open },
-    { "action_screenshot",      do_screenshot_menu },
-    { "action_screenshot_all",  do_screenshot_all },
-    { "action_screenshot_win",  do_screenshot_win },
-    { "action_screenshot_area", do_screenshot_area },
+    { "action_screenshot",      do_screenshot },
     { "action_save",            do_save },
     { "action_quit",            do_quit },
     { "action_undo",            do_undo },
@@ -63,7 +59,6 @@ public class MainWindow : Hdy.ApplicationWindow {
   };
 
   private bool on_elementary = Gtk.Settings.get_default().gtk_icon_theme_name == "elementary";
-  private bool can_do_screenshots = ScreenshotBackend.can_do_screenshots();
   public Editor editor {
     get {
       return( _editor );
@@ -78,15 +73,14 @@ public class MainWindow : Hdy.ApplicationWindow {
     /* Add the application CSS */
     var provider = new Gtk.CssProvider ();
     provider.load_from_resource( "/com/github/phase1geo/annotator/css/style.css" );
-    StyleContext.add_provider_for_screen( Gdk.Screen.get_default(), provider, STYLE_PROVIDER_PRIORITY_APPLICATION );
+    StyleContext.add_provider_for_display( get_display(), provider, STYLE_PROVIDER_PRIORITY_APPLICATION );
 
     var box = new Box( Orientation.HORIZONTAL, 0 );
 
     /* Handle any changes to the dark mode preference setting */
     handle_prefer_dark_changes();
 
-    /* Position the window size and position */
-    position_window();
+    can_focus = true;
 
     /* Create editor */
     create_editor( box );
@@ -94,12 +88,8 @@ public class MainWindow : Hdy.ApplicationWindow {
     /* Create the header */
     create_header();
 
-    var top_box = new Box( Orientation.VERTICAL, 0 );
-    top_box.pack_start( _header, false, true, 0 );
-    top_box.pack_start( box, true, true, 0 );
-
-    add( top_box );
-    show_all();
+    child = box;
+    show();
 
     /* Set the stage for menu actions */
     var actions = new SimpleActionGroup ();
@@ -112,16 +102,9 @@ public class MainWindow : Hdy.ApplicationWindow {
     /* Gather the image filters */
     gather_image_filters();
 
-    /* Handle the application closing */
-    destroy.connect( Gtk.main_quit );
-
     /* Load the exports */
     _editor.canvas.image.exports.load();
 
-  }
-
-  static construct {
-    Hdy.init();
   }
 
   /* Returns the name of the icon to use for a headerbar icon */
@@ -129,20 +112,10 @@ public class MainWindow : Hdy.ApplicationWindow {
     return( "%s%s".printf( icon_name, (on_elementary ? "" : "-symbolic") ) );
   }
 
-  /* Returns the size of the icon to use for a headerbar icon */
-  private IconSize get_icon_size() {
-    return( on_elementary ? IconSize.LARGE_TOOLBAR : IconSize.SMALL_TOOLBAR );
-  }
-
   /* Adds keyboard shortcuts for the menu actions */
   private void add_keyboard_shortcuts( Gtk.Application app ) {
     app.set_accels_for_action( "win.action_open",            { "<Control>o" } );
-    if (can_do_screenshots) {
-      app.set_accels_for_action( "win.action_screenshot",      { "<Control>t" } );
-      app.set_accels_for_action( "win.action_screenshot_all",  { "<Control>1" } );
-      app.set_accels_for_action( "win.action_screenshot_win",  { "<Control>2" } );
-      app.set_accels_for_action( "win.action_screenshot_area", { "<Control>3" } );
-    }
+    app.set_accels_for_action( "win.action_screenshot",      { "<Control>t" } );
     app.set_accels_for_action( "win.action_save",            { "<Control>s" } );
     app.set_accels_for_action( "win.action_quit",            { "<Control>q" } );
     app.set_accels_for_action( "win.action_undo",            { "<Control>z" } );
@@ -171,105 +144,74 @@ public class MainWindow : Hdy.ApplicationWindow {
     });
   }
 
-  /* Positions the window based on the settings */
-  private void position_window() {
-
-    var window_x = Annotator.settings.get_int( "window-x" );
-    var window_y = Annotator.settings.get_int( "window-y" );
-    var window_w = Annotator.settings.get_int( "window-w" );
-    var window_h = Annotator.settings.get_int( "window-h" );
-
-    /* Set the main window data */
-    if( (window_x == -1) && (window_y == -1) ) {
-      set_position( Gtk.WindowPosition.CENTER );
-    } else {
-      move( window_x, window_y );
-    }
-    set_default_size( window_w, window_h );
-
-  }
-
   /* Create the header bar */
   private void create_header() {
 
-    _header = new Hdy.HeaderBar();
-    _header.set_show_close_button( true );
+    var header = new HeaderBar() {
+      show_title_buttons = true,
+      title_widget = new Gtk.Label( _( "Annotator" ) )
+    };
+    set_titlebar( header );
 
-    _open_btn = new Button.from_icon_name( get_icon_name( "document-open" ), get_icon_size() );
-    _open_btn.set_tooltip_markup( Utils.tooltip_with_accel( _( "Open Image" ), "<Control>o" ) );
+    _open_btn = new Button.from_icon_name( get_icon_name( "document-open" ) ) {
+      tooltip_markup = Utils.tooltip_with_accel( _( "Open Image" ), "<Control>o" )
+    };
     _open_btn.clicked.connect( do_open );
-    _header.pack_start( _open_btn );
+    header.pack_start( _open_btn );
 
-    
-    if (can_do_screenshots) {
-      _screenshot_btn = new Button.from_icon_name( get_icon_name( "insert-image" ), get_icon_size() );
-      _screenshot_btn.set_tooltip_markup( Utils.tooltip_with_accel( _( "Take Screeshot" ), "<Control>t" ) );
-      _screenshot_btn.clicked.connect(() => {
-        show_screenshot_popover( _screenshot_btn );
-      });
-      _header.pack_start( _screenshot_btn );
-    }
+    _screenshot_btn = new Button.from_icon_name( get_icon_name( "insert-image" ) ) {
+      tooltip_markup = Utils.tooltip_with_accel( _( "Take Screeshot" ), "<Control>t" )
+    };
+    _screenshot_btn.clicked.connect( do_screenshot );
+    header.pack_start( _screenshot_btn );
 
-    /*
-    _save_btn = new Button.from_icon_name( get_icon_name( "document-save" ), get_icon_size() );
-    _save_btn.set_tooltip_markup( Utils.tooltip_with_accel( _( "Save File" ), "<Control>s" ) );
-    _save_btn.clicked.connect( do_save );
-    _header.pack_start( _save_btn );
-
-    _paste_btn = new Button.from_icon_name( get_icon_name( "edit-paste" ), get_icon_size() );
-    _paste_btn.set_tooltip_markup( Utils.tooltip_with_accel( _( "Paste Over" ), "<Shift><Control>v" ) );
-    _paste_btn.clicked.connect( do_paste_over );
-    _header.pack_start( _paste_btn );
-
-    _copy_btn = new Button.from_icon_name( get_icon_name( "edit-copy" ), get_icon_size() );
-    _copy_btn.set_tooltip_markup( Utils.tooltip_with_accel( _( "Copy All" ), "<Shift><Control>c" ) );
-    _copy_btn.clicked.connect( do_copy_all );
-    _header.pack_start( _copy_btn );
-    */
-
-    _undo_btn = new Button.from_icon_name( get_icon_name( "edit-undo" ), get_icon_size() );
-    _undo_btn.set_tooltip_markup( Utils.tooltip_with_accel( _( "Undo" ), "<Control>z" ) );
-    _undo_btn.set_sensitive( false );
+    _undo_btn = new Button.from_icon_name( get_icon_name( "edit-undo" ) ) {
+      tooltip_markup = Utils.tooltip_with_accel( _( "Undo" ), "<Control>z" ),
+      sensitive = false
+    };
     _undo_btn.clicked.connect( do_undo );
-    _header.pack_start( _undo_btn );
+    header.pack_start( _undo_btn );
 
-    _redo_btn = new Button.from_icon_name( get_icon_name( "edit-redo" ), get_icon_size() );
-    _redo_btn.set_tooltip_markup( Utils.tooltip_with_accel( _( "Redo" ), "<Control><Shift>z" ) );
-    _redo_btn.set_sensitive( false );
+    _redo_btn = new Button.from_icon_name( get_icon_name( "edit-redo" ) ) {
+      tooltip_markup = Utils.tooltip_with_accel( _( "Redo" ), "<Control><Shift>z" ),
+      sensitive = false
+    };
     _redo_btn.clicked.connect( do_redo );
-    _header.pack_start( _redo_btn );
+    header.pack_start( _redo_btn );
 
     _pref_btn = create_preferences();
-    _header.pack_end( _pref_btn );
+    header.pack_end( _pref_btn );
 
     _export_btn = create_exports();
-    _header.pack_end( _export_btn );
+    header.pack_end( _export_btn );
 
     _zoom_btn = create_zoom();
-    _header.pack_end( _zoom_btn );
-
-    set_title( _( "Annotator" ) );
+    header.pack_end( _zoom_btn );
 
   }
 
   private MenuButton create_preferences() {
 
-    var pref_btn = new MenuButton();
-    pref_btn.image = new Image.from_icon_name( get_icon_name( "open-menu" ), get_icon_size() );
-    pref_btn.set_tooltip_text( _( "Properties" ) );
-    pref_btn.popover = new Popover( null );
+    var pref_btn = new MenuButton() {
+      has_frame    = false,
+      child        = new Image.from_icon_name( get_icon_name( "open-menu" ) ),
+      tooltip_text = _( "Properties" ),
+      popover      = new Popover()
+    };
 
     var box = new Box( Orientation.VERTICAL, 0 );
 
-    var shortcuts = new ModelButton();
-    shortcuts.get_child().destroy();
-    shortcuts.add( new Granite.AccelLabel( _( "Shortcuts Cheatsheet" ), "<Control>question" ) );
-    shortcuts.action_name = "win.action_shortcuts";
+    var shortcuts = new Button.with_label( _( "Shortcuts Cheatsheet" ) ) {
+      has_frame = false
+    };
+    shortcuts.clicked.connect(() => {
+      do_shortcuts();
+      pref_btn.popover.popdown();
+    });
 
-    box.pack_start( shortcuts );
+    box.append( shortcuts );
 
-    box.show_all();
-    pref_btn.popover.add( box );
+    pref_btn.popover.child = box;
 
     return( pref_btn );
 
@@ -278,40 +220,45 @@ public class MainWindow : Hdy.ApplicationWindow {
   /* Create the exports menubutton and associated menu */
   private MenuButton create_exports() {
 
-    var export_btn = new MenuButton();
-    export_btn.image   = new Image.from_icon_name( (on_elementary ? "document-export" : "document-send-symbolic"), get_icon_size() );
-    export_btn.set_tooltip_text( _( "Export Image" ) );
-    export_btn.popover = new Popover( null );
-    export_btn.set_sensitive( false );
+    var box = new Box( Orientation.VERTICAL, 0 ) {
+      margin_start  = 5,
+      margin_end    = 5,
+      margin_top    = 5,
+      margin_bottom = 5
+    };
 
-    var box = new Box( Orientation.VERTICAL, 0 );
-    box.margin = 5;
+    var popover = new Popover() {
+      autohide = true,
+      child    = box
+    };
 
     /* Add the export UI */
     var export_ui = new Exporter( this );
-    box.pack_start( export_ui, false, false, 0 );
+    box.append( export_ui );
 
     /* Copy to clipboard option */
-    var clip_btn = new ModelButton();
-    clip_btn.halign = Align.START;
-    clip_btn.text   = _( "Copy To Clipboard" );
+    var clip_btn = Utils.make_menu_item( _( "Copy To Clipboard" ) );
     clip_btn.clicked.connect(() => {
       _editor.canvas.image.export_clipboard();
+      popover.popdown();
     });
-    box.pack_start( clip_btn );
+    box.append( clip_btn );
 
     /* Print option */
-    var print_btn = new ModelButton();
-    print_btn.get_child().destroy();
-    print_btn.add( new Granite.AccelLabel( _( "Print…" ), "<Control>p" ) );
-    print_btn.action_name = "win.action_print";
+    var print_btn = Utils.make_menu_item( _( "Print…" ) );
     print_btn.clicked.connect(() => {
-      _editor.canvas.image.export_print();
+      do_print();
+      popover.popdown();
     });
-    box.pack_start( print_btn );
+    box.append( print_btn );
 
-    box.show_all();
-    export_btn.popover.add( box );
+    var export_btn = new MenuButton() {
+      has_frame    = false,
+      child        = new Image.from_icon_name( (on_elementary ? "document-export" : "document-send-symbolic") ),
+      sensitive    = false,
+      tooltip_text = _( "Export Image" ),
+      popover      = popover
+    };
 
     return( export_btn );
 
@@ -320,31 +267,41 @@ public class MainWindow : Hdy.ApplicationWindow {
   /* Creates the zoom menu */
   private MenuButton create_zoom() {
 
-    /* Add the button */
-    var zoom_btn = new MenuButton();
-    zoom_btn.set_image( new Image.from_icon_name( get_icon_name( "zoom-fit-best" ), get_icon_size() ) );
-    zoom_btn.set_tooltip_text( _( "Zoom (%d%%)" ).printf( 100 ) );
-    zoom_btn.popover = new Popover( null );
-    zoom_btn.set_sensitive( false );
+    var box = new Box( Orientation.VERTICAL, 0 );
 
-    _zoom = new ZoomWidget( (int)(_editor.canvas.zoom_min * 100), (int)(_editor.canvas.zoom_max * 100), (int)(_editor.canvas.zoom_step * 100) );
-    _zoom.margin = 10;
+    var popover = new Popover() {
+      autohide = true,
+      child = box
+    };
+
+    /* Add the button */
+    var zoom_btn = new MenuButton() {
+      has_frame    = false,
+      icon_name    = get_icon_name( "zoom-fit-best" ),
+      tooltip_text = _( "Zoom (%d%%)" ).printf( 100 ),
+      sensitive    = false,
+      popover      = popover
+    };
+
+    _zoom = new ZoomWidget( (int)(_editor.canvas.zoom_min * 100), (int)(_editor.canvas.zoom_max * 100), (int)(_editor.canvas.zoom_step * 100) ) {
+      margin_start  = 10,
+      margin_end    = 10,
+      margin_top    = 10,
+      margin_bottom = 10
+    };
     _zoom.zoom_changed.connect((factor) => {
       _editor.canvas.zoom_set( factor );
     });
 
-    var zoom_fit = new ModelButton();
-    zoom_fit.get_child().destroy();
-    zoom_fit.add( new Granite.AccelLabel( _( "Zoom to Fit Window" ), "<Control>1" ) );
-    zoom_fit.action_name = "win.action_zoom_fit";
+    var zoom_fit = new Button.with_label( _( "Zoom to Fit Window" ) ) {
+      has_frame = false,
+      action_name = "win.action_zoom_fit"
+    };
 
-    var box = new Box( Orientation.VERTICAL, 0 );
-    box.pack_start( _zoom,    false, false );
-    box.pack_start( zoom_fit, false, false );
+    box.append( _zoom );
+    box.append( zoom_fit );
 
-    box.show_all();
-
-    zoom_btn.popover.add( box );
+    zoom_btn.popover.child = box;
 
     return( zoom_btn );
 
@@ -353,23 +310,22 @@ public class MainWindow : Hdy.ApplicationWindow {
   private void create_editor( Box box ) {
 
     /* Create the welcome screen */
-    var welcome = new Granite.Widgets.Welcome( _( "Welcome to Annotator" ), _( "Let's get started annotating an image" ) );
-    welcome.append( "document-open", _( "Open Image From File" ), _( "Open a PNG, JPEG, TIFF or BMP file" ) );
-    welcome.append( "edit-paste", _( "Paste Image From Clipboard" ), _( "Open an image from the clipboard" ) );
-    if (can_do_screenshots) {
-      welcome.append( "insert-image", _( "Take A Screenshot" ), _( "Open an image from a screenshot" ) );
-    }
-    welcome.activated.connect((index) => {
-      switch( index ) {
-        case 0  :  do_open();   break;
-        case 1  :  do_paste();  break;
-        case 2  :  
-          if (can_do_screenshots) {
-            show_screenshot_popover( welcome.get_button_from_index( 2 ) );  
-          }
-          break;
-        default :  assert_not_reached();
-      }
+    var welcome = new Granite.Placeholder( _( "Welcome to Annotator" ) ) {
+      description = _( "Let's get started annotating an image" )
+    };
+
+    var open = welcome.append_button( new ThemedIcon( "document-open" ), _( "Open Image From File" ), _( "Open a PNG, JPEG, TIFF or BMP file" ) );
+    open.clicked.connect( do_open );
+
+    var paste = welcome.append_button( new ThemedIcon( "edit-paste" ), _( "Paste Image From Clipboard" ), _( "Open an image from the clipboard" ) );
+    paste.clicked.connect( do_paste );
+
+    var screenshot = welcome.append_button( new ThemedIcon( "insert-image" ), _( "Take A Screenshot" ), _( "Open an image from a screenshot" ) );
+    screenshot.clicked.connect( do_screenshot );
+
+    /* Initialize the clipboard */
+    AnnotatorClipboard.get_clipboard().changed.connect(() => {
+      paste.sensitive = AnnotatorClipboard.image_pasteable();
     });
 
     /* Create the editor */
@@ -382,13 +338,13 @@ public class MainWindow : Hdy.ApplicationWindow {
     _editor.canvas.zoom_changed.connect( do_zoom_changed );
 
     /* Add the elements to the stack */
-    _stack = new Stack();
-    _stack.transition_type = StackTransitionType.NONE;
+    _stack = new Stack() {
+      transition_type = StackTransitionType.NONE
+    };
     _stack.add_named( welcome, "welcome" );
     _stack.add_named( _editor,  "editor" );
 
-    box.pack_start( _stack, true, true, 0 );
-    box.show_all();
+    box.append( _stack );
 
     _stack.visible_child_name = "welcome";
 
@@ -397,11 +353,15 @@ public class MainWindow : Hdy.ApplicationWindow {
   /* Create font selection box */
   private Box create_font_selection() {
 
-    var box = new Box( Orientation.HORIZONTAL, 0 );
-    var lbl = new Label( _( "Font:" ) );
+    var box = new Box( Orientation.HORIZONTAL, 10 );
+    var lbl = new Label( _( "Font:" ) ) {
+      halign = Align.START
+    };
 
-    _font = new FontButton();
-    _font.show_style = false;
+    _font = new FontButton() {
+      halign  = Align.END,
+      hexpand = true
+    };
     _font.set_filter_func( (family, face) => {
       var fd     = face.describe();
       var weight = fd.get_weight();
@@ -422,8 +382,8 @@ public class MainWindow : Hdy.ApplicationWindow {
     fd.set_size( Annotator.settings.get_int( "default-font-size" ) * Pango.SCALE );
     _font.set_font_desc( fd );
 
-    box.pack_start( lbl,   false, false, 10 );
-    box.pack_end(   _font, false, false, 10 );
+    box.append( lbl );
+    box.append( _font );
 
     return( box );
 
@@ -461,7 +421,7 @@ public class MainWindow : Hdy.ApplicationWindow {
   private void do_open() {
 
     /* Get the file to open from the user */
-    var dialog   = new FileChooserNative( _( "Open Image File" ), this, FileChooserAction.OPEN, _( "Open" ), _( "Cancel" ) );
+    var dialog = new FileChooserNative( _( "Open Image File" ), this, FileChooserAction.OPEN, _( "Open" ), _( "Cancel" ) );
     Utils.set_chooser_folder( dialog );
 
     /* Create file filters for each supported format */
@@ -469,11 +429,16 @@ public class MainWindow : Hdy.ApplicationWindow {
       dialog.add_filter( filter );
     }
 
-    if( dialog.run() == ResponseType.ACCEPT ) {
-      var filename = dialog.get_filename();
-      open_file( filename );
-      Utils.store_chooser_folder( filename );
-    }
+    dialog.response.connect((id) => {
+      if( id == ResponseType.ACCEPT ) {
+        var filename = dialog.get_file().get_path();
+        open_file( filename );
+        Utils.store_chooser_folder( filename );
+      }
+      dialog.destroy();
+    });
+
+    dialog.show();
 
   }
 
@@ -522,108 +487,26 @@ public class MainWindow : Hdy.ApplicationWindow {
     _export_btn.set_sensitive( true );
   }
 
-  /* Returns the capture mode as determined by the user */
-  private void show_screenshot_popover( Widget parent ) {
+  public void do_screenshot() {
 
-    var box = new Box( Orientation.VERTICAL, 10 );
-    box.margin = 10;
+    var portal = new Xdp.Portal();
+    var parent = Xdp.parent_new_gtk( this );
 
-    var popover = new Popover( parent );
+    hide();
 
-    for( int i=0; i<CaptureType.NUM; i++ ) {
-      var mode = (CaptureType)i;
-      var btn  = new ModelButton();
-      btn.get_child().destroy();
-      btn.add( new Granite.AccelLabel( mode.label(), "<Control>%d".printf( i + 1 ) ) );
-      btn.clicked.connect(() => {
-        do_screenshot( mode, false );
-        popover.popdown();
-      });
-      box.pack_start( btn, false, false, 0 );
-    }
-
-    var delay    = new Label( _( "Delay (in seconds)" ) + ":" );
-    var delay_sb = new SpinButton.with_range( 0, 6, 1 );
-    delay_sb.value = Annotator.settings.get_int( "screenshot-delay" );
-    delay_sb.value_changed.connect(() => {
-      Annotator.settings.set_int( "screenshot-delay", (int)delay_sb.value );
-    });
-
-    var dbox = new Box( Orientation.HORIZONTAL, 10 );
-    dbox.pack_start( delay,    false, false, 0 );
-    dbox.pack_start( delay_sb, false, false, 0 );
-
-    var include = new Label( _( "Include Annotator window" ) + ":" );
-    var include_sw = new Switch();
-    include_sw.active = Annotator.settings.get_boolean( "screenshot-include-win" );
-    include_sw.state_set.connect((value) => {
-      Annotator.settings.set_boolean( "screenshot-include-win", value );
-      return( true );
-    });
-
-    var sbox = new Box( Orientation.HORIZONTAL,  10 );
-    sbox.pack_start( include,    false, false, 0 );
-    sbox.pack_start( include_sw, false, false, 0 );
-
-    box.pack_start( new Separator( Orientation.HORIZONTAL ), false, true, 0 );
-    box.pack_start( dbox, false, true, 0 );
-    box.pack_start( sbox, false, true, 0 );
-    box.show_all();
-
-    popover.add( box );
-    popover.position = PositionType.BOTTOM;
-    Utils.show_popover( popover );
-
-  }
-
-  private void do_screenshot_menu() {
-    show_screenshot_popover( _screenshot_btn );
-  }
-
-  private void do_screenshot_all() {
-    do_screenshot( CaptureType.SCREEN, false );
-  }
-
-  private void do_screenshot_win() {
-    do_screenshot( CaptureType.CURRENT_WINDOW, false );
-  }
-
-  private void do_screenshot_area() {
-    do_screenshot( CaptureType.AREA, false );
-  }
-
-  public void do_screenshot( CaptureType capture_mode, bool use_params, int param_delay = 0, bool param_include_win = false ) {
-
-    /* If we aren't capturing anything, end now */
-    if( capture_mode == CaptureType.NONE ) return;
-
-    var backend = new ScreenshotBackend();
-    var delay   = use_params ? param_delay       : Annotator.settings.get_int( "screenshot-delay" );
-    var include = use_params ? param_include_win : Annotator.settings.get_boolean( "screenshot-include-win" );
-
-    /* Hide the application */
-    if( !include ) {
-      hide();
-    }
-
-    backend.capture.begin (capture_mode, delay, false, false /* redact */, (obj, res) => {
-      Gdk.Pixbuf? pixbuf = null;
-      try {
-        pixbuf = backend.capture.end (res);
-      } catch (GLib.IOError.CANCELLED e) {
-        // TBD
-      } catch (Error e) {
-        // TBD
-      }
-      if (pixbuf != null) {
-        _editor.paste_image( pixbuf, false );
+    try {
+      portal.take_screenshot.begin( parent, Xdp.ScreenshotFlags.INTERACTIVE, null, (obj, res) => {
+        var screenshot = portal.take_screenshot.end( res );
+        var file       = File.new_for_uri( screenshot );
+        _editor.open_image( file.get_path() );
         _zoom_btn.set_sensitive( true );
         _export_btn.set_sensitive( true );
-      }
-      if( !include ) {
         show();
-      }
-    });
+      });
+    } catch( Error e ) {
+      stderr.printf( "ERROR: %s\n", e.message );
+      show();
+    }
 
   }
 

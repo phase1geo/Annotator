@@ -36,6 +36,7 @@ public class CanvasItemMagnifier : CanvasItem {
   private CanvasPoint _press0      = new CanvasPoint();
   private CanvasPoint _press2      = new CanvasPoint();
   private bool        _focus_moved = false;
+  private Cursor[]    _sel_cursors;
 
   public double zoom_factor {
     get {
@@ -60,6 +61,10 @@ public class CanvasItemMagnifier : CanvasItem {
     _image       = canvas.image;
     _zoom_factor = zoom_factor;
     create_points();
+    _sel_cursors = new Cursor[3];
+    _sel_cursors[0] = new Cursor.from_name( "grab", null );
+    _sel_cursors[1] = new Cursor.from_name( "se-resize", null );
+    _sel_cursors[2] = new Cursor.from_name( "crosshair", null );
   }
 
   /* Creates the item points */
@@ -162,11 +167,11 @@ public class CanvasItemMagnifier : CanvasItem {
   }
 
   /* Provides cursor to display when mouse cursor is hovering over the given selector */
-  public override CursorType? get_selector_cursor( int index ) {
+  public override Cursor? get_selector_cursor( int index ) {
     switch( index ) {
-      case 0  :  return( CursorType.HAND2 );
-      case 1  :  return( CursorType.BOTTOM_RIGHT_CORNER );
-      default :  return( CursorType.TCROSS );
+      case 0  :  return( _sel_cursors[0] );
+      case 1  :  return( _sel_cursors[1] );
+      default :  return( _sel_cursors[2] );
     }
   }
 
@@ -196,9 +201,9 @@ public class CanvasItemMagnifier : CanvasItem {
   }
 
   /* Creates the contextual menu items */
-  protected override void add_contextual_menu_items( Box box ) {
+  protected override void add_contextual_menu_items( Box box, Popover popover ) {
 
-    add_contextual_scale( box, _( "Magnification:" ), min_zoom, max_zoom, step_zoom, _zoom_factor,
+    add_contextual_scale( box, popover, _( "Magnification:" ), min_zoom, max_zoom, step_zoom, _zoom_factor,
       (item, value) => {
         _zoom_factor = value;
         bbox_changed();
@@ -211,7 +216,7 @@ public class CanvasItemMagnifier : CanvasItem {
       }
     );
 
-    add_contextual_menuitem( box, _( "Reset Focal Point" ), null, _focus_moved, (item) => {
+    add_contextual_menuitem( box, popover, _( "Reset Focal Point" ), null, _focus_moved, (item) => {
       var old_point = new CanvasPoint.from_point( points.index( 2 ) );
       _focus_moved = false;
       bbox_changed();
@@ -304,11 +309,12 @@ public class CanvasItemMagnifier : CanvasItem {
   /* Draw the rectangle */
   public override void draw_item( Context ctx, CanvasItemColor color ) {
 
-    var surface = _image.get_surface_for_rect( _zoom_rect );
+    var pixbuf = _image.get_pixbuf_for_rect( _zoom_rect );
+    var black  = Utils.color_from_string( "black" );
 
     draw_focal_point( ctx );
 
-    Utils.set_context_color_with_alpha( ctx, _image.average_color, 0.5 );
+    Utils.set_context_color_with_alpha( ctx, black, 0.5 );
     ctx.set_line_width( 5 );
     ctx.arc( bbox.mid_x(), bbox.mid_y(), (bbox.width / 2), 0, (2 * Math.PI) );
     save_path( ctx, CanvasItemPathType.FILL );
@@ -318,7 +324,7 @@ public class CanvasItemMagnifier : CanvasItem {
     ctx.clip();
     ctx.new_path();
    	ctx.scale( _zoom_factor, _zoom_factor );
-   	ctx.set_source_surface( surface, (bbox.x / _zoom_factor), (bbox.y / _zoom_factor) );
+    cairo_set_source_pixbuf( ctx, pixbuf, (bbox.x / _zoom_factor), (bbox.y / _zoom_factor) );
    	ctx.paint();
    	ctx.restore();
 

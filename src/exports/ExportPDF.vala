@@ -20,6 +20,7 @@
 */
 
 using Cairo;
+using Gdk;
 
 public class ExportPDF : Export {
 
@@ -29,7 +30,7 @@ public class ExportPDF : Export {
   }
 
   /* Default constructor */
-  public override bool export( string filename, ImageSurface source ) {
+  public override bool export( string filename, Pixbuf source ) {
 
     /* Make sure that the filename is sane */
     var fname = repair_filename( filename );
@@ -44,8 +45,8 @@ public class ExportPDF : Export {
     var context = new Context( surface );
     var x       = 0;
     var y       = 0;
-    var w       = source.get_width();
-    var h       = source.get_height();
+    var w       = source.width;
+    var h       = source.height;
 
     /* Calculate the required scaling factor to get the document to fit */
     double width  = (page_width  - (2 * margin)) / w;

@@ -64,7 +64,7 @@ public class CurrentItem {
 
   public Image? get_image() {
     if( _canvas != CanvasItemType.NONE ) {
-      return( new Image.from_icon_name( _canvas.icon_name(), IconSize.LARGE_TOOLBAR ) );
+      return( new Image.from_icon_name( _canvas.icon_name() ) );
     } else if( _custom != null ) {
       return( _custom.get_image() );
     }

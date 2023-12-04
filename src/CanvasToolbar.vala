@@ -22,14 +22,14 @@
 using Gtk;
 using Gee;
 
-public class CanvasToolbar : Toolbar {
+public class CanvasToolbar : Box {
 
   private const int margin = 5;
 
   private Canvas             _canvas;
   private ToggleButton       _crop_btn;
-  private Array<RadioButton> _width_btns;
-  private Array<RadioButton> _dash_btns;
+  private Array<CheckButton> _width_btns;
+  private Array<CheckButton> _dash_btns;
   private ColorChooserWidget _color_chooser;
   private Switch             _asw;
   private Revealer           _areveal;
@@ -42,8 +42,8 @@ public class CanvasToolbar : Toolbar {
   public CanvasToolbar( Canvas canvas ) {
 
     _canvas       = canvas;
-    _width_btns   = new Array<RadioButton>();
-    _dash_btns    = new Array<RadioButton>();
+    _width_btns   = new Array<CheckButton>();
+    _dash_btns    = new Array<CheckButton>();
     _current_item = new HashMap<CanvasItemCategory,CurrentItem>();
 
     /* Create current items */
@@ -66,8 +66,6 @@ public class CanvasToolbar : Toolbar {
     create_stroke();
     create_fonts();
 
-    show_all();
-
     /* If the selection changes, update the toolbar */
     _canvas.items.selection_changed.connect( selection_changed );
 
@@ -76,79 +74,81 @@ public class CanvasToolbar : Toolbar {
   /* Creates the shape toolbar item */
   private void create_shapes( CanvasItemCategory category, string tooltip, string mb_tooltip, string custom_label ) {
 
-    var box = new Box( Orientation.VERTICAL, 5 );
-    box.margin = 5;
+    var box = new Box( Orientation.VERTICAL, 5 ) {
+      margin_start  = 5,
+      margin_end    = 5,
+      margin_top    = 5,
+      margin_bottom = 5
+    };
 
-    var fb = new FlowBox();
-    fb.orientation = Orientation.HORIZONTAL;
-    fb.min_children_per_line = 4;
-    fb.max_children_per_line = 4;
+    var fb = new FlowBox() {
+      orientation = Orientation.HORIZONTAL,
+      min_children_per_line = 4,
+      max_children_per_line = 4
+    };
 
-    var btn     = new ToolButton( null, null );
-    var mb      = new ToolButton( null, null );
-    var popover = new Popover( mb );
+    var mb = new MenuButton() {
+      // label        = "\u25bc",
+      has_frame    = false,
+      margin_start = 0,
+      margin_end   = margin,
+      tooltip_text = mb_tooltip,
+      popover      = new Popover()
+    };
 
-    for( int i=0; i<CanvasItemType.NUM; i++ ) {
-      var shape_type = (CanvasItemType)i;
-      if( shape_type.category() == category ) {
-        var b = new Button();
-        b.set_tooltip_markup( shape_type.tooltip() );
-        b.image  = new Image.from_icon_name( shape_type.icon_name(), IconSize.LARGE_TOOLBAR );
-        b.relief = ReliefStyle.NONE;
-        b.margin = 5;
-        b.clicked.connect(() => {
-          _current_item.get( category ).canvas_item( shape_type );
-          _current_item.get( category ).add_item( _canvas.items );
-          btn.icon_widget = _current_item.get( category ).get_image();
-          btn.show_all();
-          Utils.hide_popover( popover );
-        });
-        fb.add( b );
-      }
-    }
-
-    box.pack_start( fb, false, false, 0 );
-    _canvas.items.custom_items.create_menu( category, popover, box, custom_label, 4 );
-    _canvas.items.custom_items.item_selected.connect((cat, item) => {
-      if( cat == category ) {
-        _current_item.get( cat ).custom_item( item );
-        _current_item.get( cat ).add_item( _canvas.items );
-        btn.icon_widget = _current_item.get( cat ).get_image();
-        btn.show_all();
-        Utils.hide_popover( popover );
-      }
-    });
-    box.show_all();
-
-    popover.add( box );
-
-    btn.set_tooltip_text( tooltip );
-    btn.icon_widget  = _current_item.get( category ).get_image();
-    btn.margin_left  = margin;
-    btn.margin_right = 0;
+    var btn = new Button() {
+      has_frame    = false,
+      margin_start = margin,
+      margin_end   = 0,
+      tooltip_text = tooltip,
+      child        = _current_item.get( category ).get_image()
+    };
     btn.clicked.connect(() => {
       _current_item.get( category ).add_item( _canvas.items );
     });
 
-    var lbl = new Label( "\u25bc" );
-    lbl.max_width_chars = 1;
-    lbl.margin = 0;
+    for( int i=0; i<CanvasItemType.NUM; i++ ) {
+      var shape_type = (CanvasItemType)i;
+      if( shape_type.category() == category ) {
+        var b = new Button() {
+          icon_name     = shape_type.icon_name(),
+          has_frame     = false,
+          margin_start  = 5,
+          margin_end    = 5,
+          margin_top    = 5,
+          margin_bottom = 5,
+          tooltip_markup = shape_type.tooltip(),
+        };
+        b.clicked.connect(() => {
+          _current_item.get( category ).canvas_item( shape_type );
+          _current_item.get( category ).add_item( _canvas.items );
+          btn.child = _current_item.get( category ).get_image();
+          mb.popover.popdown();
+        });
+        fb.append( b );
+      }
+    }
 
-    mb.set_tooltip_text( mb_tooltip );
-    mb.label_widget = lbl;
-    mb.margin_left  = 0;
-    mb.margin_right = margin;
-    mb.clicked.connect(() => {
-      Utils.show_popover( popover );
+    box.append( fb );
+    _canvas.items.custom_items.create_menu( category, mb.popover, box, custom_label, 4 );
+    _canvas.items.custom_items.item_selected.connect((cat, item) => {
+      if( cat == category ) {
+        _current_item.get( cat ).custom_item( item );
+        _current_item.get( cat ).add_item( _canvas.items );
+        btn.child = _current_item.get( cat ).get_image();
+        mb.popover.popdown();
+      }
     });
 
-    add( btn );
-    add( mb );
+    mb.popover.child = box;
+
+    append( btn );
+    append( mb );
 
     /* If the system dark mode changes, hide the popover */
     var granite_settings = Granite.Settings.get_default();
     granite_settings.notify["prefers-color-scheme"].connect (() => {
-      popover.hide();
+      mb.popover.hide();
     });
 
   }
@@ -156,31 +156,35 @@ public class CanvasToolbar : Toolbar {
   /* Creates the sticker toolbar item */
   private void create_sticker() {
 
-    var mb = new MenuButton();
-    mb.set_tooltip_markup( CanvasItemType.STICKER.tooltip() );
-    mb.image   = new Image.from_icon_name( "sticker-symbolic", IconSize.LARGE_TOOLBAR );
-    mb.relief  = ReliefStyle.NONE;
-    mb.popover = new Popover( null );
+    var mb = new MenuButton() {
+      icon_name = "sticker-symbolic",
+      tooltip_markup = CanvasItemType.STICKER.tooltip(),
+      has_frame = false,
+      popover = new Popover()
+    };
 
     var box = new Box( Orientation.VERTICAL, 0 );
-    var sw  = new ScrolledWindow( null, null );
-    var vp  = new Viewport( null, null );
+    var vp  = new Viewport( null, null ) {
+      child = box
+    };
     vp.set_size_request( 200, 400 );
-    vp.add( box );
-    sw.add( vp );
+    var sw  = new ScrolledWindow() {
+      child = vp
+    };
 
     create_via_xml( box, mb.popover );
-    sw.set_size_request( 200, 400 );
-    sw.show_all();
 
-    mb.popover.add( sw );
+    mb.popover.child = sw;
 
-    var btn = new ToolItem();
-    btn.margin_left  = margin;
-    btn.margin_right = margin;
-    btn.add( mb );
+    /*
+    var btn = new Button() {
+      margin_start = margin,
+      margin_end   = margin,
+      child        = mb
+    };
+    */
 
-    add( btn );
+    append( mb );
 
   }
 
@@ -214,18 +218,22 @@ public class CanvasToolbar : Toolbar {
   /* Creates the expander flowbox for the given category name and adds it to the sidebar */
   private FlowBox create_category( Box box, string name ) {
 
-    /* Create expander */
-    var exp  = new Expander( Utils.make_title( name ) );
-    exp.use_markup = true;
-    exp.expanded   = true;
-
     /* Create the flowbox which will contain the stickers */
-    var fbox = new FlowBox();
-    fbox.homogeneous = true;
-    fbox.selection_mode = SelectionMode.NONE;
-    exp.add( fbox );
+    var fbox = new FlowBox() {
+      homogeneous = true,
+      selection_mode = SelectionMode.NONE
+    };
 
-    box.pack_start( exp, false, false, 20 );
+    /* Create expander */
+    var exp = new Expander( Utils.make_title( name ) ) {
+      margin_start = 20,
+      margin_end   = 20,
+      use_markup   = true,
+      expanded     = true,
+      child        = fbox
+    };
+
+    box.append( exp );
 
     return( fbox );
 
@@ -236,115 +244,109 @@ public class CanvasToolbar : Toolbar {
 
     var resource = "/com/github/phase1geo/annotator/images/sticker_%s".printf( name );
 
-    var btn = new Button();
-    btn.image  = new Image.from_resource( resource );
-    btn.relief = ReliefStyle.NONE;
-    btn.set_tooltip_text( name );
+    var btn = new Button() {
+      has_frame    = false,
+      tooltip_text = name,
+      child        = new Image.from_resource( resource )
+    };
     btn.clicked.connect((e) => {
       _canvas.items.add_sticker( resource );
-      Utils.hide_popover( popover );
+      popover.popdown();
     });
 
-    box.add( btn );
+    box.append( btn );
 
   }
 
   /* Adds the sequence button */
   private void create_sequence() {
 
-    var btn = new ToolButton( null, null );
-    btn.set_tooltip_markup( CanvasItemType.SEQUENCE.tooltip() );
-    btn.icon_name    = "sequence-symbolic";
-    btn.margin_left  = margin;
-    btn.margin_right = margin;
+    var btn = new Button.from_icon_name( "sequence-symbolic" ) {
+      tooltip_markup = CanvasItemType.SEQUENCE.tooltip(),
+      margin_start   = margin,
+      margin_end     = margin
+    };
     btn.clicked.connect(() => {
       _canvas.items.add_shape_item( CanvasItemType.SEQUENCE );
     });
 
-    add( btn );
+    append( btn );
 
   }
 
   /* Starts a drawing operation with the pencil tool */
   private void create_pencil() {
 
-    var btn = new ToolButton( null, null );
-    btn.set_tooltip_markup( CanvasItemType.PENCIL.tooltip() );
-    btn.icon_name = "edit-symbolic";
-    btn.margin_left  = margin;
-    btn.margin_right = margin;
+    var btn = new Button.from_icon_name( "edit-symbolic" ) {
+      tooltip_markup = CanvasItemType.PENCIL.tooltip(),
+      margin_start   = margin,
+      margin_end     = margin
+    };
     btn.clicked.connect(() => {
       _canvas.items.add_shape_item( CanvasItemType.PENCIL );
     });
 
-    add( btn );
+    append( btn );
 
   }
 
   /* Adds the text insertion button */
   private void create_text() {
 
-    var btn = new ToolButton( null, null );
-    btn.set_tooltip_markup( CanvasItemType.TEXT.tooltip() );
-    btn.icon_name    = "insert-text-symbolic";
-    btn.margin_left  = margin;
-    btn.margin_right = margin;
+    var btn = new Button.from_icon_name( "insert-text-symbolic" ) {
+      tooltip_markup = CanvasItemType.TEXT.tooltip(),
+      margin_start   = margin,
+      margin_end     = margin
+    };
     btn.clicked.connect(() => {
       _canvas.items.add_shape_item( CanvasItemType.TEXT );
     });
-    /*
-    btn.button_press_event.connect((e) => {
-      if( e.button == Gdk.BUTTON_SECONDARY ) {
-        show_custom_menu( btn, CanvasItemCategory.TEXT );
-      }
-      return( true );
-    });
-    */
 
-    add( btn );
+    append( btn );
 
   }
 
   private void create_magnifier() {
 
-    var btn = new ToolButton( null, null );
-    btn.set_tooltip_markup( CanvasItemType.MAGNIFIER.tooltip() );
-    btn.icon_name    = "magnifier-symbolic";
-    btn.margin_left  = margin;
-    btn.margin_right = margin;
+    var btn = new Button.from_icon_name( "magnifier-symbolic" ) {
+      tooltip_markup = CanvasItemType.MAGNIFIER.tooltip(),
+      margin_start   = margin,
+      margin_end     = margin
+    };
     btn.clicked.connect(() => {
       _canvas.items.add_shape_item( CanvasItemType.MAGNIFIER );
     });
 
-    add(btn );
+    append( btn );
 
   }
 
   /* Create the blur button */
   private void create_blur() {
 
-    var btn = new ToolButton( null, null );
-    btn.set_tooltip_markup( CanvasItemType.BLUR.tooltip() );
-    btn.icon_name    = "blur-symbolic";
-    btn.margin_left  = margin;
-    btn.margin_right = margin;
+    var btn = new Button.from_icon_name( "blur-symbolic" ) {
+      tooltip_markup = CanvasItemType.BLUR.tooltip(),
+      margin_start   = margin,
+      margin_end     = margin
+    };
     btn.clicked.connect(() => {
       _canvas.items.add_shape_item( CanvasItemType.BLUR );
     });
 
-    add( btn );
+    append( btn );
 
   }
 
   /* Create the crop button */
   private void create_crop() {
 
-    _crop_btn = new ToggleButton();
-    _crop_btn.set_tooltip_text( _( "Crop Image" ) );
-    _crop_btn.relief       = ReliefStyle.NONE;
-    _crop_btn.image        = new Image.from_icon_name( "image-crop-symbolic", IconSize.LARGE_TOOLBAR );
-    _crop_btn.margin_left  = margin;
-    _crop_btn.margin_right = margin;
+    _crop_btn = new ToggleButton() {
+      has_frame    = false,
+      tooltip_text = _( "Crop Image" ),
+      icon_name    = "image-crop-symbolic",
+      margin_start = margin,
+      margin_end   = margin
+    };
     _crop_btn.toggled.connect(() => {
       if( !_crop_btn.active ) {
         _canvas.image.cancel_crop();
@@ -357,21 +359,18 @@ public class CanvasToolbar : Toolbar {
       _canvas.grab_focus();
     });
 
-    var ti = new ToolItem();
-    ti.add( _crop_btn );
-
-    add( ti );
+    append( _crop_btn );
 
   }
 
   /* Create the image resizer button */
   private void create_resize() {
 
-    var btn = new ToolButton( null, null );
-    btn.set_tooltip_text( _( "Resize Image" ) );
-    btn.icon_name    = "view-fullscreen-symbolic";
-    btn.margin_left  = margin;
-    btn.margin_right = margin;
+    var btn = new Button.from_icon_name( "view-fullscreen-symbolic" ) {
+      tooltip_text = _( "Resize Image" ),
+      margin_start = margin,
+      margin_end   = margin
+    };
     btn.clicked.connect(() => {
       _canvas.items.clear_selection();
       _canvas.image.resize_image();
@@ -379,203 +378,225 @@ public class CanvasToolbar : Toolbar {
       _canvas.grab_focus();
     });
 
-    add( btn );
+    append( btn );
 
   }
 
   /* Creates the color dropdown */
   private void create_color() {
 
-    var mb = new MenuButton();
-    mb.set_tooltip_text( _( "Shape Color" ) );
-    mb.relief = ReliefStyle.NONE;
+    var mb = new MenuButton() {
+      has_frame    = false,
+      tooltip_text = _( "Shape Color" ),
+      popover      = new Popover(),
+      child        = make_color_icon()
+    };
     mb.get_style_context().add_class( "color_chooser" );
-    mb.popover = new Popover( null );
 
-    var box = new Box( Orientation.VERTICAL, 0 );
-    box.border_width = 10;
+    var box = new Box( Orientation.VERTICAL, 0 ) {
+      margin_start  = 10,
+      margin_end    = 10,
+      margin_top    = 10,
+      margin_bottom = 10
+    };
 
-    _color_chooser = new ColorChooserWidget();
-    _color_chooser.rgba = _canvas.items.props.color;
+    _color_chooser = new ColorChooserWidget() {
+      rgba = _canvas.items.props.color
+    };
     _color_chooser.notify.connect((p) => {
       _canvas.items.props.color = _color_chooser.rgba;
-      mb.image = new Image.from_surface( make_color_icon() );
+      mb.child = make_color_icon();
     });
-    mb.image = new Image.from_surface( make_color_icon() );
-    box.pack_start( _color_chooser, false, false );
+    box.append( _color_chooser );
 
     create_color_alpha( mb, box );
 
-    box.show_all();
-    mb.popover.add( box );
+    mb.popover.child = box;
 
-    var btn = new ToolItem();
-    btn.margin_left  = margin;
-    btn.margin_right = margin;
-    btn.set_tooltip_text( _( "Item Color" ) );
-    btn.add( mb );
-
-    add( btn );
+    append( mb );
 
   }
 
   private void create_color_alpha( MenuButton mb, Box box ) {
 
-    _ascale = new Scale.with_range( Orientation.HORIZONTAL, 0.0, 1.0, 0.1 );
-    _ascale.margin_left  = 20;
-    _ascale.margin_right = 20;
-    _ascale.draw_value   = true;
+    _ascale = new Scale.with_range( Orientation.HORIZONTAL, 0.0, 1.0, 0.1 ) {
+      margin_start = 20,
+      margin_end   = 20,
+      draw_value   = true
+    };
     _ascale.set_value( _canvas.items.props.alpha );
     _ascale.value_changed.connect(() => {
       _canvas.items.props.alpha = _ascale.get_value();
-      mb.image = new Image.from_surface( make_color_icon() );
-    });
-    _ascale.format_value.connect((value) => {
-      return( "%d%%".printf( (int)(value * 100) ) );
+      mb.child = make_color_icon();
     });
     for( int i=0; i<=10; i++ ) {
       _ascale.add_mark( (i / 10.0), PositionType.BOTTOM, null );
     }
 
-    _areveal = new Revealer();
-    _areveal.reveal_child = (_canvas.items.props.alpha < 1.0);
-    _areveal.add( _ascale );
+    _areveal = new Revealer() {
+      reveal_child = (_canvas.items.props.alpha < 1.0),
+      child = _ascale
+    };
 
-    _asw = new Switch();
-    _asw.halign = Align.START;
-    _asw.set_active( _canvas.items.props.alpha < 1.0 );
-    _asw.button_release_event.connect((e) => {
+    var btn_controller = new GestureClick();
+    _asw = new Switch() {
+      halign = Align.START,
+      active = (_canvas.items.props.alpha < 1.0)
+    };
+    _asw.add_controller( btn_controller );
+    btn_controller.released.connect((n_press, x, y) => {
       _canvas.items.props.alpha = _areveal.reveal_child ? 1.0 : _ascale.get_value();
-      mb.image = new Image.from_surface( make_color_icon() );
+      mb.child = make_color_icon();
       _areveal.reveal_child = !_areveal.reveal_child;
-      return( false );
     });
 
-    var albl = new Label( Utils.make_title( _( "Add Transparency" ) ) );
-    albl.halign       = Align.START;
-    albl.use_markup   = true;
-    albl.margin_right = 10;
+    var albl = new Label( Utils.make_title( _( "Add Transparency" ) ) ) {
+      halign     = Align.START,
+      use_markup = true,
+      margin_end = 10
+    };
 
-    var albox = new Box( Orientation.HORIZONTAL, 10 );
-    albox.pack_start( _asw, false, false );
-    albox.pack_start( albl, false, false );
+    var albox = new Box( Orientation.HORIZONTAL, 10 ) {
+      halign = Align.FILL,
+      hexpand = true
+    };
+    albox.append( _asw );
+    albox.append( albl );
 
-    var abox = new Box( Orientation.VERTICAL, 0 );
-    abox.margin_top = 20;
-    abox.pack_start( albox,    false, false );
-    abox.pack_start( _areveal, true,  true );
+    var abox = new Box( Orientation.VERTICAL, 0 ) {
+      halign = Align.FILL,
+      hexpand = true,
+      margin_top = 20
+    };
+    abox.append( albox );
+    abox.append( _areveal );
 
-    box.pack_start( abox, true, true );
+    box.append( abox );
 
   }
 
   /* Adds the stroke dropdown */
   private void create_stroke() {
 
-    var mb     = new MenuButton();
-    mb.set_tooltip_text( _( "Shape Border" ) );
-    mb.relief  = ReliefStyle.NONE;
-    mb.image   = new Image.from_surface( make_stroke_icon() );
-    mb.popover = new Gtk.Popover( null );
+    var mb = new MenuButton() {
+      has_frame    = false,
+      tooltip_text = _( "Shape Border" ),
+      popover      = new Gtk.Popover(),
+      child        = make_stroke_icon()
+    };
 
-    var box = new Box( Orientation.VERTICAL, 0 );
-    box.border_width = 10;
+    var box = new Box( Orientation.VERTICAL, 5 ) {
+      margin_start  = 10,
+      margin_end    = 10,
+      margin_top    = 10,
+      margin_bottom = 10
+    };
 
     /* Add stroke width */
-    var width_title = new Label( Utils.make_title( _( "Border Width" ) ) );
-    width_title.halign     = Align.START;
-    width_title.use_markup = true;
-    box.pack_start( width_title, false, false, 5 );
+    var width_title = new Label( Utils.make_title( _( "Border Width" ) ) ) {
+      halign     = Align.START,
+      use_markup = true
+    };
+    box.append( width_title );
 
-    unowned RadioButton? width_group = null;
+    unowned CheckButton? width_group = null;
     for( int i=0; i<CanvasItemStrokeWidth.NUM; i++ ) {
       var sw  = (CanvasItemStrokeWidth)i;
-      var btn = new Gtk.RadioButton.from_widget( width_group );
-      btn.margin_left = 20;
-      btn.active = (_canvas.items.props.stroke_width == sw);
-      btn.add( new Image.from_surface( make_width_icon( 100, sw.width() ) ) );
+      // var btn = new CheckButton() {
+      var btn = new CheckButton.with_label( sw.to_string() ) {
+        margin_start = 20,
+        active       = (_canvas.items.props.stroke_width == sw),
+// TODO        child        = make_width_icon( 100, sw.width() )
+      };
+      btn.set_group( width_group );
       btn.toggled.connect(() => {
         if( btn.get_active() ) {
           _canvas.items.props.stroke_width = sw;
-          mb.image = new Image.from_surface( make_stroke_icon() );
+          mb.child = make_stroke_icon();
         }
       });
       _width_btns.append_val( btn );
       if( width_group == null ) {
         width_group = btn;
       }
-      box.pack_start( btn, false, false, 5 );
+      box.append( btn );
     }
 
     /* Add dash patterns */
-    var dash_title = new Label( Utils.make_title( _( "Dash Pattern" ) ) );
-    dash_title.halign     = Align.START;
-    dash_title.margin_top = 20;
-    dash_title.use_markup = true;
-    box.pack_start( dash_title,  false, false, 5 );
+    var dash_title = new Label( Utils.make_title( _( "Dash Pattern" ) ) ) {
+      halign     = Align.START,
+      margin_top = 20,
+      use_markup = true
+    };
+    box.append( dash_title );
 
-    unowned RadioButton? dash_group = null;
+    unowned CheckButton? dash_group = null;
     for( int i=0; i<CanvasItemDashPattern.NUM; i++ ) {
       var dash = (CanvasItemDashPattern)i;
-      var btn  = new Gtk.RadioButton.from_widget( dash_group );
-      btn.margin_left = 20;
-      btn.active = (_canvas.items.props.dash == dash);
-      btn.add( new Image.from_surface( make_dash_icon( 100, dash ) ) );
+      // var btn  = new CheckButton() {
+      var btn  = new CheckButton.with_label( dash.to_string() ) {
+        margin_start = 20,
+        active       = (_canvas.items.props.dash == dash),
+// TODO        child        = make_dash_icon( 100, dash )
+      };
+      btn.set_group( dash_group );
       btn.toggled.connect(() => {
         if( btn.get_active() ) {
           _canvas.items.props.dash = dash;
-          mb.image = new Image.from_surface( make_stroke_icon() );
+          mb.child = make_stroke_icon();
         }
       });
       _dash_btns.append_val( btn );
       if( dash_group == null ) {
         dash_group = btn;
       }
-      box.pack_start( btn, false, false, 5 );
+      box.append( btn );
     }
 
     /* Add outline */
-    var outline_title = new Label( Utils.make_title( _( "Show Outline" ) ) );
-    outline_title.halign     = Align.START;
-    outline_title.use_markup = true;
-    var outline_sw = new Switch();
-    outline_sw.set_active( _canvas.items.props.outline );
-    outline_sw.button_release_event.connect((e) => {
+    var outline_title = new Label( Utils.make_title( _( "Show Outline" ) ) ) {
+      halign     = Align.START,
+      use_markup = true
+    };
+    var outline_sw = new Switch() {
+      halign = Align.END,
+      active = _canvas.items.props.outline
+    };
+    outline_sw.activate.connect((e) => {
       _canvas.items.props.outline = !_canvas.items.props.outline;
-      return( false );
     });
-    var outline_box = new Box( Orientation.HORIZONTAL, 10 );
-    outline_box.homogeneous = false;
-    outline_box.margin_top = 20;
-    outline_box.pack_start( outline_title, false, false );
-    outline_box.pack_end( outline_sw, false, false );
-    box.pack_start( outline_box, true, false, 5 );
+    var outline_box = new Box( Orientation.HORIZONTAL, 10 ) {
+      homogeneous = false,
+      margin_top  = 20
+    };
+    outline_box.append( outline_title );
+    outline_box.append( outline_sw );
+    box.append( outline_box );
 
-    box.show_all();
-    mb.popover.add( box );
+    mb.popover.child = box;
 
-    var btn = new ToolItem();
-    btn.margin_left  = margin;
-    btn.margin_right = margin;
-    btn.add( mb );
-
-    add( btn );
+    append( mb );
 
   }
 
   /* Adds the font menubutton */
   private void create_fonts() {
 
-    var mb = new MenuButton();
-    mb.set_tooltip_text( _( "Font Properties" ) );
-    mb.image  = new Image.from_icon_name( "font-x-generic-symbolic", IconSize.LARGE_TOOLBAR );
-    mb.relief = ReliefStyle.NONE;
+    var mb = new MenuButton() {
+      icon_name    = "font-x-generic-symbolic",
+      tooltip_text = _( "Font Properties" ),
+      has_frame    = false,
+      popover      = new Popover()
+    };
     mb.get_style_context().add_class( "color_chooser" );
-    mb.popover = new Popover( null );
 
-    _font_chooser = new FontChooserWidget();
-    _font_chooser.border_width = 10;
-    _font_chooser.font_desc    = _canvas.items.props.font;
+    _font_chooser = new FontChooserWidget() {
+      margin_start  = 10,
+      margin_end    = 10,
+      margin_top    = 10,
+      margin_bottom = 10,
+      font_desc     = _canvas.items.props.font
+    };
     _font_chooser.set_filter_func( (family, face) => {
       var fd     = face.describe();
       var weight = fd.get_weight();
@@ -583,27 +604,26 @@ public class CanvasToolbar : Toolbar {
       return( (weight == Pango.Weight.NORMAL) && (style == Pango.Style.NORMAL) );
     });
     _font_chooser.notify.connect((p) => {
-      _canvas.items.props.font = Pango.FontDescription.from_string( _font_chooser.get_font() );
+      if( p.name == "font" ) {
+        _canvas.items.props.font = Pango.FontDescription.from_string( _font_chooser.get_font() );
+      }
     });
-    _font_chooser.show_all();
 
-    mb.popover.add( _font_chooser );
+    mb.popover.child = _font_chooser;
 
-    var btn = new ToolItem();
-    btn.margin_left  = margin;
-    btn.margin_right = margin;
-    btn.add( mb );
-
-    add( btn );
+    append( mb );
 
   }
 
-  private Cairo.Surface make_color_icon() {
+  private Image make_color_icon() {
 
-    var surface = new Cairo.ImageSurface( Cairo.Format.ARGB32, 30, 24 );
-    var ctx     = new Cairo.Context( surface );
-    var stroke  = Granite.contrasting_foreground_color( _canvas.items.props.color );
+    var snapshot = new Snapshot();
+    var rect     = Graphene.Rect.alloc();
+    rect.init( 0, 0, (float)30, (float)24 );
+    var ctx      = snapshot.append_cairo( rect );
 
+    /* Draw the image */
+    var stroke = Granite.contrasting_foreground_color( _canvas.items.props.color );
     Utils.set_context_color_with_alpha( ctx, _canvas.items.props.color, _canvas.items.props.alpha );
     ctx.rectangle( 0, 0, 30, 24 );
     ctx.fill_preserve();
@@ -611,7 +631,9 @@ public class CanvasToolbar : Toolbar {
     Utils.set_context_color_with_alpha( ctx, stroke, 0.5 );
     ctx.stroke();
 
-    return( surface );
+    var image = new Image.from_paintable( snapshot.free_to_paintable( null ) );
+
+    return( image );
 
   }
 
@@ -627,11 +649,14 @@ public class CanvasToolbar : Toolbar {
 
   }
 
-  private Cairo.Surface make_width_icon( int width, int stroke_width ) {
+  private Image make_width_icon( int width, int stroke_width ) {
 
-    var height  = stroke_width;
-    var surface = new Cairo.ImageSurface( Cairo.Format.ARGB32, width, height );
-    var ctx     = new Cairo.Context( surface );
+    var height = stroke_width;
+
+    var snapshot = new Snapshot();
+    var rect     = Graphene.Rect.alloc();
+    rect.init( 0, 0, (float)width, (float)height );
+    var ctx      = snapshot.append_cairo( rect );
 
     /* Draw the stroke */
     Utils.set_context_color( ctx, Utils.color_from_string( is_dark_mode() ? "white" : "black" ) );
@@ -640,16 +665,22 @@ public class CanvasToolbar : Toolbar {
     ctx.line_to( width, (height / 2) );
     ctx.stroke();
 
-    return( surface );
+    var image = new Image.from_paintable( snapshot.free_to_paintable( null ) );
+
+    return( image );
 
   }
 
-  private Cairo.Surface make_dash_icon( int width, CanvasItemDashPattern dash ) {
+  private Image make_dash_icon( int width, CanvasItemDashPattern dash ) {
 
-    var height  = 5;
-    var surface = new Cairo.ImageSurface( Cairo.Format.ARGB32, width, height );
-    var ctx     = new Cairo.Context( surface );
+    var height = 5;
 
+    var snapshot = new Snapshot();
+    var rect     = Graphene.Rect.alloc();
+    rect.init( 0, 0, (float)width, (float)height );
+    var ctx      = snapshot.append_cairo( rect );
+
+    /* Draw the image */
     Utils.set_context_color( ctx, Utils.color_from_string( is_dark_mode() ? "white" : "black" ) );
     ctx.set_line_width( height );
     dash.set_fg_pattern( ctx );
@@ -657,18 +688,23 @@ public class CanvasToolbar : Toolbar {
     ctx.line_to( width, (height / 2) );
     ctx.stroke();
 
-    return( surface );
+    var image = new Image.from_paintable( snapshot.free_to_paintable( null ) );
+
+    return( image );
 
   }
 
-  private Cairo.Surface make_stroke_icon() {
+  private Image make_stroke_icon() {
 
     var width   = 50;
     var height  = _canvas.items.props.stroke_width.width();
-    var surface = new Cairo.ImageSurface( Cairo.Format.ARGB32, width, height );
-    var ctx     = new Cairo.Context( surface );
 
-    /* Draw the stroke */
+    var snapshot = new Snapshot();
+    var rect     = Graphene.Rect.alloc();
+    rect.init( 0, 0, (float)50, (float)height );
+    var ctx      = snapshot.append_cairo( rect );
+
+    /* Draw the image */
     Utils.set_context_color( ctx, Utils.color_from_string( is_dark_mode() ? "white" : "black" ) );
     ctx.set_line_width( height );
     _canvas.items.props.dash.set_fg_pattern( ctx );
@@ -676,17 +712,18 @@ public class CanvasToolbar : Toolbar {
     ctx.line_to( width, (height / 2) );
     ctx.stroke();
 
-    return( surface );
+    var image = new Image.from_paintable( snapshot.free_to_paintable( null ) );
+
+    return( image );
 
   }
 
   /* Adds a separator to the toolbar */
   private void create_separator() {
 
-    var sep = new SeparatorToolItem();
-    sep.draw = true;
+    var sep = new Separator( Orientation.VERTICAL );
 
-    add( sep );
+    append( sep );
 
   }
 

@@ -30,13 +30,13 @@ public class ExportImage : Export {
   }
   
   /* Default constructor */
-  public override bool export( string filename, ImageSurface source ) {
+  public override bool export( string filename, Pixbuf source ) {
 
     /* Make sure that the filename is sane */
     var fname = repair_filename( filename );
 
     /* Create the drawing surface */
-    var surface = new ImageSurface( Format.RGB24, source.get_width(), source.get_height() );
+    var surface = new ImageSurface( Format.RGB24, source.width, source.height );
     var context = new Context( surface );
     canvas.draw_all( context );
 

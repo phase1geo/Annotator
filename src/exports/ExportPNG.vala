@@ -31,14 +31,14 @@ public class ExportPNG : Export {
   }
 
   /* Default constructor */
-  public override bool export( string filename, ImageSurface source ) {
+  public override bool export( string filename, Pixbuf source ) {
 
     /* Make sure that the filename is sane */
     var fname = repair_filename( filename );
 
     /* Create the drawing surface */
     var format = get_bool( "transparency" ) ? Format.ARGB32 : Format.RGB24;
-    var surface = new ImageSurface( format, source.get_width(), source.get_height() );
+    var surface = new ImageSurface( format, source.width, source.height );
     var context = new Context( surface );
     canvas.draw_all( context );
 

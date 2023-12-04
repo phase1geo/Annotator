@@ -152,6 +152,18 @@ public class CanvasItems {
   private double               _last_y;
   private int                  _press_count    = -1;
   private FormatBar?           _format_bar     = null;
+  private Cursor               _xterm_cursor   = new Cursor.from_name( "text", null );
+  private bool                 _control_set    = false;
+  private bool                 _shift_set      = false;
+
+  private const GLib.ActionEntry[] action_entries = {
+    { "action_copy",          action_copy },
+    { "action_cut",           action_cut },
+    { "action_delete",        action_delete },
+    { "action_send_to_front", action_send_to_front },
+    { "action_send_to_back",  action_send_to_back },
+    { "action_save_custom",   action_save_custom }
+  };
 
   public CanvasItemProperties props        { get; private set; }
   public string               hilite_color { get; set; default = "yellow"; }
@@ -176,6 +188,11 @@ public class CanvasItems {
     /* Create the CustomItems object */
     custom_items = new CustomItems();
     custom_items.load( this );
+
+    /* Set the stage for menu actions */
+    var actions = new SimpleActionGroup ();
+    actions.add_action_entries( action_entries, this );
+    _canvas.insert_action_group( "items", actions );
 
   }
 
@@ -269,7 +286,7 @@ public class CanvasItems {
     var item = new CanvasItemPencil( _canvas, props );
     if( !loading ) {
       _active = item;
-      _canvas.set_cursor( CursorType.PENCIL );
+      _canvas.set_cursor_from_name( "pencil" );
     }
     return( item );
   }
@@ -449,7 +466,7 @@ public class CanvasItems {
 
   /* Returns true if the alt key is enabled in the given state */
   private bool alt_state( ModifierType state ) {
-    return( (bool)(state & ModifierType.MOD1_MASK) );
+    return( (bool)(state & ModifierType.ALT_MASK) );
   }
 
   /* Returns the active text item, if it is set; otherwise, returns null */
@@ -476,7 +493,7 @@ public class CanvasItems {
         text.edit = value;
         if( value ) {
           text.set_cursor_all( false );
-          _canvas.set_cursor( CursorType.XTERM );
+          _canvas.set_cursor( _xterm_cursor );
           text.mode = CanvasItemMode.EDITING;
         } else {
           text.clear_selection();
@@ -495,15 +512,14 @@ public class CanvasItems {
   /*****************************/
 
   /* Handles keypress events.  Returns true if the canvas should be redrawn. */
-  public bool key_pressed( uint keycode, ModifierType state ) {
+  public bool key_pressed( uint keyval, uint keycode, ModifierType state ) {
 
     var control = control_state( state );
     var shift   = shift_state( state );
-    var keymap  = Keymap.get_for_display( Display.get_default() );
     KeymapKey[] ks  = {};
     uint[]      kvs = {};
 
-    keymap.get_entries_for_keycode( keycode, out ks, out kvs );
+    Display.get_default().map_keycode( keycode, out ks, out kvs );
 
     if( Utils.has_key( kvs, Key.BackSpace ) )        { return( handle_backspace() ); }
     else if( Utils.has_key( kvs, Key.Delete ) )      { return( handle_delete() ); }
@@ -536,6 +552,7 @@ public class CanvasItems {
     else if( !shift && Utils.has_key( kvs, Key.m ) ) { add_shape_item( CanvasItemType.MAGNIFIER );    return( true ); }
     else if( !shift && Utils.has_key( kvs, Key.p ) ) { add_shape_item( CanvasItemType.PENCIL );       return( true ); }
     else if( !shift && Utils.has_key( kvs, Key.q ) ) { add_shape_item( CanvasItemType.SEQUENCE );     return( true ); }
+    else if( !shift && Utils.has_key( kvs, Key.Shift_L ) ) { return( handle_shift() ); }
     else if( !shift && Utils.has_key( kvs, Key.Control_L ) ) { return( handle_control() ); }
 
     return( false );
@@ -649,6 +666,7 @@ public class CanvasItems {
 
   /* Handles the control key */
   private bool handle_control() {
+    _control_set = true;
     foreach( CanvasItem item in _items ) {
       if( item.is_within( _last_x, _last_y ) ) {
         _canvas.set_cursor_from_name( "copy" );
@@ -658,16 +676,23 @@ public class CanvasItems {
     return( false );
   }
 
+  private bool handle_shift() {
+    _shift_set = true;
+    return( false );
+  }
+
   /* Handles key release events.  Returns true if the canvas should be redrawn. */
   public bool key_released( uint keyval, ModifierType state ) {
     switch( keyval ) {
       case Key.Control_L :  return( handle_release_control() );
+      case Key.Shift_L   :  return( handle_release_shift() );
     }
     return( false );
   }
 
   /* Called when the control key is released */
   private bool handle_release_control() {
+    _control_set = false;
     foreach( CanvasItem item in _items ) {
       if( item.is_within( _last_x, _last_y ) ) {
         _canvas.set_cursor_from_name( "grabbing" );
@@ -675,6 +700,11 @@ public class CanvasItems {
       }
     }
     _canvas.set_cursor( null );
+    return( false );
+  }
+
+  private bool handle_release_shift() {
+    _shift_set = false;
     return( false );
   }
 
@@ -686,10 +716,9 @@ public class CanvasItems {
    Called whenever the cursor is pressed.  Returns true if the canvas should
    draw itself.
   */
-  public bool cursor_pressed( double x, double y, ModifierType state, int press_count ) {
+  public bool cursor_pressed( double x, double y, int press_count ) {
 
     var retval  = false;
-    var control = control_state( state );
 
     /* Keep track of the press count */
     _press_count = press_count;
@@ -728,7 +757,7 @@ public class CanvasItems {
             case 2 :  text.set_cursor_at_word( x, y, false );  break;
             case 3 :  text.set_cursor_all( false );            break;
           }
-        } else if( control && (press_count == 1) ) {  // Make a duplicate of the clicked on item
+        } else if( _control_set && (press_count == 1) ) {  // Make a duplicate of the clicked on item
           _active = item.duplicate();
           _active.mode = CanvasItemMode.SELECTED;
           _canvas.set_cursor_from_name( "grabbing" );
@@ -772,26 +801,24 @@ public class CanvasItems {
    Called whenever the cursor is moved.  Returns true if the canvas should draw
    itself.
   */
-  public bool cursor_moved( double x, double y, ModifierType state ) {
+  public bool cursor_moved( double x, double y ) {
 
     var diff_x  = x - _last_x;
     var diff_y  = y - _last_y;
-    var control = control_state( state );
-    var shift   = shift_state( state );
 
     _last_x = x;
     _last_y = y;
 
     /* Since we pressed on a selector, move the selector */
     if( _selector_index != -1 ) {
-      _active.move_selector( _selector_index, diff_x, diff_y, shift );
+      _active.move_selector( _selector_index, diff_x, diff_y, _shift_set );
       return( true );
 
     /* If we are in edit mode, drag out the selection */
     } else if( in_edit_mode() ) {
       var text = get_active_text();
       if( text.is_within( x, y ) ) {
-        _canvas.set_cursor( CursorType.XTERM );
+        _canvas.set_cursor( _xterm_cursor );
         switch( _press_count ) {
           case 1  :  text.set_cursor_at_char( x, y, true );  break;
           case 2  :  text.set_cursor_at_word( x, y, true );  break;
@@ -833,10 +860,10 @@ public class CanvasItems {
       _canvas.set_tooltip_text( null );
       foreach( CanvasItem item in _items ) {
         if( item.is_within( x, y ) ) {
-          if( control ) {
+          if( _control_set ) {
             _canvas.set_cursor_from_name( "copy" );
           } else {
-            _canvas.set_cursor( CursorType.HAND1 );
+            _canvas.set_cursor_from_name( "grab" );
           }
           return( false );
         }
@@ -852,7 +879,7 @@ public class CanvasItems {
    Called whenever the cursor button is released.  Returns true if the canvas
    should draw itself.
   */
-  public bool cursor_released( double x, double y, ModifierType state ) {
+  public bool cursor_released( double x, double y ) {
 
     var retval = false;
 
@@ -943,45 +970,54 @@ public class CanvasItems {
     var pos  = item_position( item );
     var last = (int)(_items.length() - 1);
 
-    var box  = new Box( Orientation.VERTICAL, 5 );
-    box.border_width = 5;
+    var box  = new Box( Orientation.VERTICAL, 5 ) {
+      margin_start  = 5,
+      margin_end    = 5,
+      margin_top    = 5,
+      margin_bottom = 5
+    };
+
+    /* Create the popover */
+    var menu = new Popover() {
+      autohide    = true,
+      pointing_to = item.bbox.to_rectangle( _canvas.zoom_factor ),
+      position    = PositionType.RIGHT,
+      child       = box
+    };
+    menu.set_parent( _canvas );
 
     /* Add the item's contextual menu items */
-    item.add_contextual_menu_items( box );
+    item.add_contextual_menu_items( box, menu );
 
     if( !in_edit_mode() ) {
 
       /* Add a separator if there is anything existing in the box */
-      if( box.get_children().length() > 0 ) {
+      if( box.get_first_child() != null ) {
         item.add_contextual_separator( box );
       }
 
-      item.add_contextual_menuitem( box, _( "Copy" ), "<Control>c", true, do_copy );
-      item.add_contextual_menuitem( box, _( "Cut" ),  "<Control>x", true, do_cut );
+      item.add_contextual_menuitem( box, menu, _( "Copy" ), "<Control>c", true, do_copy );
+      item.add_contextual_menuitem( box, menu, _( "Cut" ),  "<Control>x", true, do_cut );
       item.add_contextual_separator( box );
-      item.add_contextual_menuitem( box, _( "Delete" ), "Delete", true, do_delete );
+      item.add_contextual_menuitem( box, menu, _( "Delete" ), "Delete", true, do_delete );
       item.add_contextual_separator( box );
-      item.add_contextual_menuitem( box, _( "Send to Front" ), null, (pos != last), do_send_to_front );
-      item.add_contextual_menuitem( box, _( "Send to Back" ),  null, (pos != 0),    do_send_to_back );
+      item.add_contextual_menuitem( box, menu, _( "Send to Front" ), null, (pos != last), do_send_to_front );
+      item.add_contextual_menuitem( box, menu, _( "Send to Back" ),  null, (pos != 0), do_send_to_back );
   
       if( item.itype.category() != CanvasItemCategory.NONE ) {
         item.add_contextual_separator( box );
-        item.add_contextual_menuitem( box, _( "Save As Custom" ), null, true, do_save_custom );
+        item.add_contextual_menuitem( box, menu, _( "Save As Custom" ), null, true, do_save_custom );
       }
 
     }
 
-    box.show_all();
-
-    /* Create the popover */
-    var menu = new Popover( _canvas );
-    menu.pointing_to = item.bbox.to_rectangle( _canvas.zoom_factor );
-    menu.position    = PositionType.RIGHT;
-    menu.add( box );
-
     /* Display the popover */
-    Utils.show_popover( menu );
+    menu.popup();
 
+  }
+
+  private void action_copy() {
+    do_copy( get_selected_item() );
   }
 
   /* Creates a copy of the item and sends it to the clipboard */
@@ -998,6 +1034,10 @@ public class CanvasItems {
     }
   }
 
+  private void action_cut() {
+    do_cut( get_selected_item() );
+  }
+
   /* Creates a copy of the item, sends it to the clipboard, and removes the item */
   public void do_cut( CanvasItem item ) {
     do_copy( item );
@@ -1007,6 +1047,10 @@ public class CanvasItems {
   /* Pastes the given item from the clipboard (if one exists) */
   private void do_paste( CanvasItem item ) {
     AnnotatorClipboard.paste( _canvas.editor );
+  }
+
+  private void action_delete() {
+    do_delete( get_selected_item() );
   }
 
   /* Deletes the item */
@@ -1031,6 +1075,10 @@ public class CanvasItems {
     }
   }
 
+  private void action_send_to_front() {
+    do_send_to_front( get_selected_item() );
+  }
+
   /* Moves the item to the top of the item list */
   private void do_send_to_front( CanvasItem item ) {
     _canvas.undo_buffer.add_item( new UndoItemSendFront( item, item_position( item ) ) );
@@ -1039,12 +1087,20 @@ public class CanvasItems {
     _canvas.queue_draw();
   }
 
+  private void action_send_to_back() {
+    do_send_to_back( get_selected_item() );
+  }
+
   /* Moves the item to the bottom of the item list */
   private void do_send_to_back( CanvasItem item ) {
     _canvas.undo_buffer.add_item( new UndoItemSendBack( item, item_position( item ) ) );
     remove_item( item );
     move_to_back( item );
     _canvas.queue_draw();
+  }
+
+  private void action_save_custom() {
+    do_save_custom( get_selected_item() );
   }
 
   /* Saves the given item as a custom item */
@@ -1134,14 +1190,14 @@ public class CanvasItems {
     _format_bar.pointing_to = rect;
     _format_bar.position    = PositionType.TOP;
 
-    Utils.show_popover( _format_bar );
+    _format_bar.popup();
 
   }
 
   /* Hides the format bar if it is currently visible and destroys it */
   private void hide_format_bar() {
     if( _format_bar != null ) {
-      Utils.hide_popover( _format_bar );
+      _format_bar.popdown();
       _format_bar = null;
     }
   }

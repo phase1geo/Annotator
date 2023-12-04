@@ -47,7 +47,7 @@ public class Utils {
 
   /* Returns the RGBA color for the given color value */
   public static RGBA color_from_string( string value ) {
-    RGBA c = {1.0, 1.0, 1.0, 1.0};
+    RGBA c = {(float)1.0, (float)1.0, (float)1.0, (float)1.0};
     c.parse( value );
     return( c );
   }
@@ -71,22 +71,6 @@ public class Utils {
     red   = (uint16)(color.red   * maxval);
     green = (uint16)(color.green * maxval);
     blue  = (uint16)(color.blue  * maxval);
-  }
-
-  /*
-   Adds the given accelerator label to the given menu item.
-  */
-  public static void add_accel_label( Gtk.MenuItem item, uint key, Gdk.ModifierType mods ) {
-
-    /* Convert the menu item to an accelerator label */
-    AccelLabel? label = item.get_child() as AccelLabel;
-
-    if( label == null ) return;
-
-    /* Add the accelerator to the label */
-    label.set_accel( key, mods );
-    label.refetch();
-
   }
 
   /* Returns true if the given coordinates are within the specified bounds */
@@ -189,43 +173,56 @@ public class Utils {
     return( Regex.match_simple( url_re(), str ) );
   }
 
-  /* Show the specified popover */
-  public static void show_popover( Popover popover ) {
-#if GTK322
-    popover.popup();
-#else
-    popover.show();
-#endif
-  }
-
-  /* Hide the specified popover */
-  public static void hide_popover( Popover popover ) {
-#if GTK322
-    popover.popdown();
-#else
-    popover.hide();
-#endif
-  }
-
-  /* Pops up the given menu */
-  public static void popup_menu( Gtk.Menu menu, Event e ) {
-#if GTK322
-    menu.popup_at_pointer( e );
-#else
-    menu.popup( null, null, null, e.button, e.time );
-#endif
-  }
-
   public static void set_chooser_folder( FileChooser chooser ) {
-    var dir = Annotator.settings.get_string( "last-directory" );
-    if( dir != "" ) {
-      chooser.set_current_folder( dir );
+    var dir_path = Annotator.settings.get_string( "last-directory" );
+    if( dir_path != "" ) {
+      try {
+        var dir = File.new_for_path( dir_path );
+        chooser.set_current_folder( dir );
+      } catch( Error e ) {}
     }
   }
 
   public static void store_chooser_folder( string file ) {
     var dir = GLib.Path.get_dirname( file );
     Annotator.settings.set_string( "last-directory", dir );
+  }
+
+  /* Returns the child widget at the given index of the parent widget (or null if one does not exist) */
+  public static Widget? get_child_at_index( Widget parent, int index ) {
+    var child = parent.get_first_child();
+    while( (child != null) && (index-- > 0) ) {
+      child = child.get_next_sibling();
+    }
+    return( child );
+  }
+
+  /* Creates a menu item for a popover */
+  public static Button make_menu_item( string label ) {
+    var lbl = new Label( label ) {
+      xalign = (float)0
+    };
+    var btn = new Button() {
+      halign = Align.FILL,
+      has_frame = false,
+      child = lbl
+    };
+    return( btn );
+  }
+
+  public static Gdk.Pixbuf? texture_to_pixbuf( Gdk.Texture texture ) {
+
+    FileIOStream iostream;
+
+    try {
+      var tmp = File.new_tmp( null, out iostream );
+      texture.save_to_png( tmp.get_path() );
+      var pixbuf = new Pixbuf.from_file( tmp.get_path() );
+      return( pixbuf );
+    } catch( Error e ) {
+      return( null );
+    }
+
   }
 
   /*

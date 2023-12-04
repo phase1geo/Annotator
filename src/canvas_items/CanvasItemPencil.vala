@@ -26,11 +26,13 @@ using Cairo;
 public class CanvasItemPencil : CanvasItem {
 
   private Array<CanvasPoint> _edit_points = new Array<CanvasPoint>();
+  private Cursor             _sel_cursor;
 
   /* Constructor */
   public CanvasItemPencil( Canvas canvas, CanvasItemProperties props ) {
     base( CanvasItemType.PENCIL, canvas, props );
     create_points();
+    _sel_cursor = new Cursor.from_name( "grab", null );
   }
 
   /* Creates the selection points */
@@ -72,8 +74,8 @@ public class CanvasItemPencil : CanvasItem {
     points.index( 1 ).adjust( diffx, diffy );
   }
 
-  public override CursorType? get_selector_cursor( int index ) {
-    return( CursorType.HAND1 );
+  public override Cursor? get_selector_cursor( int index ) {
+    return( _sel_cursor );
   }
 
   /* Add an edit point */

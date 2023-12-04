@@ -1,5 +1,6 @@
 sources += files(
     'Application.vala',
+    'BufferSurface.vala',
     'Canvas.vala',
     'CanvasImage.vala',
     'CanvasImageInfo.vala',
@@ -22,8 +23,6 @@ sources += files(
     'FormattedText.vala',
     'MainWindow.vala',
     'Resizer.vala',
-    'ScreenshotBackend.vala',
-    'ScreenshotProxy.vala',
     'UndoBuffer.vala',
     'UndoItem.vala',
     'UndoTextBuffer.vala',

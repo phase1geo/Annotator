@@ -29,10 +29,11 @@ public class Canvas : DrawingArea {
   public const double zoom_min  = 0.25;
   public const double zoom_step = 0.25;
 
-  private ImageSurface?  _surface = null;
-  private IMMulticontext _im_context;
-  private double         _last_x = 0;
-  private double         _last_y = 0;
+  private ImageSurface?      _surface = null;
+  private EventControllerKey _key_controller;
+  private IMMulticontext     _im_context;
+  private double             _last_x = 0;
+  private double             _last_y = 0;
 
   public MainWindow     win          { get; private set; }
   public Editor         editor       { get; private set; }
@@ -63,34 +64,44 @@ public class Canvas : DrawingArea {
     undo_buffer = new UndoBuffer( this );
     undo_text   = new UndoTextBuffer( this );
 
-    this.draw.connect( on_draw );
-    this.key_press_event.connect( on_keypress );
-    this.key_release_event.connect( on_keyrelease );
-    this.button_press_event.connect( on_press );
-    this.button_release_event.connect( on_release );
-    this.motion_notify_event.connect( on_motion );
-
-    /* Make sure the above events are listened for */
-    this.add_events(
-      EventMask.BUTTON_PRESS_MASK |
-      EventMask.BUTTON_RELEASE_MASK |
-      EventMask.BUTTON1_MOTION_MASK |
-      EventMask.POINTER_MOTION_MASK |
-      EventMask.KEY_PRESS_MASK |
-      EventMask.SMOOTH_SCROLL_MASK |
-      EventMask.STRUCTURE_MASK
-    );
-
     /* Make sure the drawing area can receive keyboard focus */
-    this.can_focus = true;
+    can_focus = true;
+    focusable = true;
+    set_draw_func( on_draw );
+
+    _key_controller = new EventControllerKey();
+    var pri_btn_controller = new GestureClick() {
+      button = Gdk.BUTTON_PRIMARY
+    };
+    var sec_btn_controller = new GestureClick() {
+      button = Gdk.BUTTON_SECONDARY
+    };
+    var motion_controller = new EventControllerMotion();
+
+    add_controller( _key_controller );
+    add_controller( pri_btn_controller );
+    add_controller( sec_btn_controller );
+    add_controller( motion_controller );
+
+    _key_controller.key_pressed.connect( on_keypress );
+    _key_controller.key_released.connect( on_keyrelease );
+
+    pri_btn_controller.pressed.connect( on_primary_press );
+    pri_btn_controller.released.connect( on_primary_release );
+
+    sec_btn_controller.pressed.connect( on_secondary_press );
+
+    motion_controller.motion.connect( on_motion );
+
 
     /* Make sure that we us the IMMulticontext input method when editing text only */
     _im_context = new IMMulticontext();
-    _im_context.set_client_window( this.get_window() );
+    _im_context.set_client_widget( this );
     _im_context.set_use_preedit( false );
     _im_context.commit.connect( handle_im_commit );
     _im_context.retrieve_surrounding.connect( handle_im_retrieve_surrounding );
     _im_context.delete_surrounding.connect( handle_im_delete_surrounding );
+    _key_controller.set_im_context( _im_context );
 
   }
 
@@ -99,24 +110,10 @@ public class Canvas : DrawingArea {
     return( _surface != null );
   }
 
-  /* Sets the cursor */
-  public void set_cursor( CursorType? type = null ) {
-
-    var win    = get_window();
-    var cursor = win.get_cursor();
-
-    if( type == null ) {
-      win.set_cursor( null );
-    } else if( (cursor == null) || (cursor.cursor_type != type) ) {
-      win.set_cursor( new Cursor.for_display( get_display(), type ) );
-    }
-
-  }
-
   /* Sets the cursor from the given name */
   public void set_cursor_from_name( string name ) {
-    var win   = get_window();
-    win.set_cursor( new Cursor.from_name( get_display(), name ) );
+    var cursor = new Cursor.from_name( name, null );
+    set_cursor( cursor );
   }
 
   /* Opens a new image and displays it in the drawing area */
@@ -174,47 +171,48 @@ public class Canvas : DrawingArea {
     }
   }
 
+  /* Performs actual paste operation */
+  private void do_paste( Pixbuf buf ) {
+    image.set_image( buf );
+    CanvasItemSequence.reset();
+    queue_draw();
+    image_loaded();
+    grab_focus();
+  }
+
   /* Returns true if the image paste operation should be cancelled */
-  private bool cancel_paste() {
+  private void confirm_paste( Pixbuf buf ) {
 
     if( items.items_exist() ) {
 
-      var dialog = new Granite.MessageDialog.with_image_from_icon_name(
-        _( "Annotate new image?" ),
-        _( "Pasting a new image to annotate will destroy the current annotation." ),
-        "dialog-warning",
-        ButtonsType.NONE
-      );
-      var dont = new Button.with_label( _( "Yes" ) );
-      dialog.add_action_widget( dont, ResponseType.ACCEPT );
-
-      var cancel = new Button.with_label( _( "No" ) );
-      dialog.add_action_widget( cancel, ResponseType.CANCEL );
-
-      dialog.set_transient_for( win );
+      var dialog = new MessageDialog( win, DialogFlags.MODAL, MessageType.WARNING, ButtonsType.YES_NO, _( "Annotate new image?" ) ) {
+        secondary_text = _( "Pasting a new image to annotate will destroy the current annotation." )
+      };
       dialog.set_default_response( ResponseType.CANCEL );
-      dialog.set_title( "" );
-      dialog.show_all();
 
-      var res = dialog.run();
-      dialog.destroy();
+      dialog.response.connect((id) => {
+        if( id == ResponseType.YES ) {
+          do_paste( buf );
+        }
+        dialog.destroy();
+      });
 
-      return( res == ResponseType.CANCEL );
+      dialog.show();
+
+    } else {
+
+      do_paste( buf );
 
     }
-
-    return( false );
 
   }
 
   /* Pastes an image from the given pixbuf to the canvas */
   public void paste_image( Pixbuf buf, bool confirm ) {
-    if( !confirm || !cancel_paste() ) {
-      image.set_image( buf );
-      CanvasItemSequence.reset();
-      queue_draw();
-      image_loaded();
-      grab_focus();
+    if( !confirm ) {
+      do_paste( buf );
+    } else {
+      confirm_paste( buf );
     }
   }
 
@@ -298,6 +296,7 @@ public class Canvas : DrawingArea {
   /* Handles the emoji insertion process for the given text item */
   public void insert_emoji() {
     if( items.in_edit_mode() ) {
+      /* TODO - This should be possible but research will be required
       var overlay = (Overlay)get_parent();
       var entry   = new Entry();
       var text    = items.get_active_text();
@@ -312,30 +311,50 @@ public class Canvas : DrawingArea {
         grab_focus();
       });
       overlay.add_overlay( entry );
-      entry.insert_emoji();
+      var emoji_chooser = new EmojiChooer();
+      emoji_chooser.set_parent( entry );
+      emoji_chooser.emoji_picked((str) => {
+        entry.kk
+      });
+      emoji_chooser.popup();
+      */
     }
   }
 
   /* Handles keypress events */
-  private bool on_keypress( EventKey e ) {
+  private bool on_keypress( uint keyval, uint keycode, ModifierType state ) {
+
+    var c = (unichar)keyval;
 
     /* If the character is printable, pass the value through the input method filter */
-    if( items.in_edit_mode() && e.str.get_char( 0 ).isprint() ) {
-      _im_context.filter_keypress( e );
+    if( items.in_edit_mode() && c.isprint() && false ) {
+      _im_context.filter_keypress( _key_controller.get_current_event() );
 
     /* If we are cropping the image, pass key presses to the image */
     } else if( image.cropping ) {
-      if( image.key_pressed( e.keyval, e.state ) ) {
+      if( image.key_pressed( keyval, keycode, state ) ) {
         queue_draw();
       }
 
     /* Otherwise, allow the canvas item handler to deal with it immediately */
-    } else if( items.key_pressed( e.hardware_keycode, e.state ) ) {
+    } else if( items.key_pressed( keyval, keycode, state ) ) {
       _im_context.reset();
       queue_draw();
     }
 
     return( true );
+
+  }
+
+  /* Handles keyrelease events */
+  private void on_keyrelease( uint keyval, uint keycode, ModifierType state ) {
+
+    if( !image.cropping ) {
+      if( items.key_released( keyval, state ) ) {
+        _im_context.reset();
+        queue_draw();
+      }
+    }
 
   }
 
@@ -346,83 +365,60 @@ public class Canvas : DrawingArea {
     }
   }
 
-  /* Handles keyrelease events */
-  private bool on_keyrelease( EventKey e ) {
+  /* Handles a primary mouse button press event */
+  private void on_primary_press( int n_press, double ex, double ey ) {
 
-    if( !image.cropping ) {
-      if( items.key_released( e.keyval, e.state ) ) {
-        _im_context.reset();
+    var x = scale_x( ex );
+    var y = scale_y( ey );
+
+    var retval = grab_focus();
+    if( image.cropping ) {
+      if( image.cursor_pressed( x, y, n_press ) ) {
         queue_draw();
       }
+    } else if( items.cursor_pressed( x, y, n_press ) ) {
+      queue_draw();
     }
-
-    return( true );
 
   }
 
-  /* Handles a mouse cursor button press event */
-  private bool on_press( EventButton e ) {
-
-    var x           = scale_x( e.x );
-    var y           = scale_y( e.y );
-    var press_count = (e.type == EventType.BUTTON_PRESS) ? 1 :
-                      (e.type == EventType.DOUBLE_BUTTON_PRESS) ? 2 : 3;
-
-    if( e.button == Gdk.BUTTON_SECONDARY ) {
-      if( !image.cropping ) {
-        items.show_contextual_menu( x, y );
-      }
-    } else {
-      grab_focus();
-      if( image.cropping ) {
-        if( image.cursor_pressed( x, y, e.state, press_count ) ) {
-          queue_draw();
-        }
-      } else if( items.cursor_pressed( x, y, e.state, press_count ) ) {
-        queue_draw();
-      }
-    }
-
-    return( false );
-
+  /* Handles a secondary mouse button press event */
+  private void on_secondary_press( int n_press, double ex, double ey ) {
+    show_contextual_menu();
   }
 
   /* Handles a mouse cursor motion event */
-  private bool on_motion( EventMotion e ) {
+  private void on_motion( double ex, double ey ) {
 
-    var x = scale_x( e.x );
-    var y = scale_y( e.y );
+    var x = scale_x( ex );
+    var y = scale_y( ey );
 
     _last_x = x;
     _last_y = y;
 
     if( image.cropping ) {
-      if( image.cursor_moved( x, y, e.state ) ) {
+      if( image.cursor_moved( x, y ) ) {
         queue_draw();
       }
-    } else if( items.cursor_moved( x, y, e.state ) ) {
+    } else if( items.cursor_moved( x, y ) ) {
       queue_draw();
     }
-
-    return( false );
 
   }
 
   /* Handles a mouse cursor button release event */
-  private bool on_release( EventButton e ) {
+  private void on_primary_release( int n_press, double ex, double ey ) {
 
-    var x = scale_x( e.x );
-    var y = scale_y( e.y );
+    var x = scale_x( ex );
+    var y = scale_y( ey );
 
     if( image.cropping ) {
-      if( image.cursor_released( x, y, e.state ) ) {
+      if( image.cursor_released( x, y ) ) {
         queue_draw();
       }
-    } else if( items.cursor_released( x, y, e.state ) ) {
+    } else if( items.cursor_released( x, y ) ) {
       queue_draw();
     }
-
-    return( false );
 
   }
 
@@ -506,10 +502,9 @@ public class Canvas : DrawingArea {
   }
 
   /* Draws all of the items in the canvas */
-  private bool on_draw( Context ctx ) {
+  private void on_draw( DrawingArea da, Context ctx, int width, int height ) {
     ctx.scale( zoom_factor, zoom_factor );
     draw_all( ctx );
-    return( false );
   }
 
 }

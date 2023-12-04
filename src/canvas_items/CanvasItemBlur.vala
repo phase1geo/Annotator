@@ -29,12 +29,23 @@ public class CanvasItemBlur : CanvasItem {
   private const double max_blur  = 45;
   private const double step_blur = 5;
 
+  private Cursor[] _sel_cursors;
+
   public int blur_radius { set; get; default = 20; }
 
   /* Constructor */
   public CanvasItemBlur( Canvas canvas, CanvasItemProperties props ) {
     base( CanvasItemType.BLUR, canvas, props );
     create_points();
+    _sel_cursors = new Cursor[8];
+    _sel_cursors[0] = new Cursor.from_name( "nw-resize", null );
+    _sel_cursors[1] = new Cursor.from_name( "ne-resize", null );
+    _sel_cursors[2] = new Cursor.from_name( "sw-resize", null );
+    _sel_cursors[3] = new Cursor.from_name( "se-resize", null );
+    _sel_cursors[4] = new Cursor.from_name( "n-resize", null );
+    _sel_cursors[5] = new Cursor.from_name( "e-resize", null );
+    _sel_cursors[6] = new Cursor.from_name( "s-resize", null );
+    _sel_cursors[7] = new Cursor.from_name( "w-resize", null );
   }
 
   /* Create the points */
@@ -111,24 +122,14 @@ public class CanvasItemBlur : CanvasItem {
   }
 
   /* Provides cursor to display when mouse cursor is hovering over the given selector */
-  public override CursorType? get_selector_cursor( int index ) {
-    switch( index ) {
-      case 0  :  return( CursorType.UL_ANGLE );
-      case 1  :  return( CursorType.UR_ANGLE );
-      case 2  :  return( CursorType.LL_ANGLE );
-      case 3  :  return( CursorType.LR_ANGLE );
-      case 4  :  return( CursorType.TOP_SIDE );
-      case 5  :  return( CursorType.RIGHT_SIDE );
-      case 6  :  return( CursorType.BOTTOM_SIDE );
-      case 7  :  return( CursorType.LEFT_SIDE );
-      default :  assert_not_reached();
-    }
+  public override Cursor? get_selector_cursor( int index ) {
+    return( _sel_cursors[index] );
   }
 
   /* Adds the contextual menu item values */
-  protected override void add_contextual_menu_items( Box box ) {
+  protected override void add_contextual_menu_items( Box box, Popover popover ) {
 
-    add_contextual_scale( box, _( "Blur Amount:" ), min_blur, max_blur, step_blur, (double)blur_radius,
+    add_contextual_scale( box, popover, _( "Blur Amount:" ), min_blur, max_blur, step_blur, (double)blur_radius,
       (item, value) => {
         blur_radius = (int)value;
         canvas.queue_draw();
@@ -145,7 +146,10 @@ public class CanvasItemBlur : CanvasItem {
   /* Draw the rectangle */
   public override void draw_item( Context ctx, CanvasItemColor color ) {
 
-    Utils.set_context_color_with_alpha( ctx, canvas.image.average_color, mode.alpha() );
+    var black = Utils.color_from_string( "black" );
+
+    // TODO - Utils.set_context_color_with_alpha( ctx, canvas.image.average_color, mode.alpha() );
+    Utils.set_context_color_with_alpha( ctx, black, mode.alpha() );
     ctx.set_line_width( 0 );
     ctx.rectangle( bbox.x, bbox.y, bbox.width, bbox.height );
     save_path( ctx, CanvasItemPathType.FILL );
@@ -158,11 +162,11 @@ public class CanvasItemBlur : CanvasItem {
     } else {
       ctx.stroke();
 
-      var surface = canvas.image.get_surface_for_rect( bbox );
-      var buffer  = new Granite.Drawing.BufferSurface.with_surface( (int)bbox.width, (int)bbox.height, surface );
+      var pixbuf = canvas.image.get_pixbuf_for_rect( bbox );
+      var buffer = new BufferSurface.with_pixbuf( (int)bbox.width, (int)bbox.height, pixbuf );
 
       /* Copy the surface contents over */
-      buffer.context.set_source_surface( surface, 0, 0 );
+      cairo_set_source_pixbuf( buffer.context, pixbuf, 0, 0 );
       buffer.context.paint();
 
       /* Perform the blur */

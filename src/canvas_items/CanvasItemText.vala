@@ -44,6 +44,7 @@ public class CanvasItemText : CanvasItem {
   private double         _height       = 0;
   private bool           _debug        = false;
   private int            _font_size    = 16;
+  private Cursor         _sel_cursor;
 
   /* Signals */
   public signal void select_mode( bool mode );
@@ -102,6 +103,7 @@ public class CanvasItemText : CanvasItem {
     base( CanvasItemType.TEXT, canvas, props );
     initialize( canvas );
     update_size();
+    _sel_cursor = new Cursor.from_name( "e-resize", null );
   }
 
   /* Initializes this contents of this item */
@@ -172,8 +174,8 @@ public class CanvasItemText : CanvasItem {
     max_width += diffx;
   }
 
-  public override CursorType? get_selector_cursor( int index ) {
-    return( CursorType.RIGHT_SIDE );
+  public override Cursor? get_selector_cursor( int index ) {
+    return( _sel_cursor );
   }
 
   public override UndoItem? get_undo_item_for_selector( int index ) {
@@ -882,28 +884,28 @@ public class CanvasItemText : CanvasItem {
   }
 
   /* Adds the contextual menu item values */
-  protected override void add_contextual_menu_items( Box box ) {
+  protected override void add_contextual_menu_items( Box box, Popover popover ) {
 
     if( edit ) {
 
       var selected  = is_selected();
       var pasteable = AnnotatorClipboard.text_pasteable();
 
-      add_contextual_menuitem( box, _( "Copy" ), "<Control>c", selected, (item) => {
+      add_contextual_menuitem( box, popover, _( "Copy" ), "<Control>c", selected, (item) => {
         AnnotatorClipboard.copy_text( get_selected_text() );
       });
-      add_contextual_menuitem( box, _( "Cut" ), "<Control>x", selected, (item) => {
+      add_contextual_menuitem( box, popover, _( "Cut" ), "<Control>x", selected, (item) => {
         AnnotatorClipboard.copy_text( get_selected_text() );
         backspace( canvas.undo_text );
       });
-      add_contextual_menuitem( box, _( "Paste" ), "<Control>v", pasteable, (item) => {
+      add_contextual_menuitem( box, popover, _( "Paste" ), "<Control>v", pasteable, (item) => {
         AnnotatorClipboard.paste( canvas.editor );
       });
-      add_contextual_menuitem( box, _( "Select All" ), "<Control>a", true, (item) => {
+      add_contextual_menuitem( box, popover, _( "Select All" ), "<Control>a", true, (item) => {
         set_cursor_all( false );
       });
       add_contextual_separator( box );
-      add_contextual_menuitem( box, _( "Insert Emoji" ), "<Control>slash", true, (item) => {
+      add_contextual_menuitem( box, popover, _( "Insert Emoji" ), "<Control>slash", true, (item) => {
         canvas.insert_emoji();
       });
 

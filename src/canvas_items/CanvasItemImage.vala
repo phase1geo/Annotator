@@ -25,16 +25,17 @@ using Cairo;
 
 public class CanvasItemImage : CanvasItem {
 
-  private string?       _name = null;
-  private bool          _file = false;
-  private Pixbuf?       _buf  = null;
-  private ImageSurface? _surface;
+  private string? _name = null;
+  private bool    _file = false;
+  private Pixbuf? _buf  = null;
+  private Cursor  _sel_cursor;
 
   /* Constructor */
   public CanvasItemImage( Canvas canvas, string? name, bool file, CanvasItemProperties props ) {
     base( (file ? CanvasItemType.IMAGE : CanvasItemType.STICKER), canvas, props );
     create_points();
     create_image( name, file );
+    _sel_cursor = new Cursor.from_name( "se-resize", null );
   }
 
   /* Creates the item points */
@@ -63,8 +64,9 @@ public class CanvasItemImage : CanvasItem {
   private void resize_image( int width = 0 ) {
     if( _buf != null ) {
       var height = (int)(((double)width / _buf.width) * _buf.height);
-      var buf    = (width == 0) ? _buf : _buf.scale_simple( width, height, InterpType.BILINEAR );
-      _surface = (ImageSurface)cairo_surface_create_from_pixbuf( buf, 1, null );
+      if( width != 0 ) {
+        _buf.scale_simple( width, height, InterpType.BILINEAR );
+      }
     }
   }
 
@@ -114,8 +116,8 @@ public class CanvasItemImage : CanvasItem {
   }
 
   /* Provides cursor to display when mouse cursor is hovering over the given selector */
-  public override CursorType? get_selector_cursor( int index ) {
-    return( CursorType.BOTTOM_RIGHT_CORNER );  // TBD
+  public override Cursor? get_selector_cursor( int index ) {
+    return( _sel_cursor );
   }
 
   /* Saves this item as XML */
@@ -148,7 +150,7 @@ public class CanvasItemImage : CanvasItem {
     save_path( ctx, CanvasItemPathType.FILL );
     ctx.stroke();
 
-   	ctx.set_source_surface( _surface, bbox.x, bbox.y );
+    cairo_set_source_pixbuf( ctx, _buf, bbox.x, bbox.y );
    	ctx.paint();
 
   }

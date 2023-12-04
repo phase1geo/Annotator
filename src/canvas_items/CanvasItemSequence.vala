@@ -30,6 +30,7 @@ public class CanvasItemSequence : CanvasItem {
   private int  _font_size;
   private bool _recalc_font_size = true;
   private int  _seq_num;
+  private Cursor _sel_cursor;
 
   public int seq_num {
     get {
@@ -46,6 +47,7 @@ public class CanvasItemSequence : CanvasItem {
     base( CanvasItemType.SEQUENCE, canvas, props );
     seq_num = _next_seq_num;
     create_points();
+    _sel_cursor = new Cursor.from_name( "se-resize", null );
   }
 
   /* Called when the canvas is used to annotate a new image */
@@ -101,13 +103,13 @@ public class CanvasItemSequence : CanvasItem {
   }
 
   /* Provides cursor to display when mouse cursor is hovering over the given selector */
-  public override CursorType? get_selector_cursor( int index ) {
-    return( CursorType.BOTTOM_RIGHT_CORNER );
+  public override Cursor? get_selector_cursor( int index ) {
+    return( _sel_cursor );
   }
 
-  protected override void add_contextual_menu_items( Box box ) {
+  protected override void add_contextual_menu_items( Box box, Popover popover ) {
 
-    add_contextual_spinner( box, _( "Sequence Number:" ), 1, 100, 1, seq_num,
+    add_contextual_spinner( box, popover, _( "Sequence Number:" ), 1, 100, 1, seq_num,
       (item, value) => {
         canvas.undo_buffer.add_item( new UndoItemSequenceNum( this, seq_num, value ) );
         seq_num = value;

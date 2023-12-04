@@ -27,18 +27,23 @@ public class CustomItems : Object {
 
     var rev_box = new Box( Orientation.VERTICAL, 5 );
 
-    var lbl = new Label( label_str );
-    var edit = new Button.with_label( _( "Edit" ) );
-    edit.relief = ReliefStyle.NONE;
+    var lbl = new Label( label_str ) {
+      halign = Align.START
+    };
+    var edit = new Button.with_label( _( "Edit" ) ) {
+      halign = Align.END,
+      has_frame = false
+    };
 
-    var fb = new FlowBox();
-    fb.orientation = Orientation.HORIZONTAL;
-    fb.min_children_per_line = columns;
-    fb.max_children_per_line = columns;
+    var fb = new FlowBox() {
+      orientation = Orientation.HORIZONTAL,
+      min_children_per_line = columns,
+      max_children_per_line = columns
+    };
     popover.show.connect(() => {
       edit_end_custom( category );
       populate_menu( category, fb );
-      if( fb.get_children().length() == 0 ) {
+      if( fb.get_first_child() == null ) {
         rev_box.hide();
       } else {
         rev_box.show();
@@ -64,21 +69,21 @@ public class CustomItems : Object {
     });
 
     var lbl_box = new Box( Orientation.HORIZONTAL, 0 );
-    lbl_box.pack_start( lbl,  false, false, 0 );
-    lbl_box.pack_end(   edit, false, false, 0 );
+    lbl_box.append( lbl );
+    lbl_box.append( edit );
 
-    rev_box.pack_start( new Separator( Orientation.HORIZONTAL ), false, true, 0 );
-    rev_box.pack_start( lbl_box, false, true,  0 );
-    rev_box.pack_start( fb,      false, false, 0 );
+    rev_box.append( new Separator( Orientation.HORIZONTAL ) );
+    rev_box.append( lbl_box );
+    rev_box.append( fb );
 
     item_removed.connect(() => {
-      if( fb.get_children().length() == 0 ) {
+      if( fb.get_first_child() == null ) {
         rev_box.hide();
       }
     });
 
     /* Add the revealer to the box */
-    box.pack_start( rev_box, false, true, 0 );
+    box.append( rev_box );
 
   }
 
@@ -90,35 +95,34 @@ public class CustomItems : Object {
   public void populate_menu( CanvasItemCategory category, FlowBox fb ) {
 
     /* Clear the flowbox */
-    fb.get_children().foreach((child) => {
-      fb.remove( child );
-    });
+    while( fb.get_first_child() != null ) {
+      fb.remove( fb.get_first_child() );
+    }
 
     /* Add the items into the flowbox */
     _items.foreach((item) => {
       if( item.item.itype.category() == category ) {
 
         var box = new Box( Orientation.HORIZONTAL, 0 );
-        var mb  = new Button();
-        mb.image = item.get_image();
+        var mb  = new Button() {
+          child = item.get_image()
+        };
         mb.clicked.connect(() => {
           item_selected( category, item );
         });
 
-        var del = new Button.from_icon_name( "edit-delete-symbolic", IconSize.SMALL_TOOLBAR );
+        var del = new Button.from_icon_name( "edit-delete-symbolic" );
 
         var start_id = edit_start_custom.connect((c) => {
           if( c == category ) {
             mb.set_sensitive( false );
-            box.pack_start( del, false, false, 0 );
-            box.show_all();
+            box.append( del );
           }
         });
         var end_id = edit_end_custom.connect((c) => {
           if( c == category ) {
             mb.set_sensitive( true );
             box.remove( del );
-            box.show_all();
           }
         });
 
@@ -128,17 +132,14 @@ public class CustomItems : Object {
           disconnect( start_id );
           disconnect( end_id );
           fb.remove( box.parent );
-          fb.show_all();
           item_removed();
         });
 
-        box.pack_start( mb, false, false, 0 );
-        fb.add( box );
+        box.append( mb );
+        fb.append( box );
 
       }
     });
-
-    fb.show_all();
 
   }
 
