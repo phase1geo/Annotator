@@ -96,6 +96,7 @@ public class AnnotatorClipboard {
       } else if( clipboard.get_formats().contain_gtype( Type.STRING ) ) {
         clipboard.read_text_async.begin( null, (obj, res) => {
           var text = clipboard.read_text_async.end( res );
+          editor.paste_text( text );
         });
       }
     } catch( Error e ) {}
