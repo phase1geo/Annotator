@@ -185,25 +185,23 @@ public class Canvas : DrawingArea {
 
     if( items.items_exist() ) {
 
-      var dialog = new Granite.MessageDialog.with_image_from_icon_name(
-        _( "Annotate new image?" ),
-        _( "Pasting a new image to annotate will destroy the current annotation." ),
-        "dialog-warning",
-        ButtonsType.YES_NO
-      );
-
-      dialog.set_transient_for( win );
+      var dialog = new MessageDialog( win, DialogFlags.MODAL, MessageType.WARNING, ButtonsType.YES_NO, _( "Annotate new image?" ) ) {
+        secondary_text = _( "Pasting a new image to annotate will destroy the current annotation." )
+      };
       dialog.set_default_response( ResponseType.CANCEL );
-      dialog.set_title( "" );
 
       dialog.response.connect((id) => {
-        if( id == ResponseType.ACCEPT ) {
+        if( id == ResponseType.YES ) {
           do_paste( buf );
         }
         dialog.destroy();
       });
 
       dialog.show();
+
+    } else {
+
+      do_paste( buf );
 
     }
 

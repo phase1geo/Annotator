@@ -28,6 +28,10 @@ public class AnnotatorClipboard {
 
   const string ITEMS_MIME_TYPE = "x-application/annotator-items";
 
+  public static Clipboard get_clipboard() {
+    return( Display.get_default().get_clipboard() );
+  }
+
   /* Copies the selected text to the clipboard */
   public static void copy_text( string txt ) {
     var clipboard = Display.get_default().get_clipboard();
@@ -73,7 +77,15 @@ public class AnnotatorClipboard {
     var clipboard = Display.get_default().get_clipboard();
 
     try {
-      if( clipboard.get_formats().contain_mime_type( "application/xml" ) ) {
+      if( clipboard.get_formats().contain_mime_type( "image/png" ) ) {
+        clipboard.read_texture_async.begin( null, (ob, res) => {
+          var texture = clipboard.read_texture_async.end( res );
+          if( texture != null ) {
+            var pixbuf = Utils.texture_to_pixbuf( texture );
+            editor.paste_image( pixbuf, true );
+          }
+        });
+      } else if( clipboard.get_formats().contain_mime_type( "application/xml" ) ) {
         clipboard.read_async.begin( {"application/xml"}, 0, null, (obj, res) => {
           string str;
           var stream = clipboard.read_async.end( res, out str );
@@ -84,13 +96,6 @@ public class AnnotatorClipboard {
       } else if( clipboard.get_formats().contain_gtype( Type.STRING ) ) {
         clipboard.read_text_async.begin( null, (obj, res) => {
           var text = clipboard.read_text_async.end( res );
-        });
-      } else if( clipboard.get_formats().contain_mime_type( "image/png" ) ) {
-        clipboard.read_async.begin( {"image/png"}, 0, null, (obj, res) => {
-          string str;
-          var stream = clipboard.read_async.end( res, out str );
-          var pixbuf = new Pixbuf.from_stream( stream );
-          editor.paste_image( pixbuf, true );
         });
       }
     } catch( Error e ) {}

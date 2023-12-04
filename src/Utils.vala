@@ -210,6 +210,21 @@ public class Utils {
     return( btn );
   }
 
+  public static Gdk.Pixbuf? texture_to_pixbuf( Gdk.Texture texture ) {
+
+    FileIOStream iostream;
+
+    try {
+      var tmp = File.new_tmp( null, out iostream );
+      texture.save_to_png( tmp.get_path() );
+      var pixbuf = new Pixbuf.from_file( tmp.get_path() );
+      return( pixbuf );
+    } catch( Error e ) {
+      return( null );
+    }
+
+  }
+
   /*
    Returns true if the following key was found to be pressed (regardless of
    keyboard layout).

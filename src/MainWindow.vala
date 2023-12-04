@@ -323,6 +323,11 @@ public class MainWindow : Gtk.ApplicationWindow {
     var screenshot = welcome.append_button( new ThemedIcon( "insert-image" ), _( "Take A Screenshot" ), _( "Open an image from a screenshot" ) );
     screenshot.clicked.connect( do_screenshot );
 
+    /* Initialize the clipboard */
+    AnnotatorClipboard.get_clipboard().changed.connect(() => {
+      paste.sensitive = AnnotatorClipboard.image_pasteable();
+    });
+
     /* Create the editor */
     _editor = new Editor( this );
     _editor.image_loaded.connect(() => {
