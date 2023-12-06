@@ -105,6 +105,7 @@ public class CustomItems : Object {
 
         var box = new Box( Orientation.HORIZONTAL, 0 );
         var mb  = new Button() {
+          has_frame = false,
           child = item.get_image()
         };
         mb.clicked.connect(() => {

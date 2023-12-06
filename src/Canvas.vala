@@ -349,11 +349,11 @@ public class Canvas : DrawingArea {
   /* Handles keyrelease events */
   private void on_keyrelease( uint keyval, uint keycode, ModifierType state ) {
 
-    if( !image.cropping ) {
-      if( items.key_released( keyval, state ) ) {
-        _im_context.reset();
-        queue_draw();
-      }
+    if( image.cropping ) {
+      image.key_released( keyval, keycode, state );
+    } else if( items.key_released( keyval, state ) ) {
+      _im_context.reset();
+      queue_draw();
     }
 
   }

@@ -153,8 +153,6 @@ public class CanvasItems {
   private int                  _press_count    = -1;
   private FormatBar?           _format_bar     = null;
   private Cursor               _xterm_cursor   = new Cursor.from_name( "text", null );
-  private bool                 _control_set    = false;
-  private bool                 _shift_set      = false;
 
   private const GLib.ActionEntry[] action_entries = {
     { "action_copy",          action_copy },
@@ -169,6 +167,8 @@ public class CanvasItems {
   public string               hilite_color { get; set; default = "yellow"; }
   public string               font_color   { get; set; default = "black"; }
   public CustomItems          custom_items { get; private set; }
+  public bool                 control_set  { get; private set; default = false; }
+  public bool                 shift_set    { get; private set; default = false; }
 
   public signal void text_item_edit_changed( CanvasItemText item );
   public signal void selection_changed( CanvasItemProperties props );
@@ -666,7 +666,7 @@ public class CanvasItems {
 
   /* Handles the control key */
   private bool handle_control() {
-    _control_set = true;
+    control_set = true;
     foreach( CanvasItem item in _items ) {
       if( item.is_within( _last_x, _last_y ) ) {
         _canvas.set_cursor_from_name( "copy" );
@@ -677,7 +677,7 @@ public class CanvasItems {
   }
 
   private bool handle_shift() {
-    _shift_set = true;
+    shift_set = true;
     return( false );
   }
 
@@ -692,7 +692,7 @@ public class CanvasItems {
 
   /* Called when the control key is released */
   private bool handle_release_control() {
-    _control_set = false;
+    control_set = false;
     foreach( CanvasItem item in _items ) {
       if( item.is_within( _last_x, _last_y ) ) {
         _canvas.set_cursor_from_name( "grabbing" );
@@ -704,7 +704,7 @@ public class CanvasItems {
   }
 
   private bool handle_release_shift() {
-    _shift_set = false;
+    shift_set = false;
     return( false );
   }
 
@@ -757,7 +757,7 @@ public class CanvasItems {
             case 2 :  text.set_cursor_at_word( x, y, false );  break;
             case 3 :  text.set_cursor_all( false );            break;
           }
-        } else if( _control_set && (press_count == 1) ) {  // Make a duplicate of the clicked on item
+        } else if( control_set && (press_count == 1) ) {  // Make a duplicate of the clicked on item
           _active = item.duplicate();
           _active.mode = CanvasItemMode.SELECTED;
           _canvas.set_cursor_from_name( "grabbing" );
@@ -811,7 +811,7 @@ public class CanvasItems {
 
     /* Since we pressed on a selector, move the selector */
     if( _selector_index != -1 ) {
-      _active.move_selector( _selector_index, diff_x, diff_y, _shift_set );
+      _active.move_selector( _selector_index, diff_x, diff_y, shift_set );
       return( true );
 
     /* If we are in edit mode, drag out the selection */
@@ -860,7 +860,7 @@ public class CanvasItems {
       _canvas.set_tooltip_text( null );
       foreach( CanvasItem item in _items ) {
         if( item.is_within( x, y ) ) {
-          if( _control_set ) {
+          if( control_set ) {
             _canvas.set_cursor_from_name( "copy" );
           } else {
             _canvas.set_cursor_from_name( "grab" );
