@@ -79,3 +79,8 @@ Afterwards, you can run it via: `flatpak run com.github.phase1geo.annotator`.
   </a>
 </p>
 
+## Credits
+
+Incorporates `document-edit-symbolic.svg` and `image-crop-symbolic.svg` from
+[elementary/icons](https://github.com/elementary/icons/tree/main/actions/symbolic),
+under the terms of the GPL v3.0 license.
