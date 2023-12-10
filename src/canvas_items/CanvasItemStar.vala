@@ -95,7 +95,7 @@ public class CanvasItemStar : CanvasItem {
     calculate_point( 0, points.index( 0 ) );
     calculate_point( ((num_points * 2) - 1), points.index( 1 ) );
 
-    /* Update the selector positions for changing the bondary */
+    /* Update the selector positions for changing the boundary */
     points.index( 2 ).copy_coords( bbox.x1(), bbox.y1() );
     points.index( 3 ).copy_coords( bbox.x2(), bbox.y1() );
     points.index( 4 ).copy_coords( bbox.x1(), bbox.y2() );
@@ -126,7 +126,7 @@ public class CanvasItemStar : CanvasItem {
     }
 
     /*
-     If the inner radius value is greater than zero and hte inner radius is less than
+     If the inner radius value is greater than zero and the inner radius is less than
      the outer radius.
     */
     if( (inner_radius > 5) && ((box.height / 2) > inner_radius) ) {

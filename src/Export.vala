@@ -174,7 +174,7 @@ public class Export {
   /* Loads the settings */
   public virtual void load_settings( Xml.Node* node ) {}
 
-  /* Returns true if the given filename is targetted for this export type */
+  /* Returns true if the given filename is targeted for this export type */
   public bool filename_matches( string fname, out string basename ) {
     foreach( string extension in extensions ) {
       if( fname.has_suffix( extension ) ) {
