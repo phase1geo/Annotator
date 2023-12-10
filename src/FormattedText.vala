@@ -660,7 +660,7 @@ public class FormattedText {
     initialize();
   }
 
-  /* Copy contructor with a string */
+  /* Copy constructor with a string */
   public FormattedText.with_text( string txt ) {
     initialize();
     _text = txt;

@@ -204,7 +204,7 @@ public class CanvasItemText : CanvasItem {
     return( _selstart != _selend );
   }
 
-  /* Saves the current instace into the given XML tree */
+  /* Saves the current instance into the given XML tree */
   public override Xml.Node* save() {
     Xml.Node* node = base.save();
     node->add_child( _text.save() );
