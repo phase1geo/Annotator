@@ -210,6 +210,23 @@ public class Utils {
     return( btn );
   }
 
+  /* Creates a pixbuf from a Cairo surface */
+  public static Gdk.Pixbuf? surface_to_pixbuf( Cairo.Surface surface ) {
+
+    FileIOStream iostream;
+
+    try {
+      var tmp = File.new_tmp( null, out iostream );
+      surface.write_to_png( tmp.get_path() );
+      var pixbuf = new Pixbuf.from_file( tmp.get_path() );
+      return( pixbuf );
+    } catch( Error e ) {
+      return( null );
+    }
+
+  }
+
+  /* Creates a pixbuf from a Texture */
   public static Gdk.Pixbuf? texture_to_pixbuf( Gdk.Texture texture ) {
 
     FileIOStream iostream;

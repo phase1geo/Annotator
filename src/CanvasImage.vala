@@ -242,22 +242,11 @@ public class CanvasImage {
 
   private void adjust_box_on_angle( ref CanvasRect box ) {
 
-    var a      = _buf.width;
-    var b      = _buf.height;
-    var diag   = Math.hypot(a, b) / 2;
-    var theta  = _angle;
-    var theta0 = Math.atan2(b, a);
+    var new_info = new CanvasImageInfo.with_rotation( _buf.width, _buf.height, _angle );
 
-    stdout.printf( "In adjust_box_on_angle, a: %g, b: %g, diag: %g, theta: %g, theta0: %g\n", a, b, diag, theta, theta0 );
+    _canvas.resize( info, new_info );
 
-    var x = diag * Math.fmax( Math.fabs( Math.cos( theta + theta0 ) ), Math.fabs( Math.cos(theta - theta0) ) );
-    var y = diag * Math.fmax( Math.fabs( Math.sin( theta + theta0 ) ), Math.fabs( Math.sin(theta - theta0) ) );
-    var w = 2 * diag * Math.fmax( Math.fabs( Math.cos( theta + theta0 ) ), Math.fabs( Math.cos( theta - theta0 ) ) );
-    var h = 2 * diag * Math.fmax( Math.fabs( Math.sin( theta + theta0 ) ), Math.fabs( Math.sin( theta - theta0 ) ) );
-
-    stdout.printf( "  x: %g, y: %g, w: %g, h: %g\n", x, y, w, h );
-
-    _canvas.set_size_request( (int)w, (int)h );
+    info.copy( new_info );
 
   }
   
@@ -296,10 +285,11 @@ public class CanvasImage {
         case 6  :  box.x += diffx;                   box.width -= diffx;                        break;
         case 7  :                                    box.width += diffx;                        break;
         case 8  :
-          angle = (int)(x - crop_rect.mid_x());
-          if( (angle >= -180) && (angle <= 180) && (!_control_set || ((angle % 15) == 0)) ) {
-            _angle = angle;
-            // adjust_box_on_angle( ref box );
+          angle = (int)(x - (info.width / 2));
+          if( !_control_set || ((angle % 15) == 0) || (angle < -180) || (angle > 180) ) {
+            _angle = (angle < -180) ? -180 :
+                     (angle >  180) ?  180 : angle;
+            adjust_box_on_angle( ref box );
           } else {
             return( false );
           }
@@ -367,6 +357,7 @@ public class CanvasImage {
   /* Completes the cropping operation */
   public bool end_crop() {
     cropping = false;
+    var buf = Utils.surface_to_pixbuf( Cairo.Surface surface );
     var buf = new Pixbuf.subpixbuf( _buf, (int)crop_rect.x, (int)crop_rect.y, (int)crop_rect.width, (int)crop_rect.height );
     change_image( buf, _( "image crop" ) );
     _canvas.items.adjust_items( (0 - crop_rect.x), (0 - crop_rect.y), false );
@@ -431,8 +422,8 @@ public class CanvasImage {
         rect.y = crop_rect.mid_y() - (selector_size / 2);
         break;
       case 8 :  // ROTATE
-        rect.x = (crop_rect.mid_x() - (selector_size / 2)) + (int)_angle;
-        rect.y = crop_rect.y1() + 20;
+        rect.x = ((info.width / 2) - (selector_size / 2)) + (int)_angle;
+        rect.y = 20;
         break;
     }
 
@@ -444,7 +435,7 @@ public class CanvasImage {
   /* Draw the image being annotated */
   private void draw_image( Context ctx ) {
 
-    cairo_set_source_pixbuf( ctx, _buf, 0, 0 );
+    cairo_set_source_pixbuf( ctx, _buf, info.pixbuf_rect.x, info.pixbuf_rect.y );
     ctx.paint();
 
   }
@@ -553,8 +544,8 @@ public class CanvasImage {
 
   /* Draws the image */
   public void draw( Context ctx ) {
-    var w = _buf.width;
-    var h = _buf.height;
+    var w = info.width;
+    var h = info.height;
     ctx.translate( (w * 0.5), (h * 0.5) );
     ctx.rotate( _angle * (Math.PI / 180.0) );
     ctx.translate( (w * -0.5), (h * -0.5) );
@@ -564,7 +555,7 @@ public class CanvasImage {
     ctx.translate( (w * -0.5), (h * -0.5) );
     draw_cropping( ctx );
     ctx.scale( width_scale, height_scale );
-    ctx.rectangle( crop_rect.x, crop_rect.y, crop_rect.width, crop_rect.height );
+    ctx.rectangle( 0, 0, info.width, info.height );
     ctx.stroke();
   }
 
