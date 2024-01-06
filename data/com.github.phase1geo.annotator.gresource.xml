@@ -8,6 +8,7 @@
     </gresource>
     <gresource prefix="/com/github/phase1geo/annotator/images">
         <file alias="stickers.xml" compressed="true">images/icons/flat-color-icons/categories.xml</file>
+        <file alias="README.md">custom_sticker_readme.md</file>
 
         <file alias="com.github.phase1geo.annotator.svg" compressed="true" preprocess="xml-stripblanks">images/com.github.phase1geo.annotator.svg</file>
         <file alias="16-com.github.phase1geo.annotator.svg" compressed="true" preprocess="xml-stripblanks">images/icons/16/com.github.phase1geo.annotator.svg</file>

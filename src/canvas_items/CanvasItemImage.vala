@@ -34,7 +34,7 @@ public class CanvasItemImage : CanvasItem {
   public CanvasItemImage( Canvas canvas, string? name, bool file, CanvasItemProperties props ) {
     base( (file ? CanvasItemType.IMAGE : CanvasItemType.STICKER), canvas, props );
     create_points();
-    create_image( name, file );
+    create_image( name, file, 300 );
     _sel_cursor = new Cursor.from_name( "se-resize", null );
   }
 
@@ -44,17 +44,16 @@ public class CanvasItemImage : CanvasItem {
   }
 
   /* Creates a pixbuf from the given filename or resource at full size */
-  private void create_image( string? name, bool file ) {
+  private void create_image( string? name, bool file, int width ) {
     if( name == null ) return;
     try {
       _name = name;
       _file = file;
       if( file ) {
-        _buf = new Pixbuf.from_file_at_size( _name, -1, -1 );
+        _buf = new Pixbuf.from_file_at_size( _name, width, -1 );
       } else {
-        _buf = new Pixbuf.from_resource_at_scale( _name, 300, 300, true );
+        _buf = canvas.win.sticker_set.make_pixbuf( _name, width );
       }
-      resize_image();
     } catch( Error e ) {
       _buf = null;
     }
@@ -62,11 +61,8 @@ public class CanvasItemImage : CanvasItem {
 
   /* Creates an image from the specified filename */
   private void resize_image( int width = 0 ) {
-    if( _buf != null ) {
-      var height = (int)(((double)width / _buf.width) * _buf.height);
-      if( width != 0 ) {
-        _buf.scale_simple( width, height, InterpType.BILINEAR );
-      }
+    if( (_buf != null) && (width != 0) ) {
+      create_image( _name, _file, width );
     }
   }
 
@@ -139,7 +135,7 @@ public class CanvasItemImage : CanvasItem {
     if( f != null ) {
       _file = bool.parse( f );
     }
-    create_image( _name, _file );
+    create_image( _name, _file, (int)bbox.width );
   }
 
   /* Draw the rectangle */

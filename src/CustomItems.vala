@@ -152,7 +152,7 @@ public class CustomItems : Object {
   /* Returns the local filename containing the custom items */
   private string filename() {
     var dir = GLib.Path.build_filename( Environment.get_user_data_dir(), "annotator" );
-    DirUtils.create_with_parents( dir, 0775 );
+    Utils.create_dir( dir );
     return( GLib.Path.build_filename( dir, "customs.xml" ) );
   }
 

@@ -139,7 +139,7 @@ public class Annotator : Gtk.Application {
   /* Creates the home directory and returns it */
   public static string get_home_dir() {
     var dir = GLib.Path.build_filename( Environment.get_user_data_dir(), "annotator" );
-    DirUtils.create_with_parents( dir, 0775 );
+    Utils.create_dir( dir );
     return( dir );
   }
 

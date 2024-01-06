@@ -37,6 +37,7 @@ public class MainWindow : Gtk.ApplicationWindow {
   private Editor            _editor;
   private Stack             _stack;
   private SList<FileFilter> _image_filters;
+  private StickerSet        _sticker_set;
 
   private const GLib.ActionEntry[] action_entries = {
     { "action_open",            do_open },
@@ -64,6 +65,11 @@ public class MainWindow : Gtk.ApplicationWindow {
       return( _editor );
     }
   }
+  public StickerSet sticker_set {
+    get {
+      return( _sticker_set );
+    }
+  }
 
   /* Constructor */
   public MainWindow( Gtk.Application app ) {
@@ -81,6 +87,9 @@ public class MainWindow : Gtk.ApplicationWindow {
     handle_prefer_dark_changes();
 
     can_focus = true;
+
+    /* Create the sticker set */
+    _sticker_set = new StickerSet();
 
     /* Create editor */
     create_editor( box );
@@ -104,6 +113,14 @@ public class MainWindow : Gtk.ApplicationWindow {
 
     /* Load the exports */
     _editor.canvas.image.exports.load();
+
+    close_request.connect(() => {
+      save_window_size();
+      return( false );
+    });
+
+    /* Set the window size based on saved settings */
+    set_window_size();
 
   }
 
@@ -516,8 +533,22 @@ public class MainWindow : Gtk.ApplicationWindow {
 
   }
 
+  /* Save the window size to settings */
+  private void save_window_size() {
+    Annotator.settings.set_int( "window-w", get_width() );
+    Annotator.settings.set_int( "window-h", get_height() );
+  }
+
+  /* Restore window size from settings */
+  private void set_window_size() {
+    var size_w = Annotator.settings.get_int( "window-w" );
+    var size_h = Annotator.settings.get_int( "window-h" );
+    set_default_size( size_w, size_h );
+  }
+
   /* Quits the application */
   private void do_quit() {
+    save_window_size();
     destroy();
   }
 

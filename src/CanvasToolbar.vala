@@ -164,15 +164,14 @@ public class CanvasToolbar : Box {
     };
 
     var box = new Box( Orientation.VERTICAL, 0 );
-    var vp  = new Viewport( null, null ) {
+    var sw = new ScrolledWindow() {
+      hscrollbar_policy = PolicyType.NEVER,
+      vscrollbar_policy = PolicyType.AUTOMATIC,
       child = box
     };
-    vp.set_size_request( 200, 400 );
-    var sw  = new ScrolledWindow() {
-      child = vp
-    };
+    sw.set_size_request( 400, 400 );
 
-    create_via_xml( box, mb.popover );
+    create_sticker_set( box, mb.popover );
 
     mb.popover.child = sw;
 
@@ -189,28 +188,18 @@ public class CanvasToolbar : Box {
   }
 
   /* Creates the rest of the UI from the stickers XML file that is stored in a gresource */
-  private void create_via_xml( Box box, Popover popover ) {
+  private void create_sticker_set( Box box, Popover popover ) {
 
-    try {
-      var template = resources_lookup_data( "/com/github/phase1geo/annotator/images/stickers.xml", ResourceLookupFlags.NONE);
-      var contents = (string)template.get_data();
-      Xml.Doc* doc = Xml.Parser.parse_memory( contents, contents.length );
-      if( doc != null ) {
-        for( Xml.Node* it=doc->get_root_element()->children; it!=null; it=it->next ) {
-          if( (it->type == Xml.ElementType.ELEMENT_NODE) && (it->name == "category") ) {
-            var category = create_category( box, it->get_prop( "name" ) );
-            for( Xml.Node* it2=it->children; it2!=null; it2=it2->next ) {
-              if( (it2->type == Xml.ElementType.ELEMENT_NODE) && (it2->name == "img") ) {
-                var name = it2->get_prop( "title" );
-                create_image( category, name, popover );
-              }
-            }
-          }
-        }
-        delete doc;
+    var sticker_set = _canvas.win.sticker_set;
+
+    var categories = sticker_set.get_categories();
+    for( int i=0; i<categories.length; i++ ) {
+      var category = create_category( box, categories.index( i ) );
+      var icons    = sticker_set.get_category_icons( categories.index( i ) );
+      for( int j=0; j<icons.length; j++ ) {
+        var icon = icons.index( j );
+        create_image( category, icon, popover );
       }
-    } catch( Error e ) {
-      warning( "Failed to load sticker XML template: %s", e.message );
     }
 
   }
@@ -221,13 +210,16 @@ public class CanvasToolbar : Box {
     /* Create the flowbox which will contain the stickers */
     var fbox = new FlowBox() {
       homogeneous = true,
-      selection_mode = SelectionMode.NONE
+      selection_mode = SelectionMode.NONE,
+      min_children_per_line = 4,
+      max_children_per_line = 4
     };
 
     /* Create expander */
     var exp = new Expander( Utils.make_title( name ) ) {
       margin_start = 20,
       margin_end   = 20,
+      margin_top   = 20,
       use_markup   = true,
       expanded     = true,
       child        = fbox
@@ -240,17 +232,21 @@ public class CanvasToolbar : Box {
   }
 
   /* Creates the image from the given name and adds it to the flow box */
-  private void create_image( FlowBox box, string name, Popover popover ) {
+  private void create_image( FlowBox box, StickerInfo info, Popover popover ) {
 
-    var resource = "/com/github/phase1geo/annotator/images/sticker_%s".printf( name );
+    var buf     = _canvas.win.sticker_set.make_pixbuf( info.resource );
+    var texture = Gdk.Texture.for_pixbuf( buf );
+    var picture = new Picture.for_paintable( texture ) {
+      can_shrink = false
+    };
 
     var btn = new Button() {
       has_frame    = false,
-      tooltip_text = name,
-      child        = new Image.from_resource( resource )
+      tooltip_text = info.tooltip,
+      child        = picture
     };
     btn.clicked.connect((e) => {
-      _canvas.items.add_sticker( resource );
+      _canvas.items.add_sticker( info.resource );
       popover.popdown();
     });
 

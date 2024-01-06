@@ -77,7 +77,7 @@ public class Exports {
   /* Gets the save filename and creates the parent directory if it doesn't exist */
   private string? settings_file( bool make_dir ) {
     var dir = GLib.Path.build_filename( Environment.get_user_data_dir(), "annotator" );
-    if( make_dir && DirUtils.create_with_parents( dir, 0775 ) != 0 ) {
+    if( make_dir && !Utils.create_dir( dir ) ) {
       return( null );
     }
     return( GLib.Path.build_filename( dir, "exports.xml" ) );
