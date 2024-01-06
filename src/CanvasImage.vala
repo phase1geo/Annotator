@@ -357,7 +357,6 @@ public class CanvasImage {
   /* Completes the cropping operation */
   public bool end_crop() {
     cropping = false;
-    var buf = Utils.surface_to_pixbuf( Cairo.Surface surface );
     var buf = new Pixbuf.subpixbuf( _buf, (int)crop_rect.x, (int)crop_rect.y, (int)crop_rect.width, (int)crop_rect.height );
     change_image( buf, _( "image crop" ) );
     _canvas.items.adjust_items( (0 - crop_rect.x), (0 - crop_rect.y), false );
