@@ -88,10 +88,9 @@ public class AnnotatorClipboard {
       } else if( clipboard.get_formats().contain_mime_type( "application/xml" ) ) {
         clipboard.read_async.begin( {"application/xml"}, 0, null, (obj, res) => {
           string str;
-          var stream = clipboard.read_async.end( res, out str );
-          uint8[] buffer = {};
-		      stream.read( buffer );
-          editor.paste_items( (string)buffer );
+          var stream   = clipboard.read_async.end( res, out str );
+          var contents = Utils.read_stream( stream );
+          editor.paste_items( contents );
         });
       } else if( clipboard.get_formats().contain_gtype( Type.STRING ) ) {
         clipboard.read_text_async.begin( null, (obj, res) => {

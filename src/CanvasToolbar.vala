@@ -53,6 +53,7 @@ public class CanvasToolbar : Box {
     create_shapes( CanvasItemCategory.ARROW, _( "Add Arrow" ), _( "More Arrows" ), _( "Custom Arrows" ) );
     create_shapes( CanvasItemCategory.SHAPE, _( "Add Shape" ), _( "More Shapes" ), _( "Custom Shapes" ) );
     create_sticker();
+    create_image();
     create_sequence();
     create_pencil();
     create_text();
@@ -194,18 +195,18 @@ public class CanvasToolbar : Box {
 
     var categories = sticker_set.get_categories();
     for( int i=0; i<categories.length; i++ ) {
-      var category = create_category( box, categories.index( i ) );
+      var category = create_sticker_category( box, categories.index( i ) );
       var icons    = sticker_set.get_category_icons( categories.index( i ) );
       for( int j=0; j<icons.length; j++ ) {
         var icon = icons.index( j );
-        create_image( category, icon, popover );
+        create_sticker_image( category, icon, popover );
       }
     }
 
   }
 
   /* Creates the expander flowbox for the given category name and adds it to the sidebar */
-  private FlowBox create_category( Box box, string name ) {
+  private FlowBox create_sticker_category( Box box, string name ) {
 
     /* Create the flowbox which will contain the stickers */
     var fbox = new FlowBox() {
@@ -232,7 +233,7 @@ public class CanvasToolbar : Box {
   }
 
   /* Creates the image from the given name and adds it to the flow box */
-  private void create_image( FlowBox box, StickerInfo info, Popover popover ) {
+  private void create_sticker_image( FlowBox box, StickerInfo info, Popover popover ) {
 
     var buf     = _canvas.win.sticker_set.make_pixbuf( info.resource );
     var texture = Gdk.Texture.for_pixbuf( buf );
@@ -251,6 +252,22 @@ public class CanvasToolbar : Box {
     });
 
     box.append( btn );
+
+  }
+
+  /* Add an image button */
+  private void create_image() {
+
+    var btn = new Button.from_icon_name( "insert-image-symbolic" ) {
+      tooltip_markup = CanvasItemType.IMAGE.tooltip(),
+      margin_start   = margin,
+      margin_end     = margin
+    };
+    btn.clicked.connect(() => {
+      _canvas.items.add_image();
+    });
+
+    append( btn );
 
   }
 

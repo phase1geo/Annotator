@@ -122,6 +122,7 @@ public enum CanvasItemType {
       case PENCIL      :  return( Utils.tooltip_with_accel( _( "Pencil Tool" ), "p" ) );
       case SEQUENCE    :  return( Utils.tooltip_with_accel( _( "Sequence Number" ), "q" ) );
       case STICKER     :  return( _( "Sticker" ) );
+      case IMAGE       :  return( Utils.tooltip_with_accel( _( "Image" ), "i" ) );
       default          :  return( "" );
     }
   }
@@ -307,6 +308,14 @@ public class CanvasItems {
     return( item );
   }
 
+  private CanvasItem create_image( string? path, bool loading = false ) {
+    var item = new CanvasItemImage( _canvas, path, true, props );
+    if( (path != null) && !loading ) {
+      item.bbox = center_box( item.bbox.width, item.bbox.height );
+    }
+    return( item );
+  }
+
   public void add_item( CanvasItem item, int position, bool undo, bool draw = true ) {
     clear_selection();
     item.mode = CanvasItemMode.SELECTED;
@@ -344,6 +353,31 @@ public class CanvasItems {
   public void add_sticker( string name ) {
     var item = create_sticker( name );
     add_item( item, -1, true );
+  }
+
+  public void add_image() {
+
+    /* Get the file to open from the user */
+    var dialog = new FileChooserNative( _( "Open Insertion Image" ), _canvas.win, FileChooserAction.OPEN, _( "Open" ), _( "Cancel" ) );
+    Utils.set_chooser_folder( dialog );
+
+    /* Create file filters for each supported format */
+    foreach( FileFilter filter in _canvas.win.image_filters ) {
+      dialog.add_filter( filter );
+    }
+
+    dialog.response.connect((id) => {
+      if( id == ResponseType.ACCEPT ) {
+        var filename = dialog.get_file().get_path();
+        var item = create_image( filename );
+        add_item( item, -1, true );
+        Utils.store_chooser_folder( filename );
+      }
+      dialog.destroy();
+    });
+
+    dialog.show();
+
   }
 
   /* Removes all of the canvas items */
@@ -386,7 +420,12 @@ public class CanvasItems {
 
   /* Returns the currently selected item */
   public CanvasItem? get_selected_item() {
-    return( _active );
+    foreach( CanvasItem item in _items ) {
+      if( item.mode == CanvasItemMode.SELECTED ) {
+        return( item );
+      }
+    }
+    return( null );
   }
 
   /* Deletes all of the selected items */
@@ -552,6 +591,7 @@ public class CanvasItems {
     else if( !shift && Utils.has_key( kvs, Key.m ) ) { add_shape_item( CanvasItemType.MAGNIFIER );    return( true ); }
     else if( !shift && Utils.has_key( kvs, Key.p ) ) { add_shape_item( CanvasItemType.PENCIL );       return( true ); }
     else if( !shift && Utils.has_key( kvs, Key.q ) ) { add_shape_item( CanvasItemType.SEQUENCE );     return( true ); }
+    else if( !shift && Utils.has_key( kvs, Key.i ) ) { add_image();                                   return( true ); }
     else if( !shift && Utils.has_key( kvs, Key.Shift_L ) ) { return( handle_shift() ); }
     else if( !shift && Utils.has_key( kvs, Key.Control_L ) ) { return( handle_control() ); }
 
@@ -1147,6 +1187,7 @@ public class CanvasItems {
           case CanvasItemType.PENCIL      :  item = create_pencil();            break;
           case CanvasItemType.SEQUENCE    :  item = create_sequence();          break;
           case CanvasItemType.STICKER     :  item = create_sticker( null );     break;
+          case CanvasItemType.IMAGE       :  item = create_image( null );       break;
         }
         if( item != null ) {
           item.load( it );
@@ -1232,6 +1273,7 @@ public class CanvasItems {
       case CanvasItemType.PENCIL      :  item = create_pencil( true );            break;
       case CanvasItemType.SEQUENCE    :  item = create_sequence( true );          break;
       case CanvasItemType.STICKER     :  item = create_sticker( null, true );     break;
+      case CanvasItemType.IMAGE       :  item = create_image( null );             break;
     }
     if( item != null ) {
       item.load( node );

@@ -60,6 +60,7 @@ public class MainWindow : Gtk.ApplicationWindow {
   };
 
   private bool on_elementary = Gtk.Settings.get_default().gtk_icon_theme_name == "elementary";
+
   public Editor editor {
     get {
       return( _editor );
@@ -68,6 +69,11 @@ public class MainWindow : Gtk.ApplicationWindow {
   public StickerSet sticker_set {
     get {
       return( _sticker_set );
+    }
+  }
+  public SList<FileFilter> image_filters {
+    get {
+      return( _image_filters );
     }
   }
 

@@ -1,4 +1,4 @@
-/*s
+/*
 * Copyright (c) 2020-2021 (https://github.com/phase1geo/Annotator)
 *
 * This program is free software; you can redistribute it and/or
@@ -34,7 +34,7 @@ public class CanvasItemImage : CanvasItem {
   public CanvasItemImage( Canvas canvas, string? name, bool file, CanvasItemProperties props ) {
     base( (file ? CanvasItemType.IMAGE : CanvasItemType.STICKER), canvas, props );
     create_points();
-    create_image( name, file, 300 );
+    create_image( name, file, (file ? 300 : 64) );
     _sel_cursor = new Cursor.from_name( "se-resize", null );
   }
 
@@ -54,6 +54,8 @@ public class CanvasItemImage : CanvasItem {
       } else {
         _buf = canvas.win.sticker_set.make_pixbuf( _name, width );
       }
+      bbox.width  = _buf.width;
+      bbox.height = _buf.height;
     } catch( Error e ) {
       _buf = null;
     }

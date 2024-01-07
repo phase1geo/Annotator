@@ -241,4 +241,20 @@ public class Utils {
     return( false );
   }
 
+  public static string read_stream( InputStream stream ) {
+    var str = "";
+    var dis = new DataInputStream( stream );
+    try {
+      do {
+        var line = dis.read_line();
+        if( line != null ) {
+          str += line + "\n";
+        }
+      } while( dis.get_available() > 0 );
+    } catch( IOError e ) {
+      return( "" );
+    }
+    return( str );
+  }
+
 }
