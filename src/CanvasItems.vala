@@ -286,7 +286,6 @@ public class CanvasItems {
   private CanvasItem create_pencil( bool loading = false ) {
     var item = new CanvasItemPencil( _canvas, props );
     if( !loading ) {
-      _active = item;
       _canvas.set_cursor_from_name( "pencil" );
     }
     return( item );
@@ -420,7 +419,12 @@ public class CanvasItems {
 
   /* Returns the currently selected item */
   public CanvasItem? get_selected_item() {
-    return( _active );
+    foreach( CanvasItem item in _items ) {
+      if( item.mode == CanvasItemMode.SELECTED ) {
+        return( item );
+      }
+    }
+    return( null );
   }
 
   /* Deletes all of the selected items */
