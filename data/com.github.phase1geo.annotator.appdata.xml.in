@@ -77,6 +77,25 @@
     <value key="x-appcenter-stripe">pk_live_51Ccoj4BJm4hDdHaF1YKGdyGLCLtShzElKsr4GM9hJDJAoZArcWrNHsjL9b8SBs01GQBYpakj0l1tYenVJOqke93300TULHWdph</value>
   </custom>
   <releases>
+    <release version="2.0.0" date="2024-01-31">
+      <description>
+        <p>New</p>
+        <ul>
+          <li>Updated UI from GTK3 to GTK4.</li>
+          <li>Added support for exporting PNG with transparency (thanks to Peter Willemsen).</li>
+          <li>Added support for adding user-provided custom icons.</li>
+        </ul>
+        <p>Changes</p>
+        <ul>
+        </ul>
+        <p>Bug Fixes</p>
+        <ul>
+          <li>Fixed issue with saving boolean export options between application runs (thanks to Peter Willemsen).</li>
+          <li>Fixed issue with missing icons in some distributions (thanks to Kevin Ernst).</li>
+          <li>Fixed issue with duplicating canvas items by holding Control while dragging an item.</li>
+        </ul>
+      </description>
+    </release>
     <release version="1.2.1" date="2023-05-20">
       <description>
         <p>New</p>
