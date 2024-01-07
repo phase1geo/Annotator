@@ -515,11 +515,9 @@ public class CanvasToolbar : Box {
     unowned CheckButton? width_group = null;
     for( int i=0; i<CanvasItemStrokeWidth.NUM; i++ ) {
       var sw  = (CanvasItemStrokeWidth)i;
-      // var btn = new CheckButton() {
-      var btn = new CheckButton.with_label( sw.to_string() ) {
+      var btn = new CheckButton() {
         margin_start = 20,
-        active       = (_canvas.items.props.stroke_width == sw),
-// TODO        child        = make_width_icon( 100, sw.width() )
+        active       = (_canvas.items.props.stroke_width == sw)
       };
       btn.set_group( width_group );
       btn.toggled.connect(() => {
@@ -532,7 +530,11 @@ public class CanvasToolbar : Box {
       if( width_group == null ) {
         width_group = btn;
       }
-      box.append( btn );
+      var icn = make_width_icon( 100, sw.width() );
+      var rbox = new Box( Orientation.HORIZONTAL, 5 );
+      rbox.append( btn );
+      rbox.append( icn );
+      box.append( rbox );
     }
 
     /* Add dash patterns */
@@ -546,11 +548,9 @@ public class CanvasToolbar : Box {
     unowned CheckButton? dash_group = null;
     for( int i=0; i<CanvasItemDashPattern.NUM; i++ ) {
       var dash = (CanvasItemDashPattern)i;
-      // var btn  = new CheckButton() {
-      var btn  = new CheckButton.with_label( dash.to_string() ) {
+      var btn  = new CheckButton() {
         margin_start = 20,
         active       = (_canvas.items.props.dash == dash),
-// TODO        child        = make_dash_icon( 100, dash )
       };
       btn.set_group( dash_group );
       btn.toggled.connect(() => {
@@ -563,7 +563,11 @@ public class CanvasToolbar : Box {
       if( dash_group == null ) {
         dash_group = btn;
       }
-      box.append( btn );
+      var icn = make_dash_icon( 100, dash );
+      var rbox = new Box( Orientation.HORIZONTAL, 5 );
+      rbox.append( btn );
+      rbox.append( icn );
+      box.append( rbox );
     }
 
     /* Add outline */
@@ -662,7 +666,7 @@ public class CanvasToolbar : Box {
 
   }
 
-  private Image make_width_icon( int width, int stroke_width ) {
+  private Picture make_width_icon( int width, int stroke_width ) {
 
     var height = stroke_width;
 
@@ -678,13 +682,15 @@ public class CanvasToolbar : Box {
     ctx.line_to( width, (height / 2) );
     ctx.stroke();
 
-    var image = new Image.from_paintable( snapshot.free_to_paintable( null ) );
+    var image = new Picture.for_paintable( snapshot.free_to_paintable( null ) ) {
+      can_shrink = false
+    };
 
     return( image );
 
   }
 
-  private Image make_dash_icon( int width, CanvasItemDashPattern dash ) {
+  private Picture make_dash_icon( int width, CanvasItemDashPattern dash ) {
 
     var height = 5;
 
@@ -701,7 +707,9 @@ public class CanvasToolbar : Box {
     ctx.line_to( width, (height / 2) );
     ctx.stroke();
 
-    var image = new Image.from_paintable( snapshot.free_to_paintable( null ) );
+    var image = new Picture.for_paintable( snapshot.free_to_paintable( null ) ) {
+      can_shrink = false
+    };
 
     return( image );
 
