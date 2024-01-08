@@ -214,7 +214,7 @@ public class CanvasItemStar : CanvasItem {
       var sw = props.stroke_width.width();
 
       if( props.outline ) {
-        set_color( ctx, color, outline, 0.5 );
+        set_color( ctx, color, outline, 1.0 );
         ctx.set_line_width( sw + 2 );
         props.dash.set_bg_pattern( ctx );
         ctx.stroke_preserve();

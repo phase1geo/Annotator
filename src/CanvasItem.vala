@@ -488,11 +488,9 @@ public class CanvasItem {
       use_markup = true
     };
 
-    var btn_controller = new GestureClick();
     var sw = new Switch();
-    sw.add_controller( btn_controller );
     sw.set_active( dflt );
-    btn_controller.pressed.connect((n_press, x, y) => {
+    sw.notify["active"].connect(() => {
       action( this );
     });
 
