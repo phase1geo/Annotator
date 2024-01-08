@@ -28,7 +28,8 @@ public class CustomItems : Object {
     var rev_box = new Box( Orientation.VERTICAL, 5 );
 
     var lbl = new Label( label_str ) {
-      halign = Align.START
+      halign = Align.START,
+      hexpand = true
     };
     var edit = new Button.with_label( _( "Edit" ) ) {
       halign = Align.END,
@@ -114,13 +115,13 @@ public class CustomItems : Object {
         var del = new Button.from_icon_name( "edit-delete-symbolic" );
 
         var start_id = edit_start_custom.connect((c) => {
-          if( c == category ) {
+          if( (c == category) && mb.sensitive ) {
             mb.set_sensitive( false );
             box.append( del );
           }
         });
         var end_id = edit_end_custom.connect((c) => {
-          if( c == category ) {
+          if( (c == category) && !mb.sensitive ) {
             mb.set_sensitive( true );
             box.remove( del );
           }
