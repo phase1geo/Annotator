@@ -355,7 +355,8 @@ public class CanvasToolbar : Box {
 
     _crop_btn = new ToggleButton() {
       has_frame    = false,
-      tooltip_text = _( "Crop/Rotate Image" ),
+      // TODO - tooltip_text = _( "Crop/Rotate Image" ),
+      tooltip_text = _( "Crop Image" ),
       icon_name    = "image-crop-symbolic",
       margin_start = margin,
       margin_end   = margin

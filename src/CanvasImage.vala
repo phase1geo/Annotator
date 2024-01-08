@@ -25,7 +25,9 @@ using Cairo;
 
 public class CanvasImage {
 
-  private const int selector_size = 10;
+  private const int selector_size  = 10;
+  private const int crop_selectors = 8;  // TODO - Set to 9 to enable rotation
+
   private double selector_width {
     get {
       return( selector_size / width_scale );
@@ -221,7 +223,7 @@ public class CanvasImage {
     _crop_index = -2;
 
     if( cropping ) {
-      for( int i=0; i<9; i++ ) {
+      for( int i=0; i<crop_selectors; i++ ) {
         selector_bbox( i, rect );
         if( rect.contains( x, y ) ) {
           _crop_index = i;
@@ -309,7 +311,7 @@ public class CanvasImage {
     /* If we are hovering over a crop selector, change the cursor */
     } else {
       var rect = new CanvasRect();
-      for( int i=0; i<9; i++ ) {
+      for( int i=0; i<crop_selectors; i++ ) {
         selector_bbox( i, rect );
         if( rect.contains( x, y ) ) {
           _canvas.set_cursor( _sel_cursors[i] );
@@ -538,7 +540,7 @@ public class CanvasImage {
     draw_crop_outline( ctx );
     draw_crop_dividers( ctx );
     draw_crop_selectors( ctx );
-    draw_rotate_selector( ctx );
+    // TODO - draw_rotate_selector( ctx );
   }
 
   /* Draws the image */
