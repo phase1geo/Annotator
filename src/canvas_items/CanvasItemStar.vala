@@ -196,9 +196,9 @@ public class CanvasItemStar : CanvasItem {
     }
     ctx.close_path();
 
-    if( itype == CanvasItemType.STAR_FILL ) {
+    save_path( ctx, CanvasItemPathType.FILL );
 
-      save_path( ctx, CanvasItemPathType.FILL );
+    if( itype == CanvasItemType.STAR_FILL ) {
 
       if( props.outline ) {
         ctx.fill_preserve();
@@ -217,7 +217,6 @@ public class CanvasItemStar : CanvasItem {
         set_color( ctx, color, outline, 0.5 );
         ctx.set_line_width( sw + 2 );
         props.dash.set_bg_pattern( ctx );
-        save_path( ctx, CanvasItemPathType.STROKE );
         ctx.stroke_preserve();
       }
 

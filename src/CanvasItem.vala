@@ -97,6 +97,15 @@ public enum CanvasItemPathType {
       default     :  assert_not_reached();
     }
   }
+
+  public string to_string() {
+    switch( this ) {
+      case FILL   :  return( "fill" );
+      case STROKE :  return( "stroke" );
+      case CLIP   :  return( "clip" );
+      default     :  return( "unknown" );
+    }
+  }
 }
 
 public delegate void CanvasItemClickAction( CanvasItem item );
