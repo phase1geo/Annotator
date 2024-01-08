@@ -36,13 +36,15 @@ public class CanvasImage {
       return( selector_size / height_scale );
     }
   }
-  private Cursor[] _sel_cursors = new Cursor[8];
+  private Cursor[] _sel_cursors = new Cursor[9];
 
   private Canvas        _canvas;
-  private Pixbuf?       _buf        = null;  // Currently displayed pixbuf
-  private int           _crop_index = -2;
-  private double        _last_x     = 0;
-  private double        _last_y     = 0;
+  private Pixbuf?       _buf         = null;  // Currently displayed pixbuf
+  private int           _crop_index  = -2;
+  private double        _last_x      = 0;
+  private double        _last_y      = 0;
+  private double        _angle       = 0;
+  private bool          _control_set = false;
 
   public Pixbuf?          pixbuf        { get; private set; default = null; }  // Original pixbuf of image
   public bool             cropping      { get; private set; default = false; }
@@ -68,6 +70,7 @@ public class CanvasImage {
     _sel_cursors[5] = new Cursor.from_name( "s-resize", null );
     _sel_cursors[6] = new Cursor.from_name( "w-resize", null );
     _sel_cursors[7] = new Cursor.from_name( "e-resize", null );
+    _sel_cursors[8] = new Cursor.from_name( "col-resize", null );
   }
 
   /* Returns true if the surface image has been set */
@@ -86,6 +89,10 @@ public class CanvasImage {
   /* Changes the stored image to the given pixbuf and performs other related tasks */
   public void change_image( Pixbuf buf, string? undo_name = _( "change image" ) ) {
 
+    if( cropping ) {
+      cancel_crop();
+    }
+
     if( (undo_name != null) && (_buf != null) ) {
       _canvas.undo_buffer.add_item( new UndoImageChange( undo_name, _buf, buf ) );
     }
@@ -93,6 +100,7 @@ public class CanvasImage {
     pixbuf = buf.copy();
     _buf   = buf.copy();
     _canvas.set_size_request( _buf.width, _buf.height );
+    _angle = 0;
 
     /* Create the image information */
     info = new CanvasImageInfo( _buf );
@@ -164,16 +172,39 @@ public class CanvasImage {
   //  KEY EVENT HANDLER
   /****************************************************************************/
 
-  /* Handles a keypress event */
+  /* Handles a keypress event when cropping is enabled */
   public bool key_pressed( uint keyval, uint keycode, ModifierType state ) {
 
     switch( keyval ) {
-      case Key.Return :  return( end_crop() );
-      case Key.Escape :  return( cancel_crop() );
+      case Key.Return    :  return( end_crop() );
+      case Key.Escape    :  return( cancel_crop() );
+      case Key.Control_L :  _control_set = true;  break;
+      case Key.Right     :
+        if( ((int)_angle + 1) < 180 ) {
+          var box = new CanvasRect.from_rect( crop_rect );
+          _angle += 1;
+          adjust_box_on_angle( ref box );
+          _canvas.queue_draw();
+        }
+        break;
+      case Key.Left      :
+        if( ((int)_angle - 1) > 0 ) {
+          var box = new CanvasRect.from_rect( crop_rect );
+          _angle -= 1;
+          adjust_box_on_angle( ref box );
+          _canvas.queue_draw();
+        }
+        break;
     }
 
     return( false );
 
+  }
+
+  /* Handles a key release event when cropping is enabled */
+  public bool key_released( uint keyval, uint keycode, ModifierType state ) {
+    _control_set = false;
+    return( false );
   }
 
   /****************************************************************************/
@@ -190,7 +221,7 @@ public class CanvasImage {
     _crop_index = -2;
 
     if( cropping ) {
-      for( int i=0; i<8; i++ ) {
+      for( int i=0; i<9; i++ ) {
         selector_bbox( i, rect );
         if( rect.contains( x, y ) ) {
           _crop_index = i;
@@ -209,12 +240,23 @@ public class CanvasImage {
 
   }
 
+  private void adjust_box_on_angle( ref CanvasRect box ) {
+
+    var new_info = new CanvasImageInfo.with_rotation( _buf.width, _buf.height, _angle );
+
+    _canvas.resize( info, new_info );
+
+    info.copy( new_info );
+
+  }
+  
   /* Handles a cursor motion event */
   public bool cursor_moved( double x, double y ) {
 
     var diffx = x - _last_x;
     var diffy = y - _last_y;
     var box   = new CanvasRect.from_rect( crop_rect );
+    int angle = 0;
 
     _last_x = x;
     _last_y = y;
@@ -242,6 +284,16 @@ public class CanvasImage {
         case 5  :                                                         box.height += diffy;  break;
         case 6  :  box.x += diffx;                   box.width -= diffx;                        break;
         case 7  :                                    box.width += diffx;                        break;
+        case 8  :
+          angle = (int)(x - (info.width / 2));
+          if( !_control_set || ((angle % 15) == 0) || (angle < -180) || (angle > 180) ) {
+            _angle = (angle < -180) ? -180 :
+                     (angle >  180) ?  180 : angle;
+            adjust_box_on_angle( ref box );
+          } else {
+            return( false );
+          }
+          break;
         default :  assert_not_reached();
       }
       if( (box.x >= 0) &&
@@ -257,7 +309,7 @@ public class CanvasImage {
     /* If we are hovering over a crop selector, change the cursor */
     } else {
       var rect = new CanvasRect();
-      for( int i=0; i<8; i++ ) {
+      for( int i=0; i<9; i++ ) {
         selector_bbox( i, rect );
         if( rect.contains( x, y ) ) {
           _canvas.set_cursor( _sel_cursors[i] );
@@ -368,6 +420,10 @@ public class CanvasImage {
         rect.x = (index == 6) ? crop_rect.x1() : (crop_rect.x2() - selector_size);
         rect.y = crop_rect.mid_y() - (selector_size / 2);
         break;
+      case 8 :  // ROTATE
+        rect.x = ((info.width / 2) - (selector_size / 2)) + (int)_angle;
+        rect.y = 20;
+        break;
     }
 
     rect.width  = selector_size;
@@ -378,7 +434,7 @@ public class CanvasImage {
   /* Draw the image being annotated */
   private void draw_image( Context ctx ) {
 
-    cairo_set_source_pixbuf( ctx, _buf, 0, 0 );
+    cairo_set_source_pixbuf( ctx, _buf, info.pixbuf_rect.x, info.pixbuf_rect.y );
     ctx.paint();
 
   }
@@ -437,9 +493,9 @@ public class CanvasImage {
   /* Draws the cropping selectors */
   private void draw_crop_selectors( Context ctx ) {
 
-    var blue  = Utils.color_from_string( "light blue" );
-    var black = Utils.color_from_string( "black" );
-    var rect  = new CanvasRect();
+    var blue   = Utils.color_from_string( "light blue" );
+    var black  = Utils.color_from_string( "black" );
+    var rect   = new CanvasRect();
 
     for( int i=0; i<8; i++ ) {
 
@@ -457,19 +513,49 @@ public class CanvasImage {
 
   }
 
+  /* Draws the rotation selector */
+  private void draw_rotate_selector( Context ctx ) {
+
+    var yellow = Utils.color_from_string( "yellow" );
+    var black  = Utils.color_from_string( "black" );
+    var rect   = new CanvasRect();
+
+    selector_bbox( 8, rect );
+
+    Utils.set_context_color( ctx, yellow );
+    ctx.rectangle( rect.x, rect.y, rect.width, rect.height );
+    ctx.fill_preserve();
+
+    Utils.set_context_color( ctx, black );
+    ctx.set_line_width( 1 );
+    ctx.stroke();
+
+  }
+
   /* Draw the cropping area if we are in that mode */
   private void draw_cropping( Context ctx ) {
     if( !cropping ) return;
     draw_crop_outline( ctx );
     draw_crop_dividers( ctx );
     draw_crop_selectors( ctx );
+    draw_rotate_selector( ctx );
   }
 
   /* Draws the image */
   public void draw( Context ctx ) {
+    var w = info.width;
+    var h = info.height;
+    ctx.translate( (w * 0.5), (h * 0.5) );
+    ctx.rotate( _angle * (Math.PI / 180.0) );
+    ctx.translate( (w * -0.5), (h * -0.5) );
     draw_image( ctx );
+    ctx.translate( (w * 0.5), (h * 0.5) );
+    ctx.rotate( (-1 * _angle) * (Math.PI / 180.0) );
+    ctx.translate( (w * -0.5), (h * -0.5) );
     draw_cropping( ctx );
     ctx.scale( width_scale, height_scale );
+    ctx.rectangle( 0, 0, info.width, info.height );
+    ctx.stroke();
   }
 
 }

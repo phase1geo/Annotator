@@ -39,6 +39,19 @@ public class CanvasImageInfo {
     pixbuf_rect = new CanvasRect.from_coords( left_margin, top_margin, pixbuf_width, pixbuf_height );
   }
 
+  /* Constructor - Creates an image info based on the amount of angular rotation of the pixbuf with the given dimensions */
+  public CanvasImageInfo.with_rotation( int pixbuf_width, int pixbuf_height, double angle ) {
+
+    var theta    = angle * (Math.PI / 180.0);
+    var absCosRA = Math.fabs( Math.cos( theta ) );
+    var absSinRA = Math.fabs( Math.sin( theta ) );
+
+    width  = (int)((pixbuf_width * absCosRA) + (pixbuf_height * absSinRA));
+    height = (int)((pixbuf_width * absSinRA) + (pixbuf_height * absCosRA));
+    pixbuf_rect = new CanvasRect.from_coords( ((width - pixbuf_width) / 2), ((height - pixbuf_height) / 2), pixbuf_width, pixbuf_height );
+
+  }
+
   /* Copy constructor */
   public CanvasImageInfo.from_info( CanvasImageInfo info ) {
     pixbuf_rect = new CanvasRect();
