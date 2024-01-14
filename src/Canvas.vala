@@ -296,28 +296,20 @@ public class Canvas : DrawingArea {
   /* Handles the emoji insertion process for the given text item */
   public void insert_emoji() {
     if( items.in_edit_mode() ) {
-      /* TODO - This should be possible but research will be required
-      var overlay = (Overlay)get_parent();
-      var entry   = new Entry();
-      var text    = items.get_active_text();
       int x, ytop, ybot;
+      var text = items.get_active_text();
       text.get_cursor_pos( out x, out ytop, out ybot );
-      entry.margin_start = x;
-      entry.margin_top   = ytop + ((ybot - ytop) / 2);
-      entry.changed.connect(() => {
-        text.insert( entry.text, undo_text );
+      Gdk.Rectangle rect = {x, (ytop + ((ybot - ytop) / 2)), 1, 1};
+      var emoji_chooser = new EmojiChooser() {
+        pointing_to = rect
+      };
+      emoji_chooser.set_parent( this );
+      emoji_chooser.emoji_picked.connect((str) => {
+        text.insert( str, undo_text );
         queue_draw();
-        entry.unparent();
         grab_focus();
       });
-      overlay.add_overlay( entry );
-      var emoji_chooser = new EmojiChooer();
-      emoji_chooser.set_parent( entry );
-      emoji_chooser.emoji_picked((str) => {
-        entry.kk
-      });
       emoji_chooser.popup();
-      */
     }
   }
 
