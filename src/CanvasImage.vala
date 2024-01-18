@@ -23,6 +23,18 @@ using Gtk;
 using Gdk;
 using Cairo;
 
+public enum PickMode {
+  NONE,
+  CLIPBOARD,
+  COLOR;
+
+  /* Returns true if enabled */
+  public bool enabled() {
+    return( this != NONE );
+  }
+
+}
+
 public class CanvasImage {
 
   private const int selector_size  = 10;
@@ -47,6 +59,8 @@ public class CanvasImage {
   private double        _last_y      = 0;
   private double        _angle       = 0;
   private bool          _control_set = false;
+  private PickMode      _pick_mode   = PickMode.NONE;
+  private RGBA          _pick_color  = {(float)1.0, (float)1.0, (float)1.0, (float)1.0};
 
   public Pixbuf?          pixbuf        { get; private set; default = null; }  // Original pixbuf of image
   public bool             cropping      { get; private set; default = false; }
@@ -55,10 +69,16 @@ public class CanvasImage {
   public double           width_scale   { get; private set; default = 1.0; }
   public double           height_scale  { get; private set; default = 1.0; }
   public Exports          exports       { get; private set; }
+  public bool             picking       {
+    get {
+      return( _pick_mode.enabled() );
+    }
+  }
 
   public signal void crop_started();
   public signal void crop_ended();
   public signal void image_changed();
+  public signal void color_picked( RGBA color );
 
   /* Constructor */
   public CanvasImage( Canvas canvas ) {
@@ -177,26 +197,39 @@ public class CanvasImage {
   /* Handles a keypress event when cropping is enabled */
   public bool key_pressed( uint keyval, uint keycode, ModifierType state ) {
 
-    switch( keyval ) {
-      case Key.Return    :  return( end_crop() );
-      case Key.Escape    :  return( cancel_crop() );
-      case Key.Control_L :  _control_set = true;  break;
-      case Key.Right     :
-        if( ((int)_angle + 1) < 180 ) {
-          var box = new CanvasRect.from_rect( crop_rect );
-          _angle += 1;
-          adjust_box_on_angle( ref box );
-          _canvas.queue_draw();
-        }
-        break;
-      case Key.Left      :
-        if( ((int)_angle - 1) > 0 ) {
-          var box = new CanvasRect.from_rect( crop_rect );
-          _angle -= 1;
-          adjust_box_on_angle( ref box );
-          _canvas.queue_draw();
-        }
-        break;
+    if( _pick_mode.enabled() ) {
+
+      switch( keyval ) {
+        case Key.Return :  return( complete_pick_mode( false ) );
+        case Key.Escape :  return( complete_pick_mode( true ) );
+      }
+
+    } else {
+
+      switch( keyval ) {
+        case Key.Return    :
+          return( end_crop() );
+        case Key.Escape    :
+          return( cancel_crop() );
+        case Key.Control_L :  _control_set = true;  break;
+        case Key.Right     :
+          if( ((int)_angle + 1) < 180 ) {
+            var box = new CanvasRect.from_rect( crop_rect );
+            _angle += 1;
+            adjust_box_on_angle( ref box );
+            _canvas.queue_draw();
+          }
+          break;
+        case Key.Left      :
+          if( ((int)_angle - 1) > 0 ) {
+            var box = new CanvasRect.from_rect( crop_rect );
+            _angle -= 1;
+            adjust_box_on_angle( ref box );
+            _canvas.queue_draw();
+          }
+          break;
+      }
+
     }
 
     return( false );
@@ -263,6 +296,11 @@ public class CanvasImage {
     _last_x = x;
     _last_y = y;
 
+    /* If we are picking a color, queue the draw */
+    if( _pick_mode.enabled() ) {
+      return( true );
+    }
+
     /* If we clicked into the crop rectangle, move the rectangle */
     if( _crop_index == -1 ) {
       box.x += diffx;
@@ -325,13 +363,38 @@ public class CanvasImage {
 
   }
 
+  /* If we are in color picking mode, finish it */
+  private bool complete_pick_mode( bool cancel ) {
+
+    /* Handle the pick mode, if set and we are not cancelling */
+    if( !cancel ) {
+      switch( _pick_mode ) {
+        case PickMode.CLIPBOARD : { 
+            var color_str = Utils.color_to_string( _pick_color );
+            AnnotatorClipboard.copy_text( color_str );
+            _canvas.win.notification( _( "Color copied to clipboard" ), color_str );
+            break;
+          }
+        case PickMode.COLOR :
+          color_picked( _pick_color );
+          break;
+        default :  return( false );
+      }
+    }
+
+    _pick_mode = PickMode.NONE;
+
+    return( true );
+
+  }
+
   /* Handles a cursor release event */
   public bool cursor_released( double x, double y ) {
 
     _crop_index = -2;
     _canvas.set_cursor( null );
 
-    return( false );
+    return( complete_pick_mode( false ) );
 
   }
 
@@ -365,6 +428,18 @@ public class CanvasImage {
     _canvas.queue_draw();
     crop_ended();
     return( true );
+  }
+
+  /****************************************************************************/
+  //  COLOR PICKER
+  /****************************************************************************/
+  public void pick_color( bool to_clipboard ) {
+
+    _pick_mode = to_clipboard ? PickMode.CLIPBOARD : PickMode.COLOR;
+
+    /* Make sure that the canvas has the keyboard focus to handle keypresses */
+    _canvas.grab_focus();
+
   }
 
   /****************************************************************************/
@@ -531,6 +606,30 @@ public class CanvasImage {
     Utils.set_context_color( ctx, black );
     ctx.set_line_width( 1 );
     ctx.stroke();
+
+  }
+
+  /* Draws the color picker on the canvas */
+  public void draw_pick_mode( Context ctx ) {
+
+    if( _pick_mode.enabled() ) {
+
+      /* Get the color at the last motion location */
+      var pixel = new Pixbuf.subpixbuf( _buf, (int)_last_x, (int)_last_y, 1, 1 );
+
+      /* Get the pixel color */
+      _pick_color = { (float)(pixel.get_pixels()[0] / 255.0), (float)(pixel.get_pixels()[1] / 255.0), (float)(pixel.get_pixels()[2] / 255.0), (float)1.0 };
+
+      /* Draw the square */
+      Utils.set_context_color( ctx, _pick_color );
+      ctx.rectangle( (_last_x - 30), (_last_y - 30), 60, 60 );
+      ctx.fill_preserve();
+
+      Utils.set_context_color( ctx, Granite.contrasting_foreground_color( _pick_color ) );
+      ctx.set_line_width( 1 );
+      ctx.stroke();
+
+    }
 
   }
 

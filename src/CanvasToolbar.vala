@@ -62,6 +62,7 @@ public class CanvasToolbar : Box {
     create_separator();
     create_crop();
     create_resize();
+    create_dropper();
     create_separator();
     create_color();
     create_stroke();
@@ -396,6 +397,22 @@ public class CanvasToolbar : Box {
 
   }
 
+  /* Creates the color picker */
+  private void create_dropper() {
+
+    var btn = new Button.from_icon_name( "eyedropper-symbolic" ) {
+      tooltip_text = _( "Pick Color To Clipboard" ),
+      margin_start = margin,
+      margin_end   = margin
+    };
+    btn.clicked.connect(() => {
+      _canvas.image.pick_color( true );
+    });
+
+    append( btn );
+
+  }
+
   /* Creates the color dropdown */
   private void create_color() {
 
@@ -428,6 +445,13 @@ public class CanvasToolbar : Box {
     mb.popover.child = box;
 
     append( mb );
+
+  }
+
+  /* Sets the current color */
+  public void set_color( Gdk.RGBA color ) {
+
+    _color_chooser.rgba = color;
 
   }
 
@@ -470,12 +494,23 @@ public class CanvasToolbar : Box {
       margin_end = 10
     };
 
+    var picker = new Button.from_icon_name( "eyedropper-symbolic" ) {
+      tooltip_text = _( "Pick Color From Image" ),
+      halign = Align.END,
+      hexpand = true
+    };
+    picker.clicked.connect(() => {
+      _canvas.image.pick_color( false );
+      mb.popover.popdown();
+    });
+
     var albox = new Box( Orientation.HORIZONTAL, 10 ) {
       halign = Align.FILL,
       hexpand = true
     };
     albox.append( _asw );
     albox.append( albl );
+    albox.append( picker );
 
     var abox = new Box( Orientation.VERTICAL, 0 ) {
       halign = Align.FILL,

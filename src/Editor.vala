@@ -71,6 +71,9 @@ public class Editor : Box {
       _sw.vscrollbar_policy = PolicyType.AUTOMATIC;
       _sw.hscrollbar_policy = PolicyType.AUTOMATIC;
     });
+    canvas.image.color_picked.connect((color) => {
+      toolbar.set_color( color );
+    });
 
     var sep = new Separator( Orientation.HORIZONTAL ) {
       halign = Align.FILL,

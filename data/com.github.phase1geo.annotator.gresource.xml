@@ -31,6 +31,7 @@
         <file alias="sticker-symbolic.svg">images/icons/scalable/sticker-symbolic.svg</file>
         <file alias="edit-symbolic.svg">images/icons/scalable/edit-symbolic.svg</file>
         <file alias="image-crop-symbolic.svg">images/icons/scalable/image-crop-symbolic.svg</file>
+        <file alias="eyedropper-symbolic.svg">images/icons/scalable/eyedropper-svgrepo-com.svg</file>
 
         <file alias="sticker_data_encryption">images/icons/flat-color-icons/svg/data_encryption.svg</file>
         <file alias="sticker_factory_breakdown">images/icons/flat-color-icons/svg/factory_breakdown.svg</file>
