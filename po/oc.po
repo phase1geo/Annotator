@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.annotator\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-20 23:11-0500\n"
+"POT-Creation-Date: 2024-01-18 00:56-0600\n"
 "PO-Revision-Date: 2021-10-08 09:11+0200\n"
 "Last-Translator: Quentin PAGÈS\n"
 "Language-Team: \n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 3.0\n"
 
-#: src/Application.vala:69
+#: src/Application.vala:67
 msgid ""
 "\n"
 "ERROR:  Unable to read image from standard input\n"
@@ -27,96 +27,90 @@ msgstr ""
 msgid "Opening file"
 msgstr "Dubertura del fichièr"
 
-#: src/Application.vala:128
+#: src/Application.vala:114
 #, fuzzy
 msgid "Display version number."
 msgstr "Afichar lo numèro de la version"
 
-#: src/Application.vala:129
+#: src/Application.vala:115
 #, fuzzy
 msgid "Annotate clipboard image."
 msgstr "Anotar l’imatge del quichapapièrs"
 
-#: src/Application.vala:130
+#: src/Application.vala:116
 #, fuzzy
 msgid "Take and annotate a screenshot."
 msgstr "Dobrir imatge del quichapapièrs"
 
-#: src/Application.vala:131
-msgid ""
-"Delay (in seconds) before screenshot capture occurs.  Only valid when --"
-"screenshot is set.  Default is 0."
-msgstr ""
-
-#: src/Application.vala:132
-msgid ""
-"Include Annotator window in screenshot.  Only valid when --screenshot is set."
-msgstr ""
-
-#: src/Application.vala:133
+#: src/Application.vala:117
 msgid "Uses image data from standard input"
 msgstr ""
 
-#: src/CanvasImage.vala:95 src/CanvasImage.vala:118
+#: src/CanvasImage.vala:112 src/CanvasImage.vala:136
 msgid "change image"
 msgstr "cambiar d’imatge"
 
-#: src/CanvasImage.vala:336
+#: src/CanvasImage.vala:375
+#, fuzzy
+msgid "Color copied to clipboard"
+msgstr "Copiar al quichapapièrs"
+
+#: src/CanvasImage.vala:426
 msgid "image crop"
 msgstr "requadrar imatge"
 
-#: src/canvas_items/CanvasItemBlur.vala:131
+#: src/canvas_items/CanvasItemBlur.vala:132
 msgid "Blur Amount:"
 msgstr ""
 
-#: src/canvas_items/CanvasItemMagnifier.vala:175
+#: src/canvas_items/CanvasItemMagnifier.vala:180
 msgid "Drag to control amount of zoom"
 msgstr "Lisatz per contrarotlar l’agrandiment"
 
-#: src/canvas_items/CanvasItemMagnifier.vala:176
+#: src/canvas_items/CanvasItemMagnifier.vala:181
 msgid "Drag to change area to magnify"
 msgstr "Lisatz per cambiar l’airal d’agrandir"
 
-#: src/canvas_items/CanvasItemMagnifier.vala:201
+#: src/canvas_items/CanvasItemMagnifier.vala:206
 msgid "Magnification:"
 msgstr "Agrandiment :"
 
-#: src/canvas_items/CanvasItemMagnifier.vala:214
+#: src/canvas_items/CanvasItemMagnifier.vala:219
 msgid "Reset Focal Point"
 msgstr "Reïnicializar lo punt focal"
 
-#: src/canvas_items/CanvasItemSequence.vala:110
+#: src/canvas_items/CanvasItemSequence.vala:112
 msgid "Sequence Number:"
 msgstr "Numèro de sequéncia :"
 
-#: src/canvas_items/CanvasItemStar.vala:145
+#: src/canvas_items/CanvasItemStar.vala:147
 msgid "Points:"
 msgstr "Punts :"
 
-#: src/canvas_items/CanvasItemText.vala:109 src/CanvasItems.vala:119
+#: src/canvas_items/CanvasItemText.vala:111 src/CanvasItems.vala:119
 msgid "Text"
 msgstr "Tèxte"
 
-#: src/canvas_items/CanvasItemText.vala:892 src/CanvasItems.vala:959
-#: src/FormatBar.vala:55
+#: src/canvas_items/CanvasItemText.vala:894 src/CanvasItems.vala:1039
+#: src/FormatBar.vala:59
 msgid "Copy"
 msgstr "Copiar"
 
-#: src/canvas_items/CanvasItemText.vala:895 src/CanvasItems.vala:960
-#: src/FormatBar.vala:60
+#: src/canvas_items/CanvasItemText.vala:897 src/CanvasItems.vala:1040
+#: src/FormatBar.vala:65
 msgid "Cut"
 msgstr "Copar"
 
-#: src/canvas_items/CanvasItemText.vala:899
+#: src/canvas_items/CanvasItemText.vala:901
 msgid "Paste"
 msgstr ""
 
-#: src/canvas_items/CanvasItemText.vala:902
+#: src/canvas_items/CanvasItemText.vala:904
 #, fuzzy
 msgid "Select All"
 msgstr "Seleccionar tot lo tèxte"
 
-#: src/canvas_items/CanvasItemText.vala:906
+#: src/canvas_items/CanvasItemText.vala:908
 msgid "Insert Emoji"
 msgstr ""
 
@@ -177,27 +171,46 @@ msgstr "Numèro de sequéncia :"
 msgid "Sticker"
 msgstr "Apondre pegasolet"
 
-#: src/CanvasItems.vala:881
+#: src/CanvasItems.vala:125
+#, fuzzy
+msgid "Image"
+msgstr "Retalhar l'imatge"
+
+#: src/CanvasItems.vala:361
+#, fuzzy
+msgid "Open Insertion Image"
+msgstr "Dobrir un imatge"
+
+#: src/CanvasItems.vala:361 src/MainWindow.vala:447
+msgid "Open"
+msgstr "Dobrir"
+
+#: src/CanvasItems.vala:361 src/Exporter.vala:162 src/MainWindow.vala:447
+#: src/Resizer.vala:189 src/StickerSet.vala:75
+msgid "Cancel"
+msgstr "Anullar"
+
+#: src/CanvasItems.vala:948
 msgid "move items"
 msgstr "desplaçar elements"
 
-#: src/CanvasItems.vala:962
+#: src/CanvasItems.vala:1042
 msgid "Delete"
 msgstr "Suprimir"
 
-#: src/CanvasItems.vala:964
+#: src/CanvasItems.vala:1044
 msgid "Send to Front"
 msgstr "Enviar al davant"
 
-#: src/CanvasItems.vala:965
+#: src/CanvasItems.vala:1045
 msgid "Send to Back"
 msgstr "Enviar enrèire"
 
-#: src/CanvasItems.vala:969
+#: src/CanvasItems.vala:1049
 msgid "Save As Custom"
 msgstr ""
 
-#: src/CanvasItem.vala:288
+#: src/CanvasItem.vala:300
 msgid "resize item"
 msgstr "retalhar element"
 
@@ -230,101 +243,93 @@ msgstr "Apondre fòrma"
 msgid "Custom Shapes"
 msgstr "Apondre fòrma"
 
-#: src/CanvasToolbar.vala:343
+#: src/CanvasToolbar.vala:360
 msgid "Crop Image"
 msgstr "Retalhar l'imatge"
 
-#: src/CanvasToolbar.vala:371 src/Resizer.vala:155
+#: src/CanvasToolbar.vala:385 src/Resizer.vala:184
 msgid "Resize Image"
 msgstr "Redimensionar l'imatge"
 
-#: src/CanvasToolbar.vala:390
+#: src/CanvasToolbar.vala:404
+#, fuzzy
+msgid "Pick Color To Clipboard"
+msgstr "Copiar al quichapapièrs"
+
+#: src/CanvasToolbar.vala:421
 msgid "Shape Color"
 msgstr "Color de fòrma"
 
-#: src/CanvasToolbar.vala:415
-msgid "Item Color"
-msgstr "Color d’element"
-
-#: src/CanvasToolbar.vala:454
+#: src/CanvasToolbar.vala:491
 msgid "Add Transparency"
 msgstr "Apondre transparéncia"
 
-#: src/CanvasToolbar.vala:476
+#: src/CanvasToolbar.vala:498
+msgid "Pick Color From Image"
+msgstr ""
+
+#: src/CanvasToolbar.vala:532
 msgid "Shape Border"
 msgstr "Bordadura de fòrma"
 
-#: src/CanvasToolbar.vala:485
+#: src/CanvasToolbar.vala:545
 msgid "Border Width"
 msgstr "Largor de la bordadura"
 
-#: src/CanvasToolbar.vala:511
+#: src/CanvasToolbar.vala:577
 msgid "Dash Pattern"
 msgstr ""
 
-#: src/CanvasToolbar.vala:538
+#: src/CanvasToolbar.vala:610
 msgid "Show Outline"
 msgstr ""
 
-#: src/CanvasToolbar.vala:570
+#: src/CanvasToolbar.vala:641
 msgid "Font Properties"
 msgstr "Proprietats de poliça"
 
-#: src/Canvas.vala:183
+#: src/Canvas.vala:187
 #, fuzzy
 msgid "Annotate new image?"
 msgstr "Anotar l’imatge del quichapapièrs"
 
-#: src/Canvas.vala:184
+#: src/Canvas.vala:188
 msgid "Pasting a new image to annotate will destroy the current annotation."
 msgstr ""
 
-#: src/Canvas.vala:188
-msgid "Yes"
-msgstr ""
-
-#: src/Canvas.vala:191
-#, fuzzy
-msgid "No"
-msgstr "Pas cap"
-
-#: src/CustomItems.vala:31 src/CustomItems.vala:49 src/CustomItems.vala:62
+#: src/CustomItems.vala:34 src/CustomItems.vala:55 src/CustomItems.vala:68
 #, fuzzy
 msgid "Edit"
 msgstr "Edicion"
 
-#: src/CustomItems.vala:57
+#: src/CustomItems.vala:63
 msgid "Done"
 msgstr ""
 
-#: src/Exporter.vala:43
+#: src/Exporter.vala:51
 #, fuzzy
 msgid "Export…"
 msgstr "Exportar"
 
-#: src/Exporter.vala:44
+#: src/Exporter.vala:53
 msgid "Export With Current Settings"
 msgstr ""
 
-#: src/Exporter.vala:109
+#: src/Exporter.vala:138
 #, fuzzy
 msgid "Export Options"
 msgstr "Exportar"
 
-#: src/Exporter.vala:130
+#: src/Exporter.vala:161
 #, fuzzy, c-format
 msgid "Export As %s"
 msgstr "Exportar coma PNG…"
 
-#: src/Exporter.vala:131 src/MainWindow.vala:464 src/Resizer.vala:160
-msgid "Cancel"
-msgstr "Anullar"
-
-#: src/Exporter.vala:131
+#: src/Exporter.vala:162 src/StickerSet.vala:352
 msgid "Export"
 msgstr "Exportar"
 
-#: src/Exporter.vala:153
+#: src/Exporter.vala:185
 #, fuzzy
 msgid "Export Completed"
 msgstr "Exportar l'imatge"
@@ -333,7 +338,7 @@ msgstr "Exportar l'imatge"
 msgid "Quality"
 msgstr ""
 
-#: src/exports/ExportPDF.vala:28
+#: src/exports/ExportPDF.vala:29
 msgid "PDF"
 msgstr ""
 
@@ -341,11 +346,16 @@ msgstr ""
 msgid "PNG"
 msgstr ""
 
-#: src/exports/ExportPNG.vala:64
+#: src/exports/ExportPNG.vala:65
 msgid "Compression"
 msgstr ""
 
-#: src/exports/ExportSVG.vala:28
+#: src/exports/ExportPNG.vala:66
+#, fuzzy
+msgid "Transparency"
+msgstr "Apondre transparéncia"
+
+#: src/exports/ExportSVG.vala:29
 msgid "SVG"
 msgstr ""
 
@@ -361,230 +371,1485 @@ msgstr ""
 msgid "BMP"
 msgstr ""
 
-#: src/FormatBar.vala:66
+#: src/FormatBar.vala:71
 msgid "Bold"
 msgstr "En gras"
 
-#: src/FormatBar.vala:72
+#: src/FormatBar.vala:78
 msgid "Italic"
 msgstr "Italica"
 
-#: src/FormatBar.vala:78
+#: src/FormatBar.vala:85
 msgid "Underline"
 msgstr "Soslinhar"
 
-#: src/FormatBar.vala:84
+#: src/FormatBar.vala:92
 msgid "Strikethrough"
 msgstr "Raiat"
 
-#: src/FormatBar.vala:90
+#: src/FormatBar.vala:99
 msgid "Code Block"
 msgstr "Blòt de còdi"
 
-#: src/FormatBar.vala:96
+#: src/FormatBar.vala:106
 msgid "Superscript"
 msgstr "Suscrit"
 
-#: src/FormatBar.vala:102
+#: src/FormatBar.vala:113
 msgid "Subscript"
 msgstr "Soscrit"
 
-#: src/FormatBar.vala:108
+#: src/FormatBar.vala:121
 msgid "Header"
 msgstr "Entèsta"
 
-#: src/FormatBar.vala:112
+#: src/FormatBar.vala:127
 msgid "None"
 msgstr "Pas cap"
 
-#: src/FormatBar.vala:125
+#: src/FormatBar.vala:132
 msgid "Apply Highlight Color"
 msgstr "Aplicar la color d’enlusiment"
 
-#: src/FormatBar.vala:126
+#: src/FormatBar.vala:133
 msgid "Change Highlight Color"
 msgstr "Cambiar la color d’enlusiment"
 
-#: src/FormatBar.vala:130
+#: src/FormatBar.vala:137
 msgid "Apply Font Color"
 msgstr "Aplicar color de poliça"
 
-#: src/FormatBar.vala:131
+#: src/FormatBar.vala:138
 msgid "Change Font Color"
 msgstr "Cambiar color de poliça"
 
-#: src/FormatBar.vala:136
+#: src/FormatBar.vala:143
 msgid "Clear all formatting"
 msgstr "Escafar tot lo formatatge"
 
-#: src/MainWindow.vala:199
-msgid "Open Image"
-msgstr "Dobrir un imatge"
-
-#: src/MainWindow.vala:206
-msgid "Take Screeshot"
-msgstr ""
-
-#: src/MainWindow.vala:231 src/UndoBuffer.vala:84
-msgid "Undo"
-msgstr "Desfar"
-
-#: src/MainWindow.vala:237 src/UndoBuffer.vala:90
-msgid "Redo"
-msgstr "Refar"
-
-#: src/MainWindow.vala:251
+#: src/MainWindow.vala:175
 msgid "Annotator"
 msgstr "Annotator"
 
-#: src/MainWindow.vala:259
+#: src/MainWindow.vala:180
+msgid "Open Image"
+msgstr "Dobrir un imatge"
+
+#: src/MainWindow.vala:186
+msgid "Take Screeshot"
+msgstr ""
+
+#: src/MainWindow.vala:192 src/StickerSet.vala:307 src/UndoBuffer.vala:84
+msgid "Undo"
+msgstr "Desfar"
+
+#: src/MainWindow.vala:199 src/StickerSet.vala:308 src/UndoBuffer.vala:90
+msgid "Redo"
+msgstr "Refar"
+
+#: src/MainWindow.vala:221
 msgid "Properties"
 msgstr "Proprietats"
 
-#: src/MainWindow.vala:266
+#: src/MainWindow.vala:227
 msgid "Shortcuts Cheatsheet"
 msgstr "Resumit dels acorchis"
 
-#: src/MainWindow.vala:283
-msgid "Export Image"
-msgstr "Exportar l'imatge"
-
-#: src/MainWindow.vala:297
+#: src/MainWindow.vala:263
 msgid "Copy To Clipboard"
 msgstr "Copiar al quichapapièrs"
 
-#: src/MainWindow.vala:306
+#: src/MainWindow.vala:271
 msgid "Print…"
 msgstr "Imprimir…"
 
-#: src/MainWindow.vala:326 src/MainWindow.vala:723
+#: src/MainWindow.vala:282
+msgid "Export Image"
+msgstr "Exportar l'imatge"
+
+#: src/MainWindow.vala:304 src/MainWindow.vala:643
 #, c-format
 msgid "Zoom (%d%%)"
 msgstr "Zoom (%d%%)"
 
-#: src/MainWindow.vala:338
+#: src/MainWindow.vala:319
 msgid "Zoom to Fit Window"
 msgstr "Agrandir per garnir la fenèstra"
 
-#: src/MainWindow.vala:356
+#: src/MainWindow.vala:336
 msgid "Welcome to Annotator"
 msgstr "La benvenguda a Annotator"
 
-#: src/MainWindow.vala:356
+#: src/MainWindow.vala:337
 msgid "Let's get started annotating an image"
 msgstr "Comencem d’anotar un imatge"
 
-#: src/MainWindow.vala:357
+#: src/MainWindow.vala:340
 msgid "Open Image From File"
 msgstr "Dobrir un imatge a partir de Fichièr"
 
-#: src/MainWindow.vala:357
+#: src/MainWindow.vala:340
 msgid "Open a PNG, JPEG, TIFF or BMP file"
 msgstr "Dobrir un fichièr PNG, JPEG, TIFF o BMP"
 
-#: src/MainWindow.vala:358
+#: src/MainWindow.vala:343
 msgid "Paste Image From Clipboard"
 msgstr "Pegar imatge del quichapapièrs"
 
-#: src/MainWindow.vala:358
+#: src/MainWindow.vala:343
 msgid "Open an image from the clipboard"
 msgstr "Dobrir imatge del quichapapièrs"
 
-#: src/MainWindow.vala:360
+#: src/MainWindow.vala:346
 msgid "Take A Screenshot"
 msgstr ""
 
-#: src/MainWindow.vala:360
+#: src/MainWindow.vala:346
 #, fuzzy
 msgid "Open an image from a screenshot"
 msgstr "Dobrir imatge del quichapapièrs"
 
-#: src/MainWindow.vala:401
+#: src/MainWindow.vala:380
 msgid "Font:"
 msgstr "Poliça :"
 
-#: src/MainWindow.vala:452
+#: src/MainWindow.vala:435
 msgid "All Image Formats  (*)"
 msgstr "Totes los formats d’imatges (*)"
 
-#: src/MainWindow.vala:464
+#: src/MainWindow.vala:447
 msgid "Open Image File"
 msgstr "Dobrir un fichièr imatge"
 
-#: src/MainWindow.vala:464
-msgid "Open"
-msgstr "Dobrir"
-
-#: src/MainWindow.vala:545
-msgid "Delay (in seconds)"
-msgstr ""
-
-#: src/MainWindow.vala:556
-msgid "Include Annotator window"
-msgstr ""
-
-#: src/Resizer.vala:161
+#: src/Resizer.vala:190
 msgid "Resize"
 msgstr "Redimensionar"
 
-#: src/Resizer.vala:243
+#: src/Resizer.vala:289
 msgid "Width:"
 msgstr "Largor :"
 
-#: src/Resizer.vala:258
+#: src/Resizer.vala:311
 msgid "Height:"
 msgstr "Nautor :"
 
-#: src/Resizer.vala:275
+#: src/Resizer.vala:336
 msgid "Scale proportionally"
 msgstr ""
 
-#: src/Resizer.vala:322
+#: src/Resizer.vala:378
 msgid "Image Size"
 msgstr "Talha de l'imatge"
 
-#: src/Resizer.vala:359
+#: src/Resizer.vala:422
 msgid "Top"
 msgstr "Superior"
 
-#: src/Resizer.vala:359
+#: src/Resizer.vala:422 src/StickerSet.vala:291
 msgid "Right"
 msgstr "Drecha"
 
-#: src/Resizer.vala:359
+#: src/Resizer.vala:422
 msgid "Bottom"
 msgstr "Inferior"
 
-#: src/Resizer.vala:359
+#: src/Resizer.vala:422 src/StickerSet.vala:290
 msgid "Left"
 msgstr "Pagina d'esquèrra"
 
-#: src/Resizer.vala:371
+#: src/Resizer.vala:433
 msgid "Margins"
 msgstr "Marges"
 
-#: src/Resizer.vala:398
+#: src/Resizer.vala:474
 msgid "Preview"
 msgstr "Apercebut"
 
-#: src/Resizer.vala:416
+#: src/Resizer.vala:501
 #, c-format
 msgid "%d x %d pixels"
 msgstr "%d x %d pixèls"
 
-#: src/ScreenshotBackend.vala:20
-msgid "Entire Screen"
+#: src/StickerSet.vala:25 src/StickerSet.vala:68
+msgid "Photo and Video"
 msgstr ""
 
-#: src/ScreenshotBackend.vala:21
-#, fuzzy
-msgid "Current Window"
-msgstr "Element actual"
+#: src/StickerSet.vala:26 src/StickerSet.vala:126
+msgid "Very Basic"
+msgstr ""
 
-#: src/ScreenshotBackend.vala:22
+#: src/StickerSet.vala:27 src/StickerSet.vala:130 src/StickerSet.vala:221
+msgid "Business"
+msgstr ""
+
+#: src/StickerSet.vala:28 src/StickerSet.vala:248
+msgid "Industry"
+msgstr ""
+
+#: src/StickerSet.vala:29 src/StickerSet.vala:285
+msgid "Mobile"
+msgstr ""
+
+#: src/StickerSet.vala:30 src/StickerSet.vala:309
 #, fuzzy
-msgid "Selectable Area"
-msgstr "Seleccionar tot lo tèxte"
+msgid "Arrows"
+msgstr "Sageta novèla"
+
+#: src/StickerSet.vala:31 src/StickerSet.vala:357
+msgid "Data"
+msgstr ""
+
+#: src/StickerSet.vala:33
+msgid "Flash on"
+msgstr ""
+
+#: src/StickerSet.vala:34
+msgid "Flash off"
+msgstr ""
+
+#: src/StickerSet.vala:35
+msgid "Flash auto"
+msgstr ""
+
+#: src/StickerSet.vala:36
+msgid "Panorama"
+msgstr ""
+
+#: src/StickerSet.vala:37
+msgid "Landscape"
+msgstr ""
+
+#: src/StickerSet.vala:38
+msgid "Night landscape"
+msgstr ""
+
+#: src/StickerSet.vala:39
+#, fuzzy
+msgid "Sports mode"
+msgstr "Exportar l'imatge"
+
+#: src/StickerSet.vala:40
+msgid "Portrait mode"
+msgstr ""
+
+#: src/StickerSet.vala:41
+msgid "Night portrait"
+msgstr ""
+
+#: src/StickerSet.vala:42
+msgid "Close up mode"
+msgstr ""
+
+#: src/StickerSet.vala:43
+msgid "Selfie"
+msgstr ""
+
+#: src/StickerSet.vala:44
+msgid "Gallery"
+msgstr ""
+
+#: src/StickerSet.vala:45
+msgid "Stack of photos"
+msgstr ""
+
+#: src/StickerSet.vala:46
+#, fuzzy
+msgid "Add image"
+msgstr "Apondre fòrma"
+
+#: src/StickerSet.vala:47
+#, fuzzy
+msgid "Edit image"
+msgstr "Edicion"
+
+#: src/StickerSet.vala:48
+#, fuzzy
+msgid "Remove image"
+msgstr "Redimensionar l'imatge"
+
+#: src/StickerSet.vala:49
+msgid "Compact camera"
+msgstr ""
+
+#: src/StickerSet.vala:50
+msgid "Multiple cameras"
+msgstr ""
+
+#: src/StickerSet.vala:51
+msgid "Camera"
+msgstr ""
+
+#: src/StickerSet.vala:52
+msgid "SLR back side"
+msgstr ""
+
+#: src/StickerSet.vala:53
+msgid "Old time camera"
+msgstr ""
+
+#: src/StickerSet.vala:54
+msgid "Camera addon"
+msgstr ""
+
+#: src/StickerSet.vala:55
+#, fuzzy
+msgid "Camera identification"
+msgstr "Agrandiment :"
+
+#: src/StickerSet.vala:56
+msgid "Start"
+msgstr ""
+
+#: src/StickerSet.vala:57
+msgid "Clapperboard"
+msgstr ""
+
+#: src/StickerSet.vala:58
+msgid "Film"
+msgstr ""
+
+#: src/StickerSet.vala:59
+msgid "Camcorder"
+msgstr ""
+
+#: src/StickerSet.vala:60
+msgid "Camcorder pro"
+msgstr ""
+
+#: src/StickerSet.vala:61
+msgid "Webcam"
+msgstr ""
+
+#: src/StickerSet.vala:62
+msgid "Integrated webcam"
+msgstr ""
+
+#: src/StickerSet.vala:63
+msgid "Rotate camera"
+msgstr ""
+
+#: src/StickerSet.vala:64
+msgid "Switch camera"
+msgstr ""
+
+#: src/StickerSet.vala:65
+msgid "Photo reel"
+msgstr ""
+
+#: src/StickerSet.vala:66
+msgid "Film reel"
+msgstr ""
+
+#: src/StickerSet.vala:67
+msgid "Cable release"
+msgstr ""
+
+#: src/StickerSet.vala:70
+msgid "Home"
+msgstr ""
+
+#: src/StickerSet.vala:71
+msgid "Icons8 cup"
+msgstr ""
+
+#: src/StickerSet.vala:72
+msgid "Globe"
+msgstr ""
+
+#: src/StickerSet.vala:73
+msgid "OK"
+msgstr ""
+
+#: src/StickerSet.vala:74
+msgid "Checkmark"
+msgstr ""
+
+#: src/StickerSet.vala:76
+msgid "Synchronize"
+msgstr ""
+
+#: src/StickerSet.vala:77
+msgid "Refresh"
+msgstr ""
+
+#: src/StickerSet.vala:78
+msgid "Download"
+msgstr ""
+
+#: src/StickerSet.vala:79
+msgid "Upload"
+msgstr ""
+
+#: src/StickerSet.vala:80
+msgid "Empty trash"
+msgstr ""
+
+#: src/StickerSet.vala:81
+msgid "Full trash"
+msgstr ""
+
+#: src/StickerSet.vala:82
+msgid "Folder"
+msgstr ""
+
+#: src/StickerSet.vala:83
+#, fuzzy
+msgid "Opened folder"
+msgstr "Dubertura del fichièr"
+
+#: src/StickerSet.vala:84 data/com.github.phase1geo.annotator.shortcuts.ui:16
+msgid "File"
+msgstr "Fichièr"
+
+#: src/StickerSet.vala:85
+msgid "Document"
+msgstr ""
+
+#: src/StickerSet.vala:86
+msgid "Audio file"
+msgstr ""
+
+#: src/StickerSet.vala:87
+#, fuzzy
+msgid "Image file"
+msgstr "Talha de l'imatge"
+
+#: src/StickerSet.vala:88
+msgid "Video file"
+msgstr ""
+
+#: src/StickerSet.vala:89 data/com.github.phase1geo.annotator.shortcuts.ui:35
+msgid "Print"
+msgstr "Imprimir"
+
+#: src/StickerSet.vala:90
+msgid "Music"
+msgstr ""
+
+#: src/StickerSet.vala:91
+msgid "Share"
+msgstr ""
+
+#: src/StickerSet.vala:92 data/com.github.phase1geo.annotator.shortcuts.ui:297
+msgid "Cursor"
+msgstr "Cursor"
+
+#: src/StickerSet.vala:93
+msgid "Puzzle"
+msgstr ""
+
+#: src/StickerSet.vala:94
+msgid "Unlock"
+msgstr ""
+
+#: src/StickerSet.vala:95
+msgid "Lock"
+msgstr ""
+
+#: src/StickerSet.vala:96
+msgid "Idea"
+msgstr ""
+
+#: src/StickerSet.vala:97
+msgid "No idea"
+msgstr ""
+
+#: src/StickerSet.vala:98
+msgid "Link"
+msgstr ""
+
+#: src/StickerSet.vala:99
+msgid "Broken link"
+msgstr ""
+
+#: src/StickerSet.vala:100
+#, fuzzy
+msgid "Rating"
+msgstr "Edicion"
+
+#: src/StickerSet.vala:101
+msgid "Like placeholder"
+msgstr ""
+
+#: src/StickerSet.vala:102
+msgid "Like"
+msgstr ""
+
+#: src/StickerSet.vala:103
+msgid "Dislike"
+msgstr ""
+
+#: src/StickerSet.vala:104
+msgid "Info"
+msgstr ""
+
+#: src/StickerSet.vala:105
+msgid "About"
+msgstr ""
+
+#: src/StickerSet.vala:106
+msgid "Picture"
+msgstr ""
+
+#: src/StickerSet.vala:107
+#, fuzzy
+msgid "Clock"
+msgstr "Blòt de còdi"
+
+#: src/StickerSet.vala:108
+msgid "Alarm clock"
+msgstr ""
+
+#: src/StickerSet.vala:109
+msgid "Address book"
+msgstr ""
+
+#: src/StickerSet.vala:110
+msgid "Contacts"
+msgstr ""
+
+#: src/StickerSet.vala:111
+msgid "News"
+msgstr ""
+
+#: src/StickerSet.vala:112
+msgid "Bookmark"
+msgstr ""
+
+#: src/StickerSet.vala:113
+msgid "Binoculars"
+msgstr ""
+
+#: src/StickerSet.vala:114
+msgid "Search"
+msgstr ""
+
+#: src/StickerSet.vala:115
+msgid "Ruler"
+msgstr ""
+
+#: src/StickerSet.vala:116
+msgid "Services"
+msgstr ""
+
+#: src/StickerSet.vala:117
+msgid "Settings"
+msgstr ""
+
+#: src/StickerSet.vala:118
+#, fuzzy
+msgid "Support"
+msgstr "Exportar"
+
+#: src/StickerSet.vala:119
+msgid "Frame"
+msgstr ""
+
+#: src/StickerSet.vala:120
+msgid "Menu"
+msgstr ""
+
+#: src/StickerSet.vala:121
+msgid "Key"
+msgstr ""
+
+#: src/StickerSet.vala:122
+msgid "Calendar"
+msgstr ""
+
+#: src/StickerSet.vala:123
+msgid "Calculator"
+msgstr ""
+
+#: src/StickerSet.vala:124
+msgid "Minus"
+msgstr ""
+
+#: src/StickerSet.vala:125
+msgid "Plus"
+msgstr ""
+
+#: src/StickerSet.vala:128
+msgid "Graduation cap"
+msgstr ""
+
+#: src/StickerSet.vala:129
+msgid "Briefcase"
+msgstr ""
+
+#: src/StickerSet.vala:131
+msgid "Signature"
+msgstr ""
+
+#: src/StickerSet.vala:132
+msgid "Safe"
+msgstr ""
+
+#: src/StickerSet.vala:133
+msgid "Advertising"
+msgstr ""
+
+#: src/StickerSet.vala:134
+msgid "Businessman"
+msgstr ""
+
+#: src/StickerSet.vala:135
+msgid "Businesswoman"
+msgstr ""
+
+#: src/StickerSet.vala:136
+msgid "Manager"
+msgstr ""
+
+#: src/StickerSet.vala:137
+msgid "Online support"
+msgstr ""
+
+#: src/StickerSet.vala:138
+msgid "Assistant"
+msgstr ""
+
+#: src/StickerSet.vala:139
+msgid "Customer support"
+msgstr ""
+
+#: src/StickerSet.vala:140
+msgid "Reading ebook"
+msgstr ""
+
+#: src/StickerSet.vala:141
+msgid "Reading"
+msgstr ""
+
+#: src/StickerSet.vala:142
+msgid "Neutral trading"
+msgstr ""
+
+#: src/StickerSet.vala:143
+msgid "Bullish"
+msgstr ""
+
+#: src/StickerSet.vala:144
+msgid "Bearish"
+msgstr ""
+
+#: src/StickerSet.vala:145
+msgid "High priority"
+msgstr ""
+
+#: src/StickerSet.vala:146
+msgid "Medium priority"
+msgstr ""
+
+#: src/StickerSet.vala:147
+msgid "Low priority"
+msgstr ""
+
+#: src/StickerSet.vala:148
+msgid "Make decision"
+msgstr ""
+
+#: src/StickerSet.vala:149
+msgid "Decision"
+msgstr ""
+
+#: src/StickerSet.vala:150
+msgid "Good decision"
+msgstr ""
+
+#: src/StickerSet.vala:151
+msgid "Neutral decision"
+msgstr ""
+
+#: src/StickerSet.vala:152
+msgid "Bad decision"
+msgstr ""
+
+#: src/StickerSet.vala:153
+msgid "Approve"
+msgstr ""
+
+#: src/StickerSet.vala:154
+msgid "Disapprove"
+msgstr ""
+
+#: src/StickerSet.vala:155
+msgid "Podium without speaker"
+msgstr ""
+
+#: src/StickerSet.vala:156
+msgid "Podium with speaker"
+msgstr ""
+
+#: src/StickerSet.vala:157
+msgid "Podium with audience"
+msgstr ""
+
+#: src/StickerSet.vala:158
+msgid "Video projector"
+msgstr ""
+
+#: src/StickerSet.vala:159
+msgid "Statistics"
+msgstr ""
+
+#: src/StickerSet.vala:160
+#, fuzzy
+msgid "Collaboration"
+msgstr "Creacion"
+
+#: src/StickerSet.vala:161
+msgid "Voice presentation"
+msgstr ""
+
+#: src/StickerSet.vala:162
+msgid "Conference call"
+msgstr ""
+
+#: src/StickerSet.vala:163
+msgid "Comments"
+msgstr ""
+
+#: src/StickerSet.vala:164
+msgid "FAQ"
+msgstr ""
+
+#: src/StickerSet.vala:165
+msgid "Reuse"
+msgstr ""
+
+#: src/StickerSet.vala:166
+#, fuzzy
+msgid "Organization"
+msgstr "Agrandiment :"
+
+#: src/StickerSet.vala:167
+msgid "Department"
+msgstr ""
+
+#: src/StickerSet.vala:168
+msgid "Library"
+msgstr ""
+
+#: src/StickerSet.vala:169
+msgid "Shop"
+msgstr ""
+
+#: src/StickerSet.vala:170
+msgid "Self service kiosk"
+msgstr ""
+
+#: src/StickerSet.vala:171
+msgid "Donate"
+msgstr ""
+
+#: src/StickerSet.vala:172
+msgid "Currency exchange"
+msgstr ""
+
+#: src/StickerSet.vala:173
+msgid "Debt"
+msgstr ""
+
+#: src/StickerSet.vala:174
+msgid "Sales performance"
+msgstr ""
+
+#: src/StickerSet.vala:175
+msgid "Invite"
+msgstr ""
+
+#: src/StickerSet.vala:176
+msgid "Money transfer"
+msgstr ""
+
+#: src/StickerSet.vala:177
+msgid "Feedback"
+msgstr ""
+
+#: src/StickerSet.vala:178
+msgid "Approval"
+msgstr ""
+
+#: src/StickerSet.vala:179
+msgid "Paid"
+msgstr ""
+
+#: src/StickerSet.vala:180
+msgid "In transit"
+msgstr ""
+
+#: src/StickerSet.vala:181
+msgid "Shipped"
+msgstr ""
+
+#: src/StickerSet.vala:182
+msgid "Package"
+msgstr ""
+
+#: src/StickerSet.vala:183
+msgid "Planner"
+msgstr ""
+
+#: src/StickerSet.vala:184
+msgid "Overtime"
+msgstr ""
+
+#: src/StickerSet.vala:185
+msgid "Leave"
+msgstr ""
+
+#: src/StickerSet.vala:186
+msgid "Expired"
+msgstr ""
+
+#: src/StickerSet.vala:187
+msgid "Process"
+msgstr ""
+
+#: src/StickerSet.vala:188
+msgid "Diploma 1"
+msgstr ""
+
+#: src/StickerSet.vala:189
+msgid "Diploma 2"
+msgstr ""
+
+#: src/StickerSet.vala:190
+msgid "Business contact"
+msgstr ""
+
+#: src/StickerSet.vala:191
+msgid "Survey"
+msgstr ""
+
+#: src/StickerSet.vala:192
+#, fuzzy
+msgid "Inspection"
+msgstr "Seleccion"
+
+#: src/StickerSet.vala:193
+msgid "Rules"
+msgstr ""
+
+#: src/StickerSet.vala:194
+msgid "Todo list"
+msgstr ""
+
+#: src/StickerSet.vala:195
+msgid "Ratings"
+msgstr ""
+
+#: src/StickerSet.vala:196
+msgid "Questions"
+msgstr ""
+
+#: src/StickerSet.vala:197
+msgid "Answers"
+msgstr ""
+
+#: src/StickerSet.vala:198
+msgid "Fine print"
+msgstr ""
+
+#: src/StickerSet.vala:199
+msgid "Candle sticks"
+msgstr ""
+
+#: src/StickerSet.vala:200
+msgid "Serial tasks"
+msgstr ""
+
+#: src/StickerSet.vala:201
+msgid "Parallel tasks"
+msgstr ""
+
+#: src/StickerSet.vala:202
+msgid "Tree structure"
+msgstr ""
+
+#: src/StickerSet.vala:203
+msgid "Org unit"
+msgstr ""
+
+#: src/StickerSet.vala:204
+msgid "Privacy"
+msgstr ""
+
+#: src/StickerSet.vala:205
+msgid "Disclaimer"
+msgstr ""
+
+#: src/StickerSet.vala:206
+msgid "Callback"
+msgstr ""
+
+#: src/StickerSet.vala:207
+msgid "Service mark"
+msgstr ""
+
+#: src/StickerSet.vala:208
+msgid "Registered trademark"
+msgstr ""
+
+#: src/StickerSet.vala:209
+msgid "Trademark"
+msgstr ""
+
+#: src/StickerSet.vala:210
+#, fuzzy
+msgid "Copyright"
+msgstr "Copiar"
+
+#: src/StickerSet.vala:211
+#, fuzzy
+msgid "Copyleft"
+msgstr "Copiar"
+
+#: src/StickerSet.vala:212
+msgid "Sound recording copyright"
+msgstr ""
+
+#: src/StickerSet.vala:213
+msgid "Butting in"
+msgstr ""
+
+#: src/StickerSet.vala:214
+msgid "Multiple inputs"
+msgstr ""
+
+#: src/StickerSet.vala:215
+msgid "Collect"
+msgstr ""
+
+#: src/StickerSet.vala:216
+msgid "Internal"
+msgstr ""
+
+#: src/StickerSet.vala:217
+msgid "External"
+msgstr ""
+
+#: src/StickerSet.vala:218
+msgid "VIP"
+msgstr ""
+
+#: src/StickerSet.vala:219
+msgid "Light at the end of tunnel"
+msgstr ""
+
+#: src/StickerSet.vala:220
+msgid "Entering heaven alive"
+msgstr ""
+
+#: src/StickerSet.vala:223
+msgid "Biomass"
+msgstr ""
+
+#: src/StickerSet.vala:224
+msgid "Display"
+msgstr ""
+
+#: src/StickerSet.vala:225
+msgid "Do not inhale"
+msgstr ""
+
+#: src/StickerSet.vala:226
+msgid "Factory"
+msgstr ""
+
+#: src/StickerSet.vala:227
+msgid "Factory breakdown"
+msgstr ""
+
+#: src/StickerSet.vala:228
+msgid "Crystal oscillator"
+msgstr ""
+
+#: src/StickerSet.vala:229
+msgid "Capacitor"
+msgstr ""
+
+#: src/StickerSet.vala:230
+msgid "Electricity"
+msgstr ""
+
+#: src/StickerSet.vala:231
+msgid "Electro devices"
+msgstr ""
+
+#: src/StickerSet.vala:232
+msgid "Electrical sensor"
+msgstr ""
+
+#: src/StickerSet.vala:233
+msgid "Electrical threshold"
+msgstr ""
+
+#: src/StickerSet.vala:234
+msgid "Automotive"
+msgstr ""
+
+#: src/StickerSet.vala:235
+msgid "Feed in"
+msgstr ""
+
+#: src/StickerSet.vala:236
+msgid "Dam"
+msgstr ""
+
+#: src/StickerSet.vala:237
+msgid "Biotech"
+msgstr ""
+
+#: src/StickerSet.vala:238
+#, fuzzy
+msgid "Advance"
+msgstr "Anullar"
+
+#: src/StickerSet.vala:239
+msgid "Cloth"
+msgstr ""
+
+#: src/StickerSet.vala:240
+#, fuzzy
+msgid "Electronics"
+msgstr "Seleccion"
+
+#: src/StickerSet.vala:241
+msgid "Deployment"
+msgstr ""
+
+#: src/StickerSet.vala:242
+msgid "Automatic"
+msgstr ""
+
+#: src/StickerSet.vala:243
+msgid "Do not insert"
+msgstr ""
+
+#: src/StickerSet.vala:244
+msgid "Do not mix"
+msgstr ""
+
+#: src/StickerSet.vala:245
+msgid "Biohazard"
+msgstr ""
+
+#: src/StickerSet.vala:246
+msgid "Circuit"
+msgstr ""
+
+#: src/StickerSet.vala:247
+msgid "Engineering"
+msgstr ""
+
+#: src/StickerSet.vala:250
+msgid "Cell phone"
+msgstr ""
+
+#: src/StickerSet.vala:251
+msgid "iPhone"
+msgstr ""
+
+#: src/StickerSet.vala:252
+msgid "iPad"
+msgstr ""
+
+#: src/StickerSet.vala:253
+msgid "Phone android"
+msgstr ""
+
+#: src/StickerSet.vala:254
+msgid "Tablet android"
+msgstr ""
+
+#: src/StickerSet.vala:255
+msgid "Nook"
+msgstr ""
+
+#: src/StickerSet.vala:256
+msgid "Kindle"
+msgstr ""
+
+#: src/StickerSet.vala:257
+msgid "Two smartphones"
+msgstr ""
+
+#: src/StickerSet.vala:258
+msgid "Multiple devices"
+msgstr ""
+
+#: src/StickerSet.vala:259
+msgid "Multiple smartphones"
+msgstr ""
+
+#: src/StickerSet.vala:260
+msgid "Smartphone tablet"
+msgstr ""
+
+#: src/StickerSet.vala:261
+msgid "Touchscreen smartphone"
+msgstr ""
+
+#: src/StickerSet.vala:262
+msgid "Sim card"
+msgstr ""
+
+#: src/StickerSet.vala:263
+msgid "Sim card chip"
+msgstr ""
+
+#: src/StickerSet.vala:264
+msgid "SMS"
+msgstr ""
+
+#: src/StickerSet.vala:265
+msgid "MMS"
+msgstr ""
+
+#: src/StickerSet.vala:266
+msgid "Charge battery"
+msgstr ""
+
+#: src/StickerSet.vala:267
+msgid "Full battery"
+msgstr ""
+
+#: src/StickerSet.vala:268
+msgid "High battery"
+msgstr ""
+
+#: src/StickerSet.vala:269
+msgid "Middle battery"
+msgstr ""
+
+#: src/StickerSet.vala:270
+msgid "Low battery"
+msgstr ""
+
+#: src/StickerSet.vala:271
+msgid "Empty battery"
+msgstr ""
+
+#: src/StickerSet.vala:272
+msgid "Phone"
+msgstr ""
+
+#: src/StickerSet.vala:273
+msgid "Missed call"
+msgstr ""
+
+#: src/StickerSet.vala:274
+msgid "End call"
+msgstr ""
+
+#: src/StickerSet.vala:275
+msgid "Call transfer"
+msgstr ""
+
+#: src/StickerSet.vala:276
+msgid "Video call"
+msgstr ""
+
+#: src/StickerSet.vala:277
+msgid "No video"
+msgstr ""
+
+#: src/StickerSet.vala:278
+msgid "Rotate to portrait"
+msgstr ""
+
+#: src/StickerSet.vala:279
+msgid "Lock portrait"
+msgstr ""
+
+#: src/StickerSet.vala:280
+msgid "Rotate to landscape"
+msgstr ""
+
+#: src/StickerSet.vala:281
+msgid "Lock landscape"
+msgstr ""
+
+#: src/StickerSet.vala:282
+msgid "Voicemail"
+msgstr ""
+
+#: src/StickerSet.vala:283
+msgid "Speaker"
+msgstr ""
+
+#: src/StickerSet.vala:284
+#, fuzzy
+msgid "Headset"
+msgstr "Entèsta"
+
+#: src/StickerSet.vala:287
+#, fuzzy
+msgid "Left up"
+msgstr "Pagina d'esquèrra"
+
+#: src/StickerSet.vala:288
+msgid "Up"
+msgstr ""
+
+#: src/StickerSet.vala:289
+#, fuzzy
+msgid "Right up"
+msgstr "Drecha"
+
+#: src/StickerSet.vala:292
+#, fuzzy
+msgid "Left down"
+msgstr "Pagina d'esquèrra"
+
+#: src/StickerSet.vala:293
+msgid "Down"
+msgstr ""
+
+#: src/StickerSet.vala:294
+#, fuzzy
+msgid "Right down"
+msgstr "Drecha"
+
+#: src/StickerSet.vala:295
+msgid "Collapse"
+msgstr ""
+
+#: src/StickerSet.vala:296
+#, fuzzy
+msgid "Previous"
+msgstr "Apercebut"
+
+#: src/StickerSet.vala:297
+msgid "Next"
+msgstr ""
+
+#: src/StickerSet.vala:298
+msgid "Expand"
+msgstr ""
+
+#: src/StickerSet.vala:299
+msgid "Left down2"
+msgstr ""
+
+#: src/StickerSet.vala:300
+msgid "Up left"
+msgstr ""
+
+#: src/StickerSet.vala:301
+msgid "Down right"
+msgstr ""
+
+#: src/StickerSet.vala:302
+#, fuzzy
+msgid "Right up2"
+msgstr "Drecha"
+
+#: src/StickerSet.vala:303
+#, fuzzy
+msgid "Up right"
+msgstr "Drecha"
+
+#: src/StickerSet.vala:304
+#, fuzzy
+msgid "Right down2"
+msgstr "Drecha"
+
+#: src/StickerSet.vala:305
+#, fuzzy
+msgid "Left up2"
+msgstr "Pagina d'esquèrra"
+
+#: src/StickerSet.vala:306
+msgid "Down left"
+msgstr ""
+
+#: src/StickerSet.vala:311
+msgid "Filing cabinet"
+msgstr ""
+
+#: src/StickerSet.vala:312
+msgid "Database"
+msgstr ""
+
+#: src/StickerSet.vala:313
+msgid "Accept database"
+msgstr ""
+
+#: src/StickerSet.vala:314
+msgid "Add database"
+msgstr ""
+
+#: src/StickerSet.vala:315
+msgid "Delete database"
+msgstr ""
+
+#: src/StickerSet.vala:316
+msgid "Data backup"
+msgstr ""
+
+#: src/StickerSet.vala:317
+msgid "Data recovery"
+msgstr ""
+
+#: src/StickerSet.vala:318
+msgid "Data configuration"
+msgstr ""
+
+#: src/StickerSet.vala:319
+msgid "Data encryption"
+msgstr ""
+
+#: src/StickerSet.vala:320
+msgid "Data protection"
+msgstr ""
+
+#: src/StickerSet.vala:321
+msgid "Grid"
+msgstr ""
+
+#: src/StickerSet.vala:322
+msgid "Data sheet"
+msgstr ""
+
+#: src/StickerSet.vala:323
+msgid "Add column"
+msgstr ""
+
+#: src/StickerSet.vala:324
+#, fuzzy
+msgid "Delete column"
+msgstr "Suprimir"
+
+#: src/StickerSet.vala:325
+#, fuzzy
+msgid "Add row"
+msgstr "Sageta novèla"
+
+#: src/StickerSet.vala:326
+#, fuzzy
+msgid "Delete row"
+msgstr "Suprimir"
+
+#: src/StickerSet.vala:327
+msgid "Generic sorting ascending"
+msgstr ""
+
+#: src/StickerSet.vala:328
+msgid "Generic sorting descending"
+msgstr ""
+
+#: src/StickerSet.vala:329
+msgid "Alphabetical sorting (A->Z)"
+msgstr ""
+
+#: src/StickerSet.vala:330
+msgid "Alphabetical sorting (Z->A)"
+msgstr ""
+
+#: src/StickerSet.vala:331
+msgid "Numerical sorting (2->1)"
+msgstr ""
+
+#: src/StickerSet.vala:332
+msgid "Numerical sorting (1->2)"
+msgstr ""
+
+#: src/StickerSet.vala:333
+msgid "Empty filter"
+msgstr ""
+
+#: src/StickerSet.vala:334
+msgid "Filled filter"
+msgstr ""
+
+#: src/StickerSet.vala:335
+msgid "Clear filters"
+msgstr ""
+
+#: src/StickerSet.vala:336
+msgid "Pie chart"
+msgstr ""
+
+#: src/StickerSet.vala:337
+msgid "Radar plot"
+msgstr ""
+
+#: src/StickerSet.vala:338
+msgid "Heat map"
+msgstr ""
+
+#: src/StickerSet.vala:339
+msgid "Timeline"
+msgstr ""
+
+#: src/StickerSet.vala:340
+msgid "Bar chart"
+msgstr ""
+
+#: src/StickerSet.vala:341
+msgid "Area chart"
+msgstr ""
+
+#: src/StickerSet.vala:342
+msgid "Scatter plot"
+msgstr ""
+
+#: src/StickerSet.vala:343
+msgid "Doughnut chart"
+msgstr ""
+
+#: src/StickerSet.vala:344
+msgid "Combo chart"
+msgstr ""
+
+#: src/StickerSet.vala:345
+msgid "Flow chart"
+msgstr ""
+
+#: src/StickerSet.vala:346
+msgid "Line chart"
+msgstr ""
+
+#: src/StickerSet.vala:347
+#, fuzzy
+msgid "Genealogy"
+msgstr "General"
+
+#: src/StickerSet.vala:348
+msgid "Mind map"
+msgstr ""
+
+#: src/StickerSet.vala:349
+msgid "Workflow"
+msgstr ""
+
+#: src/StickerSet.vala:350
+msgid "Positive dynamic"
+msgstr ""
+
+#: src/StickerSet.vala:351
+msgid "Negative dynamic"
+msgstr ""
+
+#: src/StickerSet.vala:353
+#, fuzzy
+msgid "Import"
+msgstr "Exportar"
+
+#: src/StickerSet.vala:354
+msgid "List"
+msgstr ""
+
+#: src/StickerSet.vala:355
+msgid "Template"
+msgstr ""
+
+#: src/StickerSet.vala:356
+msgid "View details"
+msgstr ""
 
 #: src/undo_actions/UndoImageResize.vala:31
 msgid "image resize"
@@ -679,11 +1944,11 @@ msgstr "Restablir "
 msgid "Zoom Out"
 msgstr "Reduire el zoom"
 
-#: src/ZoomWidget.vala:97
+#: src/ZoomWidget.vala:98
 msgid "Zoom Actual"
 msgstr "Zoom actual"
 
-#: src/ZoomWidget.vala:102 data/com.github.phase1geo.annotator.shortcuts.ui:68
+#: src/ZoomWidget.vala:104 data/com.github.phase1geo.annotator.shortcuts.ui:68
 msgid "Zoom In"
 msgstr "Agrandir lo zoom"
 
@@ -695,10 +1960,6 @@ msgstr "Acorchis d’Annotator"
 msgid "General"
 msgstr "General"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:16
-msgid "File"
-msgstr "Fichièr"
-
 #: data/com.github.phase1geo.annotator.shortcuts.ui:21
 msgid "New From File System"
 msgstr ""
@@ -706,10 +1967,6 @@ msgstr ""
 #: data/com.github.phase1geo.annotator.shortcuts.ui:28
 msgid "New From Clipboard"
 msgstr ""
-
-#: data/com.github.phase1geo.annotator.shortcuts.ui:35
-msgid "Print"
-msgstr "Imprimir"
 
 #: data/com.github.phase1geo.annotator.shortcuts.ui:44
 msgid "Undo/Redo"
@@ -855,10 +2112,6 @@ msgstr ""
 msgid "Show Emoji Picker"
 msgstr "Afichar lo panèl d’Emoji"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:297
-msgid "Cursor"
-msgstr "Cursor"
-
 #: data/com.github.phase1geo.annotator.shortcuts.ui:301
 msgid "Move Cursor Left One Word"
 msgstr ""
@@ -950,6 +2203,21 @@ msgstr ""
 #: data/com.github.phase1geo.annotator.shortcuts.ui:454
 msgid "Add Text Below Cursor To Selection"
 msgstr ""
+
+#~ msgid "Item Color"
+#~ msgstr "Color d’element"
+
+#, fuzzy
+#~ msgid "No"
+#~ msgstr "Pas cap"
+
+#, fuzzy
+#~ msgid "Current Window"
+#~ msgstr "Element actual"
+
+#, fuzzy
+#~ msgid "Selectable Area"
+#~ msgstr "Seleccionar tot lo tèxte"
 
 #, fuzzy
 #~ msgid "Copy All"
