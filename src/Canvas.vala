@@ -77,11 +77,13 @@ public class Canvas : DrawingArea {
       button = Gdk.BUTTON_SECONDARY
     };
     var motion_controller = new EventControllerMotion();
+    var focus_controller = new EventControllerFocus();
 
     add_controller( _key_controller );
     add_controller( pri_btn_controller );
     add_controller( sec_btn_controller );
     add_controller( motion_controller );
+    add_controller( focus_controller );
 
     _key_controller.key_pressed.connect( on_keypress );
     _key_controller.key_released.connect( on_keyrelease );
@@ -92,6 +94,8 @@ public class Canvas : DrawingArea {
     sec_btn_controller.pressed.connect( on_secondary_press );
 
     motion_controller.motion.connect( on_motion );
+
+    focus_controller.leave.connect( on_focus_leave );
 
     /* Make sure that we us the IMMulticontext input method when editing text only */
     _im_context = new IMMulticontext();
@@ -310,6 +314,13 @@ public class Canvas : DrawingArea {
       });
       emoji_chooser.popup();
     }
+  }
+
+  /* Called whenever the canvas loses focus */
+  private void on_focus_leave() {
+
+    image.focus_leave();
+
   }
 
   /* Handles keypress events */

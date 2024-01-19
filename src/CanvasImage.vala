@@ -37,8 +37,10 @@ public enum PickMode {
 
 public class CanvasImage {
 
-  private const int selector_size  = 10;
-  private const int crop_selectors = 8;  // TODO - Set to 9 to enable rotation
+  private const int selector_size   = 10;
+  private const int crop_selectors  = 8;  // TODO - Set to 9 to enable rotation
+  private const int pick_size       = 5;  // Specifies the width/height of the color picker box in pixels (should be an odd number)
+  private const int pick_pixel_size = 16; // Specifies the width/height of each pixel box in the color picker (should be an even number)
 
   private double selector_width {
     get {
@@ -53,14 +55,19 @@ public class CanvasImage {
   private Cursor[] _sel_cursors = new Cursor[9];
 
   private Canvas        _canvas;
-  private Pixbuf?       _buf         = null;  // Currently displayed pixbuf
-  private int           _crop_index  = -2;
-  private double        _last_x      = 0;
-  private double        _last_y      = 0;
-  private double        _angle       = 0;
-  private bool          _control_set = false;
-  private PickMode      _pick_mode   = PickMode.NONE;
-  private RGBA          _pick_color  = {(float)1.0, (float)1.0, (float)1.0, (float)1.0};
+  private Pixbuf?       _buf             = null;  // Currently displayed pixbuf
+  private int           _crop_index      = -2;
+  private double        _last_x          = 0;
+  private double        _last_y          = 0;
+  private double        _angle           = 0;
+  private bool          _control_set     = false;
+  private PickMode      _pick_mode       = PickMode.NONE;
+  private RGBA          _pick_color      = {(float)1.0, (float)1.0, (float)1.0, (float)1.0};
+  private int           _pick_adjust_row = (pick_size / 2);
+  private int           _pick_adjust_col = (pick_size / 2);
+  private int[]         _pick_offset     = new int[pick_size];
+  private double        _pick_x          = 0.0;
+  private double        _pick_y          = 0.0;
 
   public Pixbuf?          pixbuf        { get; private set; default = null; }  // Original pixbuf of image
   public bool             cropping      { get; private set; default = false; }
@@ -82,8 +89,10 @@ public class CanvasImage {
 
   /* Constructor */
   public CanvasImage( Canvas canvas ) {
+
     _canvas = canvas;
     exports = new Exports( canvas );
+
     _sel_cursors[0] = new Cursor.from_name( "nw-resize", null );
     _sel_cursors[1] = new Cursor.from_name( "ne-resize", null );
     _sel_cursors[2] = new Cursor.from_name( "sw-resize", null );
@@ -93,6 +102,11 @@ public class CanvasImage {
     _sel_cursors[6] = new Cursor.from_name( "w-resize", null );
     _sel_cursors[7] = new Cursor.from_name( "e-resize", null );
     _sel_cursors[8] = new Cursor.from_name( "col-resize", null );
+
+    for( int i=0; i<pick_size; i++ ) {
+      _pick_offset[i] = ((pick_size * pick_pixel_size) / 2) - (i * pick_pixel_size);
+    }
+
   }
 
   /* Returns true if the surface image has been set */
@@ -194,25 +208,65 @@ public class CanvasImage {
   //  KEY EVENT HANDLER
   /****************************************************************************/
 
+  public void focus_leave() {
+    _control_set = false;
+  }
+
   /* Handles a keypress event when cropping is enabled */
   public bool key_pressed( uint keyval, uint keycode, ModifierType state ) {
+
+    /* Handle a press of the control key */
+    if( (keyval == Key.Control_L) || (keyval == Key.Control_R) ) {
+      _control_set = true;
+      if( _pick_mode.enabled() ) {
+        _pick_x = _last_x;
+        _pick_y = _last_y;
+        return( true );
+      }
+      return( false );
+    }
 
     if( _pick_mode.enabled() ) {
 
       switch( keyval ) {
-        case Key.Return :  return( complete_pick_mode( false ) );
-        case Key.Escape :  return( complete_pick_mode( true ) );
+        case Key.Return :
+          return( complete_pick_mode( false ) );
+        case Key.Escape :
+          return( complete_pick_mode( true ) );
+        case Key.Right :
+          if( _pick_adjust_row < (pick_size - 1) ) {
+            _pick_adjust_row++;
+            return( true );
+          }
+          break;
+        case Key.Left :
+          if( _pick_adjust_row > 0 ) {
+            _pick_adjust_row--;
+            return( true );
+          }
+          break;
+        case Key.Up :
+          if( _pick_adjust_col > 0 ) {
+            _pick_adjust_col--;
+            return( true );
+          }
+          break;
+        case Key.Down :
+          if( _pick_adjust_col < (pick_size - 1) ) {
+            _pick_adjust_col++;
+            return( true );
+          }
+          break;
       }
 
     } else {
 
       switch( keyval ) {
-        case Key.Return    :
+        case Key.Return :
           return( end_crop() );
-        case Key.Escape    :
+        case Key.Escape :
           return( cancel_crop() );
-        case Key.Control_L :  _control_set = true;  break;
-        case Key.Right     :
+        case Key.Right :
           if( ((int)_angle + 1) < 180 ) {
             var box = new CanvasRect.from_rect( crop_rect );
             _angle += 1;
@@ -220,7 +274,7 @@ public class CanvasImage {
             _canvas.queue_draw();
           }
           break;
-        case Key.Left      :
+        case Key.Left :
           if( ((int)_angle - 1) > 0 ) {
             var box = new CanvasRect.from_rect( crop_rect );
             _angle -= 1;
@@ -238,7 +292,9 @@ public class CanvasImage {
 
   /* Handles a key release event when cropping is enabled */
   public bool key_released( uint keyval, uint keycode, ModifierType state ) {
-    _control_set = false;
+    if( (keyval == Key.Control_L) || (keyval == Key.Control_R) ) {
+      _control_set = false;
+    }
     return( false );
   }
 
@@ -255,7 +311,9 @@ public class CanvasImage {
     _last_y     = y;
     _crop_index = -2;
 
-    if( cropping ) {
+    if( _pick_mode.enabled() ) {
+
+    } else if( cropping ) {
       for( int i=0; i<crop_selectors; i++ ) {
         selector_bbox( i, rect );
         if( rect.contains( x, y ) ) {
@@ -284,6 +342,23 @@ public class CanvasImage {
     info.copy( new_info );
 
   }
+
+  /* Returns true if the current cursor lies within a color picker pixel box.  Sets the pick_adjust_row/col to the current values. */
+  private bool check_in_pick_box() {
+
+    var size   = (pick_size * pick_pixel_size);
+    var pick_x = _pick_x - _pick_offset[0];
+    var pick_y = _pick_y - _pick_offset[0];
+
+    if( (pick_x <= _last_x) && (_last_x < (pick_x + size)) && (pick_y <= _last_y) && (_last_y < (pick_y + size)) ) {
+      _pick_adjust_row = (int)((_last_x - pick_x) / pick_pixel_size);
+      _pick_adjust_col = (int)((_last_y - pick_y) / pick_pixel_size);
+      return( true );
+    }
+
+    return( false );
+
+  }
   
   /* Handles a cursor motion event */
   public bool cursor_moved( double x, double y ) {
@@ -298,7 +373,7 @@ public class CanvasImage {
 
     /* If we are picking a color, queue the draw */
     if( _pick_mode.enabled() ) {
-      return( true );
+      return( !_control_set || check_in_pick_box() );
     }
 
     /* If we clicked into the crop rectangle, move the rectangle */
@@ -436,6 +511,10 @@ public class CanvasImage {
   public void pick_color( bool to_clipboard ) {
 
     _pick_mode = to_clipboard ? PickMode.CLIPBOARD : PickMode.COLOR;
+
+    /* Select the middle-most row and column */
+    _pick_adjust_row = (pick_size / 2);
+    _pick_adjust_col = (pick_size / 2);
 
     /* Make sure that the canvas has the keyboard focus to handle keypresses */
     _canvas.grab_focus();
@@ -609,24 +688,55 @@ public class CanvasImage {
 
   }
 
+  private RGBA get_color_at( Pixbuf buf, int x, int y ) {
+
+    var  start = (y * buf.rowstride) + (x * buf.n_channels);
+    RGBA color = { (float)(buf.get_pixels()[start+0] / 255.0),  // red
+                   (float)(buf.get_pixels()[start+1] / 255.0),  // green
+                   (float)(buf.get_pixels()[start+2] / 255.0),  // green
+                   (float)1.0
+    };
+
+    return( color );
+
+  }
+
   /* Draws the color picker on the canvas */
   public void draw_pick_mode( Context ctx ) {
 
     if( _pick_mode.enabled() ) {
 
       /* Get the color at the last motion location */
-      var pixel = new Pixbuf.subpixbuf( _buf, (int)_last_x, (int)_last_y, 1, 1 );
+      var pick_x = _control_set ? _pick_x : _last_x;
+      var pick_y = _control_set ? _pick_y : _last_y;
+      var mid    = (pick_size / 2);
+      var buf    = new Pixbuf.subpixbuf( _buf, (int)(pick_x - mid), (int)(pick_y - mid), pick_size, pick_size );
+      var black  = Utils.color_from_string( "black" );
+      var width  = pick_size * pick_pixel_size;
+
+      Utils.set_context_color( ctx, black );
+      ctx.rectangle( (pick_x - ((width / 2) + 1)), (pick_y - ((width / 2) + 1)), (width + 2), (width + 2) );
+      ctx.fill();
+
+      for( int i=0; i<(pick_size * pick_size); i++ ) {
+
+        var x     = i % pick_size;
+        var y     = i / pick_size;
+        var color = get_color_at( buf, x, y );
+
+        Utils.set_context_color( ctx, color );
+        ctx.rectangle( (pick_x - _pick_offset[x]), (pick_y - _pick_offset[y]), pick_pixel_size, pick_pixel_size );
+        ctx.fill();
+
+      }
 
       /* Get the pixel color */
-      _pick_color = { (float)(pixel.get_pixels()[0] / 255.0), (float)(pixel.get_pixels()[1] / 255.0), (float)(pixel.get_pixels()[2] / 255.0), (float)1.0 };
+      _pick_color = get_color_at( buf, _pick_adjust_row, _pick_adjust_col );
 
-      /* Draw the square */
-      Utils.set_context_color( ctx, _pick_color );
-      ctx.rectangle( (_last_x - 30), (_last_y - 30), 60, 60 );
-      ctx.fill_preserve();
-
+      /* Draw a border around the selected color pixel box */
       Utils.set_context_color( ctx, Granite.contrasting_foreground_color( _pick_color ) );
-      ctx.set_line_width( 1 );
+      ctx.set_line_width( 2 );
+      ctx.rectangle( (pick_x - _pick_offset[_pick_adjust_row]), (pick_y - _pick_offset[_pick_adjust_col]), pick_pixel_size, pick_pixel_size );
       ctx.stroke();
 
     }
