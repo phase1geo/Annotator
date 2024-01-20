@@ -706,10 +706,16 @@ public class CanvasImage {
 
     if( _pick_mode.enabled() ) {
 
-      /* Get the color at the last motion location */
       var pick_x = _control_set ? _pick_x : _last_x;
       var pick_y = _control_set ? _pick_y : _last_y;
       var mid    = (pick_size / 2);
+
+      /* If we are too close to the border, just return */
+      if( (pick_x < mid) || (pick_y < mid) || ((pick_x + mid) >= _buf.width) || ((pick_y + mid) >= _buf.height) ) {
+        return;
+      }
+
+      /* Get the color at the last motion location */
       var buf    = new Pixbuf.subpixbuf( _buf, (int)(pick_x - mid), (int)(pick_y - mid), pick_size, pick_size );
       var black  = Utils.color_from_string( "black" );
       var width  = pick_size * pick_pixel_size;
