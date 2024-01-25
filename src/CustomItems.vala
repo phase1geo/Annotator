@@ -23,7 +23,7 @@ public class CustomItems : Object {
   /*
    Creates the custom menu UI and adds it to the end of the given box.
   */
-  public void create_menu( CanvasItemCategory category, Popover popover, Box box, string label_str, int columns = 4 ) {
+  public void create_menu( MainWindow win, CanvasItemCategory category, Popover popover, Box box, string label_str, int columns = 4 ) {
 
     var rev_box = new Box( Orientation.VERTICAL, 5 );
 
@@ -43,7 +43,7 @@ public class CustomItems : Object {
     };
     popover.show.connect(() => {
       edit_end_custom( category );
-      populate_menu( category, fb );
+      populate_menu( win, category, fb );
       if( fb.get_first_child() == null ) {
         rev_box.hide();
       } else {
@@ -93,7 +93,7 @@ public class CustomItems : Object {
    at least one custom item was found for the given category; otherwise, returns false to indicate
    that the popover should not be popped up..
   */
-  public void populate_menu( CanvasItemCategory category, FlowBox fb ) {
+  public void populate_menu( MainWindow win, CanvasItemCategory category, FlowBox fb ) {
 
     /* Clear the flowbox */
     while( fb.get_first_child() != null ) {
@@ -107,7 +107,7 @@ public class CustomItems : Object {
         var box = new Box( Orientation.HORIZONTAL, 0 );
         var mb  = new Button() {
           has_frame = false,
-          child = item.get_image()
+          child = item.get_image( win )
         };
         mb.clicked.connect(() => {
           item_selected( category, item );

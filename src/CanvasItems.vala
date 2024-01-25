@@ -92,16 +92,21 @@ public enum CanvasItemType {
     }
   }
 
-  public string icon_name() {
+  public string icon_name( bool dark ) {
     switch( this ) {
-      case RECT_STROKE :  return( "rect-stroke-symbolic" );
-      case RECT_FILL   :  return( "rect-fill-symbolic" );
-      case OVAL_STROKE :  return( "circle-stroke-symbolic" );
-      case OVAL_FILL   :  return( "circle-fill-symbolic" );
-      case STAR_STROKE :  return( "star-stroke-symbolic" );
-      case STAR_FILL   :  return( "star-fill-symbolic" );
-      case LINE        :  return( "line-symbolic" );
-      case ARROW       :  return( "arrow-symbolic" );
+      case RECT_STROKE :  return( dark ? "rect-stroke-dark-symbolic"   : "rect-stroke-symbolic" );
+      case RECT_FILL   :  return( dark ? "rect-fill-dark-symbolic"     : "rect-fill-symbolic" );
+      case OVAL_STROKE :  return( dark ? "circle-stroke-dark-symbolic" : "circle-stroke-symbolic" );
+      case OVAL_FILL   :  return( dark ? "circle-fill-dark-symbolic"   : "circle-fill-symbolic" );
+      case STAR_STROKE :  return( dark ? "star-stroke-dark-symbolic"   : "star-stroke-symbolic" );
+      case STAR_FILL   :  return( dark ? "star-fill-dark-symbolic"     : "star-fill-symbolic" );
+      case LINE        :  return( dark ? "line-dark-symbolic"          : "line-symbolic" );
+      case ARROW       :  return( dark ? "arrow-dark-symbolic"         : "arrow-symbolic" );
+      case BLUR        :  return( dark ? "blur-dark-symbolic"          : "blur-symbolic" );
+      case MAGNIFIER   :  return( dark ? "magnifier-dark-symbolic"     : "magnifier-symbolic" );
+      case PENCIL      :  return( dark ? "edit-dark-symbolic"          : "edit-symbolic" );
+      case SEQUENCE    :  return( dark ? "sequence-dark-symbolic"      : "sequence-symbolic" );
+      case STICKER     :  return( dark ? "sticker-dark-symbolic"       : "sticker-symbolic" );
       default          :  return( "" );
     }
   }

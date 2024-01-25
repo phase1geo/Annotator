@@ -83,3 +83,10 @@ gnome.post_install(
     gtk_update_icon_cache: true,
     update_desktop_database: true,
 )
+
+# If our version of Meson supports it, update the mime database
+if meson.version().version_compare('>=0.64.0')
+  gnome.post_install(
+    update_mime_database: true,
+  )
+endif

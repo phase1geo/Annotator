@@ -718,10 +718,18 @@ public class CanvasImage {
       /* Get the color at the last motion location */
       var buf    = new Pixbuf.subpixbuf( _buf, (int)(pick_x - mid), (int)(pick_y - mid), pick_size, pick_size );
       var black  = Utils.color_from_string( "black" );
-      var width  = pick_size * pick_pixel_size;
+      var size   = pick_size * pick_pixel_size;
+      var box_offset = 20;
+      var no_change  = size + (box_offset * 2);
+      var box_x  = (pick_x < ((_buf.width  / 2) - (no_change / 2))) ? (pick_x + box_offset) :
+                   (pick_x > ((_buf.width  / 2) + (no_change / 2))) ? (pick_x - (box_offset + size)) :
+                   (_buf.width / 2) - (size / 2);
+      var box_y  = (pick_y < ((_buf.height / 2) - (no_change / 2))) ? (pick_y + box_offset) :
+                   (pick_y > ((_buf.height / 2) + (no_change / 2))) ? (pick_y - (box_offset + size)) :
+                   (_buf.height / 2) - (size / 2);
 
       Utils.set_context_color( ctx, black );
-      ctx.rectangle( (pick_x - ((width / 2) + 1)), (pick_y - ((width / 2) + 1)), (width + 2), (width + 2) );
+      ctx.rectangle( (box_x - 1), (box_y - 1), (size + 2), (size + 2) );
       ctx.fill();
 
       for( int i=0; i<(pick_size * pick_size); i++ ) {
@@ -731,7 +739,7 @@ public class CanvasImage {
         var color = get_color_at( buf, x, y );
 
         Utils.set_context_color( ctx, color );
-        ctx.rectangle( (pick_x - _pick_offset[x]), (pick_y - _pick_offset[y]), pick_pixel_size, pick_pixel_size );
+        ctx.rectangle( (box_x + (x * pick_pixel_size)), (box_y + (y * pick_pixel_size)), pick_pixel_size, pick_pixel_size );
         ctx.fill();
 
       }
@@ -742,7 +750,7 @@ public class CanvasImage {
       /* Draw a border around the selected color pixel box */
       Utils.set_context_color( ctx, Granite.contrasting_foreground_color( _pick_color ) );
       ctx.set_line_width( 2 );
-      ctx.rectangle( (pick_x - _pick_offset[_pick_adjust_row]), (pick_y - _pick_offset[_pick_adjust_col]), pick_pixel_size, pick_pixel_size );
+      ctx.rectangle( (box_x + (_pick_adjust_row * pick_pixel_size)), (box_y + (_pick_adjust_col * pick_pixel_size)), pick_pixel_size, pick_pixel_size );
       ctx.stroke();
 
     }
