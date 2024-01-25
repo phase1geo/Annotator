@@ -1,14 +1,17 @@
 [Desktop Entry]
 Name[it]=Annotator
 Name[nl]=Aantekeningen
+Name[ru]=Annotator
 Name[pt_BR]=Annotator
 Name=Annotator
 GenericName[it]=Annotator
 GenericName[nl]=Aantekeningen
+GenericName[ru]=Annotator
 GenericName[pt_BR]=Annotator
 GenericName=Annotator
 Comment[it]=Comunica meglio con le immagini
 Comment[nl]=Communiceer met betere afbeeldingen
+Comment[ru]=Общайтесь с изображениями лучше
 Comment[pt_BR]=Comunique-se melhor com imagens
 Comment=Communicate with images better
 Categories=Utility;Graphics;
@@ -21,6 +24,7 @@ X-GNOME-Gettext-Domain=Annotator
 X-GNOME-UsesNotifications=true
 Keywords[it]=annotatore; immagine; annotazione;
 Keywords[nl]=aantekeningen;afbeelding;aantekening;
+Keywords[ru]=annotator;image;annotate;аннотатор;комментатор;изображение;картинка;аннотировать;комментировать;
 Keywords[pt_BR]=imagem;anotador;annotator;image;annotate;
 Keywords=annotator;image;annotate;
 Actions=EditClipboard;EditScreenshot
@@ -28,11 +32,13 @@ Actions=EditClipboard;EditScreenshot
 [Desktop Action EditClipboard]
 Name[it]=Modifica Immagine negli Appunti
 Name[nl]=Klembordafbeelding bewerken
+Name[ru]=Открыть файл из буфера обмена
 Name[pt_BR]=Edite imagens da área de transferência
 Name=Edit Clipboard Image
 Exec=com.github.phase1geo.annotator --use-clipboard
 
 [Desktop Action EditScreenshot]
 Name[it]=Fai uno Screenshot
+Name[ru]=Сделать снимок экран
 Name=Take Screenshot
 Exec=com.github.phase1geo.annotator --screenshot-area

@@ -32,6 +32,7 @@
       <li>Blur out portions of the image to obfuscate data.</li>
       <li>Crop, resize and add image borders.</li>
       <li>Control colors, line thickness and font details.</li>
+      <li>Built-in color picker to copy image pixel color to clipboard.</li>
       <li>Zoom support.</li>
       <li>Unlimited undo/redo of any change.</li>
       <li>Export to JPEG, PNG, TIFF, BMP, PDF and SVG image formats.</li>
@@ -84,6 +85,8 @@
           <li>Updated UI from GTK3 to GTK4.</li>
           <li>Added support for exporting PNG with transparency (thanks to Peter Willemsen).</li>
           <li>Added support for adding user-provided custom icons.</li>
+          <li>Added support for color picker tool to copy pixel color to clipboard.</li>
+          <li>Added support for color picker tool to change current item color to image pixel color.</li>
         </ul>
         <p>Changes</p>
         <ul>

@@ -62,11 +62,15 @@ public class CurrentItem {
     }
   }
 
-  public Image? get_image() {
+  public Image? get_image( MainWindow win ) {
     if( _canvas != CanvasItemType.NONE ) {
-      return( new Image.from_icon_name( _canvas.icon_name() ) );
+      var image = new Image.from_icon_name( _canvas.icon_name( win.dark_mode ) );
+      win.theme_changed.connect((dark_mode) => {
+        image.icon_name = _canvas.icon_name( dark_mode );
+      });
+      return( image );
     } else if( _custom != null ) {
-      return( _custom.get_image() );
+      return( _custom.get_image( win ) );
     }
     return( null );
   }

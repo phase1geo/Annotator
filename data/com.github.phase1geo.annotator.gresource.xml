@@ -18,19 +18,35 @@
         <file alias="64-com.github.phase1geo.annotator.svg" compressed="true" preprocess="xml-stripblanks">images/icons/64/com.github.phase1geo.annotator.svg</file>
         <file alias="128-com.github.phase1geo.annotator.svg" compressed="true" preprocess="xml-stripblanks">images/icons/128/com.github.phase1geo.annotator.svg</file>
         <file alias="rect-fill-symbolic.svg">images/icons/scalable/rect-fill-symbolic.svg</file>
+        <file alias="rect-fill-dark-symbolic.svg">images/icons/scalable/rect-fill-dark-symbolic.svg</file>
         <file alias="rect-stroke-symbolic.svg">images/icons/scalable/rect-stroke-symbolic.svg</file>
+        <file alias="rect-stroke-dark-symbolic.svg">images/icons/scalable/rect-stroke-dark-symbolic.svg</file>
         <file alias="circle-fill-symbolic.svg">images/icons/scalable/circle-fill-symbolic.svg</file>
+        <file alias="circle-fill-dark-symbolic.svg">images/icons/scalable/circle-fill-dark-symbolic.svg</file>
         <file alias="circle-stroke-symbolic.svg">images/icons/scalable/circle-stroke-symbolic.svg</file>
+        <file alias="circle-stroke-dark-symbolic.svg">images/icons/scalable/circle-stroke-dark-symbolic.svg</file>
         <file alias="star-fill-symbolic.svg">images/icons/scalable/star-fill-symbolic.svg</file>
+        <file alias="star-fill-dark-symbolic.svg">images/icons/scalable/star-fill-dark-symbolic.svg</file>
         <file alias="star-stroke-symbolic.svg">images/icons/scalable/star-stroke-symbolic.svg</file>
+        <file alias="star-stroke-dark-symbolic.svg">images/icons/scalable/star-stroke-dark-symbolic.svg</file>
         <file alias="arrow-symbolic.svg">images/icons/scalable/arrow-symbolic.svg</file>
+        <file alias="arrow-dark-symbolic.svg">images/icons/scalable/arrow-dark-symbolic.svg</file>
         <file alias="line-symbolic.svg">images/icons/scalable/line-symbolic.svg</file>
+        <file alias="line-dark-symbolic.svg">images/icons/scalable/line-dark-symbolic.svg</file>
         <file alias="blur-symbolic.svg">images/icons/scalable/blur-symbolic.svg</file>
+        <file alias="blur-dark-symbolic.svg">images/icons/scalable/blur-dark-symbolic.svg</file>
         <file alias="sequence-symbolic.svg">images/icons/scalable/sequence-symbolic.svg</file>
+        <file alias="sequence-dark-symbolic.svg">images/icons/scalable/sequence-dark-symbolic.svg</file>
         <file alias="magnifier-symbolic.svg">images/icons/scalable/magnifier-symbolic.svg</file>
+        <file alias="magnifier-dark-symbolic.svg">images/icons/scalable/magnifier-dark-symbolic.svg</file>
         <file alias="sticker-symbolic.svg">images/icons/scalable/sticker-symbolic.svg</file>
+        <file alias="sticker-dark-symbolic.svg">images/icons/scalable/sticker-dark-symbolic.svg</file>
         <file alias="edit-symbolic.svg">images/icons/scalable/edit-symbolic.svg</file>
+        <file alias="edit-dark-symbolic.svg">images/icons/scalable/edit-dark-symbolic.svg</file>
         <file alias="image-crop-symbolic.svg">images/icons/scalable/image-crop-symbolic.svg</file>
+        <file alias="image-crop-dark-symbolic.svg">images/icons/scalable/image-crop-dark-symbolic.svg</file>
+        <file alias="eyedropper-symbolic.svg">images/icons/scalable/eyedropper-svgrepo-com.svg</file>
+        <file alias="eyedropper-dark-symbolic.svg">images/icons/scalable/eyedropper-dark-svgrepo-com.svg</file>
 
         <file alias="sticker_data_encryption">images/icons/flat-color-icons/svg/data_encryption.svg</file>
         <file alias="sticker_factory_breakdown">images/icons/flat-color-icons/svg/factory_breakdown.svg</file>

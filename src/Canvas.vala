@@ -77,11 +77,13 @@ public class Canvas : DrawingArea {
       button = Gdk.BUTTON_SECONDARY
     };
     var motion_controller = new EventControllerMotion();
+    var focus_controller = new EventControllerFocus();
 
     add_controller( _key_controller );
     add_controller( pri_btn_controller );
     add_controller( sec_btn_controller );
     add_controller( motion_controller );
+    add_controller( focus_controller );
 
     _key_controller.key_pressed.connect( on_keypress );
     _key_controller.key_released.connect( on_keyrelease );
@@ -93,6 +95,7 @@ public class Canvas : DrawingArea {
 
     motion_controller.motion.connect( on_motion );
 
+    focus_controller.leave.connect( on_focus_leave );
 
     /* Make sure that we us the IMMulticontext input method when editing text only */
     _im_context = new IMMulticontext();
@@ -313,6 +316,13 @@ public class Canvas : DrawingArea {
     }
   }
 
+  /* Called whenever the canvas loses focus */
+  private void on_focus_leave() {
+
+    image.focus_leave();
+
+  }
+
   /* Handles keypress events */
   private bool on_keypress( uint keyval, uint keycode, ModifierType state ) {
 
@@ -323,7 +333,7 @@ public class Canvas : DrawingArea {
       _im_context.filter_keypress( _key_controller.get_current_event() );
 
     /* If we are cropping the image, pass key presses to the image */
-    } else if( image.cropping ) {
+    } else if( image.cropping || image.picking ) {
       if( image.key_pressed( keyval, keycode, state ) ) {
         queue_draw();
       }
@@ -341,7 +351,7 @@ public class Canvas : DrawingArea {
   /* Handles keyrelease events */
   private void on_keyrelease( uint keyval, uint keycode, ModifierType state ) {
 
-    if( image.cropping ) {
+    if( image.cropping || image.picking ) {
       image.key_released( keyval, keycode, state );
     } else if( items.key_released( keyval, state ) ) {
       _im_context.reset();
@@ -388,7 +398,7 @@ public class Canvas : DrawingArea {
     _last_x = x;
     _last_y = y;
 
-    if( image.cropping ) {
+    if( image.cropping || image.picking ) {
       if( image.cursor_moved( x, y ) ) {
         queue_draw();
       }
@@ -404,7 +414,7 @@ public class Canvas : DrawingArea {
     var x = scale_x( ex );
     var y = scale_y( ey );
 
-    if( image.cropping ) {
+    if( image.cropping || image.picking ) {
       if( image.cursor_released( x, y ) ) {
         queue_draw();
       }
@@ -491,6 +501,7 @@ public class Canvas : DrawingArea {
   public void draw_all( Context ctx ) {
     image.draw( ctx );
     items.draw( ctx );
+    image.draw_pick_mode( ctx );
   }
 
   /* Draws all of the items in the canvas */

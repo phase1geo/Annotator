@@ -76,6 +76,9 @@ public class MainWindow : Gtk.ApplicationWindow {
       return( _image_filters );
     }
   }
+  public bool dark_mode { private set; get; default = false; }
+
+  public signal void theme_changed( bool dark );
 
   /* Constructor */
   public MainWindow( Gtk.Application app ) {
@@ -162,8 +165,11 @@ public class MainWindow : Gtk.ApplicationWindow {
     var granite_settings = Granite.Settings.get_default();
     var gtk_settings     = Gtk.Settings.get_default();
     gtk_settings.gtk_application_prefer_dark_theme = granite_settings.prefers_color_scheme == Granite.Settings.ColorScheme.DARK;
+    dark_mode = gtk_settings.gtk_application_prefer_dark_theme;
     granite_settings.notify["prefers-color-scheme"].connect (() => {
       gtk_settings.gtk_application_prefer_dark_theme = granite_settings.prefers_color_scheme == Granite.Settings.ColorScheme.DARK;
+      dark_mode = gtk_settings.gtk_application_prefer_dark_theme;
+      theme_changed( dark_mode );
     });
   }
 

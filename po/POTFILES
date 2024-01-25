@@ -19,7 +19,7 @@ src/Exports.vala
 src/FormatBar.vala
 src/MainWindow.vala
 src/Resizer.vala
-src/ScreenshotBackend.vala
+src/StickerSet.vala
 src/undo_actions/UndoImageResize.vala
 src/undo_actions/UndoItemAdd.vala
 src/undo_actions/UndoItemBlur.vala
