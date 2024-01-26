@@ -30,10 +30,8 @@ public class CustomItem {
 
   /* Returns the image associated with this item */
   public Image get_image( MainWindow win ) {
-    var image = new Image.from_paintable( win.dark_mode ? _dark_image.paintable : _light_image.paintable );
-    win.theme_changed.connect((dark_mode) => {
-      image.paintable = dark_mode ? _dark_image.paintable : _light_image.paintable;
-    });
+    var dark_mode = Gtk.Settings.get_default().gtk_application_prefer_dark_theme;
+    var image     = new Image.from_paintable( dark_mode ? _dark_image.paintable : _light_image.paintable );
     return( image );
   }
 

@@ -325,6 +325,7 @@ public class CanvasItems {
     clear_selection();
     item.mode = CanvasItemMode.SELECTED;
     _items.insert( item, position );
+    _canvas.grab_focus();
     if( undo ) {
       _canvas.undo_buffer.add_item( new UndoItemAdd( item, (int)(_items.length() - 1) ) );
     }

@@ -165,7 +165,6 @@ public class CanvasToolbar : Box {
     var sticker = CanvasItemType.STICKER;
 
     var mb = new MenuButton() {
-      icon_name = sticker.icon_name( _canvas.win.dark_mode ),
       tooltip_markup = sticker.tooltip(),
       has_frame = false,
       popover = new Popover()
@@ -286,7 +285,7 @@ public class CanvasToolbar : Box {
 
     var sequence = CanvasItemType.SEQUENCE;
 
-    var btn = new Button.from_icon_name( sequence.icon_name( _canvas.win.dark_mode ) ) {
+    var btn = new Button() {
       tooltip_markup = sequence.tooltip(),
       margin_start   = margin,
       margin_end     = margin
@@ -307,7 +306,7 @@ public class CanvasToolbar : Box {
 
     var pencil = CanvasItemType.PENCIL;
 
-    var btn = new Button.from_icon_name( pencil.icon_name( _canvas.win.dark_mode ) ) {
+    var btn = new Button() {
       tooltip_markup = pencil.tooltip(),
       margin_start   = margin,
       margin_end     = margin
@@ -343,7 +342,7 @@ public class CanvasToolbar : Box {
 
     var magnifier = CanvasItemType.MAGNIFIER;
 
-    var btn = new Button.from_icon_name( magnifier.icon_name( _canvas.win.dark_mode ) ) {
+    var btn = new Button() {
       tooltip_markup = magnifier.tooltip(),
       margin_start   = margin,
       margin_end     = margin
@@ -364,7 +363,7 @@ public class CanvasToolbar : Box {
 
     var blur = CanvasItemType.BLUR;
 
-    var btn = new Button.from_icon_name( blur.icon_name( _canvas.win.dark_mode ) ) {
+    var btn = new Button() {
       tooltip_markup = blur.tooltip(),
       margin_start   = margin,
       margin_end     = margin
@@ -387,7 +386,6 @@ public class CanvasToolbar : Box {
       has_frame    = false,
       // TODO - tooltip_text = _( "Crop/Rotate Image" ),
       tooltip_text = _( "Crop Image" ),
-      icon_name    = _canvas.win.dark_mode ? "image-crop-dark-symbolic" : "image-crop-symbolic",
       margin_start = margin,
       margin_end   = margin
     };
@@ -432,7 +430,7 @@ public class CanvasToolbar : Box {
   /* Creates the color picker */
   private void create_dropper() {
 
-    var btn = new Button.from_icon_name( _canvas.win.dark_mode ? "eyedropper-dark-symbolic" : "eyedropper-symbolic" ) {
+    var btn = new Button() {
       tooltip_text = _( "Pick Color To Clipboard" ),
       margin_start = margin,
       margin_end   = margin

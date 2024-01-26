@@ -76,7 +76,6 @@ public class MainWindow : Gtk.ApplicationWindow {
       return( _image_filters );
     }
   }
-  public bool dark_mode { private set; get; default = false; }
 
   public signal void theme_changed( bool dark );
 
@@ -92,9 +91,6 @@ public class MainWindow : Gtk.ApplicationWindow {
 
     var box = new Box( Orientation.HORIZONTAL, 0 );
 
-    /* Handle any changes to the dark mode preference setting */
-    handle_prefer_dark_changes();
-
     can_focus = true;
 
     /* Create the sticker set */
@@ -107,6 +103,10 @@ public class MainWindow : Gtk.ApplicationWindow {
     create_header();
 
     child = box;
+
+    /* Handle any changes to the dark mode preference setting */
+    handle_prefer_dark_changes();
+
     show();
 
     /* Set the stage for menu actions */
@@ -163,14 +163,17 @@ public class MainWindow : Gtk.ApplicationWindow {
   /* Handles any changes to the dark mode preference gsettings for the desktop */
   private void handle_prefer_dark_changes() {
     var granite_settings = Granite.Settings.get_default();
-    var gtk_settings     = Gtk.Settings.get_default();
-    gtk_settings.gtk_application_prefer_dark_theme = granite_settings.prefers_color_scheme == Granite.Settings.ColorScheme.DARK;
-    dark_mode = gtk_settings.gtk_application_prefer_dark_theme;
+    update_dark_mode( granite_settings );
     granite_settings.notify["prefers-color-scheme"].connect (() => {
-      gtk_settings.gtk_application_prefer_dark_theme = granite_settings.prefers_color_scheme == Granite.Settings.ColorScheme.DARK;
-      dark_mode = gtk_settings.gtk_application_prefer_dark_theme;
-      theme_changed( dark_mode );
+      update_dark_mode( granite_settings );
     });
+  }
+
+  /* Updates the current dark mode setting in the UI */
+  private void update_dark_mode( Granite.Settings granite_settings ) {
+    var gtk_settings = Gtk.Settings.get_default();
+    gtk_settings.gtk_application_prefer_dark_theme = granite_settings.prefers_color_scheme == Granite.Settings.ColorScheme.DARK;
+    theme_changed( gtk_settings.gtk_application_prefer_dark_theme );
   }
 
   /* Create the header bar */

@@ -64,7 +64,7 @@ public class CurrentItem {
 
   public Image? get_image( MainWindow win ) {
     if( _canvas != CanvasItemType.NONE ) {
-      var image = new Image.from_icon_name( _canvas.icon_name( win.dark_mode ) );
+      var image = new Image();
       win.theme_changed.connect((dark_mode) => {
         image.icon_name = _canvas.icon_name( dark_mode );
       });
