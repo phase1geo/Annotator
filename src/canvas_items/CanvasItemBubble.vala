@@ -142,12 +142,8 @@ public class CanvasItemBubble : CanvasItem {
     return( _sel_cursors[index] );
   }
 
-  /* Draw the rectangle */
-  public override void draw_item( Context ctx, CanvasItemColor color ) {
+  private void draw_bubble( Context ctx ) {
 
-    var fill   = Granite.contrasting_foreground_color( props.color );
-    var alpha  = mode.alpha( props.alpha );
-    var sw     = props.stroke_width.width();
     var deg    = Math.PI / 180.0;
     var radius = 40;
 
@@ -160,6 +156,56 @@ public class CanvasItemBubble : CanvasItem {
     ctx.arc( (bbox.x + radius),     (bbox.y + bbox.height - radius), radius, (90 * deg),  (180 * deg) );
     ctx.arc( (bbox.x + radius),     (bbox.y + radius),     radius, (180 * deg), (270 * deg) );
     ctx.close_path();
+
+  }
+
+  private void draw_cloud( Context ctx ) {
+
+    var deg = Math.PI / 180.0;
+
+    // Draw cloud
+    var num_horizontal = (int)(bbox.width  / 40.0);
+    var hrad           = ((bbox.width  / num_horizontal) / 2);
+    var num_vertical   = (int)((bbox.height - (hrad * 2)) / 40.0);
+    var vrad           = (((bbox.height - (hrad * 2)) / num_vertical) / 2);
+
+    // Draw main cloud
+    ctx.new_sub_path();
+    for( int i=0; i<(num_horizontal + 1); i++ ) {
+      var first = (i == 0);
+      var last  = (i == num_horizontal);
+      ctx.arc( (bbox.x + (i * (hrad * 2))), bbox.y, hrad, (first ? (-270 * deg) : (-180 * deg)), (last ? (90 * deg) : (0 * deg)) );
+    }
+    for( int i=0; i<num_vertical; i++ ) {
+      ctx.arc( (bbox.x + bbox.width), (bbox.y + hrad + vrad + (i * (vrad * 2))), vrad, (-90 * deg), (90 * deg) );
+    }
+    for( int i=num_horizontal; i>=0; i-- ) {
+      var first = (i == num_horizontal);
+      var last  = (i == 0);
+      ctx.arc( (bbox.x + (i * (hrad * 2))), (bbox.y + bbox.height), hrad, (first ? (270 * deg) : (0 * deg)), (last ? (270 * deg) : (180 * deg)) );
+    }
+    for( int i=(num_vertical - 1); i>=0; i-- ) {
+      ctx.arc( bbox.x, (bbox.y + hrad + vrad + (i * (vrad * 2))), vrad, (90 * deg), (-90 * deg) );
+    }
+    ctx.close_path();
+
+    // Draw thinking circles
+    ctx.new_sub_path();
+    ctx.arc( points.index( 8 ).x, points.index( 8 ).y, 20, (0 * deg), (360 * deg) );
+    ctx.close_path();
+
+  }
+
+  /* Draw the rectangle */
+  public override void draw_item( Context ctx, CanvasItemColor color ) {
+
+    var fill   = Granite.contrasting_foreground_color( props.color );
+    var alpha  = mode.alpha( props.alpha );
+    var sw     = props.stroke_width.width();
+
+    // Draw rounded rectangle with triangle talk point
+    // draw_bubble( ctx );
+    draw_cloud( ctx );
 
     save_path( ctx, CanvasItemPathType.FILL );
 
