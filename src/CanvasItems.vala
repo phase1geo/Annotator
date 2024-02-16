@@ -38,6 +38,7 @@ public enum CanvasItemType {
   OVAL_FILL,
   STAR_STROKE,
   STAR_FILL,
+  BUBBLE,
   LINE,
   ARROW,
   TEXT,
@@ -58,6 +59,7 @@ public enum CanvasItemType {
       case OVAL_FILL   :  return( "oval-fill" );
       case STAR_STROKE :  return( "star-stroke" );
       case STAR_FILL   :  return( "star-fill" );
+      case BUBBLE      :  return( "bubble" );
       case LINE        :  return( "line" );
       case ARROW       :  return( "arrow" );
       case TEXT        :  return( "text" );
@@ -79,6 +81,7 @@ public enum CanvasItemType {
       case "oval-fill"   :  return( OVAL_FILL );
       case "star-stroke" :  return( STAR_STROKE );
       case "star-fill"   :  return( STAR_FILL );
+      case "bubble"      :  return( BUBBLE );
       case "line"        :  return( LINE );
       case "arrow"       :  return( ARROW );
       case "text"        :  return( TEXT );
@@ -100,6 +103,7 @@ public enum CanvasItemType {
       case OVAL_FILL   :  return( dark ? "circle-fill-dark-symbolic"   : "circle-fill-symbolic" );
       case STAR_STROKE :  return( dark ? "star-stroke-dark-symbolic"   : "star-stroke-symbolic" );
       case STAR_FILL   :  return( dark ? "star-fill-dark-symbolic"     : "star-fill-symbolic" );
+      case BUBBLE      :  return( dark ? "bubble-dark-symbolic"        : "bubble-symbolic" );
       case LINE        :  return( dark ? "line-dark-symbolic"          : "line-symbolic" );
       case ARROW       :  return( dark ? "arrow-dark-symbolic"         : "arrow-symbolic" );
       case BLUR        :  return( dark ? "blur-dark-symbolic"          : "blur-symbolic" );
@@ -119,6 +123,7 @@ public enum CanvasItemType {
       case OVAL_FILL   :  return( Utils.tooltip_with_accel( _( "Oval" ), "<shift>o" ) );
       case STAR_STROKE :  return( Utils.tooltip_with_accel( _( "Star Outline" ), "s" ) );
       case STAR_FILL   :  return( Utils.tooltip_with_accel( _( "Star" ), "<shift>s" ) );
+      case BUBBLE      :  return( Utils.tooltip_with_accel( _( "Bubble" ), "u" ) );
       case LINE        :  return( Utils.tooltip_with_accel( _( "Line" ), "l" ) );
       case ARROW       :  return( Utils.tooltip_with_accel( _( "Arrow" ), "a" ) );
       case TEXT        :  return( Utils.tooltip_with_accel( _( "Text" ), "t" ) );
@@ -140,6 +145,7 @@ public enum CanvasItemType {
       case OVAL_FILL   :  return( CanvasItemCategory.SHAPE );
       case STAR_STROKE :  return( CanvasItemCategory.SHAPE );
       case STAR_FILL   :  return( CanvasItemCategory.SHAPE );
+      case BUBBLE      :  return( CanvasItemCategory.SHAPE );
       case LINE        :  return( CanvasItemCategory.SHAPE );
       case ARROW       :  return( CanvasItemCategory.ARROW );
       case TEXT        :  return( CanvasItemCategory.TEXT );
@@ -234,6 +240,14 @@ public class CanvasItems {
     var item = new CanvasItemStar( _canvas, fill, 5, 25, props );
     if( !loading ) {
       item.bbox = center_box( 100, 100 );
+    }
+    return( item );
+  }
+
+  private CanvasItem create_bubble( bool loading = false ) {
+    var item = new CanvasItemBubble( _canvas, props );
+    if( !loading ) {
+      item.bbox = center_box( 200, 100 );
     }
     return( item );
   }
@@ -344,6 +358,7 @@ public class CanvasItems {
       case CanvasItemType.OVAL_FILL    :  item = create_oval( true );  break;
       case CanvasItemType.STAR_STROKE  :  item = create_star( false );  break;
       case CanvasItemType.STAR_FILL    :  item = create_star( true );  break;
+      case CanvasItemType.BUBBLE       :  item = create_bubble();  break;
       case CanvasItemType.LINE         :  item = create_line();  break;
       case CanvasItemType.ARROW        :  item = create_arrow();  break;
       case CanvasItemType.TEXT         :  item = create_text();  break;
@@ -1271,6 +1286,7 @@ public class CanvasItems {
       case CanvasItemType.OVAL_FILL   :  item = create_oval( true, true );        break;
       case CanvasItemType.STAR_STROKE :  item = create_star( false, true );       break;
       case CanvasItemType.STAR_FILL   :  item = create_star( true, true );        break;
+      case CanvasItemType.BUBBLE      :  item = create_bubble( true );            break;
       case CanvasItemType.LINE        :  item = create_line( true );              break;
       case CanvasItemType.ARROW       :  item = create_arrow( true );             break;
       case CanvasItemType.TEXT        :  item = create_text( true );              break;
