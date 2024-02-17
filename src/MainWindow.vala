@@ -224,26 +224,14 @@ public class MainWindow : Gtk.ApplicationWindow {
 
   private MenuButton create_preferences() {
 
+    var menu = new GLib.Menu();
+    menu.append( _( "Shortcuts Cheatsheet…" ), "win.action_shortcuts" );
+
     var pref_btn = new MenuButton() {
-      has_frame    = false,
       child        = new Image.from_icon_name( get_icon_name( "open-menu" ) ),
       tooltip_text = _( "Properties" ),
-      popover      = new Popover()
+      menu_model   = menu
     };
-
-    var box = new Box( Orientation.VERTICAL, 0 );
-
-    var shortcuts = new Button.with_label( _( "Shortcuts Cheatsheet" ) ) {
-      has_frame = false
-    };
-    shortcuts.clicked.connect(() => {
-      do_shortcuts();
-      pref_btn.popover.popdown();
-    });
-
-    box.append( shortcuts );
-
-    pref_btn.popover.child = box;
 
     return( pref_btn );
 
@@ -285,7 +273,6 @@ public class MainWindow : Gtk.ApplicationWindow {
     box.append( print_btn );
 
     var export_btn = new MenuButton() {
-      has_frame    = false,
       child        = new Image.from_icon_name( (on_elementary ? "document-export" : "document-send-symbolic") ),
       sensitive    = false,
       tooltip_text = _( "Export Image" ),
@@ -308,7 +295,6 @@ public class MainWindow : Gtk.ApplicationWindow {
 
     /* Add the button */
     var zoom_btn = new MenuButton() {
-      has_frame    = false,
       icon_name    = get_icon_name( "zoom-fit-best" ),
       tooltip_text = _( "Zoom (%d%%)" ).printf( 100 ),
       sensitive    = false,
