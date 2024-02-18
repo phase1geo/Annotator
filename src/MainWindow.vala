@@ -225,7 +225,7 @@ public class MainWindow : Gtk.ApplicationWindow {
   private MenuButton create_preferences() {
 
     var pref_btn = new MenuButton() {
-      has_frame    = false,
+      has_frame    = !on_elementary,
       child        = new Image.from_icon_name( get_icon_name( "open-menu" ) ),
       tooltip_text = _( "Properties" ),
       popover      = new Popover()
@@ -285,7 +285,7 @@ public class MainWindow : Gtk.ApplicationWindow {
     box.append( print_btn );
 
     var export_btn = new MenuButton() {
-      has_frame    = false,
+      has_frame    = !on_elementary,
       child        = new Image.from_icon_name( (on_elementary ? "document-export" : "document-send-symbolic") ),
       sensitive    = false,
       tooltip_text = _( "Export Image" ),
