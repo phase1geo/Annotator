@@ -24,20 +24,21 @@ using Gee;
 
 public class MainWindow : Gtk.ApplicationWindow {
 
-  private FontButton        _font;
-  private Button            _open_btn;
-  private Button            _screenshot_btn;
-  private Button            _undo_btn;
-  private Button            _redo_btn;
-  private MenuButton        _pref_btn;
-  private MenuButton        _export_btn;
-  private MenuButton        _zoom_btn;
-  private ZoomWidget        _zoom;
-  private Box               _box;
-  private Editor            _editor;
-  private Stack             _stack;
-  private SList<FileFilter> _image_filters;
-  private StickerSet        _sticker_set;
+  private Granite.Placeholder _welcome;
+  private FontButton          _font;
+  private Button              _open_btn;
+  private Button              _screenshot_btn;
+  private Button              _undo_btn;
+  private Button              _redo_btn;
+  private MenuButton          _pref_btn;
+  private MenuButton          _export_btn;
+  private MenuButton          _zoom_btn;
+  private ZoomWidget          _zoom;
+  private Box                 _box;
+  private Editor              _editor;
+  private Stack               _stack;
+  private SList<FileFilter>   _image_filters;
+  private StickerSet          _sticker_set;
 
   private const GLib.ActionEntry[] action_entries = {
     { "action_open",            do_open },
@@ -330,17 +331,17 @@ public class MainWindow : Gtk.ApplicationWindow {
   private void create_editor( Box box ) {
 
     /* Create the welcome screen */
-    var welcome = new Granite.Placeholder( _( "Welcome to Annotator" ) ) {
+    _welcome = new Granite.Placeholder( _( "Welcome to Annotator" ) ) {
       description = _( "Let's get started annotating an image" )
     };
 
-    var open = welcome.append_button( new ThemedIcon( "document-open" ), _( "Open Image From File" ), _( "Open a PNG, JPEG, TIFF or BMP file" ) );
+    var open = _welcome.append_button( new ThemedIcon( "document-open" ), _( "Open Image From File" ), _( "Open a PNG, JPEG, TIFF or BMP file" ) );
     open.clicked.connect( do_open );
 
-    var paste = welcome.append_button( new ThemedIcon( "edit-paste" ), _( "Paste Image From Clipboard" ), _( "Open an image from the clipboard" ) );
+    var paste = _welcome.append_button( new ThemedIcon( "edit-paste" ), _( "Paste Image From Clipboard" ), _( "Open an image from the clipboard" ) );
     paste.clicked.connect( do_paste );
 
-    var screenshot = welcome.append_button( new ThemedIcon( "insert-image" ), _( "Take A Screenshot" ), _( "Open an image from a screenshot" ) );
+    var screenshot = _welcome.append_button( new ThemedIcon( "insert-image" ), _( "Take A Screenshot" ), _( "Open an image from a screenshot" ) );
     screenshot.clicked.connect( do_screenshot );
 
     /* Initialize the clipboard */
@@ -361,7 +362,7 @@ public class MainWindow : Gtk.ApplicationWindow {
     _stack = new Stack() {
       transition_type = StackTransitionType.NONE
     };
-    _stack.add_named( welcome, "welcome" );
+    _stack.add_named( _welcome, "welcome" );
     _stack.add_named( _editor,  "editor" );
 
     box.append( _stack );
@@ -440,6 +441,8 @@ public class MainWindow : Gtk.ApplicationWindow {
   /* Opens an image file for loading */
   private void do_open() {
 
+    _welcome.sensitive = false;
+
     /* Get the file to open from the user */
     var dialog = new FileChooserNative( _( "Open Image File" ), this, FileChooserAction.OPEN, _( "Open" ), _( "Cancel" ) );
     Utils.set_chooser_folder( dialog );
@@ -454,6 +457,8 @@ public class MainWindow : Gtk.ApplicationWindow {
         var filename = dialog.get_file().get_path();
         open_file( filename );
         Utils.store_chooser_folder( filename );
+      } else {
+        _welcome.sensitive = true;
       }
       dialog.destroy();
     });
@@ -502,12 +507,15 @@ public class MainWindow : Gtk.ApplicationWindow {
 
   /* Pastes text or images to the editor */
   public void do_paste() {
+    _welcome.sensitive = false;
     AnnotatorClipboard.paste( _editor );
     _zoom_btn.set_sensitive( true );
     _export_btn.set_sensitive( true );
   }
 
   public void do_screenshot() {
+
+    _welcome.sensitive = false;
 
     var portal = new Xdp.Portal();
     var parent = Xdp.parent_new_gtk( this );

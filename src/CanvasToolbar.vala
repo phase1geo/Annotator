@@ -658,7 +658,6 @@ public class CanvasToolbar : Box {
     };
     outline_sw.notify["active"].connect(() => {
       _canvas.items.props.outline = !_canvas.items.props.outline;
-      stdout.printf( "Setting outline to %s\n", _canvas.items.props.outline.to_string() );
     });
     var outline_box = new Box( Orientation.HORIZONTAL, 10 ) {
       homogeneous = false,
