@@ -38,7 +38,8 @@ public enum CanvasItemType {
   OVAL_FILL,
   STAR_STROKE,
   STAR_FILL,
-  BUBBLE,
+  TALK,
+  THINK,
   LINE,
   ARROW,
   TEXT,
@@ -59,7 +60,8 @@ public enum CanvasItemType {
       case OVAL_FILL   :  return( "oval-fill" );
       case STAR_STROKE :  return( "star-stroke" );
       case STAR_FILL   :  return( "star-fill" );
-      case BUBBLE      :  return( "bubble" );
+      case TALK        :  return( "talk" );
+      case THINK       :  return( "think" );
       case LINE        :  return( "line" );
       case ARROW       :  return( "arrow" );
       case TEXT        :  return( "text" );
@@ -81,7 +83,8 @@ public enum CanvasItemType {
       case "oval-fill"   :  return( OVAL_FILL );
       case "star-stroke" :  return( STAR_STROKE );
       case "star-fill"   :  return( STAR_FILL );
-      case "bubble"      :  return( BUBBLE );
+      case "talk"        :  return( TALK );
+      case "think"       :  return( THINK );
       case "line"        :  return( LINE );
       case "arrow"       :  return( ARROW );
       case "text"        :  return( TEXT );
@@ -103,7 +106,8 @@ public enum CanvasItemType {
       case OVAL_FILL   :  return( dark ? "circle-fill-dark-symbolic"   : "circle-fill-symbolic" );
       case STAR_STROKE :  return( dark ? "star-stroke-dark-symbolic"   : "star-stroke-symbolic" );
       case STAR_FILL   :  return( dark ? "star-fill-dark-symbolic"     : "star-fill-symbolic" );
-      case BUBBLE      :  return( dark ? "bubble-dark-symbolic"        : "bubble-symbolic" );
+      case TALK        :  return( dark ? "bubble-talk-dark-symbolic"   : "bubble-talk-symbolic" );
+      case THINK       :  return( dark ? "bubble-think-dark-symbolic"  : "bubble-think-symbolic" );
       case LINE        :  return( dark ? "line-dark-symbolic"          : "line-symbolic" );
       case ARROW       :  return( dark ? "arrow-dark-symbolic"         : "arrow-symbolic" );
       case BLUR        :  return( dark ? "blur-dark-symbolic"          : "blur-symbolic" );
@@ -123,7 +127,8 @@ public enum CanvasItemType {
       case OVAL_FILL   :  return( Utils.tooltip_with_accel( _( "Oval" ), "<shift>o" ) );
       case STAR_STROKE :  return( Utils.tooltip_with_accel( _( "Star Outline" ), "s" ) );
       case STAR_FILL   :  return( Utils.tooltip_with_accel( _( "Star" ), "<shift>s" ) );
-      case BUBBLE      :  return( Utils.tooltip_with_accel( _( "Bubble" ), "u" ) );
+      case TALK        :  return( Utils.tooltip_with_accel( _( "Talk Bubble" ), "k" ) );
+      case THINK       :  return( Utils.tooltip_with_accel( _( "Think Bubble" ), "<shift>k" ) );
       case LINE        :  return( Utils.tooltip_with_accel( _( "Line" ), "l" ) );
       case ARROW       :  return( Utils.tooltip_with_accel( _( "Arrow" ), "a" ) );
       case TEXT        :  return( Utils.tooltip_with_accel( _( "Text" ), "t" ) );
@@ -145,7 +150,8 @@ public enum CanvasItemType {
       case OVAL_FILL   :  return( CanvasItemCategory.SHAPE );
       case STAR_STROKE :  return( CanvasItemCategory.SHAPE );
       case STAR_FILL   :  return( CanvasItemCategory.SHAPE );
-      case BUBBLE      :  return( CanvasItemCategory.SHAPE );
+      case TALK        :  return( CanvasItemCategory.SHAPE );
+      case THINK       :  return( CanvasItemCategory.SHAPE );
       case LINE        :  return( CanvasItemCategory.SHAPE );
       case ARROW       :  return( CanvasItemCategory.ARROW );
       case TEXT        :  return( CanvasItemCategory.TEXT );
@@ -244,8 +250,8 @@ public class CanvasItems {
     return( item );
   }
 
-  private CanvasItem create_bubble( bool loading = false ) {
-    var item = new CanvasItemBubble( _canvas, props );
+  private CanvasItem create_bubble( CanvasBubbleType type, bool loading = false ) {
+    var item = new CanvasItemBubble( _canvas, type, props );
     if( !loading ) {
       item.bbox = center_box( 200, 100 );
     }
@@ -358,7 +364,8 @@ public class CanvasItems {
       case CanvasItemType.OVAL_FILL    :  item = create_oval( true );  break;
       case CanvasItemType.STAR_STROKE  :  item = create_star( false );  break;
       case CanvasItemType.STAR_FILL    :  item = create_star( true );  break;
-      case CanvasItemType.BUBBLE       :  item = create_bubble();  break;
+      case CanvasItemType.TALK         :  item = create_bubble( CanvasBubbleType.TALK );  break;
+      case CanvasItemType.THINK        :  item = create_bubble( CanvasBubbleType.THINK );  break;
       case CanvasItemType.LINE         :  item = create_line();  break;
       case CanvasItemType.ARROW        :  item = create_arrow();  break;
       case CanvasItemType.TEXT         :  item = create_text();  break;
@@ -606,6 +613,8 @@ public class CanvasItems {
     else if(  shift && Utils.has_key( kvs, Key.o ) ) { add_shape_item( CanvasItemType.OVAL_FILL );    return( true ); }
     else if( !shift && Utils.has_key( kvs, Key.s ) ) { add_shape_item( CanvasItemType.STAR_STROKE );  return( true ); }
     else if(  shift && Utils.has_key( kvs, Key.s ) ) { add_shape_item( CanvasItemType.STAR_FILL );    return( true ); }
+    else if( !shift && Utils.has_key( kvs, Key.k ) ) { add_shape_item( CanvasItemType.TALK );         return( true ); }
+    else if(  shift && Utils.has_key( kvs, Key.k ) ) { add_shape_item( CanvasItemType.THINK );        return( true ); }
     else if( !shift && Utils.has_key( kvs, Key.l ) ) { add_shape_item( CanvasItemType.LINE );         return( true ); }
     else if( !shift && Utils.has_key( kvs, Key.t ) ) { add_shape_item( CanvasItemType.TEXT );         return( true ); }
     else if( !shift && Utils.has_key( kvs, Key.b ) ) { add_shape_item( CanvasItemType.BLUR );         return( true ); }
@@ -1286,7 +1295,8 @@ public class CanvasItems {
       case CanvasItemType.OVAL_FILL   :  item = create_oval( true, true );        break;
       case CanvasItemType.STAR_STROKE :  item = create_star( false, true );       break;
       case CanvasItemType.STAR_FILL   :  item = create_star( true, true );        break;
-      case CanvasItemType.BUBBLE      :  item = create_bubble( true );            break;
+      case CanvasItemType.TALK        :  item = create_bubble( CanvasBubbleType.TALK, true );            break;
+      case CanvasItemType.THINK       :  item = create_bubble( CanvasBubbleType.THINK, true );            break;
       case CanvasItemType.LINE        :  item = create_line( true );              break;
       case CanvasItemType.ARROW       :  item = create_arrow( true );             break;
       case CanvasItemType.TEXT        :  item = create_text( true );              break;

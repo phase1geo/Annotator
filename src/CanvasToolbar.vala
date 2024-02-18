@@ -268,6 +268,7 @@ public class CanvasToolbar : Box {
   private void create_image() {
 
     var btn = new Button.from_icon_name( "insert-image-symbolic" ) {
+      has_frame      = false,
       tooltip_markup = CanvasItemType.IMAGE.tooltip(),
       margin_start   = margin,
       margin_end     = margin
@@ -286,6 +287,7 @@ public class CanvasToolbar : Box {
     var sequence = CanvasItemType.SEQUENCE;
 
     var btn = new Button() {
+      has_frame      = false,
       tooltip_markup = sequence.tooltip(),
       margin_start   = margin,
       margin_end     = margin
@@ -307,6 +309,7 @@ public class CanvasToolbar : Box {
     var pencil = CanvasItemType.PENCIL;
 
     var btn = new Button() {
+      has_frame      = false,
       tooltip_markup = pencil.tooltip(),
       margin_start   = margin,
       margin_end     = margin
@@ -326,6 +329,7 @@ public class CanvasToolbar : Box {
   private void create_text() {
 
     var btn = new Button.from_icon_name( "insert-text-symbolic" ) {
+      has_frame      = false,
       tooltip_markup = CanvasItemType.TEXT.tooltip(),
       margin_start   = margin,
       margin_end     = margin
@@ -343,6 +347,7 @@ public class CanvasToolbar : Box {
     var magnifier = CanvasItemType.MAGNIFIER;
 
     var btn = new Button() {
+      has_frame      = false,
       tooltip_markup = magnifier.tooltip(),
       margin_start   = margin,
       margin_end     = margin
@@ -364,6 +369,7 @@ public class CanvasToolbar : Box {
     var blur = CanvasItemType.BLUR;
 
     var btn = new Button() {
+      has_frame      = false,
       tooltip_markup = blur.tooltip(),
       margin_start   = margin,
       margin_end     = margin
@@ -412,6 +418,7 @@ public class CanvasToolbar : Box {
   private void create_resize() {
 
     var btn = new Button.from_icon_name( "view-fullscreen-symbolic" ) {
+      has_frame    = false,
       tooltip_text = _( "Resize Image" ),
       margin_start = margin,
       margin_end   = margin
@@ -431,6 +438,7 @@ public class CanvasToolbar : Box {
   private void create_dropper() {
 
     var btn = new Button() {
+      has_frame    = false,
       tooltip_text = _( "Pick Color To Clipboard" ),
       margin_start = margin,
       margin_end   = margin

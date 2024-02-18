@@ -23,16 +23,48 @@ using Gtk;
 using Gdk;
 using Cairo;
 
+public enum CanvasBubbleType {
+  TALK,
+  THINK;
+
+  public string to_string() {
+    switch( this ) {
+      case TALK  :  return( "talk" );
+      case THINK :  return( "think" );
+      default    :  assert_not_reached();
+    }
+  }
+
+  public CanvasItemType item_type() {
+    switch( this ) {
+      case TALK  :  return( CanvasItemType.TALK );
+      case THINK :  return( CanvasItemType.THINK );
+      default    :  assert_not_reached();
+    }
+  }
+
+  public CanvasBubbleType parse( string str ) {
+    switch( str ) {
+      case "talk"  :  return( TALK );
+      case "think" :  return( THINK );
+      default      :  return( TALK );
+    }
+  }
+
+}
+
 public class CanvasItemBubble : CanvasItem {
 
-  private Cursor[] _sel_cursors;
-  private bool     _point_moved = false;
-  private bool     _base0_moved = false;
-  private bool     _base1_moved = false;
+  private Cursor[]         _sel_cursors;
+  private CanvasBubbleType _type;
+  private bool             _point_moved = false;
+  private bool             _base_moved  = false;
+  private double           _radius      = 40.0;
 
   /* Constructor */
-  public CanvasItemBubble( Canvas canvas, CanvasItemProperties props ) {
-    base( CanvasItemType.BUBBLE, canvas, props );
+  public CanvasItemBubble( Canvas canvas, CanvasBubbleType type, CanvasItemProperties props ) {
+    base( type.item_type(), canvas, props );
+    _type = type;
     create_points();
     _sel_cursors = new Cursor[9];
     _sel_cursors[0]  = new Cursor.from_name( "nw-resize", null );
@@ -67,15 +99,15 @@ public class CanvasItemBubble : CanvasItem {
     base.copy( item );
     var bubble_item = (CanvasItemBubble)item;
     if( bubble_item != null ) {
+      _type        = bubble_item._type;
       _point_moved = bubble_item._point_moved;
-      _base0_moved = bubble_item._base0_moved;
-      _base1_moved = bubble_item._base1_moved;
+      _base_moved  = bubble_item._base_moved;
     }
   }
  
   /* Returns a duplicate of this item */
   public override CanvasItem duplicate() {
-    var item = new CanvasItemBubble( canvas, props );
+    var item = new CanvasItemBubble( canvas, _type, props );
     item.copy( this );
     return( item );
   }
@@ -94,18 +126,23 @@ public class CanvasItemBubble : CanvasItem {
     points.index( 7 ).copy_coords( bbox.x1(), bbox.mid_y() );
 
     if( !_point_moved ) {
-      points.index( 8 ).copy_coords( bbox.mid_x(), (bbox.y2() + 50) );
-    } else {
-      var diffy = points.index( 8 ).y - points.index( 9 ).y;
-      points.index( 8 ).copy_coords( points.index( 8 ).x, (bbox.y2() + diffy) );
+      points.index( 8 ).copy_coords( bbox.mid_x(), (bbox.y2() + 70) );
     }
 
-    if( !_base0_moved ) {
+    if( !_base_moved ) {
       points.index( 9 ).copy_coords( (bbox.mid_x() + 20), bbox.y2() );
+      points.index( 10 ).copy_coords( (bbox.mid_x() + 50), bbox.y2() );
+    } else {
+      points.index( 9 ).copy_coords( points.index( 9 ).x, bbox.y2() );
+      points.index( 10 ).copy_coords( points.index( 10 ).x, bbox.y2() );
     }
 
-    if( !_base1_moved ) {
-      points.index( 10 ).copy_coords( (bbox.mid_x() + 80), bbox.y2() );
+    if( points.index( 10 ).x > bbox.x2() ) {
+      points.index( 10 ).x = bbox.x2();
+    }
+
+    if( points.index( 9 ).x < bbox.x1() ) {
+      points.index( 9 ).x = bbox.x1();
     }
 
   }
@@ -127,11 +164,11 @@ public class CanvasItemBubble : CanvasItem {
       case 6  :                                                         box.height += diffy;  break;
       case 7  :  box.x += diffx;                   box.width -= diffx;                        break;
       case 8  :  points.index( 8 ).x += diffx;  points.index( 8 ).y += diffy;  _point_moved = true;  break;
-      case 9  :  points.index( 9 ).x += diffx;   _base0_moved = true;  break;
-      case 10 :  points.index( 10 ).x += diffx;  _base1_moved = true;  break;
+      case 9  :  points.index( 9 ).x += diffx;   _base_moved = true;  break;
+      case 10 :  points.index( 10 ).x += diffx;  _base_moved = true;  break;
     }
 
-    if( (box.width >= 1) && (box.height >= 1) ) {
+    if( (box.width >= 60) && (box.height >= 1) ) {
       bbox = box;
     }
 
@@ -145,7 +182,7 @@ public class CanvasItemBubble : CanvasItem {
   private void draw_bubble( Context ctx ) {
 
     var deg    = Math.PI / 180.0;
-    var radius = 40;
+    var radius = _radius;
 
     ctx.new_sub_path();
     ctx.arc( (bbox.x + bbox.width - radius), (bbox.y + radius),     radius, (-90 * deg), (0 * deg) );
@@ -159,39 +196,67 @@ public class CanvasItemBubble : CanvasItem {
 
   }
 
+  private double get_talking_x( double y ) {
+
+    var mid = ((points.index( 10 ).x - points.index( 9 ).x) / 2) + points.index( 9 ).x;
+    var b   = Math.fabs( mid - points.index( 8 ).x );
+    var a   = points.index( 8 ).y - points.index( 9 ).y;
+    var B   = Math.atan( b / a );
+    var a2  = y - points.index( 9 ).y;
+    var b2  = Math.tan( B ) * a2;
+
+    return( (mid > points.index( 8 ).x) ? (mid - b2) : (mid + b2) );
+
+  }
+
   private void draw_cloud( Context ctx ) {
 
     var deg = Math.PI / 180.0;
 
     // Draw cloud
-    var num_horizontal = (int)(bbox.width  / 40.0);
+    var num_horizontal = (int)(bbox.width  / _radius);
     var hrad           = ((bbox.width  / num_horizontal) / 2);
-    var num_vertical   = (int)((bbox.height - (hrad * 2)) / 40.0);
+    var num_vertical   = (int)((bbox.height - (hrad * 2)) / _radius);
     var vrad           = (((bbox.height - (hrad * 2)) / num_vertical) / 2);
+    var x              = bbox.x + 60;
+    var y              = bbox.y2() - 60;
+    var scale_x        = (bbox.width / 320);
+    var scale_y        = (bbox.height / 200);
+    var trans_x        = (bbox.x    - (bbox.x    * scale_x));
+    var trans_y        = (bbox.y2() - (bbox.y2() * scale_y));
 
-    // Draw main cloud
+    // Draw cloud (scale it to match bbox size)
     ctx.new_sub_path();
-    for( int i=0; i<(num_horizontal + 1); i++ ) {
-      var first = (i == 0);
-      var last  = (i == num_horizontal);
-      ctx.arc( (bbox.x + (i * (hrad * 2))), bbox.y, hrad, (first ? (-270 * deg) : (-180 * deg)), (last ? (90 * deg) : (0 * deg)) );
-    }
-    for( int i=0; i<num_vertical; i++ ) {
-      ctx.arc( (bbox.x + bbox.width), (bbox.y + hrad + vrad + (i * (vrad * 2))), vrad, (-90 * deg), (90 * deg) );
-    }
-    for( int i=num_horizontal; i>=0; i-- ) {
-      var first = (i == num_horizontal);
-      var last  = (i == 0);
-      ctx.arc( (bbox.x + (i * (hrad * 2))), (bbox.y + bbox.height), hrad, (first ? (270 * deg) : (0 * deg)), (last ? (270 * deg) : (180 * deg)) );
-    }
-    for( int i=(num_vertical - 1); i>=0; i-- ) {
-      ctx.arc( bbox.x, (bbox.y + hrad + vrad + (i * (vrad * 2))), vrad, (90 * deg), (-90 * deg) );
-    }
+    ctx.save();
+    ctx.translate( trans_x, trans_y );
+    ctx.scale( scale_x, scale_y );
+    ctx.arc(x, y, 60, Math.PI * 0.5, Math.PI * 1.5);
+    ctx.arc(x + 70, y - 60, 70, Math.PI * 1, Math.PI * 1.85);
+    ctx.arc(x + 152, y - 45, 50, Math.PI * 1.37, Math.PI * 1.91);
+    ctx.arc(x + 200, y, 60, Math.PI * 1.5, Math.PI * 0.5);
     ctx.close_path();
+    ctx.restore();
+
+    // Draw thinking circles
+    var w  = points.index( 10 ).x - points.index( 9 ).x;
+    var h  = points.index( 8 ).y - points.index( 9 ).y;
+    var y0 = points.index( 9 ).y;
+    var r1 = (w / 2);
+    var y1 = y0 + r1;
+    var r2 = ((r1 - 10) / 2) + 10;
+    var y2 = ((points.index( 8 ).y - y1) / 2) + y1;
 
     // Draw thinking circles
     ctx.new_sub_path();
-    ctx.arc( points.index( 8 ).x, points.index( 8 ).y, 20, (0 * deg), (360 * deg) );
+    ctx.arc( get_talking_x( y1 ), y1, r1, (0 * deg), (360 * deg) );
+    ctx.close_path();
+
+    ctx.new_sub_path();
+    ctx.arc( get_talking_x( y2 ), y2, r2, (0 * deg), (360 * deg) );
+    ctx.close_path();
+
+    ctx.new_sub_path();
+    ctx.arc( points.index( 8 ).x, points.index( 8 ).y, 10, (0 * deg), (360 * deg) );
     ctx.close_path();
 
   }
@@ -204,8 +269,10 @@ public class CanvasItemBubble : CanvasItem {
     var sw     = props.stroke_width.width();
 
     // Draw rounded rectangle with triangle talk point
-    // draw_bubble( ctx );
-    draw_cloud( ctx );
+    switch( _type ) {
+      case CanvasBubbleType.TALK  :  draw_bubble( ctx );  break;
+      case CanvasBubbleType.THINK :  draw_cloud( ctx );   break;
+    }
 
     save_path( ctx, CanvasItemPathType.FILL );
 
