@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.annotator\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-18 00:56-0600\n"
+"POT-Creation-Date: 2024-02-18 14:28-0600\n"
 "PO-Revision-Date: 2023-05-08 00:13+0900\n"
 "Last-Translator: lenemter <lenemter@gmail.com>\n"
 "Language-Team: none\n"
@@ -17,6 +17,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 #: src/Application.vala:67
+#, c-format
 msgid ""
 "\n"
 "ERROR:  Unable to read image from standard input\n"
@@ -44,16 +45,16 @@ msgstr "Сделать снимок экрана и открыть его."
 msgid "Uses image data from standard input"
 msgstr "Использует данные изображения из стандартного ввода"
 
-#: src/CanvasImage.vala:112 src/CanvasImage.vala:136
+#: src/CanvasImage.vala:126 src/CanvasImage.vala:150
 msgid "change image"
 msgstr "изменение изображения"
 
-#: src/CanvasImage.vala:375
+#: src/CanvasImage.vala:450
 #, fuzzy
 msgid "Color copied to clipboard"
 msgstr "Скопировать в буфер обмена"
 
-#: src/CanvasImage.vala:426
+#: src/CanvasImage.vala:501
 msgid "image crop"
 msgstr "обрезку изображения"
 
@@ -85,16 +86,16 @@ msgstr "Число последовательности:"
 msgid "Points:"
 msgstr "Точки:"
 
-#: src/canvas_items/CanvasItemText.vala:111 src/CanvasItems.vala:119
+#: src/canvas_items/CanvasItemText.vala:111 src/CanvasItems.vala:134
 msgid "Text"
 msgstr "Текст"
 
-#: src/canvas_items/CanvasItemText.vala:894 src/CanvasItems.vala:1039
+#: src/canvas_items/CanvasItemText.vala:894 src/CanvasItems.vala:1069
 #: src/FormatBar.vala:59
 msgid "Copy"
 msgstr "Копировать"
 
-#: src/canvas_items/CanvasItemText.vala:897 src/CanvasItems.vala:1040
+#: src/canvas_items/CanvasItemText.vala:897 src/CanvasItems.vala:1070
 #: src/FormatBar.vala:65
 msgid "Cut"
 msgstr "Вырезать"
@@ -111,94 +112,102 @@ msgstr "Выбрать всё"
 msgid "Insert Emoji"
 msgstr "Встать эмодзи"
 
-#: src/CanvasItems.vala:111
+#: src/CanvasItems.vala:124
 msgid "Rectangle Outline"
 msgstr "Обводка прямоугольника"
 
-#: src/CanvasItems.vala:112
+#: src/CanvasItems.vala:125
 msgid "Rectangle"
 msgstr "Прямоугольник"
 
-#: src/CanvasItems.vala:113
+#: src/CanvasItems.vala:126
 msgid "Oval Outline"
 msgstr "Обводка овала"
 
-#: src/CanvasItems.vala:114
+#: src/CanvasItems.vala:127
 msgid "Oval"
 msgstr "Овал"
 
-#: src/CanvasItems.vala:115
+#: src/CanvasItems.vala:128
 msgid "Star Outline"
 msgstr "Обводка звезды"
 
-#: src/CanvasItems.vala:116
+#: src/CanvasItems.vala:129
 msgid "Star"
 msgstr "Звезда"
 
-#: src/CanvasItems.vala:117
+#: src/CanvasItems.vala:130
+msgid "Talk Bubble"
+msgstr ""
+
+#: src/CanvasItems.vala:131
+msgid "Think Bubble"
+msgstr ""
+
+#: src/CanvasItems.vala:132
 msgid "Line"
 msgstr "Линия"
 
-#: src/CanvasItems.vala:118
+#: src/CanvasItems.vala:133
 msgid "Arrow"
 msgstr "Стрелка"
 
-#: src/CanvasItems.vala:120
+#: src/CanvasItems.vala:135
 msgid "Blur"
 msgstr "Размытие"
 
-#: src/CanvasItems.vala:121
+#: src/CanvasItems.vala:136
 msgid "Magnifier"
 msgstr "Лупа"
 
-#: src/CanvasItems.vala:122
+#: src/CanvasItems.vala:137
 msgid "Pencil Tool"
 msgstr "Карандаш"
 
-#: src/CanvasItems.vala:123
+#: src/CanvasItems.vala:138
 msgid "Sequence Number"
 msgstr "Последовательность чисел"
 
-#: src/CanvasItems.vala:124
+#: src/CanvasItems.vala:139
 msgid "Sticker"
 msgstr "Стикер"
 
-#: src/CanvasItems.vala:125
+#: src/CanvasItems.vala:140
 #, fuzzy
 msgid "Image"
 msgstr "Обрезать изображение"
 
-#: src/CanvasItems.vala:361
+#: src/CanvasItems.vala:389
 #, fuzzy
 msgid "Open Insertion Image"
 msgstr "Открыть изображение"
 
-#: src/CanvasItems.vala:361 src/MainWindow.vala:447
+#: src/CanvasItems.vala:389 src/MainWindow.vala:442
 msgid "Open"
 msgstr "Открыть"
 
-#: src/CanvasItems.vala:361 src/Exporter.vala:162 src/MainWindow.vala:447
+#: src/CanvasItems.vala:389 src/Exporter.vala:162 src/MainWindow.vala:442
 #: src/Resizer.vala:189 src/StickerSet.vala:75
 msgid "Cancel"
 msgstr "Отменить"
 
-#: src/CanvasItems.vala:948
+#: src/CanvasItems.vala:978
 msgid "move items"
 msgstr "перемещение объекта"
 
-#: src/CanvasItems.vala:1042
+#: src/CanvasItems.vala:1072
 msgid "Delete"
 msgstr "Удалить"
 
-#: src/CanvasItems.vala:1044
+#: src/CanvasItems.vala:1074
 msgid "Send to Front"
 msgstr "Переместить вперёд"
 
-#: src/CanvasItems.vala:1045
+#: src/CanvasItems.vala:1075
 msgid "Send to Back"
 msgstr "Переместить назад"
 
-#: src/CanvasItems.vala:1049
+#: src/CanvasItems.vala:1079
 msgid "Save As Custom"
 msgstr "Сохранить как пользовательскую фигуру"
 
@@ -206,80 +215,80 @@ msgstr "Сохранить как пользовательскую фигуру"
 msgid "resize item"
 msgstr "изменение размера объекта"
 
-#: src/CanvasToolbar.vala:53
+#: src/CanvasToolbar.vala:55
 msgid "Add Arrow"
 msgstr "Добавить стрелку"
 
-#: src/CanvasToolbar.vala:53
+#: src/CanvasToolbar.vala:55
 msgid "More Arrows"
 msgstr "Больше стрелок"
 
-#: src/CanvasToolbar.vala:53
+#: src/CanvasToolbar.vala:55
 msgid "Custom Arrows"
 msgstr "Пользовательские стрелки"
 
-#: src/CanvasToolbar.vala:54
+#: src/CanvasToolbar.vala:56
 msgid "Add Shape"
 msgstr "Добавить фигуру"
 
-#: src/CanvasToolbar.vala:54
+#: src/CanvasToolbar.vala:56
 msgid "More Shapes"
 msgstr "Больше фигур"
 
-#: src/CanvasToolbar.vala:54
+#: src/CanvasToolbar.vala:56
 msgid "Custom Shapes"
 msgstr "Пользовательские фигуры"
 
-#: src/CanvasToolbar.vala:360
+#: src/CanvasToolbar.vala:394
 msgid "Crop Image"
 msgstr "Обрезать изображение"
 
-#: src/CanvasToolbar.vala:385 src/Resizer.vala:184
+#: src/CanvasToolbar.vala:422 src/Resizer.vala:184
 msgid "Resize Image"
 msgstr "Изменить размер изображения"
 
-#: src/CanvasToolbar.vala:404
+#: src/CanvasToolbar.vala:442
 #, fuzzy
 msgid "Pick Color To Clipboard"
 msgstr "Скопировать в буфер обмена"
 
-#: src/CanvasToolbar.vala:421
+#: src/CanvasToolbar.vala:462
 msgid "Shape Color"
 msgstr "Цвет фигуры"
 
-#: src/CanvasToolbar.vala:491
+#: src/CanvasToolbar.vala:532
 msgid "Add Transparency"
 msgstr "Добавить прозрачность"
 
-#: src/CanvasToolbar.vala:498
+#: src/CanvasToolbar.vala:539
 msgid "Pick Color From Image"
 msgstr ""
 
-#: src/CanvasToolbar.vala:532
+#: src/CanvasToolbar.vala:573
 msgid "Shape Border"
 msgstr "Граница фигуры"
 
-#: src/CanvasToolbar.vala:545
+#: src/CanvasToolbar.vala:586
 msgid "Border Width"
 msgstr "Ширина границы"
 
-#: src/CanvasToolbar.vala:577
+#: src/CanvasToolbar.vala:618
 msgid "Dash Pattern"
 msgstr "Шаблон"
 
-#: src/CanvasToolbar.vala:610
+#: src/CanvasToolbar.vala:651
 msgid "Show Outline"
 msgstr "Показывать обводку"
 
-#: src/CanvasToolbar.vala:641
+#: src/CanvasToolbar.vala:682
 msgid "Font Properties"
 msgstr "Свойства шрифта"
 
-#: src/Canvas.vala:187
+#: src/Canvas.vala:191
 msgid "Annotate new image?"
 msgstr "Открыть новое изображение?"
 
-#: src/Canvas.vala:188
+#: src/Canvas.vala:192
 msgid "Pasting a new image to annotate will destroy the current annotation."
 msgstr "Вставка новое изображения откроет его и уничтожит текущие изменения."
 
@@ -409,96 +418,97 @@ msgstr "Изменить цвет текста"
 msgid "Clear all formatting"
 msgstr "Очистить форматирование"
 
-#: src/MainWindow.vala:175
+#: src/MainWindow.vala:184
 msgid "Annotator"
 msgstr "Annotator"
 
-#: src/MainWindow.vala:180
+#: src/MainWindow.vala:189
 msgid "Open Image"
 msgstr "Открыть изображение"
 
-#: src/MainWindow.vala:186
+#: src/MainWindow.vala:195
 msgid "Take Screeshot"
 msgstr "Сделать снимок экрана"
 
-#: src/MainWindow.vala:192 src/StickerSet.vala:307 src/UndoBuffer.vala:84
+#: src/MainWindow.vala:201 src/StickerSet.vala:307 src/UndoBuffer.vala:84
 msgid "Undo"
 msgstr "Отменить"
 
-#: src/MainWindow.vala:199 src/StickerSet.vala:308 src/UndoBuffer.vala:90
+#: src/MainWindow.vala:208 src/StickerSet.vala:308 src/UndoBuffer.vala:90
 msgid "Redo"
 msgstr "Повторить"
 
-#: src/MainWindow.vala:221
+#: src/MainWindow.vala:228
+#, fuzzy
+msgid "Shortcuts Cheatsheet…"
+msgstr "Шпаргалка сочетаний клавиш"
+
+#: src/MainWindow.vala:232
 msgid "Properties"
 msgstr "Параметры"
 
-#: src/MainWindow.vala:227
-msgid "Shortcuts Cheatsheet"
-msgstr "Шпаргалка сочетаний клавиш"
-
-#: src/MainWindow.vala:263
+#: src/MainWindow.vala:260
 msgid "Copy To Clipboard"
 msgstr "Скопировать в буфер обмена"
 
-#: src/MainWindow.vala:271
+#: src/MainWindow.vala:268
 msgid "Print…"
 msgstr "Печать…"
 
-#: src/MainWindow.vala:282
+#: src/MainWindow.vala:278
 msgid "Export Image"
 msgstr "Экспортировать изображение"
 
-#: src/MainWindow.vala:304 src/MainWindow.vala:643
+#: src/MainWindow.vala:299 src/MainWindow.vala:638
 #, c-format
 msgid "Zoom (%d%%)"
 msgstr "Масштаб (%d%%)"
 
-#: src/MainWindow.vala:319
+#: src/MainWindow.vala:314
 msgid "Zoom to Fit Window"
 msgstr "Масштабировать по размеру окна"
 
-#: src/MainWindow.vala:336
+#: src/MainWindow.vala:331
 msgid "Welcome to Annotator"
 msgstr "Добро пожаловать в Annotator"
 
-#: src/MainWindow.vala:337
+#: src/MainWindow.vala:332
 msgid "Let's get started annotating an image"
 msgstr "Давайте начнём комментировать изображения"
 
-#: src/MainWindow.vala:340
+#: src/MainWindow.vala:335
 msgid "Open Image From File"
 msgstr "Открыть изображение из файла"
 
-#: src/MainWindow.vala:340
+#: src/MainWindow.vala:335
 msgid "Open a PNG, JPEG, TIFF or BMP file"
 msgstr "Открыть PNG, JPEG, TIFF или BMP файл"
 
-#: src/MainWindow.vala:343
+#: src/MainWindow.vala:338
 msgid "Paste Image From Clipboard"
 msgstr "Вставить изображение из буфера обмена"
 
-#: src/MainWindow.vala:343
+#: src/MainWindow.vala:338
 msgid "Open an image from the clipboard"
 msgstr "Открыть изображение из буфера обмена"
 
-#: src/MainWindow.vala:346
+#: src/MainWindow.vala:341
 msgid "Take A Screenshot"
 msgstr "Сделать снимок экрана"
 
-#: src/MainWindow.vala:346
+#: src/MainWindow.vala:341
 msgid "Open an image from a screenshot"
 msgstr "Открыть изображение из буфера обмена"
 
-#: src/MainWindow.vala:380
+#: src/MainWindow.vala:375
 msgid "Font:"
 msgstr "Шрифт:"
 
-#: src/MainWindow.vala:435
+#: src/MainWindow.vala:430
 msgid "All Image Formats  (*)"
 msgstr "Все форматы изображений (*)"
 
-#: src/MainWindow.vala:447
+#: src/MainWindow.vala:442
 msgid "Open Image File"
 msgstr "Открыть файл изображения"
 

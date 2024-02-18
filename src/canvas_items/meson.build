@@ -2,6 +2,7 @@ sources += files(
 
     'CanvasItemArrow.vala',
     'CanvasItemBlur.vala',
+    'CanvasItemBubble.vala',
     'CanvasItemImage.vala',
     'CanvasItemLine.vala',
     'CanvasItemMagnifier.vala',

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.annotator\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-18 00:56-0600\n"
+"POT-Creation-Date: 2024-02-18 14:28-0600\n"
 "PO-Revision-Date: 2023-05-06 08:30+0100\n"
 "Last-Translator: Albano Battistella <albano_battistella@gmail.com>\n"
 "Language-Team: Italian <LL@li.org>\n"
@@ -17,6 +17,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 #: src/Application.vala:67
+#, c-format
 msgid ""
 "\n"
 "ERROR:  Unable to read image from standard input\n"
@@ -44,16 +45,16 @@ msgstr "Prendi e annota uno screenshot."
 msgid "Uses image data from standard input"
 msgstr "Utilizza i dati dell'immagine dall'input standard"
 
-#: src/CanvasImage.vala:112 src/CanvasImage.vala:136
+#: src/CanvasImage.vala:126 src/CanvasImage.vala:150
 msgid "change image"
 msgstr "cambia immagine"
 
-#: src/CanvasImage.vala:375
+#: src/CanvasImage.vala:450
 #, fuzzy
 msgid "Color copied to clipboard"
 msgstr "Copia negli appunti"
 
-#: src/CanvasImage.vala:426
+#: src/CanvasImage.vala:501
 msgid "image crop"
 msgstr "ritaglia immagine"
 
@@ -85,16 +86,16 @@ msgstr "Numero di sequenza:"
 msgid "Points:"
 msgstr "Punti:"
 
-#: src/canvas_items/CanvasItemText.vala:111 src/CanvasItems.vala:119
+#: src/canvas_items/CanvasItemText.vala:111 src/CanvasItems.vala:134
 msgid "Text"
 msgstr "Testo"
 
-#: src/canvas_items/CanvasItemText.vala:894 src/CanvasItems.vala:1039
+#: src/canvas_items/CanvasItemText.vala:894 src/CanvasItems.vala:1069
 #: src/FormatBar.vala:59
 msgid "Copy"
 msgstr "Copia"
 
-#: src/canvas_items/CanvasItemText.vala:897 src/CanvasItems.vala:1040
+#: src/canvas_items/CanvasItemText.vala:897 src/CanvasItems.vala:1070
 #: src/FormatBar.vala:65
 msgid "Cut"
 msgstr "Taglia"
@@ -111,94 +112,102 @@ msgstr "Seleziona tutto"
 msgid "Insert Emoji"
 msgstr "Inserisci Emoji"
 
-#: src/CanvasItems.vala:111
+#: src/CanvasItems.vala:124
 msgid "Rectangle Outline"
 msgstr "Contorno Rettangolo"
 
-#: src/CanvasItems.vala:112
+#: src/CanvasItems.vala:125
 msgid "Rectangle"
 msgstr "Rettangolo"
 
-#: src/CanvasItems.vala:113
+#: src/CanvasItems.vala:126
 msgid "Oval Outline"
 msgstr "Contorno Ovale"
 
-#: src/CanvasItems.vala:114
+#: src/CanvasItems.vala:127
 msgid "Oval"
 msgstr "Ovale"
 
-#: src/CanvasItems.vala:115
+#: src/CanvasItems.vala:128
 msgid "Star Outline"
 msgstr "Contorno Stella"
 
-#: src/CanvasItems.vala:116
+#: src/CanvasItems.vala:129
 msgid "Star"
 msgstr "Stella"
 
-#: src/CanvasItems.vala:117
+#: src/CanvasItems.vala:130
+msgid "Talk Bubble"
+msgstr ""
+
+#: src/CanvasItems.vala:131
+msgid "Think Bubble"
+msgstr ""
+
+#: src/CanvasItems.vala:132
 msgid "Line"
 msgstr "Linea"
 
-#: src/CanvasItems.vala:118
+#: src/CanvasItems.vala:133
 msgid "Arrow"
 msgstr "Freccia"
 
-#: src/CanvasItems.vala:120
+#: src/CanvasItems.vala:135
 msgid "Blur"
 msgstr "Sfocatura"
 
-#: src/CanvasItems.vala:121
+#: src/CanvasItems.vala:136
 msgid "Magnifier"
 msgstr "Lente ingrandimento"
 
-#: src/CanvasItems.vala:122
+#: src/CanvasItems.vala:137
 msgid "Pencil Tool"
 msgstr "Strumento Matita"
 
-#: src/CanvasItems.vala:123
+#: src/CanvasItems.vala:138
 msgid "Sequence Number"
 msgstr "Numero di sequenza"
 
-#: src/CanvasItems.vala:124
+#: src/CanvasItems.vala:139
 msgid "Sticker"
 msgstr "Adesivo"
 
-#: src/CanvasItems.vala:125
+#: src/CanvasItems.vala:140
 #, fuzzy
 msgid "Image"
 msgstr "Ritaglia Immagine"
 
-#: src/CanvasItems.vala:361
+#: src/CanvasItems.vala:389
 #, fuzzy
 msgid "Open Insertion Image"
 msgstr "Apri Immagine"
 
-#: src/CanvasItems.vala:361 src/MainWindow.vala:447
+#: src/CanvasItems.vala:389 src/MainWindow.vala:442
 msgid "Open"
 msgstr "Apri"
 
-#: src/CanvasItems.vala:361 src/Exporter.vala:162 src/MainWindow.vala:447
+#: src/CanvasItems.vala:389 src/Exporter.vala:162 src/MainWindow.vala:442
 #: src/Resizer.vala:189 src/StickerSet.vala:75
 msgid "Cancel"
 msgstr "Cancella"
 
-#: src/CanvasItems.vala:948
+#: src/CanvasItems.vala:978
 msgid "move items"
 msgstr "sposta oggetti"
 
-#: src/CanvasItems.vala:1042
+#: src/CanvasItems.vala:1072
 msgid "Delete"
 msgstr "Cancella"
 
-#: src/CanvasItems.vala:1044
+#: src/CanvasItems.vala:1074
 msgid "Send to Front"
 msgstr "Manda in primo piano"
 
-#: src/CanvasItems.vala:1045
+#: src/CanvasItems.vala:1075
 msgid "Send to Back"
 msgstr "Rimandare indietro"
 
-#: src/CanvasItems.vala:1049
+#: src/CanvasItems.vala:1079
 msgid "Save As Custom"
 msgstr "Salva come personalizzato"
 
@@ -206,80 +215,80 @@ msgstr "Salva come personalizzato"
 msgid "resize item"
 msgstr "ridimensiona oggetto"
 
-#: src/CanvasToolbar.vala:53
+#: src/CanvasToolbar.vala:55
 msgid "Add Arrow"
 msgstr "Aggiungi Freccia"
 
-#: src/CanvasToolbar.vala:53
+#: src/CanvasToolbar.vala:55
 msgid "More Arrows"
 msgstr "Più frecce"
 
-#: src/CanvasToolbar.vala:53
+#: src/CanvasToolbar.vala:55
 msgid "Custom Arrows"
 msgstr "Frecce personalizzate"
 
-#: src/CanvasToolbar.vala:54
+#: src/CanvasToolbar.vala:56
 msgid "Add Shape"
 msgstr "Aggiungi Forma"
 
-#: src/CanvasToolbar.vala:54
+#: src/CanvasToolbar.vala:56
 msgid "More Shapes"
 msgstr "Più Forme"
 
-#: src/CanvasToolbar.vala:54
+#: src/CanvasToolbar.vala:56
 msgid "Custom Shapes"
 msgstr "Forme Personalizzate"
 
-#: src/CanvasToolbar.vala:360
+#: src/CanvasToolbar.vala:394
 msgid "Crop Image"
 msgstr "Ritaglia Immagine"
 
-#: src/CanvasToolbar.vala:385 src/Resizer.vala:184
+#: src/CanvasToolbar.vala:422 src/Resizer.vala:184
 msgid "Resize Image"
 msgstr "Ridimensiona Immagine"
 
-#: src/CanvasToolbar.vala:404
+#: src/CanvasToolbar.vala:442
 #, fuzzy
 msgid "Pick Color To Clipboard"
 msgstr "Copia negli appunti"
 
-#: src/CanvasToolbar.vala:421
+#: src/CanvasToolbar.vala:462
 msgid "Shape Color"
 msgstr "Colore Forma"
 
-#: src/CanvasToolbar.vala:491
+#: src/CanvasToolbar.vala:532
 msgid "Add Transparency"
 msgstr "Aggiungi Trasparenza"
 
-#: src/CanvasToolbar.vala:498
+#: src/CanvasToolbar.vala:539
 msgid "Pick Color From Image"
 msgstr ""
 
-#: src/CanvasToolbar.vala:532
+#: src/CanvasToolbar.vala:573
 msgid "Shape Border"
 msgstr "Bordo Forma"
 
-#: src/CanvasToolbar.vala:545
+#: src/CanvasToolbar.vala:586
 msgid "Border Width"
 msgstr "Larghezza del bordo"
 
-#: src/CanvasToolbar.vala:577
+#: src/CanvasToolbar.vala:618
 msgid "Dash Pattern"
 msgstr "Modello tratto"
 
-#: src/CanvasToolbar.vala:610
+#: src/CanvasToolbar.vala:651
 msgid "Show Outline"
 msgstr "Mostra contorno"
 
-#: src/CanvasToolbar.vala:641
+#: src/CanvasToolbar.vala:682
 msgid "Font Properties"
 msgstr "Proprietà Carattere"
 
-#: src/Canvas.vala:187
+#: src/Canvas.vala:191
 msgid "Annotate new image?"
 msgstr "Annotare nuova immagine?"
 
-#: src/Canvas.vala:188
+#: src/Canvas.vala:192
 msgid "Pasting a new image to annotate will destroy the current annotation."
 msgstr ""
 "Incollando una nuova immagine da annotare distruggerà l'annotazione corrente."
@@ -410,96 +419,97 @@ msgstr "Cambia colore carattere"
 msgid "Clear all formatting"
 msgstr "Cancella tutta la formattazione"
 
-#: src/MainWindow.vala:175
+#: src/MainWindow.vala:184
 msgid "Annotator"
 msgstr "Annotator"
 
-#: src/MainWindow.vala:180
+#: src/MainWindow.vala:189
 msgid "Open Image"
 msgstr "Apri Immagine"
 
-#: src/MainWindow.vala:186
+#: src/MainWindow.vala:195
 msgid "Take Screeshot"
 msgstr "Prendi Screenshot"
 
-#: src/MainWindow.vala:192 src/StickerSet.vala:307 src/UndoBuffer.vala:84
+#: src/MainWindow.vala:201 src/StickerSet.vala:307 src/UndoBuffer.vala:84
 msgid "Undo"
 msgstr "Annulla"
 
-#: src/MainWindow.vala:199 src/StickerSet.vala:308 src/UndoBuffer.vala:90
+#: src/MainWindow.vala:208 src/StickerSet.vala:308 src/UndoBuffer.vala:90
 msgid "Redo"
 msgstr "Rifai"
 
-#: src/MainWindow.vala:221
+#: src/MainWindow.vala:228
+#, fuzzy
+msgid "Shortcuts Cheatsheet…"
+msgstr "Schema delle scorciatoie"
+
+#: src/MainWindow.vala:232
 msgid "Properties"
 msgstr "Proprietà"
 
-#: src/MainWindow.vala:227
-msgid "Shortcuts Cheatsheet"
-msgstr "Schema delle scorciatoie"
-
-#: src/MainWindow.vala:263
+#: src/MainWindow.vala:260
 msgid "Copy To Clipboard"
 msgstr "Copia negli appunti"
 
-#: src/MainWindow.vala:271
+#: src/MainWindow.vala:268
 msgid "Print…"
 msgstr "Stampa…"
 
-#: src/MainWindow.vala:282
+#: src/MainWindow.vala:278
 msgid "Export Image"
 msgstr "Esporta Immagine"
 
-#: src/MainWindow.vala:304 src/MainWindow.vala:643
+#: src/MainWindow.vala:299 src/MainWindow.vala:638
 #, c-format
 msgid "Zoom (%d%%)"
 msgstr "Zoom (%d%%)"
 
-#: src/MainWindow.vala:319
+#: src/MainWindow.vala:314
 msgid "Zoom to Fit Window"
 msgstr "Zoom adatta finestra"
 
-#: src/MainWindow.vala:336
+#: src/MainWindow.vala:331
 msgid "Welcome to Annotator"
 msgstr "Benvenuto in Annotator"
 
-#: src/MainWindow.vala:337
+#: src/MainWindow.vala:332
 msgid "Let's get started annotating an image"
 msgstr "Cominciamo ad annotare un'immagine"
 
-#: src/MainWindow.vala:340
+#: src/MainWindow.vala:335
 msgid "Open Image From File"
 msgstr "Apri Immagine da File"
 
-#: src/MainWindow.vala:340
+#: src/MainWindow.vala:335
 msgid "Open a PNG, JPEG, TIFF or BMP file"
 msgstr "Apri un file PNG, JPEG, TIFF o BMP"
 
-#: src/MainWindow.vala:343
+#: src/MainWindow.vala:338
 msgid "Paste Image From Clipboard"
 msgstr "Incolla Immagine dagli Appunti"
 
-#: src/MainWindow.vala:343
+#: src/MainWindow.vala:338
 msgid "Open an image from the clipboard"
 msgstr "Apri un'immagine dagli appunti"
 
-#: src/MainWindow.vala:346
+#: src/MainWindow.vala:341
 msgid "Take A Screenshot"
 msgstr "Prendi Uno Screenshot"
 
-#: src/MainWindow.vala:346
+#: src/MainWindow.vala:341
 msgid "Open an image from a screenshot"
 msgstr "Apri un'immagine da uno screenshot"
 
-#: src/MainWindow.vala:380
+#: src/MainWindow.vala:375
 msgid "Font:"
 msgstr "Font:"
 
-#: src/MainWindow.vala:435
+#: src/MainWindow.vala:430
 msgid "All Image Formats  (*)"
 msgstr "Tutti i formati immagine (*)"
 
-#: src/MainWindow.vala:447
+#: src/MainWindow.vala:442
 msgid "Open Image File"
 msgstr "Apri File Immagine"
 

@@ -65,6 +65,8 @@ public class CurrentItem {
   public Image? get_image( MainWindow win ) {
     if( _canvas != CanvasItemType.NONE ) {
       var image = new Image();
+      var dark_mode = Gtk.Settings.get_default().gtk_application_prefer_dark_theme;
+      image.icon_name = _canvas.icon_name( dark_mode );
       win.theme_changed.connect((dark_mode) => {
         image.icon_name = _canvas.icon_name( dark_mode );
       });

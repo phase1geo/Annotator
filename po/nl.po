@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.annotator\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-18 00:56-0600\n"
+"POT-Creation-Date: 2024-02-18 14:28-0600\n"
 "PO-Revision-Date: 2021-09-30 18:25+0200\n"
 "Last-Translator: Heimen Stoffels <vistausss@fastmail.com>\n"
 "Language-Team: \n"
@@ -19,6 +19,7 @@ msgstr ""
 "X-Generator: Poedit 3.2.2\n"
 
 #: src/Application.vala:67
+#, c-format
 msgid ""
 "\n"
 "ERROR:  Unable to read image from standard input\n"
@@ -46,16 +47,16 @@ msgstr "Maak een schermfoto en aantekening."
 msgid "Uses image data from standard input"
 msgstr "Gebruikt afbeeldingsgegevens uit de standaardinvoer"
 
-#: src/CanvasImage.vala:112 src/CanvasImage.vala:136
+#: src/CanvasImage.vala:126 src/CanvasImage.vala:150
 msgid "change image"
 msgstr "Afbeelding wijzigen"
 
-#: src/CanvasImage.vala:375
+#: src/CanvasImage.vala:450
 #, fuzzy
 msgid "Color copied to clipboard"
 msgstr "Kopiëren naar klembord"
 
-#: src/CanvasImage.vala:426
+#: src/CanvasImage.vala:501
 msgid "image crop"
 msgstr "Afbeelding bijsnijden"
 
@@ -87,16 +88,16 @@ msgstr "Reeksnummer:"
 msgid "Points:"
 msgstr "Punten:"
 
-#: src/canvas_items/CanvasItemText.vala:111 src/CanvasItems.vala:119
+#: src/canvas_items/CanvasItemText.vala:111 src/CanvasItems.vala:134
 msgid "Text"
 msgstr "Tekst"
 
-#: src/canvas_items/CanvasItemText.vala:894 src/CanvasItems.vala:1039
+#: src/canvas_items/CanvasItemText.vala:894 src/CanvasItems.vala:1069
 #: src/FormatBar.vala:59
 msgid "Copy"
 msgstr "Kopiëren"
 
-#: src/canvas_items/CanvasItemText.vala:897 src/CanvasItems.vala:1040
+#: src/canvas_items/CanvasItemText.vala:897 src/CanvasItems.vala:1070
 #: src/FormatBar.vala:65
 msgid "Cut"
 msgstr "Knippen"
@@ -113,94 +114,102 @@ msgstr "Alles selecteren"
 msgid "Insert Emoji"
 msgstr "Emoji invoegen"
 
-#: src/CanvasItems.vala:111
+#: src/CanvasItems.vala:124
 msgid "Rectangle Outline"
 msgstr "Rechthoek met contour"
 
-#: src/CanvasItems.vala:112
+#: src/CanvasItems.vala:125
 msgid "Rectangle"
 msgstr "Rechthoek"
 
-#: src/CanvasItems.vala:113
+#: src/CanvasItems.vala:126
 msgid "Oval Outline"
 msgstr "Ovaal met contour"
 
-#: src/CanvasItems.vala:114
+#: src/CanvasItems.vala:127
 msgid "Oval"
 msgstr "Ovaal"
 
-#: src/CanvasItems.vala:115
+#: src/CanvasItems.vala:128
 msgid "Star Outline"
 msgstr "Ster met contour"
 
-#: src/CanvasItems.vala:116
+#: src/CanvasItems.vala:129
 msgid "Star"
 msgstr "Ster"
 
-#: src/CanvasItems.vala:117
+#: src/CanvasItems.vala:130
+msgid "Talk Bubble"
+msgstr ""
+
+#: src/CanvasItems.vala:131
+msgid "Think Bubble"
+msgstr ""
+
+#: src/CanvasItems.vala:132
 msgid "Line"
 msgstr "Lijn"
 
-#: src/CanvasItems.vala:118
+#: src/CanvasItems.vala:133
 msgid "Arrow"
 msgstr "Pijl"
 
-#: src/CanvasItems.vala:120
+#: src/CanvasItems.vala:135
 msgid "Blur"
 msgstr "Vervagen"
 
-#: src/CanvasItems.vala:121
+#: src/CanvasItems.vala:136
 msgid "Magnifier"
 msgstr "Vergrootglas"
 
-#: src/CanvasItems.vala:122
+#: src/CanvasItems.vala:137
 msgid "Pencil Tool"
 msgstr "Potlood"
 
-#: src/CanvasItems.vala:123
+#: src/CanvasItems.vala:138
 msgid "Sequence Number"
 msgstr "Reeksnummer"
 
-#: src/CanvasItems.vala:124
+#: src/CanvasItems.vala:139
 msgid "Sticker"
 msgstr "Sticker"
 
-#: src/CanvasItems.vala:125
+#: src/CanvasItems.vala:140
 #, fuzzy
 msgid "Image"
 msgstr "Afbeelding bijsnijden"
 
-#: src/CanvasItems.vala:361
+#: src/CanvasItems.vala:389
 #, fuzzy
 msgid "Open Insertion Image"
 msgstr "Afbeelding openen"
 
-#: src/CanvasItems.vala:361 src/MainWindow.vala:447
+#: src/CanvasItems.vala:389 src/MainWindow.vala:442
 msgid "Open"
 msgstr "Openen"
 
-#: src/CanvasItems.vala:361 src/Exporter.vala:162 src/MainWindow.vala:447
+#: src/CanvasItems.vala:389 src/Exporter.vala:162 src/MainWindow.vala:442
 #: src/Resizer.vala:189 src/StickerSet.vala:75
 msgid "Cancel"
 msgstr "Annuleren"
 
-#: src/CanvasItems.vala:948
+#: src/CanvasItems.vala:978
 msgid "move items"
 msgstr "Items verplaatsen"
 
-#: src/CanvasItems.vala:1042
+#: src/CanvasItems.vala:1072
 msgid "Delete"
 msgstr "Verwijderen"
 
-#: src/CanvasItems.vala:1044
+#: src/CanvasItems.vala:1074
 msgid "Send to Front"
 msgstr "Tonen op voorgrond"
 
-#: src/CanvasItems.vala:1045
+#: src/CanvasItems.vala:1075
 msgid "Send to Back"
 msgstr "Tonen op achtergrond"
 
-#: src/CanvasItems.vala:1049
+#: src/CanvasItems.vala:1079
 msgid "Save As Custom"
 msgstr "Opslaan als aangepast"
 
@@ -208,80 +217,80 @@ msgstr "Opslaan als aangepast"
 msgid "resize item"
 msgstr "Grootte aanpassen"
 
-#: src/CanvasToolbar.vala:53
+#: src/CanvasToolbar.vala:55
 msgid "Add Arrow"
 msgstr "Pijl toevoegen"
 
-#: src/CanvasToolbar.vala:53
+#: src/CanvasToolbar.vala:55
 msgid "More Arrows"
 msgstr "Meer pijlen"
 
-#: src/CanvasToolbar.vala:53
+#: src/CanvasToolbar.vala:55
 msgid "Custom Arrows"
 msgstr "Aangepaste pijlen"
 
-#: src/CanvasToolbar.vala:54
+#: src/CanvasToolbar.vala:56
 msgid "Add Shape"
 msgstr "Vorm toevoegen"
 
-#: src/CanvasToolbar.vala:54
+#: src/CanvasToolbar.vala:56
 msgid "More Shapes"
 msgstr "Meer vormen"
 
-#: src/CanvasToolbar.vala:54
+#: src/CanvasToolbar.vala:56
 msgid "Custom Shapes"
 msgstr "Aangepaste vormen"
 
-#: src/CanvasToolbar.vala:360
+#: src/CanvasToolbar.vala:394
 msgid "Crop Image"
 msgstr "Afbeelding bijsnijden"
 
-#: src/CanvasToolbar.vala:385 src/Resizer.vala:184
+#: src/CanvasToolbar.vala:422 src/Resizer.vala:184
 msgid "Resize Image"
 msgstr "Afbeeldingsgrootte aanpassen"
 
-#: src/CanvasToolbar.vala:404
+#: src/CanvasToolbar.vala:442
 #, fuzzy
 msgid "Pick Color To Clipboard"
 msgstr "Kopiëren naar klembord"
 
-#: src/CanvasToolbar.vala:421
+#: src/CanvasToolbar.vala:462
 msgid "Shape Color"
 msgstr "Vormkleur"
 
-#: src/CanvasToolbar.vala:491
+#: src/CanvasToolbar.vala:532
 msgid "Add Transparency"
 msgstr "Doorzichtigheid toevoegen"
 
-#: src/CanvasToolbar.vala:498
+#: src/CanvasToolbar.vala:539
 msgid "Pick Color From Image"
 msgstr ""
 
-#: src/CanvasToolbar.vala:532
+#: src/CanvasToolbar.vala:573
 msgid "Shape Border"
 msgstr "Vormkader"
 
-#: src/CanvasToolbar.vala:545
+#: src/CanvasToolbar.vala:586
 msgid "Border Width"
 msgstr "Kaderbreedte"
 
-#: src/CanvasToolbar.vala:577
+#: src/CanvasToolbar.vala:618
 msgid "Dash Pattern"
 msgstr "Streepjespatroon"
 
-#: src/CanvasToolbar.vala:610
+#: src/CanvasToolbar.vala:651
 msgid "Show Outline"
 msgstr "Contour tonen"
 
-#: src/CanvasToolbar.vala:641
+#: src/CanvasToolbar.vala:682
 msgid "Font Properties"
 msgstr "Lettertype-eigenschappen"
 
-#: src/Canvas.vala:187
+#: src/Canvas.vala:191
 msgid "Annotate new image?"
 msgstr "Afbeelding van aantekening voorzien?"
 
-#: src/Canvas.vala:188
+#: src/Canvas.vala:192
 msgid "Pasting a new image to annotate will destroy the current annotation."
 msgstr ""
 "Let op: door het plakken van een afbeelding wordt de huidige aantekening "
@@ -413,96 +422,97 @@ msgstr "Lettertypekleur aanpassen"
 msgid "Clear all formatting"
 msgstr "Alle opmaak wissen"
 
-#: src/MainWindow.vala:175
+#: src/MainWindow.vala:184
 msgid "Annotator"
 msgstr "Aantekeningen"
 
-#: src/MainWindow.vala:180
+#: src/MainWindow.vala:189
 msgid "Open Image"
 msgstr "Afbeelding openen"
 
-#: src/MainWindow.vala:186
+#: src/MainWindow.vala:195
 msgid "Take Screeshot"
 msgstr "Schermfoto maken"
 
-#: src/MainWindow.vala:192 src/StickerSet.vala:307 src/UndoBuffer.vala:84
+#: src/MainWindow.vala:201 src/StickerSet.vala:307 src/UndoBuffer.vala:84
 msgid "Undo"
 msgstr "Ongedaan maken"
 
-#: src/MainWindow.vala:199 src/StickerSet.vala:308 src/UndoBuffer.vala:90
+#: src/MainWindow.vala:208 src/StickerSet.vala:308 src/UndoBuffer.vala:90
 msgid "Redo"
 msgstr "Opnieuw uitvoeren"
 
-#: src/MainWindow.vala:221
+#: src/MainWindow.vala:228
+#, fuzzy
+msgid "Shortcuts Cheatsheet…"
+msgstr "Sneltoetsoverzicht"
+
+#: src/MainWindow.vala:232
 msgid "Properties"
 msgstr "Eigenschappen"
 
-#: src/MainWindow.vala:227
-msgid "Shortcuts Cheatsheet"
-msgstr "Sneltoetsoverzicht"
-
-#: src/MainWindow.vala:263
+#: src/MainWindow.vala:260
 msgid "Copy To Clipboard"
 msgstr "Kopiëren naar klembord"
 
-#: src/MainWindow.vala:271
+#: src/MainWindow.vala:268
 msgid "Print…"
 msgstr "Afdrukken…"
 
-#: src/MainWindow.vala:282
+#: src/MainWindow.vala:278
 msgid "Export Image"
 msgstr "Afbeelding exporteren"
 
-#: src/MainWindow.vala:304 src/MainWindow.vala:643
+#: src/MainWindow.vala:299 src/MainWindow.vala:638
 #, c-format
 msgid "Zoom (%d%%)"
 msgstr "Zoomen (%d%%)"
 
-#: src/MainWindow.vala:319
+#: src/MainWindow.vala:314
 msgid "Zoom to Fit Window"
 msgstr "Passend zoomen"
 
-#: src/MainWindow.vala:336
+#: src/MainWindow.vala:331
 msgid "Welcome to Annotator"
 msgstr "Welkom bij Aantekeningen"
 
-#: src/MainWindow.vala:337
+#: src/MainWindow.vala:332
 msgid "Let's get started annotating an image"
 msgstr "Tijd om aan de slag te gaan"
 
-#: src/MainWindow.vala:340
+#: src/MainWindow.vala:335
 msgid "Open Image From File"
 msgstr "Afbeelding laden uit bestand"
 
-#: src/MainWindow.vala:340
+#: src/MainWindow.vala:335
 msgid "Open a PNG, JPEG, TIFF or BMP file"
 msgstr "Open een png-, jpeg-, tiff- of bmp-bestand"
 
-#: src/MainWindow.vala:343
+#: src/MainWindow.vala:338
 msgid "Paste Image From Clipboard"
 msgstr "Afbeelding laden van klembord"
 
-#: src/MainWindow.vala:343
+#: src/MainWindow.vala:338
 msgid "Open an image from the clipboard"
 msgstr "Open een afbeelding van het klembord"
 
-#: src/MainWindow.vala:346
+#: src/MainWindow.vala:341
 msgid "Take A Screenshot"
 msgstr "Schermfoto maken"
 
-#: src/MainWindow.vala:346
+#: src/MainWindow.vala:341
 msgid "Open an image from a screenshot"
 msgstr "Open een schermfoto"
 
-#: src/MainWindow.vala:380
+#: src/MainWindow.vala:375
 msgid "Font:"
 msgstr "Lettertype:"
 
-#: src/MainWindow.vala:435
+#: src/MainWindow.vala:430
 msgid "All Image Formats  (*)"
 msgstr "Alle afbeeldingen  (*)"
 
-#: src/MainWindow.vala:447
+#: src/MainWindow.vala:442
 msgid "Open Image File"
 msgstr "Afbeeldingsbestand openen"
 

@@ -29,6 +29,10 @@
         <file alias="star-fill-dark-symbolic.svg">images/icons/scalable/star-fill-dark-symbolic.svg</file>
         <file alias="star-stroke-symbolic.svg">images/icons/scalable/star-stroke-symbolic.svg</file>
         <file alias="star-stroke-dark-symbolic.svg">images/icons/scalable/star-stroke-dark-symbolic.svg</file>
+        <file alias="bubble-talk-symbolic.svg">images/icons/scalable/bubble-talk-symbolic.svg</file>
+        <file alias="bubble-talk-dark-symbolic.svg">images/icons/scalable/bubble-talk-dark-symbolic.svg</file>
+        <file alias="bubble-think-symbolic.svg">images/icons/scalable/bubble-think-symbolic.svg</file>
+        <file alias="bubble-think-dark-symbolic.svg">images/icons/scalable/bubble-think-dark-symbolic.svg</file>
         <file alias="arrow-symbolic.svg">images/icons/scalable/arrow-symbolic.svg</file>
         <file alias="arrow-dark-symbolic.svg">images/icons/scalable/arrow-dark-symbolic.svg</file>
         <file alias="line-symbolic.svg">images/icons/scalable/line-symbolic.svg</file>
