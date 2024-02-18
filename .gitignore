@@ -6,3 +6,4 @@ src/*.o
 src/*.c
 src/undo_actions/*.c
 src/undo_actions/*.swp
+*.DS_Store
