@@ -68,7 +68,10 @@ public class Annotator : Gtk.Application {
         Process.exit( 1 );
       }
     } else if( use_clipboard ) {
-      appwin.do_paste();
+      if( !appwin.do_paste_image() ) {
+        stderr.printf( _( "\nERROR:  Image does not exist on the clipboard\n" ) );
+        Process.exit( 1 );
+      }
     } else if( take_screenshot ) {
       appwin.do_screenshot();
     }

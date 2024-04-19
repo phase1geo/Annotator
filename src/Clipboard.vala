@@ -72,9 +72,10 @@ public class AnnotatorClipboard {
   }
 
   /* Called to paste current item in clipboard to the given Canvas */
-  public static void paste( Editor editor ) {
+  public static bool paste( Editor editor, bool image_only = false ) {
 
     var clipboard = Display.get_default().get_clipboard();
+    var retval    = false;
 
     try {
       if( clipboard.get_formats().contain_mime_type( "image/png" ) ) {
@@ -85,20 +86,25 @@ public class AnnotatorClipboard {
             editor.paste_image( pixbuf, true );
           }
         });
-      } else if( clipboard.get_formats().contain_mime_type( "application/xml" ) ) {
+        retval = true;
+      } else if( !image_only && clipboard.get_formats().contain_mime_type( "application/xml" ) ) {
         clipboard.read_async.begin( {"application/xml"}, 0, null, (obj, res) => {
           string str;
           var stream   = clipboard.read_async.end( res, out str );
           var contents = Utils.read_stream( stream );
           editor.paste_items( contents );
         });
-      } else if( clipboard.get_formats().contain_gtype( Type.STRING ) ) {
+        retval = true;
+      } else if( !image_only && clipboard.get_formats().contain_gtype( Type.STRING ) ) {
         clipboard.read_text_async.begin( null, (obj, res) => {
           var text = clipboard.read_text_async.end( res );
           editor.paste_text( text );
         });
+        retval = true;
       }
     } catch( Error e ) {}
+
+    return( retval );
 
   }
 

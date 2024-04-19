@@ -505,12 +505,25 @@ public class MainWindow : Gtk.ApplicationWindow {
     _editor.canvas.do_cut();
   }
 
-  /* Pastes text or images to the editor */
+  /* Pastes clipboard contents to the editor.  This may also paste only images, if specified. */
+  private bool do_paste_internal( bool image_only ) {
+    if( AnnotatorClipboard.paste( _editor, image_only ) ) {
+      _welcome.sensitive = false;
+      _zoom_btn.set_sensitive( true );
+      _export_btn.set_sensitive( true );
+      return( true );
+    }
+    return( false );
+  }
+
+  /* Pastes text, images or items to the editor */
   public void do_paste() {
-    _welcome.sensitive = false;
-    AnnotatorClipboard.paste( _editor );
-    _zoom_btn.set_sensitive( true );
-    _export_btn.set_sensitive( true );
+    do_paste_internal( false );
+  }
+
+  /* Pasts only an image from the clipboard to the editor */
+  public bool do_paste_image() {
+    return( do_paste_internal( true ) );
   }
 
   public void do_screenshot() {
