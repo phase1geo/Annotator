@@ -193,7 +193,7 @@ public class MainWindow : Gtk.ApplicationWindow {
     header.pack_start( _open_btn );
 
     _screenshot_btn = new Button.from_icon_name( get_icon_name( "insert-image" ) ) {
-      tooltip_markup = Utils.tooltip_with_accel( _( "Take Screeshot" ), "<Control>t" )
+      tooltip_markup = Utils.tooltip_with_accel( _( "Take Screenshot" ), "<Control>t" )
     };
     _screenshot_btn.clicked.connect( do_screenshot );
     header.pack_start( _screenshot_btn );
