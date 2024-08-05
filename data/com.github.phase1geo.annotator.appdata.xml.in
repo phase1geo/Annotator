@@ -7,6 +7,7 @@
   <name>Annotator</name>
   <summary>Communicate with images better</summary>
   <developer_name>Trevor Williams</developer_name>
+  <developer>com.github.phase1geo</developer>
   <update_contact>phase1geo@gmail.com</update_contact>
   <provides>
     <binary>com.github.phase1geo.annotator</binary>
