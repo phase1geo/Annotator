@@ -44,6 +44,7 @@ public class MainWindow : Gtk.ApplicationWindow {
     { "action_open",            do_open },
     { "action_screenshot",      do_screenshot },
     { "action_save",            do_save },
+    { "action_export",          do_export },
     { "action_quit",            do_quit },
     { "action_undo",            do_undo },
     { "action_redo",            do_redo },
@@ -144,6 +145,7 @@ public class MainWindow : Gtk.ApplicationWindow {
     app.set_accels_for_action( "win.action_open",            { "<Control>o" } );
     app.set_accels_for_action( "win.action_screenshot",      { "<Control>t" } );
     app.set_accels_for_action( "win.action_save",            { "<Control>s" } );
+    app.set_accels_for_action( "win.action_export",          { "<Control>e" } );
     app.set_accels_for_action( "win.action_quit",            { "<Control>q" } );
     app.set_accels_for_action( "win.action_undo",            { "<Control>z" } );
     app.set_accels_for_action( "win.action_redo",            { "<Control><Shift>z" } );
