@@ -1,20 +1,22 @@
-# ITALIAN TRANSLATION FOR ANNOTATOR.
-# Copyright (C) 2021
+# GERMAN TRANSLATION FOR ANNOTATOR.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the com.github.phase1geo.annotator package.
-# ALBANO BATTISTELLA <albanobattistella@gmail.com>, 2021,2022,2023,2024.
+# Benjamin Weis <benjamin.weis@gmx.com>, 2024.
 #
+#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.annotator\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-18 14:28-0600\n"
-"PO-Revision-Date: 2024-07-22 17:30+0100\n"
-"Last-Translator: Albano Battistella <albano_battistella@gmail.com>\n"
-"Language-Team: Italian <LL@li.org>\n"
-"Language: It\n"
+"PO-Revision-Date: 2024-04-30 22:01+0200\n"
+"Last-Translator: Benjamin Weis <benjamin.weis@gmx.com>\n"
+"Language-Team: \n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.4.2\n"
 
 #: src/Application.vala:67
 #, c-format
@@ -23,308 +25,307 @@ msgid ""
 "ERROR:  Unable to read image from standard input\n"
 msgstr ""
 "\n"
-"ERRORE: Impossibile leggere l'immagine dall'input standard\n"
+"FEHLER: Bild kann nicht von der Standardeingabe gelesen werden\n"
 
 #: src/Application.vala:98
 msgid "Opening file"
-msgstr "File di apertura"
+msgstr "Datei öffnen"
 
 #: src/Application.vala:114
 msgid "Display version number."
-msgstr "Visualizza il numero di versione."
+msgstr "Versionsnummer anzeigen."
 
 #: src/Application.vala:115
 msgid "Annotate clipboard image."
-msgstr "Annota l'immagine negli appunti."
+msgstr "Bild aus der Zwischenablage annotieren."
 
 #: src/Application.vala:116
 msgid "Take and annotate a screenshot."
-msgstr "Prendi e annota uno screenshot."
+msgstr "Bildschirmfoto aufnehmen und annotieren."
 
 #: src/Application.vala:117
 msgid "Uses image data from standard input"
-msgstr "Utilizza i dati dell'immagine dall'input standard"
+msgstr "Verwendet Bilddaten von der Standardeingabe"
 
 #: src/CanvasImage.vala:126 src/CanvasImage.vala:150
 msgid "change image"
-msgstr "cambia immagine"
+msgstr "Bild ändern"
 
 #: src/CanvasImage.vala:450
 msgid "Color copied to clipboard"
-msgstr "Colore copiato negli appunti"
+msgstr "Farbe in die Zwischenablage kopiert"
 
 #: src/CanvasImage.vala:501
 msgid "image crop"
-msgstr "ritaglia immagine"
+msgstr "Bildausschnitt"
 
 #: src/canvas_items/CanvasItemBlur.vala:132
 msgid "Blur Amount:"
-msgstr "Quantità di sfocatura:"
+msgstr "Weichzeichnungsfaktor:"
 
 #: src/canvas_items/CanvasItemMagnifier.vala:180
 msgid "Drag to control amount of zoom"
-msgstr "Trascina per controllare la quantità di zoom"
+msgstr "Ziehen, um den Zoomfaktor zu steuern"
 
 #: src/canvas_items/CanvasItemMagnifier.vala:181
 msgid "Drag to change area to magnify"
-msgstr "Trascina per cambiare area da ingrandire"
+msgstr "Ziehen, um den Zoombereich zu ändern"
 
 #: src/canvas_items/CanvasItemMagnifier.vala:206
 msgid "Magnification:"
-msgstr "Ingrandimento:"
+msgstr "Vergrößerung:"
 
 #: src/canvas_items/CanvasItemMagnifier.vala:219
 msgid "Reset Focal Point"
-msgstr "Ripristina punto focale"
+msgstr "Brennpunkt zurücksetzen"
 
 #: src/canvas_items/CanvasItemSequence.vala:112
 msgid "Sequence Number:"
-msgstr "Numero di sequenza:"
+msgstr "Sequenznummer:"
 
 #: src/canvas_items/CanvasItemStar.vala:147
 msgid "Points:"
-msgstr "Punti:"
+msgstr "Punkte:"
 
 #: src/canvas_items/CanvasItemText.vala:111 src/CanvasItems.vala:134
 msgid "Text"
-msgstr "Testo"
+msgstr "Text"
 
 #: src/canvas_items/CanvasItemText.vala:894 src/CanvasItems.vala:1069
 #: src/FormatBar.vala:59
 msgid "Copy"
-msgstr "Copia"
+msgstr "Kopieren"
 
 #: src/canvas_items/CanvasItemText.vala:897 src/CanvasItems.vala:1070
 #: src/FormatBar.vala:65
 msgid "Cut"
-msgstr "Taglia"
+msgstr "Ausschneiden"
 
 #: src/canvas_items/CanvasItemText.vala:901
 msgid "Paste"
-msgstr "Incolla"
+msgstr "Einfügen"
 
 #: src/canvas_items/CanvasItemText.vala:904
 msgid "Select All"
-msgstr "Seleziona tutto"
+msgstr "Alles auswählen"
 
 #: src/canvas_items/CanvasItemText.vala:908
 msgid "Insert Emoji"
-msgstr "Inserisci Emoji"
+msgstr "Emoji einfügen"
 
 #: src/CanvasItems.vala:124
 msgid "Rectangle Outline"
-msgstr "Contorno Rettangolo"
+msgstr "Rechteckiger Umriss"
 
 #: src/CanvasItems.vala:125
 msgid "Rectangle"
-msgstr "Rettangolo"
+msgstr "Rechteck"
 
 #: src/CanvasItems.vala:126
 msgid "Oval Outline"
-msgstr "Contorno Ovale"
+msgstr "Oval Outline"
 
 #: src/CanvasItems.vala:127
 msgid "Oval"
-msgstr "Ovale"
+msgstr "Oval"
 
 #: src/CanvasItems.vala:128
 msgid "Star Outline"
-msgstr "Contorno Stella"
+msgstr "Sternförmiger Umriss"
 
 #: src/CanvasItems.vala:129
 msgid "Star"
-msgstr "Stella"
+msgstr "Stern"
 
 #: src/CanvasItems.vala:130
 msgid "Talk Bubble"
-msgstr "Nuvoletta di dialogo"
+msgstr "Sprechblase"
 
 #: src/CanvasItems.vala:131
 msgid "Think Bubble"
-msgstr "Nuvoletta di pensiero"
+msgstr "Denkblase"
 
 #: src/CanvasItems.vala:132
 msgid "Line"
-msgstr "Linea"
+msgstr "Linie"
 
 #: src/CanvasItems.vala:133
 msgid "Arrow"
-msgstr "Freccia"
+msgstr "Pfeil"
 
 #: src/CanvasItems.vala:135
 msgid "Blur"
-msgstr "Sfocatura"
+msgstr "Weichzeichnung"
 
 #: src/CanvasItems.vala:136
 msgid "Magnifier"
-msgstr "Lente ingrandimento"
+msgstr "Lupe"
 
 #: src/CanvasItems.vala:137
 msgid "Pencil Tool"
-msgstr "Strumento Matita"
+msgstr "Bleistiftwerkzeug"
 
 #: src/CanvasItems.vala:138
 msgid "Sequence Number"
-msgstr "Numero di sequenza"
+msgstr "Sequenznummer"
 
 #: src/CanvasItems.vala:139
 msgid "Sticker"
-msgstr "Adesivo"
+msgstr "Sticker"
 
 #: src/CanvasItems.vala:140
 msgid "Image"
-msgstr "Immagine"
+msgstr "Bild"
 
 #: src/CanvasItems.vala:389
 msgid "Open Insertion Image"
-msgstr "Apri l'immagine di inserimento"
+msgstr "Einfügungsbild öffnen"
 
 #: src/CanvasItems.vala:389 src/MainWindow.vala:442
 msgid "Open"
-msgstr "Apri"
+msgstr "Öffnen"
 
 #: src/CanvasItems.vala:389 src/Exporter.vala:162 src/MainWindow.vala:442
 #: src/Resizer.vala:189 src/StickerSet.vala:75
 msgid "Cancel"
-msgstr "Cancella"
+msgstr "Abbrechen"
 
 #: src/CanvasItems.vala:978
 msgid "move items"
-msgstr "sposta oggetti"
+msgstr "Elemente verschieben"
 
 #: src/CanvasItems.vala:1072
 msgid "Delete"
-msgstr "Cancella"
+msgstr "Löschen"
 
 #: src/CanvasItems.vala:1074
 msgid "Send to Front"
-msgstr "Manda in primo piano"
+msgstr "Nach vorne senden"
 
 #: src/CanvasItems.vala:1075
 msgid "Send to Back"
-msgstr "Rimandare indietro"
+msgstr "Nach hinten senden"
 
 #: src/CanvasItems.vala:1079
 msgid "Save As Custom"
-msgstr "Salva come personalizzato"
+msgstr "Als Benutzerdefiniert speichern"
 
 #: src/CanvasItem.vala:300
 msgid "resize item"
-msgstr "ridimensiona oggetto"
+msgstr "Größe des Elements ändern"
 
 #: src/CanvasToolbar.vala:55
 msgid "Add Arrow"
-msgstr "Aggiungi Freccia"
+msgstr "Pfeil hinzufügen"
 
 #: src/CanvasToolbar.vala:55
 msgid "More Arrows"
-msgstr "Più frecce"
+msgstr "Weitere Pfeile"
 
 #: src/CanvasToolbar.vala:55
 msgid "Custom Arrows"
-msgstr "Frecce personalizzate"
+msgstr "Benutzerdefinierte Pfeile"
 
 #: src/CanvasToolbar.vala:56
 msgid "Add Shape"
-msgstr "Aggiungi Forma"
+msgstr "Form hinzufügen"
 
 #: src/CanvasToolbar.vala:56
 msgid "More Shapes"
-msgstr "Più Forme"
+msgstr "Weitere Formen"
 
 #: src/CanvasToolbar.vala:56
 msgid "Custom Shapes"
-msgstr "Forme Personalizzate"
+msgstr "Benutzerdefinierte Formen"
 
 #: src/CanvasToolbar.vala:394
 msgid "Crop Image"
-msgstr "Ritaglia Immagine"
+msgstr "Bild zuschneiden"
 
 #: src/CanvasToolbar.vala:422 src/Resizer.vala:184
 msgid "Resize Image"
-msgstr "Ridimensiona Immagine"
+msgstr "Bildgröße ändern"
 
 #: src/CanvasToolbar.vala:442
 msgid "Pick Color To Clipboard"
-msgstr "Scegli il colore negli appunti"
+msgstr "Farbe auswählen für Zwischenablage"
 
 #: src/CanvasToolbar.vala:462
 msgid "Shape Color"
-msgstr "Colore Forma"
+msgstr "Formfarbe"
 
 #: src/CanvasToolbar.vala:532
 msgid "Add Transparency"
-msgstr "Aggiungi Trasparenza"
+msgstr "Transparenz hinzufügen"
 
 #: src/CanvasToolbar.vala:539
 msgid "Pick Color From Image"
-msgstr "Scegli il colore dall'immagine"
+msgstr "Farbe aus Bild auswählen"
 
 #: src/CanvasToolbar.vala:573
 msgid "Shape Border"
-msgstr "Bordo Forma"
+msgstr "Formrahmen"
 
 #: src/CanvasToolbar.vala:586
 msgid "Border Width"
-msgstr "Larghezza del bordo"
+msgstr "Rahmenbreite"
 
 #: src/CanvasToolbar.vala:618
 msgid "Dash Pattern"
-msgstr "Modello tratto"
+msgstr "Strichmuster"
 
 #: src/CanvasToolbar.vala:651
 msgid "Show Outline"
-msgstr "Mostra contorno"
+msgstr "Umriss anzeigen"
 
 #: src/CanvasToolbar.vala:682
 msgid "Font Properties"
-msgstr "Proprietà Carattere"
+msgstr "Schriftart-Eigenschaften"
 
 #: src/Canvas.vala:191
 msgid "Annotate new image?"
-msgstr "Annotare nuova immagine?"
+msgstr "Neues Bild annotieren?"
 
 #: src/Canvas.vala:192
 msgid "Pasting a new image to annotate will destroy the current annotation."
-msgstr ""
-"Incollando una nuova immagine da annotare distruggerà l'annotazione corrente."
+msgstr "Das Einfügen eines neuen Bildes zum Annotieren wird die aktuelle Annotation zerstören."
 
 #: src/CustomItems.vala:34 src/CustomItems.vala:55 src/CustomItems.vala:68
 msgid "Edit"
-msgstr "Modifica"
+msgstr "Bearbeiten"
 
 #: src/CustomItems.vala:63
 msgid "Done"
-msgstr "Fatto"
+msgstr "Fertig"
 
 #: src/Exporter.vala:51
 msgid "Export…"
-msgstr "Esporta…"
+msgstr "Exportieren…"
 
 #: src/Exporter.vala:53
 msgid "Export With Current Settings"
-msgstr "Esporta con le impostazioni correnti"
+msgstr "Mit aktuellen Einstellungen exportieren"
 
 #: src/Exporter.vala:138
 msgid "Export Options"
-msgstr "Esporta opzioni"
+msgstr "Export-Optionen"
 
 #: src/Exporter.vala:161
 #, c-format
 msgid "Export As %s"
-msgstr "Esporta come %s"
+msgstr "Als %s exportieren"
 
 #: src/Exporter.vala:162 src/StickerSet.vala:352
 msgid "Export"
-msgstr "Esporta"
+msgstr "Exportieren"
 
 #: src/Exporter.vala:185
 msgid "Export Completed"
-msgstr "Esportazione completata"
+msgstr "Exportieren abgeschlossen"
 
 #: src/exports/ExportImage.vala:72
 msgid "Quality"
-msgstr "Qualità"
+msgstr "Qualität"
 
 #: src/exports/ExportPDF.vala:29
 msgid "PDF"
@@ -336,11 +337,11 @@ msgstr "PNG"
 
 #: src/exports/ExportPNG.vala:65
 msgid "Compression"
-msgstr "Compressione"
+msgstr "Komprimierung"
 
 #: src/exports/ExportPNG.vala:66
 msgid "Transparency"
-msgstr "Trasparenza"
+msgstr "Transparenz hinzufügen"
 
 #: src/exports/ExportSVG.vala:29
 msgid "SVG"
@@ -360,59 +361,59 @@ msgstr "BMP"
 
 #: src/FormatBar.vala:71
 msgid "Bold"
-msgstr "Grassetto"
+msgstr "Fett"
 
 #: src/FormatBar.vala:78
 msgid "Italic"
-msgstr "Corsivo"
+msgstr "Kursiv"
 
 #: src/FormatBar.vala:85
 msgid "Underline"
-msgstr "Sottolinea"
+msgstr "Unterstreichen"
 
 #: src/FormatBar.vala:92
 msgid "Strikethrough"
-msgstr "Barrato"
+msgstr "Durchstreichen"
 
 #: src/FormatBar.vala:99
 msgid "Code Block"
-msgstr "Blocco codice"
+msgstr "Codeblock"
 
 #: src/FormatBar.vala:106
 msgid "Superscript"
-msgstr "Apice"
+msgstr "Hochgestellt"
 
 #: src/FormatBar.vala:113
 msgid "Subscript"
-msgstr "Pedice"
+msgstr "Tiefgestellt"
 
 #: src/FormatBar.vala:121
 msgid "Header"
-msgstr "Intestazione"
+msgstr "Überschrift"
 
 #: src/FormatBar.vala:127
 msgid "None"
-msgstr "Nessuna"
+msgstr "Keine"
 
 #: src/FormatBar.vala:132
 msgid "Apply Highlight Color"
-msgstr "Applica colore di evidenziazione"
+msgstr "Hervorhebungsfarbe anwenden"
 
 #: src/FormatBar.vala:133
 msgid "Change Highlight Color"
-msgstr "Cambia colore di evidenziazione"
+msgstr "Hervorhebungsfarbe ändern"
 
 #: src/FormatBar.vala:137
 msgid "Apply Font Color"
-msgstr "Applica il colore del carattere"
+msgstr "Schriftfarbe anwenden"
 
 #: src/FormatBar.vala:138
 msgid "Change Font Color"
-msgstr "Cambia colore carattere"
+msgstr "Schriftfarbe ändern"
 
 #: src/FormatBar.vala:143
 msgid "Clear all formatting"
-msgstr "Cancella tutta la formattazione"
+msgstr "Alle Formatierungen löschen"
 
 #: src/MainWindow.vala:184
 msgid "Annotator"
@@ -420,39 +421,39 @@ msgstr "Annotator"
 
 #: src/MainWindow.vala:189
 msgid "Open Image"
-msgstr "Apri Immagine"
+msgstr "Bild öffnen"
 
 #: src/MainWindow.vala:195
 msgid "Take Screeshot"
-msgstr "Prendi Screenshot"
+msgstr "Bildschirmfoto aufnehmen"
 
 #: src/MainWindow.vala:201 src/StickerSet.vala:307 src/UndoBuffer.vala:84
 msgid "Undo"
-msgstr "Annulla"
+msgstr "Rückgängig"
 
 #: src/MainWindow.vala:208 src/StickerSet.vala:308 src/UndoBuffer.vala:90
 msgid "Redo"
-msgstr "Rifai"
+msgstr "Wiederherstellen"
 
 #: src/MainWindow.vala:228
 msgid "Shortcuts Cheatsheet…"
-msgstr "Schede di riferimento sulle scorciatoie…"
+msgstr ""
 
 #: src/MainWindow.vala:232
 msgid "Properties"
-msgstr "Proprietà"
+msgstr "Eigenschaften"
 
 #: src/MainWindow.vala:260
 msgid "Copy To Clipboard"
-msgstr "Copia negli appunti"
+msgstr "In die Zwischenablage kopieren"
 
 #: src/MainWindow.vala:268
 msgid "Print…"
-msgstr "Stampa…"
+msgstr "Drucken…"
 
 #: src/MainWindow.vala:278
 msgid "Export Image"
-msgstr "Esporta Immagine"
+msgstr "Bild exportieren"
 
 #: src/MainWindow.vala:299 src/MainWindow.vala:638
 #, c-format
@@ -461,140 +462,140 @@ msgstr "Zoom (%d%%)"
 
 #: src/MainWindow.vala:314
 msgid "Zoom to Fit Window"
-msgstr "Zoom adatta finestra"
+msgstr "Zoom an Fenstergröße anpassen"
 
 #: src/MainWindow.vala:331
 msgid "Welcome to Annotator"
-msgstr "Benvenuto in Annotator"
+msgstr "Willkommen bei Annotator"
 
 #: src/MainWindow.vala:332
 msgid "Let's get started annotating an image"
-msgstr "Cominciamo ad annotare un'immagine"
+msgstr "Lasst uns mit dem Annotieren eines Bildes beginnen"
 
 #: src/MainWindow.vala:335
 msgid "Open Image From File"
-msgstr "Apri Immagine da File"
+msgstr "Bild aus Datei öffnen"
 
 #: src/MainWindow.vala:335
 msgid "Open a PNG, JPEG, TIFF or BMP file"
-msgstr "Apri un file PNG, JPEG, TIFF o BMP"
+msgstr "Eine PNG-, JPEG-, TIFF- oder BMP-Datei öffnen"
 
 #: src/MainWindow.vala:338
 msgid "Paste Image From Clipboard"
-msgstr "Incolla Immagine dagli Appunti"
+msgstr "Bild aus der Zwischenablage einfügen"
 
 #: src/MainWindow.vala:338
 msgid "Open an image from the clipboard"
-msgstr "Apri un'immagine dagli appunti"
+msgstr "Bild aus der Zwischenablage öffnen"
 
 #: src/MainWindow.vala:341
 msgid "Take A Screenshot"
-msgstr "Prendi Uno Screenshot"
+msgstr "Bildschirmfoto machen"
 
 #: src/MainWindow.vala:341
 msgid "Open an image from a screenshot"
-msgstr "Apri un'immagine da uno screenshot"
+msgstr "Bild aus einem Bildschirmfoto öffnen"
 
 #: src/MainWindow.vala:375
 msgid "Font:"
-msgstr "Font:"
+msgstr "Schriftart:"
 
 #: src/MainWindow.vala:430
 msgid "All Image Formats  (*)"
-msgstr "Tutti i formati immagine (*)"
+msgstr "Alle Bildformate  (*)"
 
 #: src/MainWindow.vala:442
 msgid "Open Image File"
-msgstr "Apri File Immagine"
+msgstr "Alle Bildformate"
 
 #: src/Resizer.vala:190
 msgid "Resize"
-msgstr "Ridimensiona"
+msgstr "Größe ändern"
 
 #: src/Resizer.vala:289
 msgid "Width:"
-msgstr "Larghezza:"
+msgstr "Breite:"
 
 #: src/Resizer.vala:311
 msgid "Height:"
-msgstr "Altezza:"
+msgstr "Höhe:"
 
 #: src/Resizer.vala:336
 msgid "Scale proportionally"
-msgstr "Scala proporzionalmente"
+msgstr "Proportional skalieren"
 
 #: src/Resizer.vala:378
 msgid "Image Size"
-msgstr "Dimensione immagine"
+msgstr "Bildgröße"
 
 #: src/Resizer.vala:422
 msgid "Top"
-msgstr "Sopra"
+msgstr "Oben"
 
 #: src/Resizer.vala:422 src/StickerSet.vala:291
 msgid "Right"
-msgstr "Destra"
+msgstr "Rechts"
 
 #: src/Resizer.vala:422
 msgid "Bottom"
-msgstr "Sotto"
+msgstr "Unten"
 
 #: src/Resizer.vala:422 src/StickerSet.vala:290
 msgid "Left"
-msgstr "Sinistra"
+msgstr "Links"
 
 #: src/Resizer.vala:433
 msgid "Margins"
-msgstr "Margini"
+msgstr "Ränder"
 
 #: src/Resizer.vala:474
 msgid "Preview"
-msgstr "Anteprima"
+msgstr "Vorschau"
 
 #: src/Resizer.vala:501
 #, c-format
 msgid "%d x %d pixels"
-msgstr "%d x %d pixel"
+msgstr "%d x %d Pixel"
 
 #: src/StickerSet.vala:25 src/StickerSet.vala:68
 msgid "Photo and Video"
-msgstr "Foto e video"
+msgstr "Foto und Video"
 
 #: src/StickerSet.vala:26 src/StickerSet.vala:126
 msgid "Very Basic"
-msgstr "Molto basico"
+msgstr "Sehr einfach"
 
 #: src/StickerSet.vala:27 src/StickerSet.vala:130 src/StickerSet.vala:221
 msgid "Business"
-msgstr "Affari"
+msgstr "Geschäftlich"
 
 #: src/StickerSet.vala:28 src/StickerSet.vala:248
 msgid "Industry"
-msgstr "Industria"
+msgstr "Industrie"
 
 #: src/StickerSet.vala:29 src/StickerSet.vala:285
 msgid "Mobile"
-msgstr "Mobile"
+msgstr "Mobil"
 
 #: src/StickerSet.vala:30 src/StickerSet.vala:309
 msgid "Arrows"
-msgstr "Freccie"
+msgstr "Pfeile"
 
 #: src/StickerSet.vala:31 src/StickerSet.vala:357
 msgid "Data"
-msgstr "Dati"
+msgstr "Daten"
 
 #: src/StickerSet.vala:33
 msgid "Flash on"
-msgstr "Flash acceso"
+msgstr "Blitzlicht ein"
 
 #: src/StickerSet.vala:34
 msgid "Flash off"
-msgstr "Flash spento"
+msgstr "Blitzlicht aus"
 
 #: src/StickerSet.vala:35
 msgid "Flash auto"
-msgstr "Flash automatico"
+msgstr "Blitzlicht automatisch"
 
 #: src/StickerSet.vala:36
 msgid "Panorama"
@@ -602,87 +603,87 @@ msgstr "Panorama"
 
 #: src/StickerSet.vala:37
 msgid "Landscape"
-msgstr "Paesaggio"
+msgstr "Landschaft"
 
 #: src/StickerSet.vala:38
 msgid "Night landscape"
-msgstr "Paesaggio notturno"
+msgstr "Nachtlandschaft"
 
 #: src/StickerSet.vala:39
 msgid "Sports mode"
-msgstr "Modalità sport"
+msgstr "Sportmodus"
 
 #: src/StickerSet.vala:40
 msgid "Portrait mode"
-msgstr "Modalità ritratto"
+msgstr "Porträtmodus"
 
 #: src/StickerSet.vala:41
 msgid "Night portrait"
-msgstr "Ritratto notturno"
+msgstr "Nachtporträt"
 
 #: src/StickerSet.vala:42
 msgid "Close up mode"
-msgstr "Modalità primo piano"
+msgstr "Nahaufnahme-Modus"
 
 #: src/StickerSet.vala:43
 msgid "Selfie"
-msgstr "Selfie"
+msgstr "Selbstporträt"
 
 #: src/StickerSet.vala:44
 msgid "Gallery"
-msgstr "Galleria"
+msgstr "Galerie"
 
 #: src/StickerSet.vala:45
 msgid "Stack of photos"
-msgstr "Collezione di foto"
+msgstr "Stapel an Fotos"
 
 #: src/StickerSet.vala:46
 msgid "Add image"
-msgstr "Aggiungi immagine"
+msgstr "Bild hinzufügen"
 
 #: src/StickerSet.vala:47
 msgid "Edit image"
-msgstr "Modifica immagine"
+msgstr "Bild bearbeiten"
 
 #: src/StickerSet.vala:48
 msgid "Remove image"
-msgstr "Rimuovi immagine"
+msgstr "Bild entfernen"
 
 #: src/StickerSet.vala:49
 msgid "Compact camera"
-msgstr "Fotocamera compatta"
+msgstr "Kompaktkamera"
 
 #: src/StickerSet.vala:50
 msgid "Multiple cameras"
-msgstr "Fotocamere multiple"
+msgstr "Mehrere Kameras"
 
 #: src/StickerSet.vala:51
 msgid "Camera"
-msgstr "Fotocamera"
+msgstr "Kamera"
 
 #: src/StickerSet.vala:52
 msgid "SLR back side"
-msgstr "Lato posteriore della reflex"
+msgstr "Spiegelreflexkamera-Rückseite"
 
 #: src/StickerSet.vala:53
 msgid "Old time camera"
-msgstr "Macchina fotografica d'altri tempi"
+msgstr "Kamera aus alter Zeit"
 
 #: src/StickerSet.vala:54
 msgid "Camera addon"
-msgstr "Componente aggiuntivo della fotocamera"
+msgstr "Kamera-Zusatz"
 
 #: src/StickerSet.vala:55
 msgid "Camera identification"
-msgstr "Identificazione della fotocamera"
+msgstr "Kamera-Identifikation"
 
 #: src/StickerSet.vala:56
 msgid "Start"
-msgstr "Inizio"
+msgstr "Start"
 
 #: src/StickerSet.vala:57
 msgid "Clapperboard"
-msgstr "Ciak"
+msgstr "Filmklappe"
 
 #: src/StickerSet.vala:58
 msgid "Film"
@@ -690,51 +691,51 @@ msgstr "Film"
 
 #: src/StickerSet.vala:59
 msgid "Camcorder"
-msgstr "Videocamera"
+msgstr "Kamerarekorder"
 
 #: src/StickerSet.vala:60
 msgid "Camcorder pro"
-msgstr "Videocamera professionale"
+msgstr "Kamerarekorder pro"
 
 #: src/StickerSet.vala:61
 msgid "Webcam"
-msgstr ""
+msgstr "Webkamera"
 
 #: src/StickerSet.vala:62
 msgid "Integrated webcam"
-msgstr "Webcam integrata"
+msgstr "Integrierte Webkamera"
 
 #: src/StickerSet.vala:63
 msgid "Rotate camera"
-msgstr "Ruota fotocamera"
+msgstr "Kamera drehen"
 
 #: src/StickerSet.vala:64
 msgid "Switch camera"
-msgstr "Cambia fotocamera"
+msgstr "Kamera wechseln"
 
 #: src/StickerSet.vala:65
 msgid "Photo reel"
-msgstr "Bobina di foto"
+msgstr "Fotorolle"
 
 #: src/StickerSet.vala:66
 msgid "Film reel"
-msgstr "Bobina cinematografica"
+msgstr "Filmrolle"
 
 #: src/StickerSet.vala:67
 msgid "Cable release"
-msgstr "Rilascio del cavo"
+msgstr "Fernauslöser"
 
 #: src/StickerSet.vala:70
 msgid "Home"
-msgstr "Casa"
+msgstr "Startseite"
 
 #: src/StickerSet.vala:71
 msgid "Icons8 cup"
-msgstr ""
+msgstr "Icons8-Becher"
 
 #: src/StickerSet.vala:72
 msgid "Globe"
-msgstr "Mappamondo"
+msgstr "Globus"
 
 #: src/StickerSet.vala:73
 msgid "OK"
@@ -742,95 +743,95 @@ msgstr "OK"
 
 #: src/StickerSet.vala:74
 msgid "Checkmark"
-msgstr "Segno di spunta"
+msgstr "Häkchen"
 
 #: src/StickerSet.vala:76
 msgid "Synchronize"
-msgstr "Sincronizza"
+msgstr "Synchronisieren"
 
 #: src/StickerSet.vala:77
 msgid "Refresh"
-msgstr "Aggiorna"
+msgstr "Auffrischen"
 
 #: src/StickerSet.vala:78
 msgid "Download"
-msgstr "Scarica"
+msgstr "Herunterladen"
 
 #: src/StickerSet.vala:79
 msgid "Upload"
-msgstr "Carica"
+msgstr "Hochladen"
 
 #: src/StickerSet.vala:80
 msgid "Empty trash"
-msgstr "Svuota spazzatura"
+msgstr "Leerer Mülleimer"
 
 #: src/StickerSet.vala:81
 msgid "Full trash"
-msgstr "Cestino pieno"
+msgstr "Voller Mülleimer"
 
 #: src/StickerSet.vala:82
 msgid "Folder"
-msgstr "Cartella"
+msgstr "Ordner"
 
 #: src/StickerSet.vala:83
 msgid "Opened folder"
-msgstr "Cartella aperta"
+msgstr "Geöffneter Ordner"
 
 #: src/StickerSet.vala:84 data/com.github.phase1geo.annotator.shortcuts.ui:16
 msgid "File"
-msgstr "File"
+msgstr "Datei"
 
 #: src/StickerSet.vala:85
 msgid "Document"
-msgstr "Documento"
+msgstr "Dokument"
 
 #: src/StickerSet.vala:86
 msgid "Audio file"
-msgstr "File audio"
+msgstr "Audiodatei"
 
 #: src/StickerSet.vala:87
 msgid "Image file"
-msgstr "File immagine"
+msgstr "Bilddatei"
 
 #: src/StickerSet.vala:88
 msgid "Video file"
-msgstr "File video"
+msgstr "Videodatei"
 
 #: src/StickerSet.vala:89 data/com.github.phase1geo.annotator.shortcuts.ui:35
 msgid "Print"
-msgstr "Stampa"
+msgstr "Drucken"
 
 #: src/StickerSet.vala:90
 msgid "Music"
-msgstr "Musica"
+msgstr "Musik"
 
 #: src/StickerSet.vala:91
 msgid "Share"
-msgstr "Condividi"
+msgstr "Teilen"
 
 #: src/StickerSet.vala:92 data/com.github.phase1geo.annotator.shortcuts.ui:297
 msgid "Cursor"
-msgstr "Cursore"
+msgstr "Cursor"
 
 #: src/StickerSet.vala:93
 msgid "Puzzle"
-msgstr ""
+msgstr "Puzzle"
 
 #: src/StickerSet.vala:94
 msgid "Unlock"
-msgstr "Sblocca"
+msgstr "Entsperren"
 
 #: src/StickerSet.vala:95
 msgid "Lock"
-msgstr "Blocca"
+msgstr "Sperren"
 
 #: src/StickerSet.vala:96
 msgid "Idea"
-msgstr "Idea"
+msgstr "Idee"
 
 #: src/StickerSet.vala:97
 msgid "No idea"
-msgstr "Nessuna idea"
+msgstr "Keine Idee"
 
 #: src/StickerSet.vala:98
 msgid "Link"
@@ -838,23 +839,23 @@ msgstr "Link"
 
 #: src/StickerSet.vala:99
 msgid "Broken link"
-msgstr "Link non funzionante"
+msgstr "Defekter Link"
 
 #: src/StickerSet.vala:100
 msgid "Rating"
-msgstr "Valutazione"
+msgstr "Bewertung"
 
 #: src/StickerSet.vala:101
 msgid "Like placeholder"
-msgstr "Come segnaposto"
+msgstr "Mag ich-Platzhalter"
 
 #: src/StickerSet.vala:102
 msgid "Like"
-msgstr "Piace"
+msgstr "Mag ich"
 
 #: src/StickerSet.vala:103
 msgid "Dislike"
-msgstr "Non piace"
+msgstr "Mag ich nicht"
 
 #: src/StickerSet.vala:104
 msgid "Info"
@@ -862,433 +863,427 @@ msgstr "Info"
 
 #: src/StickerSet.vala:105
 msgid "About"
-msgstr "Informazioni"
+msgstr "Über"
 
 #: src/StickerSet.vala:106
 msgid "Picture"
-msgstr "Foto"
+msgstr "Bild"
 
 #: src/StickerSet.vala:107
 msgid "Clock"
-msgstr "Orologio"
+msgstr "Uhr"
 
 #: src/StickerSet.vala:108
 msgid "Alarm clock"
-msgstr "Sveglia"
+msgstr "Wecker"
 
 #: src/StickerSet.vala:109
 msgid "Address book"
-msgstr "Rubrica"
+msgstr "Adressbuch"
 
 #: src/StickerSet.vala:110
 msgid "Contacts"
-msgstr "Contatti"
+msgstr "Kontakte"
 
 #: src/StickerSet.vala:111
 msgid "News"
-msgstr "Notizie"
+msgstr "Neuigkeiten"
 
 #: src/StickerSet.vala:112
 msgid "Bookmark"
-msgstr "Segnalibro"
+msgstr "Lesezeichen"
 
 #: src/StickerSet.vala:113
 msgid "Binoculars"
-msgstr "Binocolo"
+msgstr "Fernglas"
 
 #: src/StickerSet.vala:114
 msgid "Search"
-msgstr "Cerca"
+msgstr "Suchen"
 
 #: src/StickerSet.vala:115
 msgid "Ruler"
-msgstr ""
+msgstr "Lineal"
 
 #: src/StickerSet.vala:116
 msgid "Services"
-msgstr "Servizi"
+msgstr "Dienste"
 
 #: src/StickerSet.vala:117
 msgid "Settings"
-msgstr "Impostazioni"
+msgstr "Einstellungen"
 
 #: src/StickerSet.vala:118
 msgid "Support"
-msgstr "Supporto"
+msgstr "Unterstützung"
 
 #: src/StickerSet.vala:119
 msgid "Frame"
-msgstr "Frame"
+msgstr "Rahmen"
 
 #: src/StickerSet.vala:120
 msgid "Menu"
-msgstr "Menu"
+msgstr "Menü"
 
 #: src/StickerSet.vala:121
 msgid "Key"
-msgstr "Chiave"
+msgstr "Schlüssel"
 
 #: src/StickerSet.vala:122
 msgid "Calendar"
-msgstr "Calendario"
+msgstr "Kalender"
 
 #: src/StickerSet.vala:123
 msgid "Calculator"
-msgstr "Calcolatrice"
+msgstr "Taschenrechner"
 
 #: src/StickerSet.vala:124
 msgid "Minus"
-msgstr "Meno"
+msgstr "Minus"
 
 #: src/StickerSet.vala:125
 msgid "Plus"
-msgstr "Più"
+msgstr "Plus"
 
 #: src/StickerSet.vala:128
 msgid "Graduation cap"
-msgstr "Cappello di laurea"
+msgstr "Doktorhut"
 
 #: src/StickerSet.vala:129
 msgid "Briefcase"
-msgstr "Valigetta"
+msgstr "Aktentasche"
 
 #: src/StickerSet.vala:131
 msgid "Signature"
-msgstr "Firma"
+msgstr "Unterschrift"
 
 #: src/StickerSet.vala:132
 msgid "Safe"
-msgstr "Cassaforte"
+msgstr "Tresor"
 
 #: src/StickerSet.vala:133
 msgid "Advertising"
-msgstr "Pubblicità"
+msgstr "Werbung"
 
 #: src/StickerSet.vala:134
 msgid "Businessman"
-msgstr "Uomo d'affari"
+msgstr "Geschäftsmann"
 
 #: src/StickerSet.vala:135
 msgid "Businesswoman"
-msgstr "Donna d'affari"
+msgstr "Geschäftsfrau"
 
 #: src/StickerSet.vala:136
 msgid "Manager"
-msgstr ""
+msgstr "Manager"
 
 #: src/StickerSet.vala:137
 msgid "Online support"
-msgstr "Supporto online"
+msgstr "Online-Unterstützung"
 
 #: src/StickerSet.vala:138
 msgid "Assistant"
-msgstr "Assistente"
+msgstr "Assistent"
 
 #: src/StickerSet.vala:139
 msgid "Customer support"
-msgstr "Servizio clienti"
+msgstr "Kundenbetreuung"
 
 #: src/StickerSet.vala:140
 msgid "Reading ebook"
-msgstr ""
+msgstr "E-Book lesen"
 
 #: src/StickerSet.vala:141
 msgid "Reading"
-msgstr ""
+msgstr "Lesen"
 
 #: src/StickerSet.vala:142
 msgid "Neutral trading"
-msgstr ""
+msgstr "Neutraler Handel"
 
 #: src/StickerSet.vala:143
 msgid "Bullish"
-msgstr ""
+msgstr "Bullisch"
 
 #: src/StickerSet.vala:144
 msgid "Bearish"
-msgstr ""
+msgstr "Bärisch"
 
 #: src/StickerSet.vala:145
 msgid "High priority"
-msgstr "Alta priorità"
+msgstr "Hohe Priorität"
 
 #: src/StickerSet.vala:146
 msgid "Medium priority"
-msgstr "Media priorità"
+msgstr "Mittlere Priorität"
 
 #: src/StickerSet.vala:147
 msgid "Low priority"
-msgstr "Bassa priorità"
+msgstr "Niedrige Priorität"
 
 #: src/StickerSet.vala:148
 msgid "Make decision"
-msgstr "Prendere decisioni"
+msgstr "Entscheidung treffen"
 
 #: src/StickerSet.vala:149
 msgid "Decision"
-msgstr "decisione"
+msgstr "Entscheidung"
 
 #: src/StickerSet.vala:150
 msgid "Good decision"
-msgstr "Ottima decisione"
+msgstr "Gute Entscheidung"
 
 #: src/StickerSet.vala:151
 msgid "Neutral decision"
-msgstr "Decisione neutrale"
+msgstr "Neutrale Entscheidung"
 
 #: src/StickerSet.vala:152
 msgid "Bad decision"
-msgstr "Cattiva decisione"
+msgstr "Schlechte Entscheidung"
 
 #: src/StickerSet.vala:153
 msgid "Approve"
-msgstr "Approva"
+msgstr "Zustimmen"
 
 #: src/StickerSet.vala:154
 msgid "Disapprove"
-msgstr "Disapprova"
+msgstr "Ablehnen"
 
 #: src/StickerSet.vala:155
 msgid "Podium without speaker"
-msgstr ""
+msgstr "Podium ohne Redner"
 
 #: src/StickerSet.vala:156
 msgid "Podium with speaker"
-msgstr ""
+msgstr "Podium mit Redner"
 
 #: src/StickerSet.vala:157
 msgid "Podium with audience"
-msgstr ""
+msgstr "Podium mit Publikum"
 
 #: src/StickerSet.vala:158
 msgid "Video projector"
-msgstr ""
+msgstr "Videoprojektor"
 
 #: src/StickerSet.vala:159
 msgid "Statistics"
-msgstr ""
+msgstr "Statistik"
 
 #: src/StickerSet.vala:160
-#, fuzzy
 msgid "Collaboration"
-msgstr "Creazione"
+msgstr "Zusammenarbeit"
 
 #: src/StickerSet.vala:161
 msgid "Voice presentation"
-msgstr ""
+msgstr "Sprachliche Präsentation"
 
 #: src/StickerSet.vala:162
 msgid "Conference call"
-msgstr ""
+msgstr "Konferenzanruf"
 
 #: src/StickerSet.vala:163
 msgid "Comments"
-msgstr ""
+msgstr "Kommentare"
 
 #: src/StickerSet.vala:164
 msgid "FAQ"
-msgstr ""
+msgstr "FAQ"
 
 #: src/StickerSet.vala:165
 msgid "Reuse"
-msgstr ""
+msgstr "Wiederverwenden"
 
 #: src/StickerSet.vala:166
-#, fuzzy
 msgid "Organization"
-msgstr "Ingrandimento:"
+msgstr "Organisation"
 
 #: src/StickerSet.vala:167
 msgid "Department"
-msgstr ""
+msgstr "Abteilung"
 
 #: src/StickerSet.vala:168
 msgid "Library"
-msgstr ""
+msgstr "Bibliothek"
 
 #: src/StickerSet.vala:169
 msgid "Shop"
-msgstr ""
+msgstr "Geschäft"
 
 #: src/StickerSet.vala:170
 msgid "Self service kiosk"
-msgstr ""
+msgstr "Selbstbedienungskiosk"
 
 #: src/StickerSet.vala:171
 msgid "Donate"
-msgstr ""
+msgstr "Spenden"
 
 #: src/StickerSet.vala:172
-#, fuzzy
 msgid "Currency exchange"
-msgstr "cambia numero di sequenza"
+msgstr "Währungsumtausch"
 
 #: src/StickerSet.vala:173
 msgid "Debt"
-msgstr ""
+msgstr "Verschuldung"
 
 #: src/StickerSet.vala:174
 msgid "Sales performance"
-msgstr ""
+msgstr "Vertriebsleistung"
 
 #: src/StickerSet.vala:175
 msgid "Invite"
-msgstr ""
+msgstr "Einladen"
 
 #: src/StickerSet.vala:176
 msgid "Money transfer"
-msgstr ""
+msgstr "Geldüberweisung"
 
 #: src/StickerSet.vala:177
 msgid "Feedback"
-msgstr ""
+msgstr "Rückmeldung"
 
 #: src/StickerSet.vala:178
 msgid "Approval"
-msgstr ""
+msgstr "Zustimmung"
 
 #: src/StickerSet.vala:179
 msgid "Paid"
-msgstr ""
+msgstr "Bezahlt"
 
 #: src/StickerSet.vala:180
 msgid "In transit"
-msgstr ""
+msgstr "Unterwegs"
 
 #: src/StickerSet.vala:181
 msgid "Shipped"
-msgstr ""
+msgstr "Versandt"
 
 #: src/StickerSet.vala:182
 msgid "Package"
-msgstr ""
+msgstr "Paket"
 
 #: src/StickerSet.vala:183
 msgid "Planner"
-msgstr ""
+msgstr "Planer"
 
 #: src/StickerSet.vala:184
 msgid "Overtime"
-msgstr ""
+msgstr "Überstunden"
 
 #: src/StickerSet.vala:185
 msgid "Leave"
-msgstr ""
+msgstr "Verlassen"
 
 #: src/StickerSet.vala:186
 msgid "Expired"
-msgstr ""
+msgstr "Abgelaufen"
 
 #: src/StickerSet.vala:187
 msgid "Process"
-msgstr ""
+msgstr "Prozess"
 
 #: src/StickerSet.vala:188
 msgid "Diploma 1"
-msgstr ""
+msgstr "Diplom 1"
 
 #: src/StickerSet.vala:189
 msgid "Diploma 2"
-msgstr ""
+msgstr "Diplom 2"
 
 #: src/StickerSet.vala:190
 msgid "Business contact"
-msgstr ""
+msgstr "Geschäftskontakt"
 
 #: src/StickerSet.vala:191
 msgid "Survey"
-msgstr ""
+msgstr "Umfrage"
 
 #: src/StickerSet.vala:192
-#, fuzzy
 msgid "Inspection"
-msgstr "Selezione"
+msgstr "Inspektion"
 
 #: src/StickerSet.vala:193
 msgid "Rules"
-msgstr ""
+msgstr "Regeln"
 
 #: src/StickerSet.vala:194
 msgid "Todo list"
-msgstr ""
+msgstr "Aufgabenliste"
 
 #: src/StickerSet.vala:195
 msgid "Ratings"
-msgstr ""
+msgstr "Bewertungen"
 
 #: src/StickerSet.vala:196
 msgid "Questions"
-msgstr ""
+msgstr "Fragen"
 
 #: src/StickerSet.vala:197
 msgid "Answers"
-msgstr ""
+msgstr "Antworten"
 
 #: src/StickerSet.vala:198
 msgid "Fine print"
-msgstr ""
+msgstr "Kleingedrucktes"
 
 #: src/StickerSet.vala:199
 msgid "Candle sticks"
-msgstr ""
+msgstr "Kerzenhalter"
 
 #: src/StickerSet.vala:200
 msgid "Serial tasks"
-msgstr ""
+msgstr "Serielle Aufgaben"
 
 #: src/StickerSet.vala:201
 msgid "Parallel tasks"
-msgstr ""
+msgstr "Parallele Aufgaben"
 
 #: src/StickerSet.vala:202
 msgid "Tree structure"
-msgstr ""
+msgstr "Baumstruktur"
 
 #: src/StickerSet.vala:203
 msgid "Org unit"
-msgstr ""
+msgstr "Organisationseinheit"
 
 #: src/StickerSet.vala:204
 msgid "Privacy"
-msgstr ""
+msgstr "Privatsphäre"
 
 #: src/StickerSet.vala:205
 msgid "Disclaimer"
-msgstr ""
+msgstr "Haftungsausschluss"
 
 #: src/StickerSet.vala:206
 msgid "Callback"
-msgstr ""
+msgstr "Rückruf"
 
 #: src/StickerSet.vala:207
 msgid "Service mark"
-msgstr ""
+msgstr "Dienstleistungsmarke"
 
 #: src/StickerSet.vala:208
 msgid "Registered trademark"
-msgstr ""
+msgstr "Eingetragenes Warenzeichen"
 
 #: src/StickerSet.vala:209
 msgid "Trademark"
-msgstr ""
+msgstr "Warenzeichen"
 
 #: src/StickerSet.vala:210
-#, fuzzy
 msgid "Copyright"
-msgstr "Copia"
+msgstr "Urheberrecht"
 
 #: src/StickerSet.vala:211
-#, fuzzy
 msgid "Copyleft"
-msgstr "Copia"
+msgstr "Copyleft"
 
 #: src/StickerSet.vala:212
 msgid "Sound recording copyright"
-msgstr ""
+msgstr "Urheberrecht für Tonaufnahmen"
 
 #: src/StickerSet.vala:213
 msgid "Butting in"
-msgstr ""
+msgstr "Sich einmischen"
 
 #: src/StickerSet.vala:214
 msgid "Multiple inputs"
@@ -1296,43 +1291,43 @@ msgstr ""
 
 #: src/StickerSet.vala:215
 msgid "Collect"
-msgstr ""
+msgstr "Sammeln"
 
 #: src/StickerSet.vala:216
 msgid "Internal"
-msgstr ""
+msgstr "Intern"
 
 #: src/StickerSet.vala:217
 msgid "External"
-msgstr ""
+msgstr "Extern"
 
 #: src/StickerSet.vala:218
 msgid "VIP"
-msgstr ""
+msgstr "VIP"
 
 #: src/StickerSet.vala:219
 msgid "Light at the end of tunnel"
-msgstr ""
+msgstr "Licht am Ende des Tunnels"
 
 #: src/StickerSet.vala:220
 msgid "Entering heaven alive"
-msgstr ""
+msgstr "Lebendig in den Himmel kommen"
 
 #: src/StickerSet.vala:223
 msgid "Biomass"
-msgstr ""
+msgstr "Biomasse"
 
 #: src/StickerSet.vala:224
 msgid "Display"
-msgstr ""
+msgstr "Anzeige"
 
 #: src/StickerSet.vala:225
 msgid "Do not inhale"
-msgstr ""
+msgstr "Nicht einatmen"
 
 #: src/StickerSet.vala:226
 msgid "Factory"
-msgstr ""
+msgstr "Fabrik"
 
 #: src/StickerSet.vala:227
 msgid "Factory breakdown"
@@ -1340,105 +1335,103 @@ msgstr ""
 
 #: src/StickerSet.vala:228
 msgid "Crystal oscillator"
-msgstr ""
+msgstr "Kristalloszillator"
 
 #: src/StickerSet.vala:229
 msgid "Capacitor"
-msgstr ""
+msgstr "Kondensator"
 
 #: src/StickerSet.vala:230
 msgid "Electricity"
-msgstr ""
+msgstr "Elektrizität"
 
 #: src/StickerSet.vala:231
 msgid "Electro devices"
-msgstr ""
+msgstr "Elektrogeräte"
 
 #: src/StickerSet.vala:232
 msgid "Electrical sensor"
-msgstr ""
+msgstr "Elektrischer Sensor"
 
 #: src/StickerSet.vala:233
 msgid "Electrical threshold"
-msgstr ""
+msgstr "Elektrischer Schwellenwert"
 
 #: src/StickerSet.vala:234
 msgid "Automotive"
-msgstr ""
+msgstr "Automobilindustrie"
 
 #: src/StickerSet.vala:235
 msgid "Feed in"
-msgstr ""
+msgstr "Einspeisung"
 
 #: src/StickerSet.vala:236
 msgid "Dam"
-msgstr ""
+msgstr "Damm"
 
 #: src/StickerSet.vala:237
 msgid "Biotech"
-msgstr ""
+msgstr "Biotechnologie"
 
 #: src/StickerSet.vala:238
-#, fuzzy
 msgid "Advance"
-msgstr "Cancella"
+msgstr "Erweitert"
 
 #: src/StickerSet.vala:239
 msgid "Cloth"
-msgstr ""
+msgstr "Stoff"
 
 #: src/StickerSet.vala:240
-#, fuzzy
 msgid "Electronics"
-msgstr "Selezione"
+msgstr "Elektronik"
 
 #: src/StickerSet.vala:241
 msgid "Deployment"
-msgstr ""
+msgstr "Bereitstellung"
 
 #: src/StickerSet.vala:242
 msgid "Automatic"
-msgstr ""
+msgstr "Automatisch"
 
 #: src/StickerSet.vala:243
 msgid "Do not insert"
-msgstr ""
+msgstr "Nicht einfügen"
 
 #: src/StickerSet.vala:244
 msgid "Do not mix"
-msgstr ""
+msgstr "Nicht mischen"
 
 #: src/StickerSet.vala:245
 msgid "Biohazard"
-msgstr ""
+msgstr "Biogefahr"
 
 #: src/StickerSet.vala:246
 msgid "Circuit"
-msgstr ""
+msgstr "Schaltung"
 
 #: src/StickerSet.vala:247
 msgid "Engineering"
-msgstr ""
+msgstr "Ingenieurwesen"
 
 #: src/StickerSet.vala:250
 msgid "Cell phone"
-msgstr ""
+msgstr "Mobiltelefon"
 
 #: src/StickerSet.vala:251
 msgid "iPhone"
-msgstr ""
+msgstr "iPhone"
 
 #: src/StickerSet.vala:252
 msgid "iPad"
-msgstr ""
+msgstr "iPad"
 
 #: src/StickerSet.vala:253
 msgid "Phone android"
-msgstr ""
+msgstr "Telefon Android"
 
 #: src/StickerSet.vala:254
 msgid "Tablet android"
-msgstr ""
+msgstr "Tablet Android"
 
 #: src/StickerSet.vala:255
 msgid "Nook"
@@ -1446,849 +1439,721 @@ msgstr ""
 
 #: src/StickerSet.vala:256
 msgid "Kindle"
-msgstr ""
+msgstr "Kindle"
 
 #: src/StickerSet.vala:257
 msgid "Two smartphones"
-msgstr ""
+msgstr "Zwei Smartphones"
 
 #: src/StickerSet.vala:258
 msgid "Multiple devices"
-msgstr ""
+msgstr "Mehrere Geräte"
 
 #: src/StickerSet.vala:259
 msgid "Multiple smartphones"
-msgstr ""
+msgstr "Mehrere Smartphones"
 
 #: src/StickerSet.vala:260
 msgid "Smartphone tablet"
-msgstr ""
+msgstr "Smartphone-Tablet"
 
 #: src/StickerSet.vala:261
 msgid "Touchscreen smartphone"
-msgstr ""
+msgstr "Touchscreen-Smartphone"
 
 #: src/StickerSet.vala:262
 msgid "Sim card"
-msgstr ""
+msgstr "SIM-Karte"
 
 #: src/StickerSet.vala:263
 msgid "Sim card chip"
-msgstr ""
+msgstr "SIM-Karten-Chip"
 
 #: src/StickerSet.vala:264
 msgid "SMS"
-msgstr ""
+msgstr "SMS"
 
 #: src/StickerSet.vala:265
 msgid "MMS"
-msgstr ""
+msgstr "MMS"
 
 #: src/StickerSet.vala:266
 msgid "Charge battery"
-msgstr ""
+msgstr "Akku aufladen"
 
 #: src/StickerSet.vala:267
 msgid "Full battery"
-msgstr ""
+msgstr "Voller Akku"
 
 #: src/StickerSet.vala:268
 msgid "High battery"
-msgstr ""
+msgstr "Hohe Akkuladung"
 
 #: src/StickerSet.vala:269
 msgid "Middle battery"
-msgstr ""
+msgstr "Mittlere Akkuladung"
 
 #: src/StickerSet.vala:270
 msgid "Low battery"
-msgstr ""
+msgstr "Niedrige Akkuladung"
 
 #: src/StickerSet.vala:271
 msgid "Empty battery"
-msgstr ""
+msgstr "Leerer Akku"
 
 #: src/StickerSet.vala:272
 msgid "Phone"
-msgstr ""
+msgstr "Telefon"
 
 #: src/StickerSet.vala:273
 msgid "Missed call"
-msgstr ""
+msgstr "Verpasster Anruf"
 
 #: src/StickerSet.vala:274
 msgid "End call"
-msgstr ""
+msgstr "Anruf beenden"
 
 #: src/StickerSet.vala:275
 msgid "Call transfer"
-msgstr ""
+msgstr "Anrufumlegung"
 
 #: src/StickerSet.vala:276
 msgid "Video call"
-msgstr ""
+msgstr "Videoanruf"
 
 #: src/StickerSet.vala:277
 msgid "No video"
-msgstr ""
+msgstr "Kein Video"
 
 #: src/StickerSet.vala:278
 msgid "Rotate to portrait"
-msgstr ""
+msgstr "Auf Hochformat drehen"
 
 #: src/StickerSet.vala:279
 msgid "Lock portrait"
-msgstr ""
+msgstr "Hochformat sperren"
 
 #: src/StickerSet.vala:280
 msgid "Rotate to landscape"
-msgstr ""
+msgstr "Auf Querformat drehen"
 
 #: src/StickerSet.vala:281
 msgid "Lock landscape"
-msgstr ""
+msgstr "Querformat sperren"
 
 #: src/StickerSet.vala:282
 msgid "Voicemail"
-msgstr ""
+msgstr "Sprachnachricht"
 
 #: src/StickerSet.vala:283
 msgid "Speaker"
-msgstr ""
+msgstr "Lautsprecher"
 
 #: src/StickerSet.vala:284
-#, fuzzy
 msgid "Headset"
-msgstr "Intestazione"
+msgstr "Kopfhörersatz"
 
 #: src/StickerSet.vala:287
-#, fuzzy
 msgid "Left up"
-msgstr "Sinistra"
+msgstr "Links oben"
 
 #: src/StickerSet.vala:288
 msgid "Up"
-msgstr ""
+msgstr "Oben"
 
 #: src/StickerSet.vala:289
-#, fuzzy
 msgid "Right up"
-msgstr "Destra"
+msgstr "Rechts oben"
 
 #: src/StickerSet.vala:292
-#, fuzzy
 msgid "Left down"
-msgstr "Sinistra"
+msgstr "Links unten"
 
 #: src/StickerSet.vala:293
 msgid "Down"
-msgstr ""
+msgstr "Unten"
 
 #: src/StickerSet.vala:294
-#, fuzzy
 msgid "Right down"
-msgstr "Destra"
+msgstr "Rechts unten"
 
 #: src/StickerSet.vala:295
 msgid "Collapse"
-msgstr ""
+msgstr "Einklappen"
 
 #: src/StickerSet.vala:296
-#, fuzzy
 msgid "Previous"
-msgstr "Anteprima"
+msgstr "Zurück"
 
 #: src/StickerSet.vala:297
 msgid "Next"
-msgstr ""
+msgstr "Weiter"
 
 #: src/StickerSet.vala:298
 msgid "Expand"
-msgstr ""
+msgstr "Ausklappen"
 
 #: src/StickerSet.vala:299
 msgid "Left down2"
-msgstr ""
+msgstr "Links unten2"
 
 #: src/StickerSet.vala:300
 msgid "Up left"
-msgstr ""
+msgstr "Oben links"
 
 #: src/StickerSet.vala:301
 msgid "Down right"
-msgstr ""
+msgstr "Unten rechts"
 
 #: src/StickerSet.vala:302
-#, fuzzy
 msgid "Right up2"
-msgstr "Destra"
+msgstr "Rechts oben2"
 
 #: src/StickerSet.vala:303
-#, fuzzy
 msgid "Up right"
-msgstr "Destra"
+msgstr "Oben rechts"
 
 #: src/StickerSet.vala:304
-#, fuzzy
 msgid "Right down2"
-msgstr "Destra"
+msgstr "Rechts unten2"
 
 #: src/StickerSet.vala:305
-#, fuzzy
 msgid "Left up2"
-msgstr "Sinistra"
+msgstr "Links oben2"
 
 #: src/StickerSet.vala:306
 msgid "Down left"
-msgstr ""
+msgstr "Unten links"
 
 #: src/StickerSet.vala:311
 msgid "Filing cabinet"
-msgstr ""
+msgstr "Aktenschrank"
 
 #: src/StickerSet.vala:312
 msgid "Database"
-msgstr ""
+msgstr "Datenbank"
 
 #: src/StickerSet.vala:313
 msgid "Accept database"
-msgstr ""
+msgstr "Datenbank akzeptieren"
 
 #: src/StickerSet.vala:314
 msgid "Add database"
-msgstr ""
+msgstr "Datenbank hinzufügen"
 
 #: src/StickerSet.vala:315
-#, fuzzy
 msgid "Delete database"
-msgstr "Elimina carattere successivo"
+msgstr "Datenbank löschen"
 
 #: src/StickerSet.vala:316
 msgid "Data backup"
-msgstr ""
+msgstr "Datensicherung"
 
 #: src/StickerSet.vala:317
 msgid "Data recovery"
-msgstr ""
+msgstr "Datenwiederherstellung"
 
 #: src/StickerSet.vala:318
 msgid "Data configuration"
-msgstr ""
+msgstr "Datenkonfiguration"
 
 #: src/StickerSet.vala:319
 msgid "Data encryption"
-msgstr ""
+msgstr "Datenverschlüsselung"
 
 #: src/StickerSet.vala:320
 msgid "Data protection"
-msgstr ""
+msgstr "Datenschutz"
 
 #: src/StickerSet.vala:321
 msgid "Grid"
-msgstr ""
+msgstr "Raster"
 
 #: src/StickerSet.vala:322
 msgid "Data sheet"
-msgstr ""
+msgstr "Datenblatt"
 
 #: src/StickerSet.vala:323
 msgid "Add column"
-msgstr ""
+msgstr "Spalte hinzufügen"
 
 #: src/StickerSet.vala:324
-#, fuzzy
 msgid "Delete column"
-msgstr "Cancella"
+msgstr "Spalte löschen"
 
 #: src/StickerSet.vala:325
-#, fuzzy
 msgid "Add row"
-msgstr "Aggiungi Freccia"
+msgstr "Zeile hinzufügen"
 
 #: src/StickerSet.vala:326
-#, fuzzy
 msgid "Delete row"
-msgstr "Cancella"
+msgstr "Zeile löschen"
 
 #: src/StickerSet.vala:327
 msgid "Generic sorting ascending"
-msgstr ""
+msgstr "Allgemeine Sortierung aufsteigend"
 
 #: src/StickerSet.vala:328
 msgid "Generic sorting descending"
-msgstr ""
+msgstr "Allgemeine Sortierung absteigend"
 
 #: src/StickerSet.vala:329
 msgid "Alphabetical sorting (A->Z)"
-msgstr ""
+msgstr "Alphabetische Sortierung (A->Z)"
 
 #: src/StickerSet.vala:330
 msgid "Alphabetical sorting (Z->A)"
-msgstr ""
+msgstr "Alphabetische Sortierung (Z->A)"
 
 #: src/StickerSet.vala:331
 msgid "Numerical sorting (2->1)"
-msgstr ""
+msgstr "Numerische Sortierung (2->1)"
 
 #: src/StickerSet.vala:332
 msgid "Numerical sorting (1->2)"
-msgstr ""
+msgstr "Numerische Sortierung (1->2)"
 
 #: src/StickerSet.vala:333
 msgid "Empty filter"
-msgstr ""
+msgstr "Leerer Filter"
 
 #: src/StickerSet.vala:334
 msgid "Filled filter"
-msgstr ""
+msgstr "Gefüllter Filter"
 
 #: src/StickerSet.vala:335
 msgid "Clear filters"
-msgstr ""
+msgstr "Filter löschen"
 
 #: src/StickerSet.vala:336
 msgid "Pie chart"
-msgstr ""
+msgstr "Kreisdiagramm"
 
 #: src/StickerSet.vala:337
 msgid "Radar plot"
-msgstr ""
+msgstr "Radardiagramm"
 
 #: src/StickerSet.vala:338
 msgid "Heat map"
-msgstr ""
+msgstr "Heatmap"
 
 #: src/StickerSet.vala:339
 msgid "Timeline"
-msgstr ""
+msgstr "Zeitleiste"
 
 #: src/StickerSet.vala:340
 msgid "Bar chart"
-msgstr ""
+msgstr "Balkendiagramm"
 
 #: src/StickerSet.vala:341
 msgid "Area chart"
-msgstr ""
+msgstr "Flächendiagramm"
 
 #: src/StickerSet.vala:342
 msgid "Scatter plot"
-msgstr ""
+msgstr "Streudiagramm"
 
 #: src/StickerSet.vala:343
 msgid "Doughnut chart"
-msgstr ""
+msgstr "Donut-Diagramm"
 
 #: src/StickerSet.vala:344
 msgid "Combo chart"
-msgstr ""
+msgstr "Kombinationsdiagramm"
 
 #: src/StickerSet.vala:345
 msgid "Flow chart"
-msgstr ""
+msgstr "Ablaufdiagramm"
 
 #: src/StickerSet.vala:346
 msgid "Line chart"
-msgstr ""
+msgstr "Liniendiagramm"
 
 #: src/StickerSet.vala:347
-#, fuzzy
 msgid "Genealogy"
-msgstr "Generale"
+msgstr "Genealogie"
 
 #: src/StickerSet.vala:348
 msgid "Mind map"
-msgstr ""
+msgstr "Gedankenkarte"
 
 #: src/StickerSet.vala:349
 msgid "Workflow"
-msgstr ""
+msgstr "Arbeitsablauf"
 
 #: src/StickerSet.vala:350
 msgid "Positive dynamic"
-msgstr ""
+msgstr "Positive Dynamik"
 
 #: src/StickerSet.vala:351
 msgid "Negative dynamic"
-msgstr ""
+msgstr "Negative Dynamik"
 
 #: src/StickerSet.vala:353
-#, fuzzy
 msgid "Import"
-msgstr "Esporta"
+msgstr "Importieren"
 
 #: src/StickerSet.vala:354
 msgid "List"
-msgstr ""
+msgstr "Liste"
 
 #: src/StickerSet.vala:355
 msgid "Template"
-msgstr ""
+msgstr "Vorlage"
 
 #: src/StickerSet.vala:356
 msgid "View details"
-msgstr ""
+msgstr "Details ansehen"
 
 #: src/undo_actions/UndoImageResize.vala:31
 msgid "image resize"
-msgstr "ridimensiona immagine"
+msgstr "Bildgröße ändern"
 
 #: src/undo_actions/UndoItemAdd.vala:29
 msgid "item add"
-msgstr "aggiungi elemento"
+msgstr "Element hinzufügen"
 
 #: src/undo_actions/UndoItemBlur.vala:30
 msgid "blur amount"
-msgstr "quantità di sfocatura"
+msgstr "Weichzeichnungsfaktor"
 
 #: src/undo_actions/UndoItemDelete.vala:37
 msgid "item delete"
-msgstr "cancella elemento"
+msgstr "Element löschen"
 
 #: src/undo_actions/UndoItemMagnifierFocus.vala:30
 msgid "magnifier focus change"
-msgstr "cambia messa a fuoco della lente d'ingrandimento"
+msgstr "Lupenfokusänderung"
 
 #: src/undo_actions/UndoItemMagnifierZoom.vala:30
 msgid "magnifier zoom"
-msgstr "zoom con lente d'ingrandimento"
+msgstr "Lupenzoom"
 
 #: src/undo_actions/UndoItemPaste.vala:28
 msgid "item paste"
-msgstr "incolla elemento"
+msgstr "Element einfügen"
 
 #: src/undo_actions/UndoItemPropChange.vala:52
 msgid "item property change"
-msgstr "modifica della proprietà dell'elemento"
+msgstr "Elementeigenschaftsänderung"
 
 #: src/undo_actions/UndoItemSendBack.vala:29
 msgid "move item to back"
-msgstr "sposta l'elemento indietro"
+msgstr "Element nach hinten verschieben"
 
 #: src/undo_actions/UndoItemSendFront.vala:29
 msgid "move item to front"
-msgstr "sposta l'elemento in primo piano"
+msgstr "Element nach vorne verschieben"
 
 #: src/undo_actions/UndoItemSequenceNum.vala:30
 msgid "sequence number change"
-msgstr "cambia numero di sequenza"
+msgstr "Sequenznummeränderung"
 
 #: src/undo_actions/UndoItemStarPoints.vala:30
 msgid "start points change"
-msgstr "cambia punti di partenza"
+msgstr "Startpunktänderung"
 
 #: src/undo_actions/UndoItemTextResize.vala:30
 msgid "text resize"
-msgstr "ridimensiona del testo"
+msgstr "Textgröße ändern"
 
 #: src/undo_actions/UndoTextClearTags.vala:30
 msgid "clear formatting"
-msgstr "pulisci formattazione"
+msgstr "Formatierung löschen"
 
 #: src/undo_actions/UndoTextCommit.vala:32
 msgid "text changed"
-msgstr "testo modificato"
+msgstr "Text geändert"
 
 #: src/undo_actions/UndoTextDelete.vala:30
 msgid "text deletion"
-msgstr "cancellazione del testo"
+msgstr "Textlöschung"
 
 #: src/undo_actions/UndoTextInsert.vala:29
 #: src/undo_actions/UndoTextMultiInsert.vala:33
 msgid "text insertion"
-msgstr "inserimento di testo"
+msgstr "Texteinfügung"
 
 #: src/undo_actions/UndoTextReplace.vala:31
 msgid "text replacement"
-msgstr "sostituzione del testo"
+msgstr "Textersetzung"
 
 #: src/undo_actions/UndoTextTagAdd.vala:31
 msgid "format tag add"
-msgstr "aggiungi formato tag"
+msgstr "Format-Markierung hinzufügen"
 
 #: src/undo_actions/UndoTextTagRemove.vala:31
 msgid "format tag remove"
-msgstr "rimuovi tag formattato"
+msgstr "Format-Markierung entfernen"
 
 #: src/UndoBuffer.vala:85
 msgid "Undo "
-msgstr "Annulla "
+msgstr "Rückgängig "
 
 #: src/UndoBuffer.vala:91
 msgid "Redo "
-msgstr "Rifai "
+msgstr "Wiederherstellen "
 
 #: src/ZoomWidget.vala:92 data/com.github.phase1geo.annotator.shortcuts.ui:75
 msgid "Zoom Out"
-msgstr "Rimpicciolisci"
+msgstr "Herauszoomen"
 
 #: src/ZoomWidget.vala:98
 msgid "Zoom Actual"
-msgstr "Zoom Effettivo"
+msgstr "Tatsächlicher Zoom"
 
 #: src/ZoomWidget.vala:104 data/com.github.phase1geo.annotator.shortcuts.ui:68
 msgid "Zoom In"
-msgstr "Ingrandisci"
+msgstr "Hineinzoomen"
 
 #: data/com.github.phase1geo.annotator.shortcuts.ui:6
 msgid "Annotator Shortcuts"
-msgstr "Scorciatoie per Annotator"
+msgstr "Annotator-Kurzbefehle"
 
 #: data/com.github.phase1geo.annotator.shortcuts.ui:12
 msgid "General"
-msgstr "Generale"
+msgstr "Allgemein"
 
 #: data/com.github.phase1geo.annotator.shortcuts.ui:21
 msgid "New From File System"
-msgstr "Nuovo dal file system"
+msgstr "Neu aus dem Dateisystem"
 
 #: data/com.github.phase1geo.annotator.shortcuts.ui:28
 msgid "New From Clipboard"
-msgstr "Nuovo dagli appunti"
+msgstr "Neu aus der Zwischenablage"
 
 #: data/com.github.phase1geo.annotator.shortcuts.ui:44
 msgid "Undo/Redo"
-msgstr "Annulla/Rifai"
+msgstr "Rückgängig/Wiederherstellen"
 
 #: data/com.github.phase1geo.annotator.shortcuts.ui:48
 msgid "Undo Last Change"
-msgstr "Annulla ultima modifica"
+msgstr "Letzte Änderung rückgängig machen"
 
 #: data/com.github.phase1geo.annotator.shortcuts.ui:55
 msgid "Redo Last Undo"
-msgstr "Ripeti Ultimo Annullamento"
+msgstr "Wiederherstellen der letzten rückgängig gemachten Aktion"
 
 #: data/com.github.phase1geo.annotator.shortcuts.ui:64
 msgid "Zooming"
-msgstr "Ingrandimento"
+msgstr "Zoomen"
 
 #: data/com.github.phase1geo.annotator.shortcuts.ui:82
 msgid "Zoom To Actual Size"
-msgstr "Zoom alle dimensioni reali"
+msgstr "Auf tatsächliche Größe zoomen"
 
 #: data/com.github.phase1geo.annotator.shortcuts.ui:89
 msgid "Zoom To Window"
-msgstr "Zoom su finestra"
+msgstr "Auf Fenstergröße zoomen"
 
 #: data/com.github.phase1geo.annotator.shortcuts.ui:98
 msgid "Miscellaneous"
-msgstr "Eterogeneo"
+msgstr "Sonstiges"
 
 #: data/com.github.phase1geo.annotator.shortcuts.ui:102
 msgid "Show Contextual Menu"
-msgstr "Mostra menu contestuale"
+msgstr "Kontextmenü anzeigen"
 
 #: data/com.github.phase1geo.annotator.shortcuts.ui:109
 msgid "Show Keyboard Shortcuts"
-msgstr "Mostra scorciatoie da tastiera"
+msgstr "Tastaturkurzbefehle anzeigen"
 
 #: data/com.github.phase1geo.annotator.shortcuts.ui:116
 msgid "Quit Application"
-msgstr "Esci dall'applicazione"
+msgstr "Applikation beenden"
 
 #: data/com.github.phase1geo.annotator.shortcuts.ui:128
 msgid "Annotation Commands"
-msgstr "Comandi di annotazione"
+msgstr "Annotationsbefehle"
 
 #: data/com.github.phase1geo.annotator.shortcuts.ui:132
 msgid "Creation"
-msgstr "Creazione"
+msgstr "Erstellung"
 
 #: data/com.github.phase1geo.annotator.shortcuts.ui:136
 msgid "New Arrow"
-msgstr "Nuova freccia"
+msgstr "Neuer Pfeil"
 
 #: data/com.github.phase1geo.annotator.shortcuts.ui:143
 msgid "New Outlined Rectangle"
-msgstr "Nuovo rettangolo delineato"
+msgstr "Neues umrissenes Rechteck"
 
 #: data/com.github.phase1geo.annotator.shortcuts.ui:150
 msgid "New Solid Rectangle"
-msgstr "Nuovo rettangolo solido"
+msgstr "Neues Volltonrechteck"
 
 #: data/com.github.phase1geo.annotator.shortcuts.ui:157
 msgid "New Outlined Oval"
-msgstr "Nuovo ovale delineato"
+msgstr "Neu umrissenes Oval"
 
 #: data/com.github.phase1geo.annotator.shortcuts.ui:164
 msgid "New Solid Oval"
-msgstr "Nuovo Solido Ovale"
+msgstr "Neues Volltonoval"
 
 #: data/com.github.phase1geo.annotator.shortcuts.ui:171
 msgid "New Outlined Star"
-msgstr "Nuova stella delineata"
+msgstr "Neuer umrissener Stern"
 
 #: data/com.github.phase1geo.annotator.shortcuts.ui:178
 msgid "New Solid Star"
-msgstr "Nuova Stella Solida"
+msgstr "Neuer Volltonstern"
 
 #: data/com.github.phase1geo.annotator.shortcuts.ui:185
 msgid "New Line"
-msgstr "Nuova linea"
+msgstr "Neue Linie"
 
 #: data/com.github.phase1geo.annotator.shortcuts.ui:192
 msgid "New Text Box"
-msgstr "Nuova casella di testo"
+msgstr "Neue Textbox"
 
 #: data/com.github.phase1geo.annotator.shortcuts.ui:199
 msgid "New Blur Box"
-msgstr "Nuovo riquadro sfocatura"
+msgstr "Neue Weichzeichnungsbox"
 
 #: data/com.github.phase1geo.annotator.shortcuts.ui:206
 msgid "New Magnifier"
-msgstr "Nuova lente d'ingrandimento"
+msgstr "Neue Lupe"
 
 #: data/com.github.phase1geo.annotator.shortcuts.ui:213
 msgid "New Pencil Stroke"
-msgstr "Nuovo tratto di matita"
+msgstr "Neuer Bleistiftstrich"
 
 #: data/com.github.phase1geo.annotator.shortcuts.ui:220
 msgid "New Sequence Marker"
-msgstr "Nuovo marcatore di sequenza"
+msgstr "Neuer Sequenzmarker"
 
 #: data/com.github.phase1geo.annotator.shortcuts.ui:229
 msgid "Current Item"
-msgstr "Elemento corrente"
+msgstr "Aktuelles Element"
 
 #: data/com.github.phase1geo.annotator.shortcuts.ui:233
 msgid "Delete Selected Item"
-msgstr "Elimina elemento selezionato"
+msgstr "Ausgewähltes Element löschen"
 
 #: data/com.github.phase1geo.annotator.shortcuts.ui:240
 msgid "Copy Selected Item and Move"
-msgstr "Copia elemento selezionato e sposta"
+msgstr "Ausgewähltes Element kopieren und verschieben"
 
 #: data/com.github.phase1geo.annotator.shortcuts.ui:241
 msgid "[Control + Drag]"
-msgstr "[Ctrl + trascina]"
+msgstr "[Steuerung + Ziehen]"
 
 #: data/com.github.phase1geo.annotator.shortcuts.ui:252
 msgid "Text Commands"
-msgstr "Comandi di testo"
+msgstr "Textbefehle"
 
 #: data/com.github.phase1geo.annotator.shortcuts.ui:256
 msgid "Editing"
-msgstr "Modifica"
+msgstr "Bearbeitung"
 
 #: data/com.github.phase1geo.annotator.shortcuts.ui:260
 msgid "Delete Previous Character"
-msgstr "Elimina carattere precedente"
+msgstr "Vorheriges Zeichen löschen"
 
 #: data/com.github.phase1geo.annotator.shortcuts.ui:267
 msgid "Delete Next Character"
-msgstr "Elimina carattere successivo"
+msgstr "Nächstes Zeichen löschen"
 
 #: data/com.github.phase1geo.annotator.shortcuts.ui:274
 msgid "Exit Text Edit Mode And Select Item"
-msgstr "Esci dalla modalità di modifica del testo e seleziona l'elemento"
+msgstr "Textbearbeitungsmodus beenden und Element auswählen"
 
 #: data/com.github.phase1geo.annotator.shortcuts.ui:281
 msgid "Insert Newline Character"
-msgstr "Inserisci nuovo carattere di riga"
+msgstr "Zeilenumbruchzeichen einfügen"
 
 #: data/com.github.phase1geo.annotator.shortcuts.ui:288
 msgid "Show Emoji Picker"
-msgstr "Mostra selettore emoji"
+msgstr "Emoji-Auswahl anzeigen"
 
 #: data/com.github.phase1geo.annotator.shortcuts.ui:301
 msgid "Move Cursor Left One Word"
-msgstr "Sposta il cursore a sinistra di una parola"
+msgstr "Cursor ein Wort nach links verschieben"
 
 #: data/com.github.phase1geo.annotator.shortcuts.ui:308
 msgid "Move Cursor Right One Word"
-msgstr "Sposta il cursore a destra di una parola"
+msgstr "Cursor ein Wort nach rechts verschieben"
 
 #: data/com.github.phase1geo.annotator.shortcuts.ui:315
 msgid "Move Cursor Left One Character"
-msgstr "Sposta il cursore a sinistra di un carattere"
+msgstr "Cursor ein Zeichen nach links verschieben"
 
 #: data/com.github.phase1geo.annotator.shortcuts.ui:322
 msgid "Move Cursor Right One Character"
-msgstr "Sposta il cursore a destra di un carattere"
+msgstr "Cursor ein Zeichen nach rechts verschieben"
 
 #: data/com.github.phase1geo.annotator.shortcuts.ui:329
 msgid "Move Cursor To Text Start"
-msgstr "Sposta il cursore all'inizio del testo"
+msgstr "Cursor an den Textanfang verschieben"
 
 #: data/com.github.phase1geo.annotator.shortcuts.ui:336
 msgid "Move Cursor To Text End"
-msgstr "Sposta il cursore alla fine del testo"
+msgstr "Cursor an das Textende verschieben"
 
 #: data/com.github.phase1geo.annotator.shortcuts.ui:343
 msgid "Move Cursor To Current Line Start"
-msgstr "Sposta il cursore all'inizio della riga corrente"
+msgstr "Cursor an den aktuellen Zeilenanfang verschieben"
 
 #: data/com.github.phase1geo.annotator.shortcuts.ui:350
 msgid "Move Cursor To Current Line End"
-msgstr "Sposta il cursore alla fine della riga corrente"
+msgstr "Cursor an das aktuelle Zeilenende verschieben"
 
 #: data/com.github.phase1geo.annotator.shortcuts.ui:357
 msgid "Move Cursor Up One Line"
-msgstr "Sposta il cursore in alto di una riga"
+msgstr "Cursor eine Zeile nach oben verschieben"
 
 #: data/com.github.phase1geo.annotator.shortcuts.ui:364
 msgid "Move Cursor Down One Line"
-msgstr "Sposta il cursore in basso di una riga"
+msgstr "Cursor eine Zeile nach unten verschieben"
 
 #: data/com.github.phase1geo.annotator.shortcuts.ui:373
 msgid "Selection"
-msgstr "Selezione"
+msgstr "Auswahl"
 
 #: data/com.github.phase1geo.annotator.shortcuts.ui:377
 msgid "Select All Text"
-msgstr "Seleziona tutto il testo"
+msgstr "Gesamten Text auswählen"
 
 #: data/com.github.phase1geo.annotator.shortcuts.ui:384
 msgid "Deselect All Text"
-msgstr "Deseleziona tutto il testo"
+msgstr "Gesamten Text abwählen"
 
 #: data/com.github.phase1geo.annotator.shortcuts.ui:391
 msgid "Add Left Word To Selection"
-msgstr "Aggiungi parola a sinistra alla selezione"
+msgstr "Linkes Wort zur Auswahl hinzufügen"
 
 #: data/com.github.phase1geo.annotator.shortcuts.ui:398
 msgid "Add Right Word To Selection"
-msgstr "Aggiungi parola a destra alla selezione"
+msgstr "Rechtes Wort zur Auswahl hinzufügen"
 
 #: data/com.github.phase1geo.annotator.shortcuts.ui:405
 msgid "Add Left Character To Selection"
-msgstr "Aggiungi il carattere a sinistra alla selezione"
+msgstr "Linkes Zeichen zur Auswahl hinzufügen"
 
 #: data/com.github.phase1geo.annotator.shortcuts.ui:412
 msgid "Add Right Character To Selection"
-msgstr "Aggiungi il carattere a destra alla selezione"
+msgstr "Rechtes Zeichen zur Auswahl hinzufügen"
 
 #: data/com.github.phase1geo.annotator.shortcuts.ui:419
 msgid "Add Text From Start To Selection"
-msgstr "Aggiungi testo dall'inizio alla selezione"
+msgstr "Text ab dem Anfang zur Auswahl hinzufügen"
 
 #: data/com.github.phase1geo.annotator.shortcuts.ui:426
 msgid "Add Text From End To Selection"
-msgstr "Aggiungi testo dalla fine alla selezione"
+msgstr "Text bis zum Ende zur Auswahl hinzufügen"
 
 #: data/com.github.phase1geo.annotator.shortcuts.ui:433
 msgid "Add Text From Current Line Start To Selection"
-msgstr "Aggiungi testo dall'inizio della riga corrente alla selezione"
+msgstr "Text ab dem aktuellen Zeilenanfang zur Auswahl hinzufügen"
 
 #: data/com.github.phase1geo.annotator.shortcuts.ui:440
 msgid "Add Text From Current Line End To Selection"
-msgstr "Aggiungi testo dalla fine della riga corrente alla selezione"
+msgstr "Text bis zum aktuellen Zeilenende zur Auswahl hinzufügen"
 
 #: data/com.github.phase1geo.annotator.shortcuts.ui:447
 msgid "Add Text Above Cursor To Selection"
-msgstr "Aggiungi testo sopra il cursore alla selezione"
+msgstr "Text über dem Cursor zur Auswahl hinzufügen"
 
 #: data/com.github.phase1geo.annotator.shortcuts.ui:454
 msgid "Add Text Below Cursor To Selection"
-msgstr "Aggiungi testo sotto il cursore alla selezione"
-
-#~ msgid ""
-#~ "Delay (in seconds) before screenshot capture occurs.  Only valid when --"
-#~ "screenshot is set.  Default is 0."
-#~ msgstr ""
-#~ "Ritardo (in secondi) prima dell'acquisizione dello screenshot. Valido "
-#~ "solo quando --lo screenshot è impostato. Il valore predefinito è 0."
-
-#~ msgid ""
-#~ "Include Annotator window in screenshot.  Only valid when --screenshot is "
-#~ "set."
-#~ msgstr ""
-#~ "Includi la finestra Annotator nello screenshot. Valido solo quando --lo "
-#~ "screenshot è impostato."
-
-#~ msgid "Item Color"
-#~ msgstr "Colore Elemento"
-
-#~ msgid "Yes"
-#~ msgstr "Si"
-
-#~ msgid "No"
-#~ msgstr "No"
-
-#~ msgid "Delay (in seconds)"
-#~ msgstr "Ritardo (in secondi)"
-
-#~ msgid "Include Annotator window"
-#~ msgstr "Includi finestra di Annotator"
-
-#, fuzzy
-#~ msgid "Current Window"
-#~ msgstr "Elemento corrente"
-
-#, fuzzy
-#~ msgid "Selectable Area"
-#~ msgstr "Seleziona tutto"
-
-#~ msgid "Copy All"
-#~ msgstr "Copia Tutto"
-
-#~ msgid "Save File"
-#~ msgstr "Salva File"
-
-#~ msgid "Send by Email"
-#~ msgstr "Inviare per Email"
-
-#~ msgid "Send files via Bluetooth"
-#~ msgstr "Invia file tramite Bluetooth"
-
-#~ msgid "JPEG Image (JPEG)"
-#~ msgstr "Immagine JPEG (JPEG)"
-
-#~ msgid "Portable Network Graphics (PNG)"
-#~ msgstr "Portable Network Graphics (PNG)"
-
-#~ msgid "Tag Image File Format (TIFF)"
-#~ msgstr "Tag Image File Format (TIFF)"
-
-#~ msgid "Bitmap Image (BMP)"
-#~ msgstr "Bitmap Image (BMP)"
-
-#~ msgid "Portable Document Format (PDF)"
-#~ msgstr "Portable Document Format (PDF)"
-
-#~ msgid "Scalable Vector Graphics (SVG)"
-#~ msgstr "Scalable Vector Graphics (SVG)"
-
-#~ msgid "Export As JPEG…"
-#~ msgstr "Esporta come JPEG…"
-
-#~ msgid "Export As TIFF…"
-#~ msgstr "Esporta come TIFF…"
-
-#~ msgid "Export As BMP…"
-#~ msgstr "Esporta come BMP…"
-
-#~ msgid "Export As PDF…"
-#~ msgstr "Esporta come PDF…"
-
-#~ msgid "Export As SVG…"
-#~ msgstr "Esporta come SVG…"
-
-#~ msgid ".jpg"
-#~ msgstr ".jpg"
-
-#~ msgid ".png"
-#~ msgstr ".png"
-
-#~ msgid ".tiff"
-#~ msgstr ".tiff"
-
-#~ msgid ".bmp"
-#~ msgstr ".bmp"
-
-#~ msgid ".pdf"
-#~ msgstr ".pdf"
-
-#~ msgid ".svg"
-#~ msgstr ".svg"
-
-#~ msgid "Add Sequence Number"
-#~ msgstr "Aggiungi numero di sequenza"
-
-#~ msgid "Add Text"
-#~ msgstr "Aggiungi Testo"
-
-#~ msgid "Add Blur Box"
-#~ msgstr "Aggiungi riquadro sfocatura"
-
-#~ msgid "Zoom (%):"
-#~ msgstr "Zoom (%):"
+msgstr "Text unter dem Cursor zur Auswahl hinzufügen"

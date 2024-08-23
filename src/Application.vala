@@ -68,7 +68,10 @@ public class Annotator : Gtk.Application {
         Process.exit( 1 );
       }
     } else if( use_clipboard ) {
-      appwin.do_paste();
+      if( !appwin.do_paste_image() ) {
+        stderr.printf( _( "\nERROR:  Image does not exist on the clipboard\n" ) );
+        Process.exit( 1 );
+      }
     } else if( take_screenshot ) {
       appwin.do_screenshot();
     }
@@ -108,14 +111,14 @@ public class Annotator : Gtk.Application {
   private void parse_arguments( ref unowned string[] args ) {
 
     var context = new OptionContext( "- Annotator Options" );
-    var options = new OptionEntry[7];
+    var options = new OptionEntry[5];
 
     /* Create the command-line options */
     options[0] = {"version",        0,   0, OptionArg.NONE, ref show_version,    _( "Display version number." ), null};
     options[1] = {"use-clipboard",  0,   0, OptionArg.NONE, ref use_clipboard,   _( "Annotate clipboard image." ), null};
     options[2] = {"screenshot",     0,   0, OptionArg.NONE, ref take_screenshot, _( "Take and annotate a screenshot." ), null};
-    options[5] = {"standard-input", 'i', 0, OptionArg.NONE, ref std_input,       _( "Uses image data from standard input" ), null};
-    options[6] = {null};
+    options[3] = {"standard-input", 'i', 0, OptionArg.NONE, ref std_input,       _( "Uses image data from standard input" ), null};
+    options[4] = {null};
 
     /* Parse the arguments */
     try {

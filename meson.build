@@ -62,6 +62,7 @@ dependencies = [
     dependency('gtk4'),
     dependency('libxml-2.0'),
     dependency('libportal-gtk4'),
+    dependency('pangocairo'),
     math_dep
 ]
 

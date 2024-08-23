@@ -1,0 +1,5 @@
+Release TODO:
+
+  ☐ Add support for chat and cloud bubble shapes @new
+  ☐ Fix issue with loading image from the clipboard from the CLI @bugfix
+    Issue https://github.com/phase1geo/Annotator/issues/99
