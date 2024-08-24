@@ -28,6 +28,7 @@ public class Exporter : Box {
   private Revealer   _stack_reveal;
   private Stack      _stack;
 
+  public signal void export_started();
   public signal void export_done();
 
   private const GLib.ActionEntry[] action_entries = {
@@ -53,6 +54,7 @@ public class Exporter : Box {
       tooltip_markup = Utils.tooltip_with_accel( _( "Export With Current Settings" ), "<Control>e" )
     };
     export.clicked.connect(() => {
+      export_started();
       do_export( win );
       export_done();
     });

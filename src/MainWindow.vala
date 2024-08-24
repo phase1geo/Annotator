@@ -256,6 +256,9 @@ public class MainWindow : Gtk.ApplicationWindow {
 
     /* Add the export UI */
     var export_ui = new Exporter( this );
+    export_ui.export_started.connect(() => {
+      popover.popdown();
+    });
     box.append( export_ui );
 
     /* Copy to clipboard option */
