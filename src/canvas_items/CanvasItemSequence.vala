@@ -107,9 +107,11 @@ public class CanvasItemSequence : CanvasItem {
     return( _sel_cursor );
   }
 
-  protected override void add_contextual_menu_items( Box box, Popover popover ) {
+  //-------------------------------------------------------------
+  // Adds the contextual menu items to the given menu.
+  protected override void add_contextual_menu_items( CanvasItemMenu menu ) {
 
-    add_contextual_spinner( box, popover, _( "Sequence Number:" ), 1, 100, 1, seq_num,
+    menu.add_spinner( this, _( "Sequence Number:" ), 1, 100, 1, seq_num,
       (item, value) => {
         canvas.undo_buffer.add_item( new UndoItemSequenceNum( this, seq_num, value ) );
         seq_num = value;

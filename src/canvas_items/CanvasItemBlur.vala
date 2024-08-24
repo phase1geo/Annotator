@@ -126,10 +126,11 @@ public class CanvasItemBlur : CanvasItem {
     return( _sel_cursors[index] );
   }
 
-  /* Adds the contextual menu item values */
-  protected override void add_contextual_menu_items( Box box, Popover popover ) {
+  //-------------------------------------------------------------
+  // Adds the contextual menu item values
+  protected override void add_contextual_menu_items( CanvasItemMenu menu ) {
 
-    add_contextual_scale( box, popover, _( "Blur Amount:" ), min_blur, max_blur, step_blur, (double)blur_radius,
+    menu.add_scale( this, _( "Blur Amount:" ), min_blur, max_blur, step_blur, (double)blur_radius,
       (item, value) => {
         blur_radius = (int)value;
         canvas.queue_draw();

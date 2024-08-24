@@ -1039,53 +1039,40 @@ public class CanvasItems {
 
     var pos  = item_position( item );
     var last = (int)(_items.length() - 1);
-
-    var box  = new Box( Orientation.VERTICAL, 5 ) {
-      margin_start  = 5,
-      margin_end    = 5,
-      margin_top    = 5,
-      margin_bottom = 5
-    };
-
-    /* Create the popover */
-    var menu = new Popover() {
-      autohide    = true,
-      pointing_to = item.bbox.to_rectangle( _canvas.zoom_factor ),
-      position    = PositionType.RIGHT,
-      child       = box
-    };
-    menu.set_parent( _canvas );
+    var menu = new CanvasItemMenu( _canvas );
 
     /* Add the item's contextual menu items */
-    item.add_contextual_menu_items( box, menu );
+    item.add_contextual_menu_items( menu );
+    menu.complete_section();
 
     if( !in_edit_mode() ) {
 
-      /* Add a separator if there is anything existing in the box */
-      if( box.get_first_child() != null ) {
-        item.add_contextual_separator( box );
-      }
+      menu.add_menu_item( item, _( "Copy" ), "<Control>c", true, do_copy );
+      menu.add_menu_item( item, _( "Cut" ),  "<Control>x", true, do_cut );
+      menu.complete_section();
 
-      item.add_contextual_menuitem( box, menu, _( "Copy" ), "<Control>c", true, do_copy );
-      item.add_contextual_menuitem( box, menu, _( "Cut" ),  "<Control>x", true, do_cut );
-      item.add_contextual_separator( box );
-      item.add_contextual_menuitem( box, menu, _( "Delete" ), "Delete", true, do_delete );
-      item.add_contextual_separator( box );
-      item.add_contextual_menuitem( box, menu, _( "Send to Front" ), null, (pos != last), do_send_to_front );
-      item.add_contextual_menuitem( box, menu, _( "Send to Back" ),  null, (pos != 0), do_send_to_back );
+      menu.add_menu_item( item, _( "Delete" ), "Delete", true, do_delete );
+      menu.complete_section();
+
+      menu.add_menu_item( item, _( "Send to Front" ), null, (pos != last), do_send_to_front );
+      menu.add_menu_item( item, _( "Send to Back" ),  null, (pos != 0), do_send_to_back );
+      menu.complete_section();
   
       if( item.itype.category() != CanvasItemCategory.NONE ) {
-        item.add_contextual_separator( box );
-        item.add_contextual_menuitem( box, menu, _( "Save As Custom" ), null, true, do_save_custom );
+        menu.add_menu_item( item, _( "Save As Custom" ), null, true, do_save_custom );
+        menu.complete_section();
       }
 
     }
 
-    /* Display the popover */
-    menu.popup();
+    /* Create and display the popover */
+    var popover = menu.create_popover( item.bbox.to_rectangle( _canvas.zoom_factor ) );
+    popover.popup();
 
   }
 
+  //-------------------------------------------------------------
+  // Copy operation
   private void action_copy() {
     do_copy( get_selected_item() );
   }

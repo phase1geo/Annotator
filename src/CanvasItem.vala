@@ -108,13 +108,6 @@ public enum CanvasItemPathType {
   }
 }
 
-public delegate void CanvasItemClickAction( CanvasItem item );
-public delegate void CanvasItemScaleAction( CanvasItem item, double value );
-public delegate void CanvasItemSpinnerAction( CanvasItem item, int value );
-public delegate void CanvasItemSwitchAction( CanvasItem item );
-public delegate void CanvasItemScaleComplete( CanvasItem item, double old_value, double new_value );
-public delegate void CanvasItemSpinnerComplete( CanvasItem item, int old_value, int new_value );
-
 public class CanvasItem {
 
   private const double selector_size = 12;
@@ -125,6 +118,7 @@ public class CanvasItem {
   private Cairo.Path?          _path      = null;
   private CanvasItemPathType   _path_type = CanvasItemPathType.FILL;
   private Cursor               _sel_cursor;
+  private int                  _menu_item_index = 0;
 
   protected Array<CanvasPoint> points { get; set; default = new Array<CanvasPoint>(); }
   protected Canvas             canvas { get; private set; }
@@ -355,162 +349,9 @@ public class CanvasItem {
   //  CONTEXTUAL MENU
   /****************************************************************************/
 
-  /* Add contextual menu fields from the associated item */
-  public virtual void add_contextual_menu_items( Box box, Popover popover ) {}
-
-  /* Returns a menuitem with the given label, action and (optional) keyboard shortcut */
-  public Button add_contextual_menuitem( Box box, Popover popover, string label, string? shortcut, bool sensitive, CanvasItemClickAction action ) {
-
-    var btn = Utils.make_menu_item( label );
-    btn.sensitive = sensitive;
-
-    // TODO - Not sure what we can do about the shortcut at this point
-
-    btn.clicked.connect(() => {
-      action( this );
-      popover.popdown();
-    });
-
-    box.append( btn );
-
-    return( btn );
-
-  }
-
-  /* Adds a horizontal separator item to the contextual menu */
-  public Separator add_contextual_separator( Box box ) {
-
-    var sep = new Separator( Orientation.HORIZONTAL ) {
-      halign = Align.FILL,
-      hexpand = true
-    };
-
-    box.append( sep );
-
-    return( sep );
-
-  }
-
-  /* Creates a scale widget for the contextual menu */
-  protected Scale add_contextual_scale(
-    Box box, Popover popover, string label, double min, double max, double step, double dflt,
-    CanvasItemScaleAction   action,
-    CanvasItemScaleComplete complete
-  ) {
-
-    var lbl = new Label( label ) {
-      halign     = Align.START,
-      use_markup = true
-    };
-
-    var btn_controller = new GestureClick();
-    var scale = new Scale.with_range( Orientation.HORIZONTAL, min, max, step ) {
-      halign        = Align.FILL,
-      hexpand       = true,
-      draw_value    = false,
-      width_request = 200
-    };
-    scale.add_controller( btn_controller );
-    scale.set_value( dflt );
-    scale.value_changed.connect(() => {
-      action( this, scale.get_value() );
-    });
-    btn_controller.released.connect((n_press, x, y) => {
-      complete( this, dflt, scale.get_value() );
-    });
-
-    var scale_box = new Box( Orientation.HORIZONTAL, 10 ) {
-      halign        = Align.FILL,
-      hexpand       = true,
-      margin_start  = 10,
-      margin_end    = 10,
-      margin_top    = 10,
-      margin_bottom = 10
-    };
-    scale_box.append( lbl );
-    scale_box.append( scale );
-
-    box.append( scale_box );
-
-    return( scale );
-
-  }
-
-  /* Creates a scale widget for the contextual menu */
-  protected SpinButton add_contextual_spinner(
-    Box box, Popover popover, string label, int min, int max, int step, int dflt,
-    CanvasItemSpinnerAction   action,
-    CanvasItemSpinnerComplete complete
-  ) {
-
-    var lbl = new Label( label ) {
-      halign     = Align.START,
-      use_markup = true
-    };
-
-    var btn_controller = new GestureClick();
-    var sb = new SpinButton.with_range( (double)min, (double)max, (double)step ) {
-      halign = Align.FILL,
-      hexpand = true,
-      digits = 0
-    };
-    sb.add_controller( btn_controller );
-    sb.set_value( (double)dflt );
-    sb.value_changed.connect(() => {
-      action( this, (int)sb.get_value() );
-    });
-    btn_controller.released.connect((n_press, x, y) => {
-      complete( this, dflt, (int)sb.get_value() );
-    });
-
-    var sb_box = new Box( Orientation.HORIZONTAL, 10 ) {
-      halign        = Align.FILL,
-      hexpand       = true,
-      margin_start  = 10,
-      margin_end    = 10,
-      margin_top    = 10,
-      margin_bottom = 10
-    };
-    sb_box.append( lbl );
-    sb_box.append( sb );
-
-    box.append( sb_box );
-
-    return( sb );
-
-  }
-
-  /* Creates a switch widget for the contextual menu */
-  protected Switch add_contextual_switch( Box box, Popover popover, string label, bool dflt, CanvasItemSwitchAction action ) {
-
-    var lbl = new Label( label ) {
-      halign     = Align.START,
-      use_markup = true
-    };
-
-    var sw = new Switch();
-    sw.set_active( dflt );
-    sw.notify["active"].connect(() => {
-      action( this );
-    });
-
-    var sw_box = new Box( Orientation.HORIZONTAL, 10 ) {
-      halign        = Align.FILL,
-      hexpand       = true,
-      margin_start  = 10,
-      margin_end    = 10,
-      margin_top    = 10,
-      margin_bottom = 10,
-      homogeneous   = false
-    };
-    sw_box.append( lbl );
-    sw_box.append( sw );
-
-    box.append( sw_box );
-
-    return( sw );
-
-  }
+  //-------------------------------------------------------------
+  // Add contextual menu fields from the associated item
+  public virtual void add_contextual_menu_items( CanvasItemMenu menu ) {}
 
   /****************************************************************************/
   //  DRAW METHODS
