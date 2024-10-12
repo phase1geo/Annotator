@@ -77,8 +77,6 @@ e = executable('com.github.phase1geo.annotator',
     install : true
 )
 
-#test('tests', e, args : ['--run-tests'])
-
 gnome.post_install(
     glib_compile_schemas: true,
     gtk_update_icon_cache: true,
@@ -86,8 +84,8 @@ gnome.post_install(
 )
 
 # If our version of Meson supports it, update the mime database
-if meson.version().version_compare('>=0.64.0')
-  gnome.post_install(
-    update_mime_database: true,
-  )
-endif
+#if meson.version().version_compare('>=0.64.0')
+#  gnome.post_install(
+#    update_mime_database: true,
+#  )
+#endif
