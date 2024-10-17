@@ -292,40 +292,34 @@ public class MainWindow : Gtk.ApplicationWindow {
   /* Creates the zoom menu */
   private MenuButton create_zoom() {
 
-    var box = new Box( Orientation.VERTICAL, 0 );
-
-    var popover = new Popover() {
-      autohide = true,
-      child = box
-    };
-
-    /* Add the button */
-    var zoom_btn = new MenuButton() {
-      icon_name    = get_icon_name( "zoom-fit-best" ),
-      tooltip_text = _( "Zoom (%d%%)" ).printf( 100 ),
-      sensitive    = false,
-      popover      = popover
-    };
-
     _zoom = new ZoomWidget( (int)(_editor.canvas.zoom_min * 100), (int)(_editor.canvas.zoom_max * 100), (int)(_editor.canvas.zoom_step * 100) ) {
       margin_start  = 10,
       margin_end    = 10,
       margin_top    = 10,
       margin_bottom = 10
     };
+
     _zoom.zoom_changed.connect((factor) => {
       _editor.canvas.zoom_set( factor );
     });
 
-    var zoom_fit = new Button.with_label( _( "Zoom to Fit Window" ) ) {
-      has_frame = false,
-      action_name = "win.action_zoom_fit"
+    var zoom_mi = new GLib.MenuItem( null, null );
+    zoom_mi.set_attribute( "custom", "s", "zoom" );
+
+    var menu = new GLib.Menu();
+    menu.append_item( zoom_mi );
+    menu.append( _( "Zoom to Fit Window" ), "win.action_zoom_fit" );
+
+    var zoom_popover = new PopoverMenu.from_model( menu );
+    zoom_popover.add_child( _zoom, "zoom" );
+
+    /* Add the button */
+    var zoom_btn = new MenuButton() {
+      icon_name    = get_icon_name( "zoom-fit-best" ),
+      tooltip_text = _( "Zoom (%d%%)" ).printf( 100 ),
+      sensitive    = false,
+      popover      = zoom_popover
     };
-
-    box.append( _zoom );
-    box.append( zoom_fit );
-
-    zoom_btn.popover.child = box;
 
     return( zoom_btn );
 
