@@ -461,12 +461,17 @@ public class CanvasItems {
     var retval    = false;
     var position  = 0;
     var undo_item = new UndoItemDelete();
-    for( unowned List<CanvasItem> item=_items.first(); item!=null; item=item.next ) {
+    unowned var item = _items.first();
+    while( item != null ) {
       if( item.data.mode == CanvasItemMode.SELECTED ) {
+        unowned var next = item.next;
         undo_item.add( item.data, position );
         _items.delete_link( item );
         _canvas.set_cursor( null );
+        item = next;
         retval = true;
+      } else {
+        item = item.next;
       }
       position++;
     }

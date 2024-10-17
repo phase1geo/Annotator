@@ -94,7 +94,6 @@ case $1 in
 "debug")
     initialize 0
     G_DEBUG=fatal-criticals gdb --args ./com.github.phase1geo.annotator "${@:2}"
-    # gdb --args ./com.github.phase1geo.annotator "${@:2}"
     ;;
 "test")
     test

@@ -329,8 +329,33 @@ public class MainWindow : Gtk.ApplicationWindow {
 
     /* Create the welcome screen */
     _welcome = new Granite.Placeholder( _( "Welcome to Annotator" ) ) {
+      vexpand = true,
       description = _( "Let's get started annotating an image" )
     };
+
+    var welcome_box = new Box( Orientation.VERTICAL, 0 ) {
+      halign = Align.FILL,
+      valign = Align.FILL
+    };
+    welcome_box.append( _welcome );
+
+    var drop = new DropTarget( typeof(GLib.File), Gdk.DragAction.COPY );
+    welcome_box.add_controller( drop );
+
+    drop.drop.connect((val, x, y) => {
+      var file = (val as GLib.File);
+      if( file != null ) {
+        uint8[] contents = {};
+        try {
+          if( file.load_contents( null, out contents, null ) &&
+              GLib.ContentType.guess( null, contents, null ).contains( "image" ) ) {
+            open_file( file.get_path() );
+            return( true );
+          }
+        } catch( Error e ) {}
+      }
+      return( false );
+    });
 
     var open = _welcome.append_button( new ThemedIcon( "document-open" ), _( "Open Image From File" ), _( "Open a PNG, JPEG, TIFF or BMP file" ) );
     open.clicked.connect( do_open );
@@ -359,8 +384,8 @@ public class MainWindow : Gtk.ApplicationWindow {
     _stack = new Stack() {
       transition_type = StackTransitionType.NONE
     };
-    _stack.add_named( _welcome, "welcome" );
-    _stack.add_named( _editor,  "editor" );
+    _stack.add_named( welcome_box, "welcome" );
+    _stack.add_named( _editor,     "editor" );
 
     box.append( _stack );
 
@@ -532,19 +557,21 @@ public class MainWindow : Gtk.ApplicationWindow {
 
     hide();
 
-    try {
-      portal.take_screenshot.begin( parent, Xdp.ScreenshotFlags.INTERACTIVE, null, (obj, res) => {
+    portal.take_screenshot.begin( parent, Xdp.ScreenshotFlags.INTERACTIVE, null, (obj, res) => {
+      try {
         var screenshot = portal.take_screenshot.end( res );
         var file       = File.new_for_uri( screenshot );
         _editor.open_image( file.get_path() );
         _zoom_btn.set_sensitive( true );
         _export_btn.set_sensitive( true );
         show();
-      });
-    } catch( Error e ) {
-      stderr.printf( "ERROR: %s\n", e.message );
-      show();
-    }
+      } catch( Error e ) {
+        _welcome.sensitive = true;
+        _zoom_btn.set_sensitive( true );
+        _export_btn.set_sensitive( true );
+        show();
+      }
+    });
 
   }
 
