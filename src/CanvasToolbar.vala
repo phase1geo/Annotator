@@ -94,14 +94,21 @@ public class CanvasToolbar : Box {
       max_children_per_line = 4
     };
 
-    var mb = new MenuButton() {
-      // label        = "\u25bc",
+    var mb = new Button.with_label( "\u23f7" ) {
       has_frame    = false,
-      margin_start = 0,
-      margin_end   = margin,
       tooltip_text = mb_tooltip,
-      popover      = new Popover()
+      margin_start = 0,
+      margin_end   = margin
     };
+
+    var popover = new Popover() {
+      child = box
+    };
+    popover.set_parent( mb );
+
+    mb.clicked.connect(() => {
+      popover.popup();
+    });
 
     var btn = new Button() {
       has_frame    = false,
@@ -130,31 +137,32 @@ public class CanvasToolbar : Box {
           _current_item.get( category ).canvas_item( shape_type );
           _current_item.get( category ).add_item( _canvas.items );
           btn.child = _current_item.get( category ).get_image( _canvas.win );
-          mb.popover.popdown();
+          popover.popdown();
         });
         fb.append( b );
       }
     }
 
     box.append( fb );
-    _canvas.items.custom_items.create_menu( _canvas.win, category, mb.popover, box, custom_label, 4 );
+    _canvas.items.custom_items.create_menu( _canvas.win, category, popover, box, custom_label, 4 );
     _canvas.items.custom_items.item_selected.connect((cat, item) => {
       if( cat == category ) {
         _current_item.get( cat ).custom_item( item );
         _current_item.get( cat ).add_item( _canvas.items );
         btn.child = _current_item.get( cat ).get_image( _canvas.win );
-        mb.popover.popdown();
+        popover.popdown();
       }
     });
 
-    mb.popover.child = box;
+    var shape_box = new Box( Orientation.HORIZONTAL, 0 );
+    shape_box.append( btn );
+    shape_box.append( mb );
 
-    append( btn );
-    append( mb );
+    append( shape_box );
 
     /* If the system dark mode changes, hide the popover */
     _canvas.win.theme_changed.connect((dark_mode) => {
-      mb.popover.hide();
+      popover.hide();
     });
 
   }
