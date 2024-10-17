@@ -55,6 +55,7 @@ public class Editor : Box {
       hscrollbar_policy  = PolicyType.AUTOMATIC,
       child = canvas
     };
+    ((Viewport)_sw.child).scroll_to_focus = false;
     _sw.get_style_context().add_class( Granite.STYLE_CLASS_CHECKERBOARD );
 
     /* Create the toolbar */
