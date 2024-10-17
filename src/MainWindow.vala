@@ -538,19 +538,21 @@ public class MainWindow : Gtk.ApplicationWindow {
 
     hide();
 
-    try {
-      portal.take_screenshot.begin( parent, Xdp.ScreenshotFlags.INTERACTIVE, null, (obj, res) => {
+    portal.take_screenshot.begin( parent, Xdp.ScreenshotFlags.INTERACTIVE, null, (obj, res) => {
+      try {
         var screenshot = portal.take_screenshot.end( res );
         var file       = File.new_for_uri( screenshot );
         _editor.open_image( file.get_path() );
         _zoom_btn.set_sensitive( true );
         _export_btn.set_sensitive( true );
         show();
-      });
-    } catch( Error e ) {
-      stderr.printf( "ERROR: %s\n", e.message );
-      show();
-    }
+      } catch( Error e ) {
+        _welcome.sensitive = true;
+        _zoom_btn.set_sensitive( true );
+        _export_btn.set_sensitive( true );
+        show();
+      }
+    });
 
   }
 

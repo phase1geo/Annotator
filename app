@@ -85,7 +85,7 @@ case $1 in
     ;;
 "run")
     initialize 0
-    GDK_BACKEND=x11 ./com.github.phase1geo.annotator "${@:2}"
+    ./com.github.phase1geo.annotator "${@:2}"
     ;;
 "run-emmet")
     initialize 1
@@ -93,14 +93,14 @@ case $1 in
     ;;
 "debug")
     initialize 0
-    G_DEBUG=fatal-criticals GDK_BACKEND=x11 gdb --args ./com.github.phase1geo.annotator "${@:2}"
+    G_DEBUG=fatal-criticals gdb --args ./com.github.phase1geo.annotator "${@:2}"
     ;;
 "test")
     test
     ;;
 "test-run")
     test
-    GDK_BACKEND=x11 ./com.github.phase1geo.annotator "${@:2}"
+    ./com.github.phase1geo.annotator "${@:2}"
     ;;
 "uninstall")
     initialize 0
