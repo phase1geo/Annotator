@@ -383,8 +383,6 @@ public class CanvasItemBubble : CanvasItem {
     var rad    = (bbox.width < bbox.height) ? (bbox.width / 5) : (bbox.height / 5);
     var pt1    = new CanvasPoint();
     var pt2    = new CanvasPoint();
-    var pa     = new CanvasPoint();  // Intersecting point
-    var pb     = new CanvasPoint();  // Intersecting point
 
     var rul    = new CanvasPoint.from_coords( bbox.x1(), bbox.y1() );
     var rur    = new CanvasPoint.from_coords( bbox.x2(), bbox.y1() );
@@ -393,6 +391,7 @@ public class CanvasItemBubble : CanvasItem {
 
     if( !find_tangents( center, rad, points.index( 8 ), pt1, pt2 ) ) return;
 
+    CanvasPoint? pa, pb;
     if( get_line_intersection( pt1, points.index( 8 ), rul, rur, out pa ) ||
         get_line_intersection( pt1, points.index( 8 ), rur, rlr, out pa ) ||
         get_line_intersection( pt1, points.index( 8 ), rlr, rll, out pa ) ||
@@ -432,6 +431,8 @@ public class CanvasItemBubble : CanvasItem {
 
   }
 
+  //-------------------------------------------------------------
+  // Draws a cloud (thought) bubble.
   private void draw_cloud( Context ctx ) {
 
     var deg = Math.PI / 180.0;
@@ -461,8 +462,54 @@ public class CanvasItemBubble : CanvasItem {
     ctx.restore();
 
     // Draw thinking circles
-    var w  = points.index( 10 ).x - points.index( 9 ).x;
-    var h  = points.index( 8 ).y - points.index( 9 ).y;
+    var center = new CanvasPoint.from_coords( bbox.mid_x(), bbox.mid_y() );
+    var pt     = new CanvasPoint();  // Intersecting point
+
+    var large_radius = (bbox.width < bbox.height) ? (bbox.width / 5) : (bbox.height / 5);
+    if( large_radius < 20 ) {
+      large_radius = 20;
+    } else if( large_radius > 30 ) {
+      large_radius = 30;
+    }
+    var small_radius = 10;
+
+    var ul = new CanvasPoint.from_coords( (bbox.x1() - large_radius), (bbox.y1() - large_radius) );
+    var ur = new CanvasPoint.from_coords( (bbox.x2() + large_radius), (bbox.y1() - large_radius) );
+    var ll = new CanvasPoint.from_coords( (bbox.x1() - large_radius), (bbox.y2() + large_radius) );
+    var lr = new CanvasPoint.from_coords( (bbox.x2() + large_radius), (bbox.y2() + large_radius) );
+
+    // If there is an intersecting point, continue
+    if( get_line_intersection( center, points.index( 8 ), ul, ur, out pt ) ||
+        get_line_intersection( center, points.index( 8 ), ur, lr, out pt ) ||
+        get_line_intersection( center, points.index( 8 ), lr, ll, out pt ) ||
+        get_line_intersection( center, points.index( 8 ), ll, ul, out pt ) ) {
+
+      // Get the length of the line from the talking point to the intersecting point
+      var a       = points.index( 8 ).x - pt.x;
+      var b       = points.index( 8 ).y - pt.y;
+      var len     = Math.sqrt( (a * a) + (b * b) );
+      var bubbles = (int)(len / (large_radius * 2));
+
+      // Draw the talking point bubble
+      ctx.new_sub_path();
+      ctx.arc( points.index( 8 ).x, points.index( 8 ).y, small_radius, (0 * deg), (360 * deg) );
+      ctx.close_path();
+
+      for( int i=0; i<bubbles; i++ ) {
+        ctx.new_sub_path();
+        ctx.arc( 
+          (points.index( 8 ).x - ((a / bubbles) * (i + 1))), 
+          (points.index( 8 ).y - ((b / bubbles) * (i + 1))), 
+          (small_radius + ((i + 1) * ((float)(large_radius - small_radius) / bubbles))),
+          (0 * deg), (360 * deg)
+        );
+        ctx.close_path();
+      }
+
+    }
+
+    /*
+    FOOBAR
     var y0 = points.index( 9 ).y;
     var r1 = (w / 2);
     var y1 = y0 + r1;
@@ -481,6 +528,7 @@ public class CanvasItemBubble : CanvasItem {
     ctx.new_sub_path();
     ctx.arc( points.index( 8 ).x, points.index( 8 ).y, 10, (0 * deg), (360 * deg) );
     ctx.close_path();
+    */
 
   }
 
