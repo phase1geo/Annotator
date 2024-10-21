@@ -685,7 +685,7 @@ public class CanvasToolbar : Box {
   private void create_fonts() {
 
     var mb = new MenuButton() {
-      icon_name    = "font-symbolic",
+      icon_name    = "font-annotator-symbolic",
       tooltip_text = _( "Font Properties" ),
       has_frame    = false,
       popover      = new Popover()
@@ -693,7 +693,7 @@ public class CanvasToolbar : Box {
     mb.get_style_context().add_class( "color_chooser" );
 
     _canvas.win.theme_changed.connect((dark_mode) => {
-      mb.icon_name = dark_mode ? "font-dark-symbolic" : "font-symbolic";
+      mb.icon_name = dark_mode ? "font-annotator-dark-symbolic" : "font-annotator-symbolic";
     });
 
     _font_chooser = new FontChooserWidget() {

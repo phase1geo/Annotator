@@ -44,8 +44,8 @@
         <file alias="image-crop-dark-symbolic.svg">images/icons/scalable/image-crop-dark-symbolic.svg</file>
         <file alias="eyedropper-symbolic.svg">images/icons/scalable/eyedropper-svgrepo-com.svg</file>
         <file alias="eyedropper-dark-symbolic.svg">images/icons/scalable/eyedropper-dark-svgrepo-com.svg</file>
-        <file alias="font-symbolic.svg">images/icons/scalable/font-symbolic.svg</file>
-        <file alias="font-dark-symbolic.svg">images/icons/scalable/font-dark-symbolic.svg</file>
+        <file alias="font-annotator-symbolic.svg">images/icons/scalable/font-symbolic.svg</file>
+        <file alias="font-annotator-dark-symbolic.svg">images/icons/scalable/font-dark-symbolic.svg</file>
 
         <file alias="sticker_data_encryption">images/icons/flat-color-icons/svg/data_encryption.svg</file>
         <file alias="sticker_factory_breakdown">images/icons/flat-color-icons/svg/factory_breakdown.svg</file>
