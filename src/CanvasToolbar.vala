@@ -735,6 +735,31 @@ public class CanvasToolbar : Box {
       margin_start = 20
     };
 
+    var motion = new EventControllerMotion();
+    drag_label.add_controller( motion );
+
+    motion.enter.connect((x, y) => {
+      var cursor = new Gdk.Cursor.from_name( "grab", null );
+      drag_label.set_cursor( cursor );
+    });
+
+    motion.leave.connect(() => {
+      drag_label.set_cursor( null );
+    });
+
+    var click = new GestureClick();
+    drag_label.add_controller( click );
+
+    click.pressed.connect((x, y) => {
+      var cursor = new Gdk.Cursor.from_name( "grabbing", null );
+      drag_label.set_cursor( cursor );
+    });
+
+    click.released.connect(() => {
+      var cursor = new Gdk.Cursor.from_name( "grab", null );
+      drag_label.set_cursor( cursor );
+    });
+
     var drag = new DragSource() {
       actions = Gdk.DragAction.MOVE
     };
@@ -747,6 +772,18 @@ public class CanvasToolbar : Box {
       val = File.new_for_path( fname );
       var cp = new Gdk.ContentProvider.for_value( val );
       return( cp );
+    });
+
+    drag.drag_end.connect((d, delete_data) => {
+      stdout.printf( "In drag_end, delete_data: %s\n", delete_data.to_string() );
+      if( !delete_data ) {
+        var val      = Value( typeof(GLib.File) );
+        var provider = d.get_content();
+        if( provider.get_value( ref val ) ) {
+          var file = (GLib.File)val;
+          FileUtils.remove( file.get_path() );
+        }
+      }
     });
 
     append( drag_label );
