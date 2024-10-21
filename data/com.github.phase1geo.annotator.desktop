@@ -1,14 +1,17 @@
 [Desktop Entry]
+Name[de]=Annotator
 Name[it]=Annotator
 Name[nl]=Aantekeningen
 Name[ru]=Annotator
 Name[pt_BR]=Annotator
 Name=Annotator
+GenericName[de]=Annotator
 GenericName[it]=Annotator
 GenericName[nl]=Aantekeningen
 GenericName[ru]=Annotator
 GenericName[pt_BR]=Annotator
 GenericName=Annotator
+Comment[de]=Besser mit Bildern kommunizieren
 Comment[it]=Comunica meglio con le immagini
 Comment[nl]=Communiceer met betere afbeeldingen
 Comment[ru]=Общайтесь с изображениями лучше
@@ -30,6 +33,7 @@ Keywords=annotator;image;annotate;
 Actions=EditClipboard;EditScreenshot
 
 [Desktop Action EditClipboard]
+Name[de]=Bild in der Zwischenablage bearbeiten
 Name[it]=Modifica Immagine negli Appunti
 Name[nl]=Klembordafbeelding bewerken
 Name[ru]=Открыть файл из буфера обмена
@@ -38,6 +42,7 @@ Name=Edit Clipboard Image
 Exec=com.github.phase1geo.annotator --use-clipboard
 
 [Desktop Action EditScreenshot]
+Name[de]=Bildschirmfoto aufnehmen
 Name[it]=Fai uno Screenshot
 Name[ru]=Сделать снимок экран
 Name=Take Screenshot
