@@ -104,7 +104,6 @@ public class Canvas : DrawingArea {
     _im_context.commit.connect( handle_im_commit );
     _im_context.retrieve_surrounding.connect( handle_im_retrieve_surrounding );
     _im_context.delete_surrounding.connect( handle_im_delete_surrounding );
-    _key_controller.set_im_context( _im_context );
 
   }
 
@@ -232,11 +231,13 @@ public class Canvas : DrawingArea {
   /* Called whenever the user changes the edit mode of an active text item */
   private void edit_mode_changed( CanvasItemText item ) {
     if( item.edit ) {
+      _key_controller.set_im_context( _im_context );
       update_im_cursor( item );
       _im_context.focus_in();
       undo_text.orig.copy( item );
       undo_text.ct = item;
     } else {
+      _key_controller.set_im_context( null );
       _im_context.reset();
       _im_context.focus_out();
       undo_buffer.add_item( new UndoTextCommit( this, item, undo_text.orig ) );
