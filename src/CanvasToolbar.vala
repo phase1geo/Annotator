@@ -685,12 +685,16 @@ public class CanvasToolbar : Box {
   private void create_fonts() {
 
     var mb = new MenuButton() {
-      icon_name    = "font-x-generic-symbolic",
+      icon_name    = "font-symbolic",
       tooltip_text = _( "Font Properties" ),
       has_frame    = false,
       popover      = new Popover()
     };
     mb.get_style_context().add_class( "color_chooser" );
+
+    _canvas.win.theme_changed.connect((dark_mode) => {
+      mb.icon_name = dark_mode ? "font-dark-symbolic" : "font-symbolic";
+    });
 
     _font_chooser = new FontChooserWidget() {
       margin_start  = 10,
