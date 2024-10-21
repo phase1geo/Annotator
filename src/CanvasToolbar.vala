@@ -133,6 +133,9 @@ public class CanvasToolbar : Box {
           margin_bottom = 5,
           tooltip_markup = shape_type.tooltip(),
         };
+        _canvas.win.theme_changed.connect((dark) => {
+          b.icon_name = shape_type.icon_name( dark );
+        });
         b.clicked.connect(() => {
           _current_item.get( category ).canvas_item( shape_type );
           _current_item.get( category ).add_item( _canvas.items );
