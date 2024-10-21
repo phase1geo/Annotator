@@ -274,4 +274,16 @@ public class Utils {
     return( str );
   }
 
+  //-------------------------------------------------------------
+  // Creates a temporary filename.
+  public static string? create_temp_filename( string extension ) {
+    try {
+      string filename = "";
+      var fd = FileUtils.open_tmp( "annotator_XXXXXX.%s".printf( extension ), out filename );
+      FileUtils.close( fd );
+      return( filename );
+    } catch( FileError e ) {}
+    return( null );
+  }
+
 }

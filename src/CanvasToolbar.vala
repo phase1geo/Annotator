@@ -69,6 +69,8 @@ public class CanvasToolbar : Box {
     create_color();
     create_stroke();
     create_fonts();
+    create_separator();
+    create_drag_label();
 
     /* If the selection changes, update the toolbar */
     _canvas.items.selection_changed.connect( selection_changed );
@@ -721,6 +723,33 @@ public class CanvasToolbar : Box {
     mb.popover.child = _font_chooser;
 
     append( mb );
+
+  }
+
+  //-------------------------------------------------------------
+  // Creates a label that we can drag an image from. 
+  private void create_drag_label() {
+
+    var drag_label = new Label( "PNG" ) {
+      tooltip_text = _( "Drag PNG Image" ),
+      margin_start = 20
+    };
+
+    var drag = new DragSource() {
+      actions = Gdk.DragAction.MOVE
+    };
+    drag_label.add_controller( drag );
+
+    drag.prepare.connect((d) => {
+      var val = Value( typeof(GLib.File) );
+      var fname = Utils.create_temp_filename( "png" );
+      _canvas.win.editor.canvas.image.export_image( "png", fname );
+      val = File.new_for_path( fname );
+      var cp = new Gdk.ContentProvider.for_value( val );
+      return( cp );
+    });
+
+    append( drag_label );
 
   }
 
