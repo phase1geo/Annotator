@@ -41,23 +41,24 @@ public class MainWindow : Gtk.ApplicationWindow {
   private StickerSet          _sticker_set;
 
   private const GLib.ActionEntry[] action_entries = {
-    { "action_open",            do_open },
-    { "action_screenshot",      do_screenshot },
-    { "action_save",            do_save },
-    { "action_quit",            do_quit },
-    { "action_undo",            do_undo },
-    { "action_redo",            do_redo },
-    { "action_copy",            do_copy },
-    { "action_cut",             do_cut },
-    { "action_paste",           do_paste },
-    { "action_zoom_in",         do_zoom_in },
-    { "action_zoom_out",        do_zoom_out },
-    { "action_zoom_actual",     do_zoom_actual },
-    { "action_zoom_fit",        do_zoom_fit },
-    { "action_shortcuts",       do_shortcuts },
-    { "action_contextual_menu", do_contextual_menu },
-    { "action_print",           do_print },
-    { "action_emoji",           do_emoji }
+    { "action_open",              do_open },
+    { "action_screenshot",        do_screenshot },
+    { "action_save",              do_save },
+    { "action_quit",              do_quit },
+    { "action_undo",              do_undo },
+    { "action_redo",              do_redo },
+    { "action_copy",              do_copy },
+    { "action_cut",               do_cut },
+    { "action_paste",             do_paste },
+    { "action_zoom_in",           do_zoom_in },
+    { "action_zoom_out",          do_zoom_out },
+    { "action_zoom_actual",       do_zoom_actual },
+    { "action_zoom_fit",          do_zoom_fit },
+    { "action_shortcuts",         do_shortcuts },
+    { "action_contextual_menu",   do_contextual_menu },
+    { "action_copy_to_clipboard", do_copy_to_clipboard },
+    { "action_print",             do_print },
+    { "action_emoji",             do_emoji }
   };
 
   private bool on_elementary = Gtk.Settings.get_default().gtk_icon_theme_name == "elementary";
@@ -242,40 +243,30 @@ public class MainWindow : Gtk.ApplicationWindow {
   /* Create the exports menubutton and associated menu */
   private MenuButton create_exports() {
 
-    var box = new Box( Orientation.VERTICAL, 0 ) {
-      margin_start  = 5,
-      margin_end    = 5,
-      margin_top    = 5,
-      margin_bottom = 5
-    };
-
-    var popover = new Popover() {
-      autohide = true,
-      child    = box
-    };
-
     /* Add the export UI */
     var export_ui = new Exporter( this );
+    var export_mi = new GLib.MenuItem( null, null );
+    export_mi.set_attribute( "custom", "s", "export" );
+
+    var export_menu = new GLib.Menu();
+    export_menu.append_item( export_mi );
+
+    var other_menu = new GLib.Menu();
+    other_menu.append( _( "Copy To Clipboard" ), "win.action_copy_to_clipboard" );
+    other_menu.append( _( "Print…" ), "win.action_print" );
+
+    var menu = new GLib.Menu();
+    menu.append_section( null, export_menu );
+    menu.append_section( null, other_menu );
+
+    var popover = new PopoverMenu.from_model( menu ) {
+      cascade_popdown = false
+    };
+    popover.add_child( export_ui, "export" );
+
     export_ui.export_started.connect(() => {
       popover.popdown();
     });
-    box.append( export_ui );
-
-    /* Copy to clipboard option */
-    var clip_btn = Utils.make_menu_item( _( "Copy To Clipboard" ) );
-    clip_btn.clicked.connect(() => {
-      _editor.canvas.image.export_clipboard();
-      popover.popdown();
-    });
-    box.append( clip_btn );
-
-    /* Print option */
-    var print_btn = Utils.make_menu_item( _( "Print…" ) );
-    print_btn.clicked.connect(() => {
-      do_print();
-      popover.popdown();
-    });
-    box.append( print_btn );
 
     var export_btn = new MenuButton() {
       has_frame    = !on_elementary,
@@ -660,6 +651,12 @@ public class MainWindow : Gtk.ApplicationWindow {
   /* Performs an image export */
   public void do_export( string type, string filename ) {
     _editor.canvas.image.export_image( type, filename );
+  }
+
+  //-------------------------------------------------------------
+  // Copies the annotated image to the clipboard.
+  private void do_copy_to_clipboard() {
+    _editor.canvas.image.export_clipboard();
   }
 
   /* Prints the current image */
