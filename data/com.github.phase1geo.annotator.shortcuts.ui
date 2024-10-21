@@ -129,95 +129,115 @@
         <property name="visible">1</property>
         <child>
           <object class="GtkShortcutsGroup">
-            <property name="title" translatable="yes">Creation</property>
+            <property name="title" translatable="yes">Add Shape</property>
             <property name="visible">1</property>
             <child>
               <object class="GtkShortcutsShortcut">
-                <property name="title" translatable="yes">New Arrow</property>
+                <property name="title" translatable="yes">Arrow</property>
                 <property name="accelerator">a</property>
                 <property name="visible">1</property>
               </object>
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
-                <property name="title" translatable="yes">New Outlined Rectangle</property>
+                <property name="title" translatable="yes">Outlined Rectangle</property>
                 <property name="accelerator">r</property>
                 <property name="visible">1</property>
               </object>
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
-                <property name="title" translatable="yes">New Solid Rectangle</property>
+                <property name="title" translatable="yes">Solid Rectangle</property>
                 <property name="accelerator">&lt;shift&gt;r</property>
                 <property name="visible">1</property>
               </object>
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
-                <property name="title" translatable="yes">New Outlined Oval</property>
+                <property name="title" translatable="yes">Outlined Oval</property>
                 <property name="accelerator">o</property>
                 <property name="visible">1</property>
               </object>
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
-                <property name="title" translatable="yes">New Solid Oval</property>
+                <property name="title" translatable="yes">Solid Oval</property>
                 <property name="accelerator">&lt;shift&gt;o</property>
                 <property name="visible">1</property>
               </object>
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
-                <property name="title" translatable="yes">New Outlined Star</property>
+                <property name="title" translatable="yes">Outlined Star</property>
                 <property name="accelerator">s</property>
                 <property name="visible">1</property>
               </object>
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
-                <property name="title" translatable="yes">New Solid Star</property>
+                <property name="title" translatable="yes">Solid Star</property>
                 <property name="accelerator">&lt;shift&gt;s</property>
                 <property name="visible">1</property>
               </object>
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
-                <property name="title" translatable="yes">New Line</property>
+                <property name="title" translatable="yes">Talking Bubble</property>
+                <property name="accelerator">k</property>
+                <property name="visible">1</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes">Thought Bubble</property>
+                <property name="accelerator">&lt;shift&gt;k</property>
+                <property name="visible">1</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes">Line</property>
                 <property name="accelerator">l</property>
                 <property name="visible">1</property>
               </object>
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
-                <property name="title" translatable="yes">New Text Box</property>
+                <property name="title" translatable="yes">Text Box</property>
                 <property name="accelerator">t</property>
                 <property name="visible">1</property>
               </object>
             </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkShortcutsGroup">
+            <property name="title" translatable="yes">Add Other</property>
+            <property name="visible">1</property>
             <child>
               <object class="GtkShortcutsShortcut">
-                <property name="title" translatable="yes">New Blur Box</property>
+                <property name="title" translatable="yes">Blur Box</property>
                 <property name="accelerator">b</property>
                 <property name="visible">1</property>
               </object>
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
-                <property name="title" translatable="yes">New Magnifier</property>
+                <property name="title" translatable="yes">Magnifier</property>
                 <property name="accelerator">m</property>
                 <property name="visible">1</property>
               </object>
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
-                <property name="title" translatable="yes">New Pencil Stroke</property>
+                <property name="title" translatable="yes">Pencil Stroke</property>
                 <property name="accelerator">p</property>
                 <property name="visible">1</property>
               </object>
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
-                <property name="title" translatable="yes">New Sequence Marker</property>
+                <property name="title" translatable="yes">Sequence Marker</property>
                 <property name="accelerator">q</property>
                 <property name="visible">1</property>
               </object>
