@@ -6,7 +6,7 @@
   </a>
 </p>
 
-![<center><b>Main Window - Light Theme</b></center>](https://raw.githubusercontent.com/phase1geo/Annotator/master/data/screenshots/screenshot-light.png "Image Annotation for Elementary OS")
+![<center><b>Main Window - Light Theme</b></center>](https://raw.githubusercontent.com/phase1geo/Annotator/master/data/screenshots/screenshot-editor.png "Image Annotation for Elementary OS")
 
 ## Overview
 
