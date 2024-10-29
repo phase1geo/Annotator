@@ -12,14 +12,16 @@
 
 Annotate your images and let a picture say 1000 words.
 
-- Load image from the file system or clipboard.
-- Add shapes, stickers, text, drawings, and other callouts to highlight image details.
+- Load image from the file system, clipboard, or create a screenshot to annotate.
+- Add shapes, stickers, images, text, drawings, and other callouts to highlight image details.
 - Add magnifiers to enhance image details.
 - Blur out portions of the image to obfuscate data.
 - Crop, resize and add image borders.
 - Control colors, line thickness and font details.
 - Zoom support.
+- Color picker support within a loaded image.
 - Unlimited undo/redo of any change.
+- Drag-and-drop PNG copies of the annotated image.
 - Export to JPEG, PNG, TIFF, BMP, PDF and SVG image formats.
 - Support for copying annotated image to clipboard.
 - Printer support.
