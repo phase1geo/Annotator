@@ -775,7 +775,6 @@ public class CanvasToolbar : Box {
     });
 
     drag.drag_end.connect((d, delete_data) => {
-      stdout.printf( "In drag_end, delete_data: %s\n", delete_data.to_string() );
       if( !delete_data ) {
         var val      = Value( typeof(GLib.File) );
         var provider = d.get_content();
