@@ -6,28 +6,29 @@
   <project_license>GPL-3.0+</project_license>
   <name>Annotator</name>
   <summary>Communicate with images better</summary>
-  <developer_name>Trevor Williams</developer_name>
-  <developer>com.github.phase1geo</developer>
+  <developer id="com.github.phase1geo">
+    <name>Trevor Williams</name>
+  </developer>
   <update_contact>phase1geo@gmail.com</update_contact>
+  <launchable type="desktop-id">com.github.phase1geo.annotator.desktop</launchable>
   <provides>
     <binary>com.github.phase1geo.annotator</binary>
   </provides>
   <screenshots>
     <screenshot>
       <image>https://raw.githubusercontent.com/phase1geo/Annotator/master/data/screenshots/screenshot-welcome.png</image>
+      <caption>Welcome Screen</caption>
     </screenshot>
-    <screenshot>
-      <image>https://raw.githubusercontent.com/phase1geo/Annotator/master/data/screenshots/screenshot-light.png</image>
-    </screenshot>
-    <screenshot>
-      <image>https://raw.githubusercontent.com/phase1geo/Annotator/master/data/screenshots/screenshot-dark.png</image>
+    <screenshot type="default">
+      <image>https://raw.githubusercontent.com/phase1geo/Annotator/master/data/screenshots/screenshot-editor.png</image>
+      <caption>Annotation Editor</caption>
     </screenshot>
   </screenshots>
   <description>
     <p>Communicate with images. Better.</p>
     <ul>
       <li>Load image from the file system, clipboard or a screenshot.</li>
-      <li>Add shapes, stickers, text, drawings, and other callouts to highlight image details.</li>
+      <li>Add shapes, stickers, images, text, drawings, and other callouts to highlight image details.</li>
       <li>Save custom shapes for easy reuse.</li>
       <li>Add magnifiers to enhance image details.</li>
       <li>Blur out portions of the image to obfuscate data.</li>
@@ -38,6 +39,7 @@
       <li>Unlimited undo/redo of any change.</li>
       <li>Export to JPEG, PNG, TIFF, BMP, PDF and SVG image formats.</li>
       <li>Support for copying annotated image to clipboard.</li>
+      <li>Support for dragging out a PNG image to another app or location.</li>
       <li>Printer support.</li>
     </ul>
   </description>
@@ -79,27 +81,38 @@
     <value key="x-appcenter-stripe">pk_live_51Ccoj4BJm4hDdHaF1YKGdyGLCLtShzElKsr4GM9hJDJAoZArcWrNHsjL9b8SBs01GQBYpakj0l1tYenVJOqke93300TULHWdph</value>
   </custom>
   <releases>
-    <release version="2.0.0" date="2024-02-25">
+    <release version="2.0.0" date="2024-10-30">
       <description>
         <p>New</p>
         <ul>
-          <li>Added support for exporting PNG with transparency (thanks to Peter Willemsen).</li>
-          <li>Added support for adding user-provided custom stickers.</li>
-          <li>Added support for color picker tool to copy pixel color to clipboard.</li>
-          <li>Added support for color picker tool to change current item color to image pixel color.</li>
+          <li>Added option for transparent PNG export (thanks for Peter Willemsen).</li>
+          <li>Added support for adding custom stickers.</li>
           <li>Added support for inserting images.</li>
+          <li>Added support for color picker (copy value to clipboard or change current annotation object color).</li>
           <li>Added support for inserting speech and thought bubble shapes.</li>
+          <li>Added ability to annotate image by drag/drop on welcome screen.</li>
+          <li>Added ability to drag a copy of the annotated image via a new "PNG" icon in the toolbar.</li>
         </ul>
         <p>Changes</p>
         <ul>
-          <li>Converted code base from GTK3 to GTK4.</li>
+          <li>Converted codebase from GTK3 to GTK4.</li>
+          <li>Updated Flatpak platform from 7.2 to 8.</li>
+          <li>Improving look of toolbar dropdowns.</li>
         </ul>
         <p>Bug Fixes</p>
         <ul>
-          <li>Fixed issue with saving boolean export options between application runs (thanks to Peter Willemsen).</li>
-          <li>Fixed issue with missing icons in some distributions (thanks to Kevin Ernst).</li>
+          <li>Fixed issue where boolean export values were not properly saving (thanks to Peter Willemsen).</li>
           <li>Fixed issue with duplicating canvas items by holding Control while dragging an item.</li>
+          <li>Fixed issues with missing icons on non-elementary distributions (thanks to Kevin Ernst).</li>
           <li>Fixed issue with certain icons not displaying properly in dark mode.</li>
+          <li>Fixed issue with icons being installed in the wrong place.</li>
+          <li>Fixed issue with dismissing popover when the export button is clicked.</li>
+          <li>Fixed issue with the --use-clipboard command-line option.</li>
+          <li>Fixed application crash issue in some cases when annotate items are deleted.</li>
+          <li>Fixed issues with using the screenshot capture functionality.</li>
+          <li>Fixed issue with canvas scrolling in various cases.</li>
+          <li>Fixed display issues with icons in dark modes.</li>
+          <li>Fixed issue with the font icon not appearing correctly on some systems.</li>
         </ul>
       </description>
     </release>

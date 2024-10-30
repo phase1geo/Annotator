@@ -16,26 +16,27 @@
   <summary xml:lang="nl">Communiceer met betere afbeeldingen</summary>
   <summary xml:lang="it">Comunica meglio con le immagini</summary>
   <summary xml:lang="de">Besser mit Bildern kommunizieren</summary>
-  <developer_name>Trevor Williams</developer_name>
-  <developer_name xml:lang="pt_BR">Trevor Williams</developer_name>
-  <developer_name xml:lang="ru">Trevor Williams</developer_name>
-  <developer_name xml:lang="nl">Trevor Williams</developer_name>
-  <developer_name xml:lang="it">Trevor Williams</developer_name>
-  <developer_name xml:lang="de">Trevor Williams</developer_name>
-  <developer>com.github.phase1geo</developer>
+  <developer id="com.github.phase1geo">
+    <name>Trevor Williams</name>
+    <name xml:lang="pt_BR">Trevor Williams</name>
+    <name xml:lang="ru">Trevor Williams</name>
+    <name xml:lang="nl">Trevor Williams</name>
+    <name xml:lang="it">Trevor Williams</name>
+    <name xml:lang="de">Trevor Williams</name>
+  </developer>
   <update_contact>phase1geo@gmail.com</update_contact>
+  <launchable type="desktop-id">com.github.phase1geo.annotator.desktop</launchable>
   <provides>
     <binary>com.github.phase1geo.annotator</binary>
   </provides>
   <screenshots>
     <screenshot>
       <image>https://raw.githubusercontent.com/phase1geo/Annotator/master/data/screenshots/screenshot-welcome.png</image>
+      <caption>Welcome Screen</caption>
     </screenshot>
-    <screenshot>
-      <image>https://raw.githubusercontent.com/phase1geo/Annotator/master/data/screenshots/screenshot-light.png</image>
-    </screenshot>
-    <screenshot>
-      <image>https://raw.githubusercontent.com/phase1geo/Annotator/master/data/screenshots/screenshot-dark.png</image>
+    <screenshot type="default">
+      <image>https://raw.githubusercontent.com/phase1geo/Annotator/master/data/screenshots/screenshot-editor.png</image>
+      <caption>Annotation Editor</caption>
     </screenshot>
   </screenshots>
   <description>
@@ -50,12 +51,7 @@
       <li xml:lang="ru">Загружайте изображения из файловой системы, буфера обмена или снимка экрана.</li>
       <li xml:lang="it">Carica l'immagine dal file system, dagli appunti o da uno screenshot.</li>
       <li xml:lang="de">Bild aus dem Dateisystem, der Zwischenablage oder einem Bildschirmfoto laden.</li>
-      <li>Add shapes, stickers, text, drawings, and other callouts to highlight image details.</li>
-      <li xml:lang="pt_BR">Adicione formas, adesivos, texto, desenhos ou outros textos explicativos para destacar os detalhes da imagem.</li>
-      <li xml:lang="ru">Добавляйте фигуры, стикеры, текст, рисунки и другие выноски, чтобы подчеркнуть важные детали изображения.</li>
-      <li xml:lang="nl">Voeg vormen, stickers, tekst, tekeningen en andere items toe om afbeeldingen te verduidelijken.</li>
-      <li xml:lang="it">Aggiungi forme, adesivi, testo, disegni e altri richiami per evidenziare i particolari dell'immagine.</li>
-      <li xml:lang="de">Formen, Sticker, Text, Zeichnungen und andere Beschriftungen hinzufügen, um Bilddetails hervorzuheben.</li>
+      <li>Add shapes, stickers, images, text, drawings, and other callouts to highlight image details.</li>
       <li>Save custom shapes for easy reuse.</li>
       <li xml:lang="ru">Сохраняйте пользовательские фигуры для повторного использования.</li>
       <li xml:lang="it">Salva forme personalizzate per un facile riutilizzo.</li>
@@ -110,6 +106,7 @@
       <li xml:lang="nl">Ondersteuning voor het kopiëren van afbeeldingen naar het klembord.</li>
       <li xml:lang="it">Supporto per la copia di immagini annotate negli appunti.</li>
       <li xml:lang="de">Unterstützung für das Kopieren von annotierten Bildern in die Zwischenablage.</li>
+      <li>Support for dragging out a PNG image to another app or location.</li>
       <li>Printer support.</li>
       <li xml:lang="pt_BR">Suporte a impressoras.</li>
       <li xml:lang="ru">Поддержка принтеров.</li>
@@ -156,44 +153,48 @@
     <value key="x-appcenter-stripe">pk_live_51Ccoj4BJm4hDdHaF1YKGdyGLCLtShzElKsr4GM9hJDJAoZArcWrNHsjL9b8SBs01GQBYpakj0l1tYenVJOqke93300TULHWdph</value>
   </custom>
   <releases>
-    <release version="2.0.0" date="2024-02-25">
+    <release version="2.0.0" date="2024-10-30">
       <description>
         <p>New</p>
         <p xml:lang="ru">Новое</p>
         <p xml:lang="de">Neu</p>
         <ul>
-          <li>Added support for exporting PNG with transparency (thanks to Peter Willemsen).</li>
-          <li xml:lang="de">Unterstützung für den Export von PNG mit Transparenz hinzugefügt (Dank an Peter Willemsen).</li>
-          <li>Added support for adding user-provided custom stickers.</li>
-          <li xml:lang="de">Unterstützung für das Hinzufügen von benutzerdefinierten Stickern hinzugefügt.</li>
-          <li>Added support for color picker tool to copy pixel color to clipboard.</li>
-          <li xml:lang="de">Unterstützung für das Farbauswahlwerkzeug zum Kopieren von Pixelfarben in die Zwischenablage hinzugefügt.</li>
-          <li>Added support for color picker tool to change current item color to image pixel color.</li>
-          <li xml:lang="de">Unterstützung für das Farbauswahlwerkzeug zum Ändern der aktuellen Elementfarbe in die Bildpixelfarbe hinzugefügt.</li>
+          <li>Added option for transparent PNG export (thanks for Peter Willemsen).</li>
+          <li>Added support for adding custom stickers.</li>
           <li>Added support for inserting images.</li>
           <li xml:lang="de">Unterstützung für das Einfügen von Bildern hinzugefügt.</li>
+          <li>Added support for color picker (copy value to clipboard or change current annotation object color).</li>
           <li>Added support for inserting speech and thought bubble shapes.</li>
           <li xml:lang="de">Unterstützung für das Einfügen von Sprach- und Gedankenblasenformen hinzugefügt.</li>
+          <li>Added ability to annotate image by drag/drop on welcome screen.</li>
+          <li>Added ability to drag a copy of the annotated image via a new "PNG" icon in the toolbar.</li>
         </ul>
         <p>Changes</p>
         <p xml:lang="ru">Изменения</p>
         <p xml:lang="de">Änderungen</p>
         <ul>
-          <li>Converted code base from GTK3 to GTK4.</li>
-          <li xml:lang="de">Konvertierte Codebasis von GTK3 zu GTK4.</li>
+          <li>Converted codebase from GTK3 to GTK4.</li>
+          <li>Updated Flatpak platform from 7.2 to 8.</li>
+          <li>Improving look of toolbar dropdowns.</li>
         </ul>
         <p>Bug Fixes</p>
         <p xml:lang="ru">Исправления ошибок</p>
         <p xml:lang="de">Fehlerkorrekturen</p>
         <ul>
-          <li>Fixed issue with saving boolean export options between application runs (thanks to Peter Willemsen).</li>
-          <li xml:lang="de">Problem mit dem Speichern von booleschen Exportoptionen zwischen Anwendungsläufen behoben (Dank an Peter Willemsen).</li>
-          <li>Fixed issue with missing icons in some distributions (thanks to Kevin Ernst).</li>
-          <li xml:lang="de">Problem mit fehlenden Symbolen in einigen Distributionen behoben (Dank an Kevin Ernst).</li>
+          <li>Fixed issue where boolean export values were not properly saving (thanks to Peter Willemsen).</li>
           <li>Fixed issue with duplicating canvas items by holding Control while dragging an item.</li>
           <li xml:lang="de">Problem bei der Duplizierung von Leinwandelementen durch Festhalten der Steuerungstaste beim Ziehen eines Elements behoben.</li>
+          <li>Fixed issues with missing icons on non-elementary distributions (thanks to Kevin Ernst).</li>
           <li>Fixed issue with certain icons not displaying properly in dark mode.</li>
           <li xml:lang="de">Problem bei der Anzeige bestimmter Symbole im dunklen Modus behoben.</li>
+          <li>Fixed issue with icons being installed in the wrong place.</li>
+          <li>Fixed issue with dismissing popover when the export button is clicked.</li>
+          <li>Fixed issue with the --use-clipboard command-line option.</li>
+          <li>Fixed application crash issue in some cases when annotate items are deleted.</li>
+          <li>Fixed issues with using the screenshot capture functionality.</li>
+          <li>Fixed issue with canvas scrolling in various cases.</li>
+          <li>Fixed display issues with icons in dark modes.</li>
+          <li>Fixed issue with the font icon not appearing correctly on some systems.</li>
         </ul>
       </description>
     </release>

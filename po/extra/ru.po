@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: extra\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-21 00:50-0500\n"
+"POT-Creation-Date: 2024-10-30 00:45-0500\n"
 "PO-Revision-Date: 2023-05-08 00:14+0900\n"
 "Last-Translator: lenemter <lenemter@gmail.com>\n"
 "Language-Team: none\n"
@@ -41,99 +41,101 @@ msgstr "Открыть файл из буфера обмена"
 msgid "Take Screenshot"
 msgstr "Сделать снимок экран"
 
-#: data/com.github.phase1geo.annotator.appdata.xml.in:9
+#: data/com.github.phase1geo.annotator.appdata.xml.in:10
 msgid "Trevor Williams"
 msgstr "Trevor Williams"
 
-#: data/com.github.phase1geo.annotator.appdata.xml.in:27
+#: data/com.github.phase1geo.annotator.appdata.xml.in:20
+msgid "Welcome Screen"
+msgstr ""
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:24
+#, fuzzy
+msgid "Annotation Editor"
+msgstr "Annotator"
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:28
 msgid "Communicate with images. Better."
 msgstr "Общайтесь с изображениями. Лучше."
 
-#: data/com.github.phase1geo.annotator.appdata.xml.in:29
+#: data/com.github.phase1geo.annotator.appdata.xml.in:30
 msgid "Load image from the file system, clipboard or a screenshot."
 msgstr ""
 "Загружайте изображения из файловой системы, буфера обмена или снимка экрана."
 
-#: data/com.github.phase1geo.annotator.appdata.xml.in:30
+#: data/com.github.phase1geo.annotator.appdata.xml.in:31
+#, fuzzy
 msgid ""
-"Add shapes, stickers, text, drawings, and other callouts to highlight image "
-"details."
+"Add shapes, stickers, images, text, drawings, and other callouts to "
+"highlight image details."
 msgstr ""
 "Добавляйте фигуры, стикеры, текст, рисунки и другие выноски, чтобы "
 "подчеркнуть важные детали изображения."
 
-#: data/com.github.phase1geo.annotator.appdata.xml.in:31
+#: data/com.github.phase1geo.annotator.appdata.xml.in:32
 msgid "Save custom shapes for easy reuse."
 msgstr "Сохраняйте пользовательские фигуры для повторного использования."
 
-#: data/com.github.phase1geo.annotator.appdata.xml.in:32
+#: data/com.github.phase1geo.annotator.appdata.xml.in:33
 msgid "Add magnifiers to enhance image details."
 msgstr "Добавляйте лупы, чтобы улучшить детали изображения."
 
-#: data/com.github.phase1geo.annotator.appdata.xml.in:33
+#: data/com.github.phase1geo.annotator.appdata.xml.in:34
 msgid "Blur out portions of the image to obfuscate data."
 msgstr "Размывайте части изображения, чтобы скрыть данные."
 
-#: data/com.github.phase1geo.annotator.appdata.xml.in:34
+#: data/com.github.phase1geo.annotator.appdata.xml.in:35
 msgid "Crop, resize and add image borders."
 msgstr "Обрезайте, меняйте размер и добавляйте границы изображения."
 
-#: data/com.github.phase1geo.annotator.appdata.xml.in:35
+#: data/com.github.phase1geo.annotator.appdata.xml.in:36
 msgid "Control colors, line thickness and font details."
 msgstr "Управляйте цветами, толщиной линий и шрифтами."
 
-#: data/com.github.phase1geo.annotator.appdata.xml.in:36
+#: data/com.github.phase1geo.annotator.appdata.xml.in:37
 msgid "Built-in color picker to copy image pixel color to clipboard."
 msgstr ""
 
-#: data/com.github.phase1geo.annotator.appdata.xml.in:37
+#: data/com.github.phase1geo.annotator.appdata.xml.in:38
 msgid "Zoom support."
 msgstr "Поддержка приближения."
 
-#: data/com.github.phase1geo.annotator.appdata.xml.in:38
+#: data/com.github.phase1geo.annotator.appdata.xml.in:39
 msgid "Unlimited undo/redo of any change."
 msgstr "Неограниченное количество отмен/повторов любых изменений."
 
-#: data/com.github.phase1geo.annotator.appdata.xml.in:39
+#: data/com.github.phase1geo.annotator.appdata.xml.in:40
 msgid "Export to JPEG, PNG, TIFF, BMP, PDF and SVG image formats."
 msgstr "Экспорт в JPEG, PNG, TIFF, BMP, PDF и SVG."
 
-#: data/com.github.phase1geo.annotator.appdata.xml.in:40
+#: data/com.github.phase1geo.annotator.appdata.xml.in:41
 msgid "Support for copying annotated image to clipboard."
 msgstr "Поддержка копирования отредактированного изображения в буфер обмена."
 
-#: data/com.github.phase1geo.annotator.appdata.xml.in:41
+#: data/com.github.phase1geo.annotator.appdata.xml.in:42
+msgid "Support for dragging out a PNG image to another app or location."
+msgstr ""
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:43
 msgid "Printer support."
 msgstr "Поддержка принтеров."
 
-#: data/com.github.phase1geo.annotator.appdata.xml.in:84
-#: data/com.github.phase1geo.annotator.appdata.xml.in:108
-#: data/com.github.phase1geo.annotator.appdata.xml.in:125
-#: data/com.github.phase1geo.annotator.appdata.xml.in:152
+#: data/com.github.phase1geo.annotator.appdata.xml.in:86
+#: data/com.github.phase1geo.annotator.appdata.xml.in:121
+#: data/com.github.phase1geo.annotator.appdata.xml.in:138
+#: data/com.github.phase1geo.annotator.appdata.xml.in:165
 msgid "New"
 msgstr "Новое"
 
-#: data/com.github.phase1geo.annotator.appdata.xml.in:86
-msgid ""
-"Added support for exporting PNG with transparency (thanks to Peter "
-"Willemsen)."
-msgstr ""
-
-#: data/com.github.phase1geo.annotator.appdata.xml.in:87
-#, fuzzy
-msgid "Added support for adding user-provided custom stickers."
-msgstr ""
-"Добавлена поддержка создания и сохранения пользовательских стрелок и фигур."
-
 #: data/com.github.phase1geo.annotator.appdata.xml.in:88
-msgid "Added support for color picker tool to copy pixel color to clipboard."
+msgid "Added option for transparent PNG export (thanks for Peter Willemsen)."
 msgstr ""
 
 #: data/com.github.phase1geo.annotator.appdata.xml.in:89
-msgid ""
-"Added support for color picker tool to change current item color to image "
-"pixel color."
+#, fuzzy
+msgid "Added support for adding custom stickers."
 msgstr ""
+"Добавлена поддержка создания и сохранения пользовательских стрелок и фигур."
 
 #: data/com.github.phase1geo.annotator.appdata.xml.in:90
 #, fuzzy
@@ -142,113 +144,185 @@ msgstr ""
 "Добавлена поддержка создания и сохранения пользовательских стрелок и фигур."
 
 #: data/com.github.phase1geo.annotator.appdata.xml.in:91
+msgid ""
+"Added support for color picker (copy value to clipboard or change current "
+"annotation object color)."
+msgstr ""
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:92
 msgid "Added support for inserting speech and thought bubble shapes."
 msgstr ""
 
 #: data/com.github.phase1geo.annotator.appdata.xml.in:93
-#: data/com.github.phase1geo.annotator.appdata.xml.in:112
-#: data/com.github.phase1geo.annotator.appdata.xml.in:131
-#: data/com.github.phase1geo.annotator.appdata.xml.in:161
+msgid "Added ability to annotate image by drag/drop on welcome screen."
+msgstr ""
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:94
+msgid ""
+"Added ability to drag a copy of the annotated image via a new \"PNG\" icon "
+"in the toolbar."
+msgstr ""
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:96
+#: data/com.github.phase1geo.annotator.appdata.xml.in:125
+#: data/com.github.phase1geo.annotator.appdata.xml.in:144
+#: data/com.github.phase1geo.annotator.appdata.xml.in:174
 msgid "Changes"
 msgstr "Изменения"
 
-#: data/com.github.phase1geo.annotator.appdata.xml.in:95
-msgid "Converted code base from GTK3 to GTK4."
+#: data/com.github.phase1geo.annotator.appdata.xml.in:98
+msgid "Converted codebase from GTK3 to GTK4."
 msgstr ""
 
-#: data/com.github.phase1geo.annotator.appdata.xml.in:97
-#: data/com.github.phase1geo.annotator.appdata.xml.in:117
-#: data/com.github.phase1geo.annotator.appdata.xml.in:142
-#: data/com.github.phase1geo.annotator.appdata.xml.in:172
+#: data/com.github.phase1geo.annotator.appdata.xml.in:99
+#, fuzzy
+msgid "Updated Flatpak platform from 7.2 to 8."
+msgstr "Обновлена версия Flatpak SDK с 6 до 6.1."
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:100
+msgid "Improving look of toolbar dropdowns."
+msgstr ""
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:102
+#: data/com.github.phase1geo.annotator.appdata.xml.in:130
+#: data/com.github.phase1geo.annotator.appdata.xml.in:155
+#: data/com.github.phase1geo.annotator.appdata.xml.in:185
 msgid "Bug Fixes"
 msgstr "Исправления ошибок"
 
-#: data/com.github.phase1geo.annotator.appdata.xml.in:99
+#: data/com.github.phase1geo.annotator.appdata.xml.in:104
 msgid ""
-"Fixed issue with saving boolean export options between application runs "
-"(thanks to Peter Willemsen)."
+"Fixed issue where boolean export values were not properly saving (thanks to "
+"Peter Willemsen)."
 msgstr ""
 
-#: data/com.github.phase1geo.annotator.appdata.xml.in:100
-msgid ""
-"Fixed issue with missing icons in some distributions (thanks to Kevin Ernst)."
-msgstr ""
-
-#: data/com.github.phase1geo.annotator.appdata.xml.in:101
+#: data/com.github.phase1geo.annotator.appdata.xml.in:105
 msgid ""
 "Fixed issue with duplicating canvas items by holding Control while dragging "
 "an item."
 msgstr ""
 
-#: data/com.github.phase1geo.annotator.appdata.xml.in:102
+#: data/com.github.phase1geo.annotator.appdata.xml.in:106
+msgid ""
+"Fixed issues with missing icons on non-elementary distributions (thanks to "
+"Kevin Ernst)."
+msgstr ""
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:107
 #, fuzzy
 msgid "Fixed issue with certain icons not displaying properly in dark mode."
 msgstr ""
 "Исправлена проблема с отображением значков звёздочек и линий на панели "
 "инструментов фигур в тёмном режиме."
 
+#: data/com.github.phase1geo.annotator.appdata.xml.in:108
+#, fuzzy
+msgid "Fixed issue with icons being installed in the wrong place."
+msgstr ""
+"Исправлена проблема с отображением значков звёздочек и линий на панели "
+"инструментов фигур в тёмном режиме."
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:109
+msgid "Fixed issue with dismissing popover when the export button is clicked."
+msgstr ""
+
 #: data/com.github.phase1geo.annotator.appdata.xml.in:110
+msgid "Fixed issue with the --use-clipboard command-line option."
+msgstr ""
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:111
+msgid ""
+"Fixed application crash issue in some cases when annotate items are deleted."
+msgstr ""
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:112
+#, fuzzy
+msgid "Fixed issues with using the screenshot capture functionality."
+msgstr "Исправлены проблемы с копированием содержимого одной фигуры в другую."
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:113
+#, fuzzy
+msgid "Fixed issue with canvas scrolling in various cases."
+msgstr ""
+"Исправлена проблема с отображением значков звёздочек и линий на панели "
+"инструментов фигур в тёмном режиме."
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:114
+#, fuzzy
+msgid "Fixed display issues with icons in dark modes."
+msgstr ""
+"Исправлена проблема с отображением значков звёздочек и линий на панели "
+"инструментов фигур в тёмном режиме."
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:115
+#, fuzzy
+msgid "Fixed issue with the font icon not appearing correctly on some systems."
+msgstr ""
+"Исправлена проблема с отображением значков звёздочек и линий на панели "
+"инструментов фигур в тёмном режиме."
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:123
 #, fuzzy
 msgid "Added Russian translation (thanks to @lenemter)."
 msgstr "Обновлён итальянский перевод (спасибо @albanobattistella)."
 
-#: data/com.github.phase1geo.annotator.appdata.xml.in:114
+#: data/com.github.phase1geo.annotator.appdata.xml.in:127
 #, fuzzy
 msgid "Updated Italian translations (thanks to @albanobattistella)."
 msgstr "Обновлён итальянский перевод (спасибо @albanobattistella)."
 
-#: data/com.github.phase1geo.annotator.appdata.xml.in:115
-#: data/com.github.phase1geo.annotator.appdata.xml.in:133
+#: data/com.github.phase1geo.annotator.appdata.xml.in:128
+#: data/com.github.phase1geo.annotator.appdata.xml.in:146
 msgid "Updated Dutch translation (thanks to Heimen Stoffels)."
 msgstr "Обновлён голландский перевод (спасибо Heimen Stoffels)."
 
-#: data/com.github.phase1geo.annotator.appdata.xml.in:119
+#: data/com.github.phase1geo.annotator.appdata.xml.in:132
 msgid ""
 "Fixed translation string issues related to Zoom and Screenshot (thanks to "
 "@lenemter)."
 msgstr ""
 
-#: data/com.github.phase1geo.annotator.appdata.xml.in:127
+#: data/com.github.phase1geo.annotator.appdata.xml.in:140
 msgid ""
 "Adding support for taking screenshots from within the application (screen, "
 "window and area)."
 msgstr ""
 
-#: data/com.github.phase1geo.annotator.appdata.xml.in:128
+#: data/com.github.phase1geo.annotator.appdata.xml.in:141
 msgid "Adding command-line options for taking screenshots."
 msgstr "Добавлен параметр командной строки для создания скриншотов."
 
-#: data/com.github.phase1geo.annotator.appdata.xml.in:129
+#: data/com.github.phase1geo.annotator.appdata.xml.in:142
 msgid "Adding support for creating and saving custom arrows and shapes."
 msgstr ""
 "Добавлена поддержка создания и сохранения пользовательских стрелок и фигур."
 
-#: data/com.github.phase1geo.annotator.appdata.xml.in:134
-#: data/com.github.phase1geo.annotator.appdata.xml.in:163
+#: data/com.github.phase1geo.annotator.appdata.xml.in:147
+#: data/com.github.phase1geo.annotator.appdata.xml.in:176
 msgid "Updated Italian translation (thanks to @albanobattistella)."
 msgstr "Обновлён итальянский перевод (спасибо @albanobattistella)."
 
-#: data/com.github.phase1geo.annotator.appdata.xml.in:135
+#: data/com.github.phase1geo.annotator.appdata.xml.in:148
 msgid "Updated Flatpak SDK from version 6 to 6.1."
 msgstr "Обновлена версия Flatpak SDK с 6 до 6.1."
 
-#: data/com.github.phase1geo.annotator.appdata.xml.in:136
+#: data/com.github.phase1geo.annotator.appdata.xml.in:149
 msgid "Modified .gitignore to ignore .swp files from anywhere in the codebase."
 msgstr "В .gitignore были добавлены файлы .swp для удаления их из кода."
 
-#: data/com.github.phase1geo.annotator.appdata.xml.in:137
+#: data/com.github.phase1geo.annotator.appdata.xml.in:150
 msgid "Changed shape dropdown to display four shapes per row instead of two."
 msgstr ""
 "Изменено раскрывающееся меню фигур, чтобы отображать четыре фигуры в строке "
 "вместо двух."
 
-#: data/com.github.phase1geo.annotator.appdata.xml.in:138
+#: data/com.github.phase1geo.annotator.appdata.xml.in:151
 msgid "Enhanced export UI and adding export options for PNG and JPEG types."
 msgstr ""
 "Улучшен пользовательский интерфейс экспорта и добавлены параметры экспорта в "
 "PNG и JPEG."
 
-#: data/com.github.phase1geo.annotator.appdata.xml.in:139
+#: data/com.github.phase1geo.annotator.appdata.xml.in:152
 msgid ""
 "Changed JPEG export to use both .jpeg and .jpg file extensions (defaults to ."
 "jpg now)."
@@ -256,19 +330,19 @@ msgstr ""
 "Изменён экспорт JPEG для использования файлов с расширениями .jpeg и .jpg "
 "(теперь по умолчанию используется .jpg)."
 
-#: data/com.github.phase1geo.annotator.appdata.xml.in:140
+#: data/com.github.phase1geo.annotator.appdata.xml.in:153
 msgid "Improved arrow icon in toolbar."
 msgstr "Улучшен значок стрелки на панели инструментов."
 
-#: data/com.github.phase1geo.annotator.appdata.xml.in:144
+#: data/com.github.phase1geo.annotator.appdata.xml.in:157
 msgid "Improved ability to click on shapes that only have borders."
 msgstr "Улучшена возможность нажимать на фигуры, которые имеют только границы."
 
-#: data/com.github.phase1geo.annotator.appdata.xml.in:145
+#: data/com.github.phase1geo.annotator.appdata.xml.in:158
 msgid "Fixed issues with copying the contents of one shape into another."
 msgstr "Исправлены проблемы с копированием содержимого одной фигуры в другую."
 
-#: data/com.github.phase1geo.annotator.appdata.xml.in:146
+#: data/com.github.phase1geo.annotator.appdata.xml.in:159
 msgid ""
 "Fixed issue with displaying star and line icons in shapes toolbar for dark "
 "mode."
@@ -276,7 +350,7 @@ msgstr ""
 "Исправлена проблема с отображением значков звёздочек и линий на панели "
 "инструментов фигур в тёмном режиме."
 
-#: data/com.github.phase1geo.annotator.appdata.xml.in:154
+#: data/com.github.phase1geo.annotator.appdata.xml.in:167
 msgid ""
 "Added keyboard shortcuts for creating annotation items, printing and "
 "displaying contextual menus."
@@ -284,60 +358,60 @@ msgstr ""
 "Добавлены сочетания клавиш для создания элементов аннотаций, печати и "
 "отображения контекстных меню."
 
-#: data/com.github.phase1geo.annotator.appdata.xml.in:155
+#: data/com.github.phase1geo.annotator.appdata.xml.in:168
 msgid "Added keyboard shortcut cheatsheet."
 msgstr "Добавлена шпаргалка по сочетаниям клавиш."
 
-#: data/com.github.phase1geo.annotator.appdata.xml.in:156
+#: data/com.github.phase1geo.annotator.appdata.xml.in:169
 msgid "Added keyboard shortcut support for non-English keyboards."
 msgstr "Добавлена поддержка сочетаний клавиш для неанглийских клавиатур."
 
-#: data/com.github.phase1geo.annotator.appdata.xml.in:157
+#: data/com.github.phase1geo.annotator.appdata.xml.in:170
 msgid "Added Brazilian Portuguese translation (thanks to Fúlvio Alves)."
 msgstr "Добавлен бразильский португальский перевод (спасибо Fúlvio Alves)."
 
-#: data/com.github.phase1geo.annotator.appdata.xml.in:158
+#: data/com.github.phase1geo.annotator.appdata.xml.in:171
 msgid "Added Slovak translation (thanks to @MartinIIOT)"
 msgstr "Добавлен словацкий перевод (спасибо @MartinIIOT)"
 
-#: data/com.github.phase1geo.annotator.appdata.xml.in:159
+#: data/com.github.phase1geo.annotator.appdata.xml.in:172
 msgid ""
 "Added support for hitting the escape key to deselect all items on the canvas."
 msgstr ""
 "Добавлена поддержка нажатия клавиши выхода для отмены выбора всех элементов "
 "на холсте."
 
-#: data/com.github.phase1geo.annotator.appdata.xml.in:164
+#: data/com.github.phase1geo.annotator.appdata.xml.in:177
 msgid "Updated German translation (thanks to Hannes Fritz)."
 msgstr "Обновлён немецкий перевод (спасибо Hannes Fritz)."
 
-#: data/com.github.phase1geo.annotator.appdata.xml.in:165
+#: data/com.github.phase1geo.annotator.appdata.xml.in:178
 msgid "Updated zoom UI to make it more consistent with other elementary apps."
 msgstr ""
 "Обновлйн пользовательский интерфейс масштабирования, чтобы сделать его более "
 "совместимым с другими приложениями elementary."
 
-#: data/com.github.phase1geo.annotator.appdata.xml.in:166
+#: data/com.github.phase1geo.annotator.appdata.xml.in:179
 msgid "Improved accuracy of the list of translatable files."
 msgstr "Улучшена точность списка переводимых файлов."
 
-#: data/com.github.phase1geo.annotator.appdata.xml.in:167
+#: data/com.github.phase1geo.annotator.appdata.xml.in:180
 msgid "Moved arrow annotation to its own button in the toolbar."
 msgstr ""
 "Аннотация со стрелкой перемещена в собственную кнопку на панели инструментов."
 
-#: data/com.github.phase1geo.annotator.appdata.xml.in:168
+#: data/com.github.phase1geo.annotator.appdata.xml.in:181
 msgid ""
 "Removed Accounts permissions from Flatpak manifest as it is no longer needed."
 msgstr ""
 "Удалены разрешения учетных записей из манифеста Flatpak, так как они больше "
 "не нужны."
 
-#: data/com.github.phase1geo.annotator.appdata.xml.in:169
+#: data/com.github.phase1geo.annotator.appdata.xml.in:182
 msgid "Removed text grab selector when editing text."
 msgstr "Удалён селектор захвата текста при редактировании текста."
 
-#: data/com.github.phase1geo.annotator.appdata.xml.in:170
+#: data/com.github.phase1geo.annotator.appdata.xml.in:183
 msgid ""
 "Changed behavior of Return key when text is edited to keep the text item "
 "selected."
@@ -345,11 +419,11 @@ msgstr ""
 "Изменено поведение клавиши Enter при редактировании текста, чтобы текстовый "
 "элемент оставался выделенным."
 
-#: data/com.github.phase1geo.annotator.appdata.xml.in:174
+#: data/com.github.phase1geo.annotator.appdata.xml.in:187
 msgid "Fixed icons8_cup sticker issue (thanks to Jan Tojnar)."
 msgstr "Исправлена ​​проблема со стикером icons8_cup (спасибо Jan Tojnar)."
 
-#: data/com.github.phase1geo.annotator.appdata.xml.in:175
+#: data/com.github.phase1geo.annotator.appdata.xml.in:188
 msgid ""
 "Fixed issue where the toolbar state did not update to match the currently "
 "selected item."
@@ -357,7 +431,7 @@ msgstr ""
 "Исправлена проблема, из-за которой состояние панели инструментов не "
 "обновлялось в соответствии с текущим выбранным элементом."
 
-#: data/com.github.phase1geo.annotator.appdata.xml.in:176
+#: data/com.github.phase1geo.annotator.appdata.xml.in:189
 msgid ""
 "Fixed issue where dragging a blur rectangle outside of the image caused "
 "application crash."
@@ -365,13 +439,13 @@ msgstr ""
 "Исправлена проблема, из-за которой перетаскивание прямоугольника размытия за "
 "пределы изображения приводило к вылету приложения."
 
-#: data/com.github.phase1geo.annotator.appdata.xml.in:177
+#: data/com.github.phase1geo.annotator.appdata.xml.in:190
 msgid ""
 "Fixed issue where a text widget could be deleted but remain on the canvas."
 msgstr ""
 "Исправлена ошибка, из-за которой текстовый виджет мог быть удалён, но он "
 "оставался на холсте."
 
-#: data/com.github.phase1geo.annotator.appdata.xml.in:183
+#: data/com.github.phase1geo.annotator.appdata.xml.in:196
 msgid "Initial release."
 msgstr "Начальный выпуск."
