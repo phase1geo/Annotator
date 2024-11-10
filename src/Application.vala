@@ -43,6 +43,8 @@ public class Annotator : Gtk.Application {
     Intl.bind_textdomain_codeset( GETTEXT_PACKAGE, "UTF-8" );
     Intl.textdomain( GETTEXT_PACKAGE );
 
+    stdout.printf( "CPE_NAME: %s\n", Environment.get_os_info( "CPE_NAME" ) );
+
     startup.connect( start_application );
     open.connect( open_files );
 
@@ -75,7 +77,7 @@ public class Annotator : Gtk.Application {
         }
       });
     } else if( take_screenshot ) {
-      appwin.do_screenshot();
+      appwin.do_screenshot( null );
     }
 
     /* Handle any changes to the position of the window */

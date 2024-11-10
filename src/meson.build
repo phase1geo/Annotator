@@ -24,6 +24,7 @@ sources += files(
     'FormattedText.vala',
     'MainWindow.vala',
     'Resizer.vala',
+    'ScreenshotBackend.vala',
     'StickerSet.vala',
     'UndoBuffer.vala',
     'UndoItem.vala',
