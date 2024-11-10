@@ -567,13 +567,6 @@ public class MainWindow : Gtk.ApplicationWindow {
   // Returns the capture mode as determined by the user
   private void show_screenshot_popover( Widget parent ) {
 
-    var box = new Box( Orientation.VERTICAL, 10 ) {
-      margin_start  = 10,
-      margin_end    = 10,
-      margin_top    = 10,
-      margin_bottom = 10
-    };
-
     var shot_menu = new GLib.Menu();
 
     for( int i=0; i<CaptureType.NUM; i++ ) {
@@ -592,14 +585,18 @@ public class MainWindow : Gtk.ApplicationWindow {
       hexpand = true
     };
     var delay_sb = new SpinButton.with_range( 0, 6, 1 ) {
-      halign = Align.END
+      halign = Align.END,
+      valign = Align.CENTER
     };
     delay_sb.value = Annotator.settings.get_int( "screenshot-delay" );
     delay_sb.value_changed.connect(() => {
       Annotator.settings.set_int( "screenshot-delay", (int)delay_sb.value );
     });
 
-    var dbox = new Box( Orientation.HORIZONTAL, 10 );
+    var dbox = new Box( Orientation.HORIZONTAL, 10 ) {
+      margin_start = 10,
+      margin_end   = 10
+    };
     dbox.append( delay );
     dbox.append( delay_sb );
 
@@ -613,13 +610,18 @@ public class MainWindow : Gtk.ApplicationWindow {
     };
     var include_sw = new Switch() {
       halign = Align.END,
+      valign = Align.CENTER,
       active = Annotator.settings.get_boolean( "screenshot-include-win" )
     };
     include_sw.notify["active"].connect((value) => {
       Annotator.settings.set_boolean( "screenshot-include-win", include_sw.active );
     });
 
-    var ibox = new Box( Orientation.HORIZONTAL, 10 );
+    var ibox = new Box( Orientation.HORIZONTAL, 10 ) {
+      margin_top   = 10,
+      margin_start = 10,
+      margin_end   = 10
+    };
     ibox.append( include );
     ibox.append( include_sw );
 
