@@ -94,9 +94,7 @@ public class ScreenshotBackend : Object {
     try {
       var introspectable = get_instrospectable();
       return true;
-    } catch (Error e) {
-      warning ("Can not take screenshots on this system: %s\n", e.message);
-    }
+    } catch (Error e) {}
     return false;
   }
 

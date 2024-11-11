@@ -545,14 +545,11 @@ public class MainWindow : Gtk.ApplicationWindow {
   }
 
   //-------------------------------------------------------------
-  // Main procedure that initiates a screenshot.  If we are using
-  // elementary OS 7.1 or below, we will roll our own screenshot
-  // UI and functionality; otherwise, we will use the screenshot
-  // portal.
+  // Main procedure that initiates a screenshot.  If the backend
+  // indicates that it can handle taking the screenshot, use the
+  // backend to perform the screenshot; otherwise, use the portal.
   public void do_screenshot( Widget? parent ) {
-    var os      = Environment.get_os_info( "ID" );
-    var version = Environment.get_os_info( "VERSION" );
-    if( (os == "elementary") && (double.parse(version) < 8.0) ) {
+    if( ScreenshotBackend.can_do_screenshots() ) {
       if( parent == null ) {
         do_screenshot_nonportal( CaptureType.SCREEN );
       } else {
