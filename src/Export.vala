@@ -92,8 +92,9 @@ public class Export {
     };
 
     var sw  = new Switch() {
-      halign = Align.END,
-      hexpand = true
+      halign  = Align.END,
+      hexpand = true,
+      active  = dflt
     };
     sw.notify["active"].connect(() => {
       settings_changed();
@@ -126,6 +127,7 @@ public class Export {
       draw_value   = true,
       round_digits = max.to_string().char_count()
     };
+    scale.set_value( (double)dflt );
     scale.value_changed.connect(() => {
       settings_changed();
     });
