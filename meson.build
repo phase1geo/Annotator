@@ -37,12 +37,6 @@ subdir('data')
 subdir('po')
 subdir('src')
 
-# If the GTK version is higher than 3.22, add a define to indicate that
-gtk_dep = dependency('gtk+-3.0')
-if gtk_dep.version().version_compare('>=3.22.0')
-  add_project_arguments(['--define=GTK322'], language: 'vala')
-endif
-
 # Add the math library
 cc = meson.get_compiler('c')
 math_dep = cc.find_library('m', required: false)
