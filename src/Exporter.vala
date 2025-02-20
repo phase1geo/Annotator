@@ -43,7 +43,7 @@ public class Exporter : Box {
     _win = win;
 
     _mb = new MenuButton() {
-      halign     = Align.START,
+      halign     = Align.FILL,
       hexpand    = true,
       icon_name  = "pan-down-symbolic",
       menu_model = new GLib.Menu()
@@ -60,7 +60,9 @@ public class Exporter : Box {
     });
 
     var bbox = new Box( Orientation.HORIZONTAL, 5 ) {
-      hexpand = true
+      hexpand      = true,
+      margin_start = 5,
+      margin_end   = 5
     };
     bbox.append( _mb );
     bbox.append( export );
