@@ -243,7 +243,8 @@ public class MainWindow : Gtk.ApplicationWindow {
 
   }
 
-  /* Create the exports menubutton and associated menu */
+  //-------------------------------------------------------------
+  // Create the exports menubutton and associated menu.
   private MenuButton create_exports() {
 
     /* Add the export UI */
@@ -283,7 +284,8 @@ public class MainWindow : Gtk.ApplicationWindow {
 
   }
 
-  /* Creates the zoom menu */
+  //-------------------------------------------------------------
+  // Creates the zoom menu.
   private MenuButton create_zoom() {
 
     _zoom = new ZoomWidget( (int)(_editor.canvas.zoom_min * 100), (int)(_editor.canvas.zoom_max * 100), (int)(_editor.canvas.zoom_step * 100) ) {
@@ -351,7 +353,7 @@ public class MainWindow : Gtk.ApplicationWindow {
       return( false );
     });
 
-    var open = _welcome.append_button( new ThemedIcon( "document-open" ), _( "Open Image From File" ), _( "Open a PNG, JPEG, TIFF or BMP file" ) );
+    var open = _welcome.append_button( new ThemedIcon( "document-open" ), _( "Open Image From File" ), _( "Open a PNG, JPEG, TIFF, BMP or Annotator file" ) );
     open.clicked.connect( do_open );
 
     var paste = _welcome.append_button( new ThemedIcon( "edit-paste" ), _( "Paste Image From Clipboard" ), _( "Open an image from the clipboard" ) );
@@ -445,6 +447,12 @@ public class MainWindow : Gtk.ApplicationWindow {
       }
       _image_filters.append( filter );
     }
+
+    var afilter = new FileFilter();
+    afilter.set_filter_name( _( "Annotator" ) );
+    afilter.add_pattern( "*.annotator" );
+    patterns += "*.annotator";
+    _image_filters.append( afilter );
 
     /* Add the 'all image formats' filter first */
     var filter = new FileFilter();

@@ -38,6 +38,7 @@ public class Exports {
     add( new ExportPDF( canvas ) );
     add( new ExportPNG( canvas ) );
     add( new ExportSVG( canvas ) );
+    add( new ExportEditable( canvas ) );
 
     clipboard = new ExportClipboard( canvas );
     printer   = new ExportPrint( canvas );

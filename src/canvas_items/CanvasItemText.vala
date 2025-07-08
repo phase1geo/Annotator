@@ -205,8 +205,8 @@ public class CanvasItemText : CanvasItem {
   }
 
   /* Saves the current instance into the given XML tree */
-  public override Xml.Node* save() {
-    Xml.Node* node = base.save();
+  public override Xml.Node* save( int id, string? image_dir ) {
+    Xml.Node* node = base.save( id, image_dir );
     node->add_child( _text.save() );
     return( node );
   }

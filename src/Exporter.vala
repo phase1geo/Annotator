@@ -170,6 +170,7 @@ public class Exporter : Box {
     FileFilter filter = new FileFilter();
     filter.set_filter_name( export.label );
     foreach( string extension in export.extensions ) {
+      stdout.printf( "Setting export to %s\n", extension );
       filter.add_pattern( "*" + extension );
     }
     dialog.set_filter( filter );

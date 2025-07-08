@@ -118,7 +118,8 @@ public class Canvas : DrawingArea {
     set_cursor( cursor );
   }
 
-  /* Opens a new image and displays it in the drawing area */
+  //-------------------------------------------------------------
+  // Opens a new image and displays it in the drawing area.
   public bool open_image( string filename ) {
 
     try {
@@ -491,6 +492,38 @@ public class Canvas : DrawingArea {
 
     /* Resize the canvas itself */
     set_size_request( new_info.width, new_info.height );
+
+  }
+
+  /****************************************************************************/
+  //  SAVE/LOAD
+  /****************************************************************************/
+
+  //-------------------------------------------------------------
+  // Saves this canvas and all canvas items in XML format.
+  public Xml.Node* save( string? image_dir = null ) {
+
+    Xml.Node* node = new Xml.Node( null, "canvas" );
+
+    node->add_child( image.save( editor.filename, image_dir ) );
+    node->add_child( items.save( image_dir ) );
+
+    return( node );
+
+  }
+
+  //-------------------------------------------------------------
+  // Loads this canvas and the canvas items from XML format.
+  public void load( Xml.Node* node ) {
+
+    for( Xml.Node* it=node->children; it!=null; it=it->next ) {
+      if( it->type == Xml.ElementType.ELEMENT_NODE ) {
+        switch( it->name ) {
+          case "image" :  image.load( it );  break;
+          case "items" :  items.load( it );  break;
+        }
+      }
+    }    
 
   }
 

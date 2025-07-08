@@ -1,0 +1,193 @@
+/*
+* Copyright (c) 2018 (https://github.com/phase1geo/Minder)
+*
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public
+* License as published by the Free Software Foundation; either
+* version 2 of the License, or (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+* General Public License for more details.
+*
+* You should have received a copy of the GNU General Public
+* License along with this program; if not, write to the
+* Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+* Boston, MA 02110-1301 USA
+*
+* Authored by: Trevor Williams <phase1geo@gmail.com>
+*/
+
+using Cairo;
+using Gdk;
+using Gtk;
+
+public class ExportEditable : Export {
+
+  //-------------------------------------------------------------
+  // Default constructor
+  public ExportEditable( Canvas canvas ) {
+    base( canvas, "annotator", _( "Annotator" ), { ".annotator" } );
+  }
+  
+  //-------------------------------------------------------------
+  // Main export function.
+  public override bool export( string filename, Pixbuf source ) {
+
+    /* Make sure that the filename is sane */
+    var fname = repair_filename( filename );
+
+    /* Figure out if the user wants to include the images or not */
+    if( get_bool( "include-images" ) ) {
+      save_with_images( fname );
+    } else {
+      save_without_images( fname );
+    }
+
+    return( true );
+
+  }
+
+  //-------------------------------------------------------------
+  // Saves the *.annotator file as a temporary directory such that
+  // images used within the annotation are saved into the directory
+  // and the directory is zipped and archived as the final *.annotator
+  // file.
+  private void save_with_images( string fname ) {
+
+    string temp_dir;
+
+    // Make the temporary directory
+    try {
+      temp_dir = DirUtils.make_tmp( "annotator-XXXXXX" );
+    } catch( Error e ) {
+      critical( e.message );
+      return;
+    }
+
+    var image_dir = GLib.Path.build_filename( temp_dir, "images" );
+    DirUtils.create( image_dir, 0755 );
+
+    var annotations_file = GLib.Path.build_filename( temp_dir, "annotations.xml" );
+    save_xml( annotations_file, image_dir );
+
+    // Create the tar.gz archive named according the the first argument
+    Archive.Write archive = new Archive.Write ();
+    archive.add_filter_gzip();
+    archive.set_format_pax_restricted();
+    archive.open_filename( fname );
+
+    // Add the Minder file to the archive
+    archive_file( archive, annotations_file );
+
+    // Add the images
+    string? name = null;
+    var     dir  = Dir.open( image_dir );
+    while( (name = dir.read_name()) != null ) {
+      archive_file( archive, GLib.Path.build_filename( image_dir, name ) );
+    }
+
+    // Close the archive
+    if( archive.close() != Archive.Result.OK ) {
+      error( "Error : %s (%d)", archive.error_string(), archive.errno() );
+    }
+
+  }
+
+  //-------------------------------------------------------------
+  // Adds the given file to the archive.
+  public bool archive_file( Archive.Write archive, string fname, int? image_id = null ) {
+
+    try {
+
+      var file              = GLib.File.new_for_path( fname );
+      var file_info         = file.query_info( GLib.FileAttribute.STANDARD_SIZE, GLib.FileQueryInfoFlags.NONE );
+      var input_stream      = file.read();
+      var data_input_stream = new DataInputStream( input_stream );
+
+      /* Add an entry to the archive */
+      var entry = new Archive.Entry();
+      entry.set_pathname( file.get_basename() );
+      entry.set_size( (Archive.int64_t)file_info.get_size() );
+      entry.set_filetype( Archive.FileType.IFREG );
+      entry.set_perm( (Archive.FileMode)0644 );
+
+      if( image_id != null ) {
+        entry.xattr_add_entry( "image_id", (void*)image_id, sizeof( int ) );
+      }
+
+      if( archive.write_header( entry ) != Archive.Result.OK ) {
+        critical ("Error writing '%s': %s (%d)", file.get_path (), archive.error_string (), archive.errno ());
+        return( false );
+      }
+
+      /* Add the actual content of the file */
+      size_t bytes_read;
+      uint8[] buffer = new uint8[64];
+      while( data_input_stream.read_all( buffer, out bytes_read ) ) {
+        if( bytes_read <= 0 ) {
+          break;
+        }
+        archive.write_data( buffer );
+      }
+
+    } catch( Error e ) {
+      stdout.printf( "ERROR archiving: %s\n", e.message );
+      critical( e.message );
+      return( false );
+    }
+
+    return( true );
+
+  }
+
+  //-------------------------------------------------------------
+  // Saves the *.annotator file as an XML file, leaving the image
+  // paths to point to the local filesystem.
+  private void save_without_images( string fname ) {
+
+    save_xml( fname, null );
+
+  }
+
+  //-------------------------------------------------------------
+  // Saves the XML information from the annotation.  Copies the stored
+  // images in the given image directory, if specified.
+  private void save_xml( string fname, string? image_dir ) {
+
+    Xml.Doc*  doc  = new Xml.Doc( "1.0" );
+    Xml.Node* root = new Xml.Node( null, "exports" );
+
+    root->set_prop( "version", Annotator.version );
+    root->add_child( canvas.save( image_dir ) );
+
+    doc->set_root_element( root );
+    doc->save_format_file( fname, 1 );
+    delete doc;
+
+  }
+
+  //-------------------------------------------------------------
+  // Add the setting to enable/disable including the images included
+  // in the annotation.
+  public override void add_settings( Grid grid ) {
+    add_setting_bool( "include-images", grid, _( "Include images" ), _( "Including images will allow the saved file to be used on a different machine, but will make the file size much larger" ), false );
+  }
+
+  //-------------------------------------------------------------
+  // Save the settings.
+  public override void save_settings( Xml.Node* node ) {
+    node->set_prop( "include-images", get_bool( "include-images" ).to_string() );
+  }
+
+  //-------------------------------------------------------------
+  // Load the settings.
+  public override void load_settings( Xml.Node* node ) {
+    var ii = node->get_prop( "include-images" );
+    if( ii != null ) {
+      set_bool( "include-images", bool.parse( ii ) );
+    }
+  }
+
+}

@@ -248,8 +248,8 @@ public class CanvasItemArrow : CanvasItem {
   }
 
   /* Saves this item as XML */
-  public override Xml.Node* save() {
-    Xml.Node* node = base.save();
+  public override Xml.Node* save( int id, string? image_dir ) {
+    Xml.Node* node = base.save( id, image_dir );
     node->set_prop( "peak-angle",    _peak_a.to_string() );
     node->set_prop( "peak-length",   _peak_c.to_string() );
     node->set_prop( "valley-angle",  _valley_a.to_string() );

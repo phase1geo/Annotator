@@ -28,6 +28,12 @@ public class Editor : Box {
 
   public Canvas canvas { get; private set; }
 
+  public string filename {
+    get {
+      return( _filename );
+    }
+  }
+
   public signal void image_loaded();
 
   /* Constructor */
@@ -98,39 +104,51 @@ public class Editor : Box {
 
   }
 
-  /* Opens the given image */
+  //-------------------------------------------------------------
+  // Opens the given image.
   public void open_image( string filename ) {
     _filename = filename;
-    canvas.open_image( filename );
+    if( filename.has_suffix( ".annotator" ) ) {
+      // TBD - load( filename );
+    } else {
+      canvas.open_image( filename );
+    }
   }
 
-  /* Pastes the given image pixbuf to the canvas */
+  //-------------------------------------------------------------
+  // Pastes the given image pixbuf to the canvas.
   public void paste_image( Gdk.Pixbuf buf, bool confirm ) {
     canvas.paste_image( buf, confirm );
   }
 
-  /* Pastes the given text to the canvas */
+  //-------------------------------------------------------------
+  // Pastes the given text to the canvas.
   public void paste_text( string txt ) {
     canvas.paste_text( txt );
   }
 
-  /* Pastes the given text as canvas items */
+  //-------------------------------------------------------------
+  // Pastes the given text as canvas items.
   public void paste_items( string items ) {
     canvas.items.deserialize_for_paste( items );
   }
 
-  /* Returns true if the image has been successfully set */
+  //-------------------------------------------------------------
+  // Returns true if the image has been successfully set.
   public bool is_image_set() {
     return( canvas.is_surface_set() );
   }
 
-  /* Returns the width and height to size the current image so that it fits in the window */
+  //-------------------------------------------------------------
+  // Returns the width and height to size the current image so
+  // that it fits in the window.
   public void get_win_size( out int width, out int height ) {
     width  = _sw.get_allocated_width();
     height = _sw.get_allocated_height();
   }
 
-  /* Returns the width and height of the overlay area of the canvas */
+  //-------------------------------------------------------------
+  // Returns the width and height of the overlay area of the canvas.
   public CanvasRect get_displayed_rect() {
     var x = (int)_sw.hadjustment.value;
     var y = (int)_sw.vadjustment.value;

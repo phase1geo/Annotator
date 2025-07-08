@@ -57,6 +57,7 @@ dependencies = [
     dependency('libxml-2.0'),
     dependency('libportal-gtk4'),
     dependency('pangocairo'),
+    dependency('libarchive'),
     math_dep
 ]
 

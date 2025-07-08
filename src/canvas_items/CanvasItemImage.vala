@@ -118,11 +118,25 @@ public class CanvasItemImage : CanvasItem {
     return( _sel_cursor );
   }
 
-  /* Saves this item as XML */
-  public override Xml.Node* save() {
-    Xml.Node* node = base.save();
-    node->set_prop( "name", _name );
-    node->set_prop( "file", _file.to_string() );
+  //-------------------------------------------------------------
+  // Saves this item as XML.
+  public override Xml.Node* save( int id, string? image_dir ) {
+    Xml.Node* node = base.save( id, image_dir );
+    if( (image_dir != null) && _file ) {
+      string[] options = { "compression" };
+      string[] values  = { "9" };
+      var fname = GLib.Path.build_filename( image_dir, "image%d.png".printf( id ) );
+      try {
+        _buf.savev( fname, "png", options, values );
+        node->set_prop( "name", fname );
+        node->set_prop( "file", true.to_string() );
+      } catch( Error e ) {
+        critical( e.message );
+      }
+    } else {
+      node->set_prop( "name", _name );
+      node->set_prop( "file", _file.to_string() );
+    }
     return( node );
   }
 
