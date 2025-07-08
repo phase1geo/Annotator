@@ -588,6 +588,7 @@ public class CanvasImage {
       string[]  options = { "compression" };
       string[]  values  = { "9" };
       var       name    = GLib.Path.build_filename( image_dir, "background.png" );
+      stdout.printf( "Attempting to save canvas image as %s\n", name );
       try {
         _buf.savev( name, "png", options, values );
         node->set_prop( "filename", name );
@@ -610,7 +611,8 @@ public class CanvasImage {
 
     var fname = node->get_prop( "filename" );
     if( fname != null ) {
-      _canvas.open_image( fname ); 
+      stdout.printf( "Opening image: %s\n", fname );
+      _canvas.editor.open_image( fname ); 
     }
 
     var a = node->get_prop( "angle" );

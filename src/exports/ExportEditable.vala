@@ -169,6 +169,96 @@ public class ExportEditable : Export {
   }
 
   //-------------------------------------------------------------
+  // Loads the XML file and updates the editor.
+  private void load_xml( string fname ) {
+
+    Xml.Doc* doc = Xml.Parser.read_file( fname, null, Xml.ParserOption.HUGE );
+    if( doc == null ) return;
+
+    for( Xml.Node* it=doc->get_root_element()->children; it!=null; it=it->next ) {
+      if( (it->type == Xml.ElementType.ELEMENT_NODE) && (it->name == "canvas") ) {
+        canvas.load( it );
+      }
+    }
+
+    delete doc;
+
+  }
+
+  //-------------------------------------------------------------
+  // Imports the given filename.
+  public void import( string filename ) {
+
+    string temp_dir;
+
+    // Make the temporary directory
+    try {
+      temp_dir = DirUtils.make_tmp( "annotator-XXXXXX" );
+    } catch( Error e ) {
+      critical( e.message );
+      return;
+    }
+
+    Archive.Read archive = new Archive.Read();
+    archive.support_filter_gzip();
+    archive.support_format_all();
+
+    Archive.ExtractFlags flags;
+    flags  = Archive.ExtractFlags.TIME;
+    flags |= Archive.ExtractFlags.PERM;
+    flags |= Archive.ExtractFlags.ACL;
+    flags |= Archive.ExtractFlags.FFLAGS;
+
+    Archive.WriteDisk extractor = new Archive.WriteDisk();
+    extractor.set_options( flags );
+    extractor.set_standard_lookup();
+
+    /* Open the portable Minder file for reading */
+    if( archive.open_filename( filename, 16384 ) != Archive.Result.OK ) {
+      load_xml( filename );
+      return;
+    }
+
+    unowned Archive.Entry entry;
+
+    while( archive.next_header( out entry ) == Archive.Result.OK ) {
+
+      /*
+       We will need to modify the entry pathname so the file is written to the
+       proper location.
+      */
+      if( entry.pathname() == "annotations.xml" ) {
+        entry.set_pathname( GLib.Path.build_filename( temp_dir, entry.pathname() ) );
+      } else {
+        entry.set_pathname( GLib.Path.build_filename( temp_dir, "images", entry.pathname() ) );
+      }
+
+      /* Read from the archive and write the files to disk */
+      if( extractor.write_header( entry ) != Archive.Result.OK ) {
+        continue;
+      }
+      uint8[]         buffer;
+      Archive.int64_t offset;
+
+      while( archive.read_data_block( out buffer, out offset ) == Archive.Result.OK ) {
+        if( extractor.write_data_block( buffer, offset ) != Archive.Result.OK ) {
+          break;
+        }
+      }
+
+    }
+
+    /* Close the archive */
+    if( archive.close () != Archive.Result.OK) {
+      error( "Error: %s (%d)", archive.error_string(), archive.errno() );
+    }
+
+    /* Finally, load the XML file */
+    load_xml( GLib.Path.build_filename( temp_dir, "annotations.xml" ) );
+
+  }
+
+  //-------------------------------------------------------------
   // Add the setting to enable/disable including the images included
   // in the annotation.
   public override void add_settings( Grid grid ) {

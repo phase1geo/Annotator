@@ -182,7 +182,6 @@ public class CanvasItemStar : CanvasItem {
     if( i != null ) {
       _inner_radius = double.parse( i );
     }
-    bbox_changed();
   }
 
   /* Draw the rectangle */

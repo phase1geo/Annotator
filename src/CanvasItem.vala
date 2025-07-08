@@ -461,6 +461,8 @@ public class CanvasItem {
       }
     }
 
+    bbox_changed();
+
   }
 
   /* Returns the canvas item type from the given XML node */

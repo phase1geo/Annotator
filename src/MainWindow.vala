@@ -498,7 +498,17 @@ public class MainWindow : Gtk.ApplicationWindow {
    image is successfully read and displayed.
   */
   public void open_file( string filename ) {
-    _editor.open_image( filename );
+    stdout.printf( "HERE A\n" );
+    if( filename.has_suffix( ".annotator" ) ) {
+      stdout.printf( "HERE B\n" );
+      var export = (_editor.canvas.image.exports.get_by_name( "annotator" ) as ExportEditable);
+      if( export != null ) {
+        stdout.printf( "HERE C\n" );
+        export.import( filename );
+      }
+    } else {
+      _editor.open_image( filename );
+    }
     _zoom_btn.set_sensitive( true );
     _export_btn.set_sensitive( true );
   }

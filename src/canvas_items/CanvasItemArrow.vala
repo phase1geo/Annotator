@@ -276,7 +276,6 @@ public class CanvasItemArrow : CanvasItem {
     if( vc != null ) {
       _valley_c = double.parse( vc );
     }
-    bbox_changed();
   }
 
   /* Draw the rectangle */
