@@ -237,11 +237,11 @@ public class CanvasItemMagnifier : CanvasItem {
   //-------------------------------------------------------------
   // Loads this item from XML.
   public override void load( Xml.Node* node ) {
-    base.load( node );
     var f = node->get_prop( "zoom-factor" );
     if( f != null ) {
       _zoom_factor = double.parse( f );
     }
+    base.load( node );
   }
 
   /* Helper function that finds the two tangential points on a circle to a given point */

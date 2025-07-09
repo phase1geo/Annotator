@@ -78,14 +78,40 @@ public class CanvasItemPencil : CanvasItem {
     return( _sel_cursor );
   }
 
-  /* Add an edit point */
+  //-------------------------------------------------------------
+  // Saves the contents of this pencil line in XML format.
+  public override Xml.Node* save( int id, string? image_dir ) {
+    Xml.Node* node = base.save( id, image_dir );
+    for( int i=0; i<_edit_points.length; i++ ) {
+      node->add_child( _edit_points.index( i ).save() );
+    }
+    return( node );
+  }
+
+  //-------------------------------------------------------------
+  // Loads the contents of this pencil line from Xml format.
+  public override void load( Xml.Node* node ) {
+    for( Xml.Node* it=node->children; it!=null; it=it->next ) {
+      if( (it->type == Xml.ElementType.ELEMENT_NODE) && (it->name == "point") ) {
+        var point = new CanvasPoint();
+        point.load( it );
+        _edit_points.append_val( point );
+      }
+    }
+    points.index( 0 ).copy( _edit_points.index( 0 ) );
+    points.index( 1 ).copy( _edit_points.index( _edit_points.length - 1 ) );
+  }
+
+  //-------------------------------------------------------------
+  // Add an edit point.
   public override void draw( double x, double y ) {
     _edit_points.append_val( new CanvasPoint.from_coords( x, y, CanvasPointType.RESIZER0 ) );
     points.index( 0 ).copy( _edit_points.index( 0 ) );
     points.index( 1 ).copy( _edit_points.index( _edit_points.length - 1 ) );
   }
 
-  /* Draw the rectangle */
+  //-------------------------------------------------------------
+  // Draw the lines.
   public override void draw_item( Context ctx, CanvasItemColor color ) {
 
     if( _edit_points.length == 0 ) return;

@@ -126,20 +126,22 @@ public class CanvasItemSequence : CanvasItem {
 
   }
 
-  /* Saves this item as XML */
+  //-------------------------------------------------------------
+  // Saves this item as XML.
   public override Xml.Node* save( int id, string? image_dir ) {
     Xml.Node* node = base.save( id, image_dir );
     node->set_prop( "sequence-num", seq_num.to_string() );
     return( node );
   }
 
-  /* Loads this item from XML */
+  //-------------------------------------------------------------
+  // Loads this item from XML.
   public override void load( Xml.Node* node ) {
-    base.load( node );
     var f = node->get_prop( "sequence-num" );
     if( f != null ) {
       seq_num = int.parse( f );
     }
+    base.load( node );
   }
 
   /* Figure out the text size that will fit within the boundary box */

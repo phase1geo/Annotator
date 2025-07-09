@@ -106,13 +106,9 @@ public class Editor : Box {
 
   //-------------------------------------------------------------
   // Opens the given image.
-  public void open_image( string filename ) {
+  public bool open_image( string filename ) {
     _filename = filename;
-    if( filename.has_suffix( ".annotator" ) ) {
-      // TBD - load( filename );
-    } else {
-      canvas.open_image( filename );
-    }
+    return( canvas.open_image( filename ) );
   }
 
   //-------------------------------------------------------------

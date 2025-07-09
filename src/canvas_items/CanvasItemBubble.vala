@@ -43,7 +43,7 @@ public enum CanvasBubbleType {
     }
   }
 
-  public CanvasBubbleType parse( string str ) {
+  public static CanvasBubbleType parse( string str ) {
     switch( str ) {
       case "talk"  :  return( TALK );
       case "think" :  return( THINK );
@@ -152,9 +152,29 @@ public class CanvasItemBubble : CanvasItem {
 
   }
 
-  /* Provides cursor to display when mouse cursor is hovering over the given selector */
+  //-------------------------------------------------------------
+  // Provides cursor to display when mouse cursor is hovering over
+  // the given selector.
   public override Cursor? get_selector_cursor( int index ) {
     return( _sel_cursors[index] );
+  }
+
+  //-------------------------------------------------------------
+  // Saves the description of this item in XML format.
+  public override Xml.Node* save( int id, string? image_dir ) {
+    Xml.Node* node = base.save( id, image_dir );
+    node->set_prop( "type", _type.to_string() );
+    return( node );
+  }
+
+  //-------------------------------------------------------------
+  // Loads the description of this item from XML format.
+  public override void load( Xml.Node* node ) {
+    var t = node->get_prop( "type" );
+    if( t != null ) {
+      _type = CanvasBubbleType.parse( t );
+    }
+    base.load( node );
   }
 
   /* Helper function that finds the two tangential points on a circle to a given point */

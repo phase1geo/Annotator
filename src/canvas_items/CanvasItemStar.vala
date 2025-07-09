@@ -173,7 +173,6 @@ public class CanvasItemStar : CanvasItem {
   //-------------------------------------------------------------
   // Loads this item from XML.
   public override void load( Xml.Node* node ) {
-    base.load( node );
     var p = node->get_prop( "points" );
     if( p != null ) {
       num_points = int.parse( p );
@@ -182,9 +181,11 @@ public class CanvasItemStar : CanvasItem {
     if( i != null ) {
       _inner_radius = double.parse( i );
     }
+    base.load( node );
   }
 
-  /* Draw the rectangle */
+  //-------------------------------------------------------------
+  // Draw the star.
   public override void draw_item( Context ctx, CanvasItemColor color ) {
 
     var outline = Granite.contrasting_foreground_color( props.color );

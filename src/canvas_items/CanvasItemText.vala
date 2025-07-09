@@ -204,22 +204,24 @@ public class CanvasItemText : CanvasItem {
     return( _selstart != _selend );
   }
 
-  /* Saves the current instance into the given XML tree */
+  //-------------------------------------------------------------
+  // Saves the current instance into the given XML tree.
   public override Xml.Node* save( int id, string? image_dir ) {
     Xml.Node* node = base.save( id, image_dir );
     node->add_child( _text.save() );
     return( node );
   }
 
-  /* Loads the file contents into this instance */
+  //-------------------------------------------------------------
+  // Loads the file contents into this instance.
   public override void load( Xml.Node* node ) {
-    base.load( node );
     for( Xml.Node* it = node->children; it != null; it = it->next ) {
       if( (it->type == Xml.ElementType.ELEMENT_NODE) && (it->name == "text" ) )  {
         _text.load( it );
         update_size();
       }
     }
+    base.load( node );
   }
 
   /* Returns the height of a single line of text */

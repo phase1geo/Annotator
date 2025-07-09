@@ -514,16 +514,20 @@ public class Canvas : DrawingArea {
 
   //-------------------------------------------------------------
   // Loads this canvas and the canvas items from XML format.
-  public void load( Xml.Node* node ) {
+  public bool load( Xml.Node* node ) {
+
+    bool image_loaded = false;
 
     for( Xml.Node* it=node->children; it!=null; it=it->next ) {
       if( it->type == Xml.ElementType.ELEMENT_NODE ) {
         switch( it->name ) {
-          case "image" :  image.load( it );  break;
+          case "image" :  image_loaded = image.load( it );  break;
           case "items" :  items.load( it );  break;
         }
       }
-    }    
+    }
+
+    return( image_loaded );
 
   }
 

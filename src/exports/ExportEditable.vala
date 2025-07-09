@@ -170,24 +170,27 @@ public class ExportEditable : Export {
 
   //-------------------------------------------------------------
   // Loads the XML file and updates the editor.
-  private void load_xml( string fname ) {
+  private bool load_xml( string fname ) {
 
     Xml.Doc* doc = Xml.Parser.read_file( fname, null, Xml.ParserOption.HUGE );
-    if( doc == null ) return;
+    if( doc == null ) return( false );
 
+    var loaded = false;
     for( Xml.Node* it=doc->get_root_element()->children; it!=null; it=it->next ) {
       if( (it->type == Xml.ElementType.ELEMENT_NODE) && (it->name == "canvas") ) {
-        canvas.load( it );
+        loaded = canvas.load( it );
       }
     }
 
     delete doc;
 
+    return( loaded );
+
   }
 
   //-------------------------------------------------------------
   // Imports the given filename.
-  public void import( string filename ) {
+  public bool import( string filename ) {
 
     string temp_dir;
 
@@ -196,7 +199,7 @@ public class ExportEditable : Export {
       temp_dir = DirUtils.make_tmp( "annotator-XXXXXX" );
     } catch( Error e ) {
       critical( e.message );
-      return;
+      return( false );
     }
 
     Archive.Read archive = new Archive.Read();
@@ -215,8 +218,7 @@ public class ExportEditable : Export {
 
     /* Open the portable Minder file for reading */
     if( archive.open_filename( filename, 16384 ) != Archive.Result.OK ) {
-      load_xml( filename );
-      return;
+      return( load_xml( filename ) );
     }
 
     unowned Archive.Entry entry;
@@ -251,10 +253,11 @@ public class ExportEditable : Export {
     /* Close the archive */
     if( archive.close () != Archive.Result.OK) {
       error( "Error: %s (%d)", archive.error_string(), archive.errno() );
+      return( false );
     }
 
     /* Finally, load the XML file */
-    load_xml( GLib.Path.build_filename( temp_dir, "annotations.xml" ) );
+    return( load_xml( GLib.Path.build_filename( temp_dir, "annotations.xml" ) ) );
 
   }
 

@@ -456,7 +456,7 @@ public class MainWindow : Gtk.ApplicationWindow {
 
     /* Add the 'all image formats' filter first */
     var filter = new FileFilter();
-    filter.set_filter_name( _( "All Image Formats  (*)" ) );
+    filter.set_filter_name( _( "All Loadable Formats" ) );
     foreach( string pattern in patterns ) {
       filter.add_pattern( pattern );
     }
@@ -498,19 +498,19 @@ public class MainWindow : Gtk.ApplicationWindow {
    image is successfully read and displayed.
   */
   public void open_file( string filename ) {
-    stdout.printf( "HERE A\n" );
+    var opened = false;
     if( filename.has_suffix( ".annotator" ) ) {
-      stdout.printf( "HERE B\n" );
       var export = (_editor.canvas.image.exports.get_by_name( "annotator" ) as ExportEditable);
       if( export != null ) {
-        stdout.printf( "HERE C\n" );
-        export.import( filename );
+        opened = export.import( filename );
       }
     } else {
-      _editor.open_image( filename );
+      opened = _editor.open_image( filename );
     }
-    _zoom_btn.set_sensitive( true );
-    _export_btn.set_sensitive( true );
+    if( opened ) {
+      _zoom_btn.set_sensitive( true );
+      _export_btn.set_sensitive( true );
+    }
   }
 
   /* Parses image data from standard output to use as pixbuf */

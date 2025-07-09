@@ -607,12 +607,13 @@ public class CanvasImage {
 
   //-------------------------------------------------------------
   // Load the contents of this canvas image from XML format.
-  public void load( Xml.Node* node ) {
+  public bool load( Xml.Node* node ) {
+
+    var loaded = false;
 
     var fname = node->get_prop( "filename" );
     if( fname != null ) {
-      stdout.printf( "Opening image: %s\n", fname );
-      _canvas.editor.open_image( fname ); 
+      loaded = _canvas.editor.open_image( fname ); 
     }
 
     var a = node->get_prop( "angle" );
@@ -620,6 +621,8 @@ public class CanvasImage {
       _angle = double.parse( a );
       // TBD - We will probably want to handle the angle change in the canvas.
     }
+
+    return( loaded );
 
   }
 

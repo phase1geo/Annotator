@@ -121,9 +121,29 @@ public class CanvasItemBlur : CanvasItem {
 
   }
 
-  /* Provides cursor to display when mouse cursor is hovering over the given selector */
+  //-------------------------------------------------------------
+  // Provides cursor to display when mouse cursor is hovering over
+  // the given selector.
   public override Cursor? get_selector_cursor( int index ) {
     return( _sel_cursors[index] );
+  }
+
+  //-------------------------------------------------------------
+  // Saves the description of this blur item in XML format.
+  public override Xml.Node* save( int id, string? image_dir ) {
+    Xml.Node* node = base.save( id, image_dir );
+    node->set_prop( "radius", blur_radius.to_string() );
+    return( node );
+  }
+
+  //-------------------------------------------------------------
+  // Loads the description of this blur item from XML format.
+  public override void load( Xml.Node* node ) {
+    var r = node->get_prop( "radius" );
+    if( r != null ) {
+      blur_radius = int.parse( r );
+    }
+    base.load( node );
   }
 
   //-------------------------------------------------------------

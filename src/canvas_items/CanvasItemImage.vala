@@ -142,7 +142,6 @@ public class CanvasItemImage : CanvasItem {
 
   /* Loads this item from XML */
   public override void load( Xml.Node* node ) {
-    base.load( node );
     var n = node->get_prop( "name" );
     if( n != null ) {
       _name = n;
@@ -152,6 +151,7 @@ public class CanvasItemImage : CanvasItem {
       _file = bool.parse( f );
     }
     create_image( _name, _file, (int)bbox.width );
+    base.load( node );
   }
 
   /* Draw the rectangle */

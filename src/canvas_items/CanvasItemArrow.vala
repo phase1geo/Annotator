@@ -259,7 +259,6 @@ public class CanvasItemArrow : CanvasItem {
 
   /* Loads this item from XML */
   public override void load( Xml.Node* node ) {
-    base.load( node );
     var pa = node->get_prop( "peak-angle" );
     if( pa != null ) {
       _peak_a = double.parse( pa );
@@ -276,6 +275,7 @@ public class CanvasItemArrow : CanvasItem {
     if( vc != null ) {
       _valley_c = double.parse( vc );
     }
+    base.load( node );
   }
 
   /* Draw the rectangle */
