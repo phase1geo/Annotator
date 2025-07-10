@@ -377,7 +377,7 @@ public class Canvas : DrawingArea {
 
     var retval = grab_focus();
     if( image.cropping ) {
-      if( image.cursor_pressed( x, y, n_press ) ) {
+      if( image.cursor_pressed( ex, ey, n_press ) ) {
         queue_draw();
       }
     } else if( items.cursor_pressed( x, y, n_press ) ) {
@@ -401,7 +401,7 @@ public class Canvas : DrawingArea {
     _last_y = y;
 
     if( image.cropping || image.picking ) {
-      if( image.cursor_moved( x, y ) ) {
+      if( image.cursor_moved( ex, ey ) ) {
         queue_draw();
       }
     } else if( items.cursor_moved( x, y ) ) {
@@ -417,7 +417,7 @@ public class Canvas : DrawingArea {
     var y = scale_y( ey );
 
     if( image.cropping || image.picking ) {
-      if( image.cursor_released( x, y ) ) {
+      if( image.cursor_released( ex, ey ) ) {
         queue_draw();
       }
     } else if( items.cursor_released( x, y ) ) {

@@ -95,9 +95,47 @@ public class CanvasImageInfo {
     return( width - (int)(pixbuf_rect.width + pixbuf_rect.x) );
   }
 
-  /* Generates a string version of this class for debug output */
+  //-------------------------------------------------------------
+  // Generates a string version of this class for debug output.
   public string to_string() {
     return( "width: %d, height: %d, pixbuf_rect: %s\n".printf( width, height, pixbuf_rect.to_string() ) );
+  }
+
+  //-------------------------------------------------------------
+  // Saves the canvas image information in XML format.
+  public Xml.Node* save() {
+
+    Xml.Node* node = new Xml.Node( null, "image-info" );
+
+    node->set_prop( "width", width.to_string() );
+    node->set_prop( "height", height.to_string() );
+
+    node->add_child( pixbuf_rect.save() );
+
+    return( node );
+
+  }
+
+  //-------------------------------------------------------------
+  // Loads the canvas image information from XML format.
+  public void load( Xml.Node* node ) {
+
+    var w = node->get_prop( "width" );
+    if( w != null ) {
+      width = int.parse( w );
+    }
+
+    var h = node->get_prop( "height" );
+    if( h != null ) {
+      height = int.parse( h );
+    }
+
+    for( Xml.Node* it=node->children; it!=null; it=it->next ) {
+      if( (it->type == Xml.ElementType.ELEMENT_NODE) && (it->name == "rect") ) {
+        pixbuf_rect.load( it );
+      }
+    }
+
   }
 
 }

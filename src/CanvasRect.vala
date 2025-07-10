@@ -28,20 +28,24 @@ public class CanvasRect {
   public double width  { get; set; default = 0.0; }
   public double height { get; set; default = 0.0; }
 
-  /* Constructor */
+  //-------------------------------------------------------------
+  // Constructor
   public CanvasRect() {}
 
-  /* Constructor */
+  //-------------------------------------------------------------
+  // Constructor
   public CanvasRect.from_coords( double x, double y, double width, double height ) {
     copy_coords( x, y, width, height );
   }
 
-  /* Copy constructor */
+  //-------------------------------------------------------------
+  // Copy constructor
   public CanvasRect.from_rect( CanvasRect rect ) {
     copy( rect );
   }
 
-  /* Makes a copy of the given rectangle */
+  //-------------------------------------------------------------
+  // Makes a copy of the given rectangle
   public void copy( CanvasRect rect ) {
     x      = rect.x;
     y      = rect.y;
@@ -49,7 +53,9 @@ public class CanvasRect {
     height = rect.height;
   }
 
-  /* Makes a copy of the given rectangle coordinates to this rectangle */
+  //-------------------------------------------------------------
+  // Makes a copy of the given rectangle coordinates to this
+  // rectangle.
   public void copy_coords( double x, double y, double width, double height ) {
     this.x      = x;
     this.y      = y;
@@ -57,7 +63,9 @@ public class CanvasRect {
     this.height = height;
   }
 
-  /* Converts this rectangle into a Gdk.Rectangle and returns the result */
+  //-------------------------------------------------------------
+  // Converts this rectangle into a Gdk.Rectangle and returns the
+  // result.
   public Gdk.Rectangle to_rectangle( double zoom_factor = 1.0 ) {
     Gdk.Rectangle rect = {0, 0, 0, 0};
     rect.x      = (int)(x * zoom_factor);
@@ -67,47 +75,56 @@ public class CanvasRect {
     return( rect );
   }
 
-  /* Returns the x1 value */
+  //-------------------------------------------------------------
+  // Returns the x1 value.
   public double x1() {
     return( x );
   }
 
-  /* Returns the y1 value */
+  //-------------------------------------------------------------
+  // Returns the y1 value.
   public double y1() {
     return( y );
   }
 
-  /* Returns the x2 value */
+  //-------------------------------------------------------------
+  // Returns the x2 value.
   public double x2() {
     return( (x + width) );
   }
 
-  /* Returns the y2 value */
+  //-------------------------------------------------------------
+  // Returns the y2 value.
   public double y2() {
     return( (y + height) );
   }
 
-  /* Returns the mid-point between x1 and x2 */
+  //-------------------------------------------------------------
+  // Returns the mid-point between x1 and x2.
   public double mid_x() {
     return( x + (width / 2) );
   }
 
-  /* Returns the mid-point between y1 and y2 */
+  //-------------------------------------------------------------
+  // Returns the mid-point between y1 and y2.
   public double mid_y() {
     return( y + (height / 2) );
   }
 
-  /* Returns the absolute width of the rectangle */
+  //-------------------------------------------------------------
+  // Returns the absolute width of the rectangle.
   public double abs_width() {
     return( width.abs() );
   }
 
-  /* Returns the absolute height of the rectangle */
+  //-------------------------------------------------------------
+  // Returns the absolute height of the rectangle.
   public double abs_height() {
     return( height.abs() );
   }
 
-  /* Resizes the size of the rectangle by the numb of pixels */
+  //-------------------------------------------------------------
+  // Resizes the size of the rectangle by the numb of pixels.
   public void resize( double amount ) {
     x      -= amount;
     y      -= amount;
@@ -115,12 +132,15 @@ public class CanvasRect {
     height += (amount * 2);
   }
 
-  /* Returns true if the given rectangle matches this rectangle */
+  //-------------------------------------------------------------
+  // Returns true if the given rectangle matches this rectangle.
   public bool equals( CanvasRect rect ) {
     return( (x == rect.x) && (y == rect.y) && (width == rect.width) && (height == rect.height) );
   }
 
-  /* Returns true if the given rectangle intersects with this rectangle */
+  //-------------------------------------------------------------
+  // Returns true if the given rectangle intersects with this
+  // rectangle.
   public bool intersects( CanvasRect rect ) {
     var x5 = (x1() < rect.x1()) ? rect.x1() : x1();
     var y5 = (y2() < rect.y2()) ? rect.y2() : y2();
@@ -129,9 +149,9 @@ public class CanvasRect {
     return( (x5 <= x6) && (y6 <= y5) );
   }
 
-  /*
-   Stores the intersected rectangle of the two specified rectangles in ourself.
-  */
+  //-------------------------------------------------------------
+  // Stores the intersected rectangle of the two specified
+  // rectangles in ourself.
   public void intersection( CanvasRect a, CanvasRect b ) {
     var x1 = (a.x1() < b.x1()) ? b.x1() : a.x1();
     var y1 = (a.y1() < b.y1()) ? b.y1() : a.y1();
@@ -143,12 +163,14 @@ public class CanvasRect {
     height = (y2 - y1);
   }
 
-  /* Returns true if this rectangle contains the given point */
+  //-------------------------------------------------------------
+  // Returns true if this rectangle contains the given point.
   public bool contains( double x, double y ) {
     return( Utils.is_within_bounds( x, y, this.x, this.y, this.width, this.height ) );
   }
 
-  /* Creates a rectangle that is a drawable version of this rectangle */
+  //-------------------------------------------------------------
+  // Creates a rectangle that is a drawable version of this rectangle.
   public void normalize( out CanvasRect rect ) {
     rect = new CanvasRect.from_coords(
       ((width  < 0) ? (x + width)  : x),
@@ -158,9 +180,51 @@ public class CanvasRect {
     );
   }
 
-  /* Returns a string version of this rectangle */
+  //-------------------------------------------------------------
+  // Returns a string version of this rectangle.
   public string to_string() {
     return( "x: %g, y: %g, w: %g, h: %g".printf( x, y, width, height ) );
+  }
+
+  //-------------------------------------------------------------
+  // Saves this rectangle to XML format.
+  public Xml.Node* save() {
+
+    Xml.Node* node = new Xml.Node( null, "rect" );
+
+    node->set_prop( "x", x.to_string() );
+    node->set_prop( "y", y.to_string() );
+    node->set_prop( "width", width.to_string() );
+    node->set_prop( "height", height.to_string() );
+
+    return( node );
+
+  }
+
+  //-------------------------------------------------------------
+  // Loads the rectangle information from XML format.
+  public void load( Xml.Node* node ) {
+
+    var xs = node->get_prop( "x" );
+    if( xs != null ) {
+      x = double.parse( xs );
+    }
+
+    var ys = node->get_prop( "y" );
+    if( ys != null ) {
+      y = double.parse( ys );
+    }
+
+    var w = node->get_prop( "width" );
+    if( w != null ) {
+      width = double.parse( w );
+    }
+
+    var h = node->get_prop( "height" );
+    if( h != null ) {
+      height = double.parse( h );
+    }
+
   }
 
 }

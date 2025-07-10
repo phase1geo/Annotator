@@ -601,6 +601,8 @@ public class CanvasImage {
 
     node->set_prop( "angle", _angle.to_string() );
 
+    node->add_child( info.save() );
+
     return( node );
 
   }
@@ -620,6 +622,15 @@ public class CanvasImage {
     if( a != null ) {
       _angle = double.parse( a );
       // TBD - We will probably want to handle the angle change in the canvas.
+    }
+
+    for( Xml.Node* it=node->children; it!=null; it=it->next ) {
+      if( (it->type == Xml.ElementType.ELEMENT_NODE) && (it->name == "image-info") ) {
+        var old_info = new CanvasImageInfo.from_info( info );
+        var new_info = new CanvasImageInfo.from_info( info );
+        new_info.load( it );
+        do_resize( old_info, new_info );
+      }
     }
 
     return( loaded );
@@ -679,6 +690,9 @@ public class CanvasImage {
     var black = Utils.color_from_string( "black" );
 
     Utils.set_context_color_with_alpha( ctx, black, 0.5 );
+
+    ctx.rectangle( crop_rect.x1(), crop_rect.y1(), crop_rect.width, crop_rect.height );
+    ctx.stroke();
 
     ctx.rectangle( 0, 0, crop_rect.x1(), info.height );
     ctx.fill();
@@ -769,6 +783,9 @@ public class CanvasImage {
 
   }
 
+  //-------------------------------------------------------------
+  // Returns the color value at the given pixel location within the
+  // image buffer.
   private RGBA get_color_at( Pixbuf buf, int x, int y ) {
 
     var  start = (y * buf.rowstride) + (x * buf.n_channels);
