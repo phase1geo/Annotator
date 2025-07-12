@@ -188,9 +188,9 @@ public class CanvasRect {
 
   //-------------------------------------------------------------
   // Saves this rectangle to XML format.
-  public Xml.Node* save() {
+  public Xml.Node* save( string name ) {
 
-    Xml.Node* node = new Xml.Node( null, "rect" );
+    Xml.Node* node = new Xml.Node( null, name );
 
     node->set_prop( "x", x.to_string() );
     node->set_prop( "y", y.to_string() );

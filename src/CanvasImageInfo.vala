@@ -110,7 +110,7 @@ public class CanvasImageInfo {
     node->set_prop( "width", width.to_string() );
     node->set_prop( "height", height.to_string() );
 
-    node->add_child( pixbuf_rect.save() );
+    node->add_child( pixbuf_rect.save( "rect" ) );
 
     return( node );
 
