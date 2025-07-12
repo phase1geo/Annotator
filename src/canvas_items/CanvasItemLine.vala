@@ -29,20 +29,42 @@ public class CanvasItemLine : CanvasItem {
     UPPER_LEFT,
     UPPER_RIGHT,
     LOWER_LEFT,
-    LOWER_RIGHT
+    LOWER_RIGHT;
+
+    public string to_string() {
+      switch( this ) {
+        case UPPER_LEFT  :  return( "ul" );
+        case UPPER_RIGHT :  return( "ur" );
+        case LOWER_LEFT  :  return( "ll" );
+        case LOWER_RIGHT :  return( "lr" );
+        default          :  assert_not_reached();
+      }
+    }
+
+    public static LineStartDirection parse( string val ) {
+      switch( val ) {
+        case "ul" :  return( UPPER_LEFT );
+        case "ur" :  return( UPPER_RIGHT );
+        case "ll" :  return( LOWER_LEFT );
+        case "lr" :  return( LOWER_RIGHT );
+        default   :  return( UPPER_LEFT );
+      }
+    }
   }
 
   private LineStartDirection _dir = LineStartDirection.UPPER_LEFT;
   private Cursor             _sel_cursor;
 
-  /* Constructor */
+  //-------------------------------------------------------------
+  // Constructor.
   public CanvasItemLine( Canvas canvas, CanvasItemProperties props ) {
     base( CanvasItemType.LINE, canvas, props );
     create_points();
     _sel_cursor = new Cursor.from_name( "crosshair", null );
   }
 
-  /* Creates the selection points */
+  //-------------------------------------------------------------
+  // Creates the selection points.
   private void create_points() {
     points.append_val( new CanvasPoint( CanvasPointType.RESIZER0 ) );  // Start
     points.append_val( new CanvasPoint( CanvasPointType.RESIZER0 ) );  // End
@@ -52,7 +74,8 @@ public class CanvasItemLine : CanvasItem {
     points.append_val( new CanvasPoint() );  // Below End
   }
 
-  /* Copies the given arrow item properties to this one */
+  //-------------------------------------------------------------
+  // Copies the given arrow item properties to this one.
   public override void copy( CanvasItem item ) {
     base.copy( item );
     var line_item = (CanvasItemLine)item;
@@ -61,14 +84,16 @@ public class CanvasItemLine : CanvasItem {
     }
   }
 
-  /* Returns a copy of this item */
+  //-------------------------------------------------------------
+  // Returns a copy of this item.
   public override CanvasItem duplicate() {
     var item = new CanvasItemLine( canvas, props );
     item.copy( this );
     return( item );
   }
 
-  /* Updates the selection boxes whenever the bounding box changes */
+  //-------------------------------------------------------------
+  // Updates the selection boxes whenever the bounding box changes.
   protected override void bbox_changed() {
 
     switch( _dir ) {
@@ -90,16 +115,10 @@ public class CanvasItemLine : CanvasItem {
         break;
     }
 
-    /*
-    points.index( 2 ).copy_coords(  )
-    points.index( 3 ).copy_coords(  )
-    points.index( 4 ).copy_coords(  )
-    points.index( 5 ).copy_coords(  )
-    */
-
   }
 
-  /* Adjusts the bounding box */
+  //-------------------------------------------------------------
+  // Adjusts the bounding box.
   public override void move_selector( int index, double diffx, double diffy, bool shift ) {
 
     var box  = new CanvasRect.from_rect( bbox );
@@ -139,12 +158,32 @@ public class CanvasItemLine : CanvasItem {
 
   }
 
-  /* Provides cursor to display when mouse cursor is hovering over the given selector */
+  //-------------------------------------------------------------
+  // Provides cursor to display when mouse cursor is hovering over
+  // the given selector.
   public override Cursor? get_selector_cursor( int index ) {
     return( _sel_cursor );
   }
 
-  /* Draw the rectangle */
+  //-------------------------------------------------------------
+  // Saves the contents of this item in XML format.
+  public override Xml.Node* save( int id, string image_dir ) {
+    Xml.Node* node = base.save( id, image_dir );
+    node->set_prop( "dir", _dir.to_string() );
+    return( node );
+  }
+
+  //-------------------------------------------------------------
+  // Loads the contents of this item with XML formatted data.
+  public override void load( Xml.Node* node ) {
+    var d = node->get_prop( "dir" );
+    if( d != null ) {
+      _dir = LineStartDirection.parse( d );
+    }
+  }
+
+  //-------------------------------------------------------------
+  // Draw the rectangle.
   public override void draw_item( Context ctx, CanvasItemColor color ) {
 
     var alpha   = mode.alpha( props.alpha );

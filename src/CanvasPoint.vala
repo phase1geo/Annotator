@@ -187,11 +187,10 @@ public class CanvasPoint {
 
   //-------------------------------------------------------------
   // Saves the contents of this point in XML format.
-  public Xml.Node* save() {
-    Xml.Node* node = new Xml.Node( null, "point" );
+  public Xml.Node* save( string name ) {
+    Xml.Node* node = new Xml.Node( null, name );
     node->set_prop( "x", x.to_string() );
     node->set_prop( "y", y.to_string() );
-    node->set_prop( "kind", kind.to_string() );
     return( node );
   }
 
@@ -207,11 +206,6 @@ public class CanvasPoint {
     var y = node->get_prop( "y" );
     if( y != null ) {
       this.y = double.parse( y );
-    }
-
-    var k = node->get_prop( "kind" );
-    if( k != null ) {
-      this.kind = CanvasPointType.parse( k );
     }
 
   }

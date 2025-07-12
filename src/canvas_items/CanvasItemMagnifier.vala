@@ -228,9 +228,10 @@ public class CanvasItemMagnifier : CanvasItem {
 
   //-------------------------------------------------------------
   // Saves this item as XML.
-  public override Xml.Node* save( int id, string? image_dir ) {
+  public override Xml.Node* save( int id, string image_dir ) {
     Xml.Node* node = base.save( id, image_dir );
     node->set_prop( "zoom-factor", _zoom_factor.to_string() );
+    node->add_child( points.index( 2 ).save( "focus" ) );
     return( node );
   }
 
@@ -240,6 +241,12 @@ public class CanvasItemMagnifier : CanvasItem {
     var f = node->get_prop( "zoom-factor" );
     if( f != null ) {
       _zoom_factor = double.parse( f );
+    }
+    for( Xml.Node* it=node->children; it!=null; it=it->next ) {
+      if( (it->type == Xml.ElementType.ELEMENT_NODE) && (it->name == "focus") ) {
+        points.index( 2 ).load( it );
+        _focus_moved = true;
+      }
     }
     base.load( node );
   }

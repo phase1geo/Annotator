@@ -80,10 +80,10 @@ public class CanvasItemPencil : CanvasItem {
 
   //-------------------------------------------------------------
   // Saves the contents of this pencil line in XML format.
-  public override Xml.Node* save( int id, string? image_dir ) {
+  public override Xml.Node* save( int id, string image_dir ) {
     Xml.Node* node = base.save( id, image_dir );
     for( int i=0; i<_edit_points.length; i++ ) {
-      node->add_child( _edit_points.index( i ).save() );
+      node->add_child( _edit_points.index( i ).save( "point" ) );
     }
     return( node );
   }

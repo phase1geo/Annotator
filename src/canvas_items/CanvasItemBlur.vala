@@ -130,7 +130,7 @@ public class CanvasItemBlur : CanvasItem {
 
   //-------------------------------------------------------------
   // Saves the description of this blur item in XML format.
-  public override Xml.Node* save( int id, string? image_dir ) {
+  public override Xml.Node* save( int id, string image_dir ) {
     Xml.Node* node = base.save( id, image_dir );
     node->set_prop( "radius", blur_radius.to_string() );
     return( node );

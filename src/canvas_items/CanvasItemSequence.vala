@@ -42,7 +42,8 @@ public class CanvasItemSequence : CanvasItem {
     }
   }
 
-  /* Constructor */
+  //-------------------------------------------------------------
+  // Constructor.
   public CanvasItemSequence( Canvas canvas, CanvasItemProperties props ) {
     base( CanvasItemType.SEQUENCE, canvas, props );
     seq_num = _next_seq_num;
@@ -50,30 +51,35 @@ public class CanvasItemSequence : CanvasItem {
     _sel_cursor = new Cursor.from_name( "se-resize", null );
   }
 
-  /* Called when the canvas is used to annotate a new image */
+  //-------------------------------------------------------------
+  // Called when the canvas is used to annotate a new image.
   public static void reset() {
     _next_seq_num = 1;
   }
 
-  /* Creates the item points */
+  //-------------------------------------------------------------
+  // Creates the item points.
   private void create_points() {
     points.append_val( new CanvasPoint( CanvasPointType.RESIZER0 ) );  // Resizer
   }
 
-  /* Copies the contents of the given item to ourselves */
+  //-------------------------------------------------------------
+  // Copies the contents of the given item to ourselves.
   public override void copy( CanvasItem item ) {
     base.copy( item );
     _recalc_font_size = true;
   }
 
-  /* Returns a copy of this sequence */
+  //-------------------------------------------------------------
+  // Returns a copy of this sequence.
   public override CanvasItem duplicate() {
     var item = new CanvasItemSequence( canvas, props );
     item.copy( this );
     return( item );
   }
 
-  /* Updates the selection boxes whenever the bounding box changes */
+  //-------------------------------------------------------------
+  // Updates the selection boxes whenever the bounding box changes.
   protected override void bbox_changed() {
 
     var radius       = bbox.width / 2;
@@ -87,7 +93,8 @@ public class CanvasItemSequence : CanvasItem {
 
   }
 
-  /* Adjusts the bounding box */
+  //-------------------------------------------------------------
+  // Adjusts the bounding box.
   public override void move_selector( int index, double diffx, double diffy, bool shift ) {
 
     var box = new CanvasRect.from_rect( bbox );
@@ -102,7 +109,9 @@ public class CanvasItemSequence : CanvasItem {
 
   }
 
-  /* Provides cursor to display when mouse cursor is hovering over the given selector */
+  //-------------------------------------------------------------
+  // Provides cursor to display when mouse cursor is hovering over
+  // the given selector.
   public override Cursor? get_selector_cursor( int index ) {
     return( _sel_cursor );
   }
@@ -128,7 +137,7 @@ public class CanvasItemSequence : CanvasItem {
 
   //-------------------------------------------------------------
   // Saves this item as XML.
-  public override Xml.Node* save( int id, string? image_dir ) {
+  public override Xml.Node* save( int id, string image_dir ) {
     Xml.Node* node = base.save( id, image_dir );
     node->set_prop( "sequence-num", seq_num.to_string() );
     return( node );
@@ -144,7 +153,8 @@ public class CanvasItemSequence : CanvasItem {
     base.load( node );
   }
 
-  /* Figure out the text size that will fit within the boundary box */
+  //-------------------------------------------------------------
+  // Figure out the text size that will fit within the boundary box.
   private void set_font_size( Context ctx, out TextExtents extents ) {
     if( _recalc_font_size ) {
       _font_size = 20;
@@ -163,7 +173,8 @@ public class CanvasItemSequence : CanvasItem {
 
   }
 
-  /* Draw the rectangle */
+  //-------------------------------------------------------------
+  // Draw the item.
   public override void draw_item( Context ctx, CanvasItemColor color ) {
 
     var seq_color = Granite.contrasting_foreground_color( props.color );

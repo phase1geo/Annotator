@@ -163,7 +163,7 @@ public class CanvasItemStar : CanvasItem {
 
   //-------------------------------------------------------------
   // Saves the contents of this canvas item in XML format.
-  public override Xml.Node* save( int id, string? image_dir ) {
+  public override Xml.Node* save( int id, string image_dir ) {
     Xml.Node* node = base.save( id, image_dir );
     node->set_prop( "points",       num_points.to_string() );
     node->set_prop( "inner-radius", _inner_radius.to_string() );
