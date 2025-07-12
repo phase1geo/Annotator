@@ -39,11 +39,7 @@ public class ExportEditable : Export {
     var fname = repair_filename( filename );
 
     /* Figure out if the user wants to include the images or not */
-    if( get_bool( "include-images" ) ) {
-      save_with_images( fname );
-    } else {
-      save_without_images( fname );
-    }
+    save( fname );
 
     return( true );
 
@@ -54,7 +50,7 @@ public class ExportEditable : Export {
   // images used within the annotation are saved into the directory
   // and the directory is zipped and archived as the final *.annotator
   // file.
-  private void save_with_images( string fname ) {
+  private void save( string fname ) {
 
     string temp_dir;
 
@@ -143,24 +139,15 @@ public class ExportEditable : Export {
   }
 
   //-------------------------------------------------------------
-  // Saves the *.annotator file as an XML file, leaving the image
-  // paths to point to the local filesystem.
-  private void save_without_images( string fname ) {
-
-    save_xml( fname, null );
-
-  }
-
-  //-------------------------------------------------------------
   // Saves the XML information from the annotation.  Copies the stored
   // images in the given image directory, if specified.
-  private void save_xml( string fname, string? image_dir ) {
+  private void save_xml( string fname, string image_dir ) {
 
     Xml.Doc*  doc  = new Xml.Doc( "1.0" );
     Xml.Node* root = new Xml.Node( null, "exports" );
 
     root->set_prop( "version", Annotator.version );
-    root->add_child( canvas.save( image_dir ) );
+    root->add_child( canvas.save( image_dir, get_scale( "image-compression" ) ) );
 
     doc->set_root_element( root );
     doc->save_format_file( fname, 1 );
@@ -218,7 +205,7 @@ public class ExportEditable : Export {
 
     /* Open the portable Minder file for reading */
     if( archive.open_filename( filename, 16384 ) != Archive.Result.OK ) {
-      return( load_xml( filename ) );
+      return( false );
     }
 
     unowned Archive.Entry entry;
@@ -265,21 +252,21 @@ public class ExportEditable : Export {
   // Add the setting to enable/disable including the images included
   // in the annotation.
   public override void add_settings( Grid grid ) {
-    add_setting_bool( "include-images", grid, _( "Include images" ), _( "Including images will allow the saved file to be used on a different machine, but will make the file size much larger" ), false );
+    add_setting_scale( "image-compression", grid, _( "Image Compression" ), null, 0, 9, 1, 0 );
   }
 
   //-------------------------------------------------------------
   // Save the settings.
   public override void save_settings( Xml.Node* node ) {
-    node->set_prop( "include-images", get_bool( "include-images" ).to_string() );
+    node->set_prop( "compression", get_scale( "image-compression" ).to_string() );
   }
 
   //-------------------------------------------------------------
   // Load the settings.
   public override void load_settings( Xml.Node* node ) {
-    var ii = node->get_prop( "include-images" );
-    if( ii != null ) {
-      set_bool( "include-images", bool.parse( ii ) );
+    var c = node->get_prop( "compression" );
+    if( c != null ) {
+      set_scale( "image-compression", int.parse( c ) );
     }
   }
 

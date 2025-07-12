@@ -501,11 +501,11 @@ public class Canvas : DrawingArea {
 
   //-------------------------------------------------------------
   // Saves this canvas and all canvas items in XML format.
-  public Xml.Node* save( string? image_dir = null ) {
+  public Xml.Node* save( string image_dir, int compression ) {
 
     Xml.Node* node = new Xml.Node( null, "canvas" );
 
-    node->add_child( image.save( editor.filename, image_dir ) );
+    node->add_child( image.save( image_dir, compression ) );
     node->add_child( items.save( image_dir ) );
 
     return( node );

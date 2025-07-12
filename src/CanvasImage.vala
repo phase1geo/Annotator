@@ -580,23 +580,18 @@ public class CanvasImage {
 
   //-------------------------------------------------------------
   // Saves the contents of this canvas image to XML format.
-  public Xml.Node* save( string fname, string? image_dir ) {
+  public Xml.Node* save( string image_dir, int compression ) {
 
-    Xml.Node* node = new Xml.Node( null, "image" );
+    Xml.Node* node    = new Xml.Node( null, "image" );
+    string[]  options = { "compression" };
+    string[]  values  = { compression.to_string() };
+    var       fname   = GLib.Path.build_filename( image_dir, "background.png" );
 
-    if( image_dir != null ) {
-      string[]  options = { "compression" };
-      string[]  values  = { "9" };
-      var       name    = GLib.Path.build_filename( image_dir, "background.png" );
-      stdout.printf( "Attempting to save canvas image as %s\n", name );
-      try {
-        _buf.savev( name, "png", options, values );
-        node->set_prop( "filename", name );
-      } catch( GLib.Error e ) {
-        critical( e.message );
-      }
-    } else {
+    try {
+      _buf.savev( fname, "png", options, values );
       node->set_prop( "filename", fname );
+    } catch( GLib.Error e ) {
+      critical( e.message );
     }
 
     node->set_prop( "angle", _angle.to_string() );
