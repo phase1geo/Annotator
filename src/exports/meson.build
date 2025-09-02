@@ -4,5 +4,6 @@ sources += files(
   'ExportPDF.vala',
   'ExportPNG.vala',
   'ExportPrint.vala',
-  'ExportSVG.vala'
+  'ExportSVG.vala',
+  'ExportWebP.vala',
 )

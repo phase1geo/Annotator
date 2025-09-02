@@ -42,7 +42,7 @@ cc = meson.get_compiler('c')
 math_dep = cc.find_library('m', required: false)
 
 add_project_arguments([
-  #        '--vapidir', join_paths(meson.current_source_dir(), 'vapi'),
+        '--vapidir', join_paths(meson.current_source_dir(), 'vapi'),
         '--disable-warnings'
     ],
     language: 'vala',
@@ -57,6 +57,7 @@ dependencies = [
     dependency('libxml-2.0'),
     dependency('libportal-gtk4'),
     dependency('pangocairo'),
+    dependency('libwebp'),
     math_dep
 ]
 
