@@ -22,7 +22,7 @@ Annotate your images and let a picture say 1000 words.
 - Color picker support within a loaded image.
 - Unlimited undo/redo of any change.
 - Drag-and-drop PNG copies of the annotated image.
-- Export to JPEG, PNG, TIFF, BMP, PDF and SVG image formats.
+- Export to JPEG, PNG, TIFF, BMP, PDF, SVG and WebP image formats.
 - Support for copying annotated image to clipboard.
 - Printer support.
 
@@ -42,6 +42,7 @@ You will need the following dependencies to build Annotator:
 - libxml2-dev
 - libgtk-3-dev
 - libhandy-1-dev
+- libwebp-dev
 
 To install Annotator from source, run `./app install`.
 
