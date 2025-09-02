@@ -204,30 +204,35 @@ public class CanvasItemText : CanvasItem {
     return( _selstart != _selend );
   }
 
-  /* Saves the current instance into the given XML tree */
-  public override Xml.Node* save() {
-    Xml.Node* node = base.save();
+  //-------------------------------------------------------------
+  // Saves the current instance into the given XML tree.
+  public override Xml.Node* save( int id, string image_dir ) {
+    Xml.Node* node = base.save( id, image_dir );
     node->add_child( _text.save() );
     return( node );
   }
 
-  /* Loads the file contents into this instance */
+  //-------------------------------------------------------------
+  // Loads the file contents into this instance.
   public override void load( Xml.Node* node ) {
-    base.load( node );
     for( Xml.Node* it = node->children; it != null; it = it->next ) {
       if( (it->type == Xml.ElementType.ELEMENT_NODE) && (it->name == "text" ) )  {
         _text.load( it );
         update_size();
       }
     }
+    base.load( node );
   }
 
-  /* Returns the height of a single line of text */
+  //-------------------------------------------------------------
+  // Returns the height of a single line of text.
   public double get_line_height() {
     return( Utils.get_line_height( _pango_layout ) );
   }
 
-  /* Returns the number of pixels to include on the current page of this text item */
+  //-------------------------------------------------------------
+  // Returns the number of pixels to include on the current page
+  // of this text item.
   public double get_page_include_size( int page_size ) {
     Pango.Rectangle ink_rect, log_rect;
     var line_count = _pango_layout.get_line_count();
@@ -242,14 +247,14 @@ public class CanvasItemText : CanvasItem {
     return( _height );
   }
 
-  /* Called whenever the text changes */
+  //-------------------------------------------------------------
+  // Called whenever the text changes.
   private void text_changed() {
     update_size();
   }
 
-  /*
-   Updates the width and height based on the current text.
-  */
+  //-------------------------------------------------------------
+  // Updates the width and height based on the current text.
   public void update_size() {
     if( _pango_layout != null ) {
       CanvasRect box = new CanvasRect.from_rect( bbox );
@@ -263,21 +268,24 @@ public class CanvasItemText : CanvasItem {
     }
   }
 
-  /* Resizes the node width by the given amount */
+  //-------------------------------------------------------------
+  // Resizes the node width by the given amount.
   public virtual void resize( double diff ) {
     _max_width += diff;
     _pango_layout.set_width( (int)_max_width * Pango.SCALE );
     update_size();
   }
 
-  /* Updates the column value */
+  //-------------------------------------------------------------
+  // Updates the column value.
   private void update_column() {
     int line;
     var cpos = text.text.index_of_nth_char( _cursor );
     _pango_layout.index_to_line_x( cpos, false, out line, out _column );
   }
 
-  /* Only sets the cursor location to the given value */
+  //-------------------------------------------------------------
+  // Only sets the cursor location to the given value.
   public void set_cursor_only( int cursor ) {
     var orig_cursor = _cursor;
     _cursor = cursor;
@@ -287,7 +295,8 @@ public class CanvasItemText : CanvasItem {
     }
   }
 
-  /* Sets the cursor from the given mouse coordinates */
+  //-------------------------------------------------------------
+  // Sets the cursor from the given mouse coordinates.
   public void set_cursor_at_char( double x, double y, bool motion ) {
     int cursor, trailing;
     int adjusted_x = (int)(x - bbox.x) * Pango.SCALE;
@@ -312,7 +321,8 @@ public class CanvasItemText : CanvasItem {
     set_cursor_only( _selend );
   }
 
-  /* Selects the word at the current x/y position in the text */
+  //-------------------------------------------------------------
+  // Selects the word at the current x/y position in the text.
   public void set_cursor_at_word( double x, double y, bool motion ) {
     int cursor, trailing;
     int adjusted_x = (int)(x - bbox.x) * Pango.SCALE;
@@ -344,7 +354,8 @@ public class CanvasItemText : CanvasItem {
     }
   }
 
-  /* Called after the cursor has been moved, clears the selection */
+  //-------------------------------------------------------------
+  // Called after the cursor has been moved, clears the selection.
   public void clear_selection( string? msg = null ) {
     if( _debug && (msg != null) ) {
       stdout.printf( "In clear_selection, msg: %s\n", msg );
@@ -352,10 +363,9 @@ public class CanvasItemText : CanvasItem {
     change_selection( _cursor, _cursor, "clear_selection" );
   }
 
-  /*
-   Called after the cursor has been moved, adjusts the selection
-   to include the cursor.
-  */
+  //-------------------------------------------------------------
+  // Called after the cursor has been moved, adjusts the selection
+  // to include the cursor.
   private void adjust_selection( int last_cursor ) {
     if( last_cursor == _selstart ) {
       if( _cursor <= _selend ) {
@@ -372,12 +382,15 @@ public class CanvasItemText : CanvasItem {
     }
   }
 
-  /* Deselects all of the text */
+  //-------------------------------------------------------------
+  // Deselects all of the text.
   public void set_cursor_none() {
     clear_selection( "set_cursor_none" );
   }
 
-  /* Selects all of the text and places the cursor at the end of the name string */
+  //-------------------------------------------------------------
+  // Selects all of the text and places the cursor at the end of
+  // the name string.
   public void set_cursor_all( bool motion ) {
     if( !motion ) {
       change_selection( 0, text.text.char_count(), "set_cursor_all" );
@@ -386,7 +399,8 @@ public class CanvasItemText : CanvasItem {
     }
   }
 
-  /* Adjusts the cursor by the given amount of characters */
+  //-------------------------------------------------------------
+  // Adjusts the cursor by the given amount of characters.
   private void cursor_by_char( int dir ) {
     var last = text.text.char_count();
     var cpos = _cursor + dir;
@@ -398,20 +412,23 @@ public class CanvasItemText : CanvasItem {
     set_cursor_only( cpos );
   }
 
-  /* Move the cursor in the given direction */
+  //-------------------------------------------------------------
+  // Move the cursor in the given direction.
   public void move_cursor( int dir ) {
     cursor_by_char( dir );
     clear_selection( "move_cursor" );
   }
 
-  /* Adjusts the selection by the given cursor */
+  //-------------------------------------------------------------
+  // Adjusts the selection by the given cursor.
   public void selection_by_char( int dir ) {
     var last_cursor = _cursor;
     cursor_by_char( dir );
     adjust_selection( last_cursor );
   }
 
-  /* Moves the cursor up/down the text by a line */
+  //-------------------------------------------------------------
+  // Moves the cursor up/down the text by a line.
   private void cursor_by_line( int dir ) {
     int line, x;
     var cpos = text.text.index_of_nth_char( _cursor );
@@ -429,23 +446,24 @@ public class CanvasItemText : CanvasItem {
     }
   }
 
-  /*
-   Moves the cursor in the given vertical direction, clearing the
-   selection.
-  */
+  //-------------------------------------------------------------
+  // Moves the cursor in the given vertical direction, clearing the
+  // selection.
   public void move_cursor_vertically( int dir ) {
     cursor_by_line( dir );
     clear_selection( "move_cursor_vertically" );
   }
 
-  /* Adjusts the selection in the vertical direction */
+  //-------------------------------------------------------------
+  // Adjusts the selection in the vertical direction.
   public void selection_vertically( int dir ) {
     var last_cursor = _cursor;
     cursor_by_line( dir );
     adjust_selection( last_cursor );
   }
 
-  /* Finds the start or end character of a line */
+  //-------------------------------------------------------------
+  // Finds the start or end character of a line.
   private int find_line_extent( bool start ) {
     int line, line2, column;
     _pango_layout.index_to_line_x( text.text.index_of_nth_char( _cursor ), false, out line, out column );
@@ -459,19 +477,22 @@ public class CanvasItemText : CanvasItem {
     }
   }
 
-  /* Moves the cursor to the beginning of the current line */
+  //-------------------------------------------------------------
+  // Moves the cursor to the beginning of the current line.
   public void move_cursor_to_linestart() {
     set_cursor_only( find_line_extent( true ) );
     clear_selection( "move_cursor_to_start_of_line" );
   }
 
-  /* Moves the cursor to the end of the name */
+  //-------------------------------------------------------------
+  // Moves the cursor to the end of the name.
   public void move_cursor_to_lineend() {
     set_cursor_only( find_line_extent( false ) );
     clear_selection( "move_cursor_to_end_of_line" );
   }
 
-  /* Causes the selection to continue from the start of the line */
+  //-------------------------------------------------------------
+  // Causes the selection to continue from the start of the line.
   public void selection_to_linestart( bool home ) {
     int line_start = find_line_extent( true );
     if( (_selstart == _selend) || home ) {
@@ -485,7 +506,8 @@ public class CanvasItemText : CanvasItem {
     }
   }
 
-  /* Causes the selection to continue to the end of the line */
+  //-------------------------------------------------------------
+  // Causes the selection to continue to the end of the line.
   public void selection_to_lineend( bool end ) {
     int line_end = find_line_extent( false );
     if( (_selstart == _selend) || end ) {
@@ -499,19 +521,22 @@ public class CanvasItemText : CanvasItem {
     }
   }
 
-  /* Moves the cursor to the beginning of the name */
+  //-------------------------------------------------------------
+  // Moves the cursor to the beginning of the name.
   public void move_cursor_to_start() {
     set_cursor_only( 0 );
     clear_selection( "move_cursor_to_start" );
   }
 
-  /* Moves the cursor to the end of the name */
+  //-------------------------------------------------------------
+  // Moves the cursor to the end of the name.
   public void move_cursor_to_end() {
     set_cursor_only( text.text.char_count() );
     clear_selection( "move_cursor_to_end" );
   }
 
-  /* Causes the selection to continue from the start of the text */
+  //-------------------------------------------------------------
+  // Causes the selection to continue from the start of the text.
   public void selection_to_start() {
     if( _selstart == _selend ) {
       change_selection( 0, _cursor, "selection_to_start A" );
@@ -522,7 +547,8 @@ public class CanvasItemText : CanvasItem {
     }
   }
 
-  /* Causes the selection to continue to the end of the text */
+  //-------------------------------------------------------------
+  // Causes the selection to continue to the end of the text.
   public void selection_to_end() {
     if( _selstart == _selend ) {
       change_selection( _cursor, text.text.char_count(), "selection_to_end A" );
@@ -533,7 +559,8 @@ public class CanvasItemText : CanvasItem {
     }
   }
 
-  /* Finds the next/previous word boundary */
+  //-------------------------------------------------------------
+  // Finds the next/previous word boundary.
   private int find_word( int start, int dir ) {
     bool alnum_found = false;
     if( dir == 1 ) {
@@ -559,13 +586,15 @@ public class CanvasItemText : CanvasItem {
     }
   }
 
-  /* Moves the cursor to the next or previous word beginning */
+  //-------------------------------------------------------------
+  // Moves the cursor to the next or previous word beginning.
   public void move_cursor_by_word( int dir ) {
     set_cursor_only( find_word( _cursor, dir ) );
     change_selection( null, _selstart, "move_cursor_by_word" );
   }
 
-  /* Change the selection by a word in the given direction */
+  //-------------------------------------------------------------
+  // Change the selection by a word in the given direction.
   public void selection_by_word( int dir ) {
     if( _cursor == _selstart ) {
       set_cursor_only( find_word( _cursor, dir ) );
@@ -584,7 +613,8 @@ public class CanvasItemText : CanvasItem {
     }
   }
 
-  /* Handles a backspace key event */
+  //-------------------------------------------------------------
+  // Handles a backspace key event.
   public void backspace( UndoTextBuffer undo_buffer ) {
     if( _cursor > 0 ) {
       var cur = _cursor;
@@ -609,7 +639,8 @@ public class CanvasItemText : CanvasItem {
     }
   }
 
-  /* Handles a backspace to wordstart key event */
+  //-------------------------------------------------------------
+  // Handles a backspace to wordstart key event.
   public void backspace_word( UndoTextBuffer undo_buffer ) {
     if( _cursor > 0 ) {
       var cur  = _cursor;
@@ -632,7 +663,8 @@ public class CanvasItemText : CanvasItem {
     }
   }
 
-  /* Handles a delete key event */
+  //-------------------------------------------------------------
+  // Handles a delete key event.
   public void delete( UndoTextBuffer undo_buffer ) {
     if( _cursor < text.text.length ) {
       var cur = _cursor;
@@ -654,7 +686,8 @@ public class CanvasItemText : CanvasItem {
     }
   }
 
-  /* Deletes all characters in the given range */
+  //-------------------------------------------------------------
+  // Deletes all characters in the given range.
   public void delete_range( int startpos, int endpos, UndoTextBuffer undo_buffer ) {
     var cur  = _cursor;
     var spos = text.text.index_of_nth_char( startpos );
@@ -666,7 +699,8 @@ public class CanvasItemText : CanvasItem {
     undo_buffer.add_delete( spos, str, tags, cur );
   }
 
-  /* Handles a delete to end of word key event */
+  //-------------------------------------------------------------
+  // Handles a delete to end of word key event.
   public void delete_word( UndoTextBuffer undo_buffer ) {
     if( _cursor < text.text.length ) {
       var spos = text.text.index_of_nth_char( _cursor );
@@ -687,7 +721,9 @@ public class CanvasItemText : CanvasItem {
     }
   }
 
-  /* Inserts the given string at the current cursor position and adjusts cursor */
+  //-------------------------------------------------------------
+  // Inserts the given string at the current cursor position and
+  // adjusts cursor.
   public void insert( string s, UndoTextBuffer undo_buffer ) {
     var slen = s.char_count();
     var cur  = _cursor;
@@ -708,7 +744,8 @@ public class CanvasItemText : CanvasItem {
     }
   }
 
-  /* Inserts the given formatted text at the current cursor position */
+  //-------------------------------------------------------------
+  // Inserts the given formatted text at the current cursor position.
   public void insert_formatted_text( FormattedText t, UndoTextBuffer undo_buffer ) {
     var slen  = t.text.char_count();
     var ttags = t.get_tags_in_range( 0, slen );
@@ -738,7 +775,8 @@ public class CanvasItemText : CanvasItem {
     }
   }
 
-  /* Inserts a range of text messages */
+  //-------------------------------------------------------------
+  // Inserts a range of text messages.
   public void insert_ranges( Array<InsertText?> its, UndoTextBuffer undo_buffer ) {
     var cur = _cursor;
     for( int i=(int)(its.length - 1); i>=0; i-- ) {
@@ -755,7 +793,8 @@ public class CanvasItemText : CanvasItem {
     undo_buffer.add_inserts( its, cur );
   }
 
-  /* Replaces the given range with the specified string */
+  //-------------------------------------------------------------
+  // Replaces the given range with the specified string.
   public void replace( int start, int end, string s, UndoTextBuffer undo_buffer ) {
     var slen = s.char_count();
     var cur  = _cursor;
@@ -767,10 +806,9 @@ public class CanvasItemText : CanvasItem {
     undo_buffer.add_replace( start, str, s, tags, cur );
   }
 
-  /*
-   Returns the currently selected text or, if no text is currently selected,
-   returns null.
-  */
+  //-------------------------------------------------------------
+  // Returns the currently selected text or, if no text is currently
+  // selected, returns null.
   public string? get_selected_text() {
     if( _selstart != _selend ) {
       var spos = text.text.index_of_nth_char( _selstart );
@@ -780,14 +818,17 @@ public class CanvasItemText : CanvasItem {
     return( null );
   }
 
-  /* Returns the current cursor, selection start and selection end values. */
+  //-------------------------------------------------------------
+  // Returns the current cursor, selection start and selection end
+  // values.
   public void get_cursor_info( out int cursor, out int start, out int end ) {
     cursor = _cursor;
     start  = _selstart;
     end    = _selend;
   }
 
-  /* Returns the current cursor position */
+  //-------------------------------------------------------------
+  // Returns the current cursor position.
   public void get_cursor_pos( out int x, out int ytop, out int ybot ) {
     var index = text.text.index_of_nth_char( _cursor );
     var rect  = _pango_layout.index_to_pos( index );
@@ -796,7 +837,8 @@ public class CanvasItemText : CanvasItem {
     ybot = ytop + (int)(rect.height / Pango.SCALE);
   }
 
-  /* Returns the x and y position of the given character position */
+  //-------------------------------------------------------------
+  // Returns the x and y position of the given character position.
   public void get_char_pos( int pos, out double left, out double top, out double bottom, out int line ) {
     var index = text.text.index_of_nth_char( pos );
     var rect  = _pango_layout.index_to_pos( index );
@@ -807,7 +849,9 @@ public class CanvasItemText : CanvasItem {
     _pango_layout.index_to_line_x( index, false, out line, out x_pos );
   }
 
-  /* Returns a populated FormattedText instance containing the selected text range */
+  //-------------------------------------------------------------
+  // Returns a populated FormattedText instance containing the
+  // selected text range.
   public FormattedText? get_selected_formatted_text() {
     if( _selstart != _selend ) {
       var spos = text.text.index_of_nth_char( _selstart );
@@ -817,7 +861,8 @@ public class CanvasItemText : CanvasItem {
     return( null );
   }
 
-  /* Add tag to selected area */
+  //-------------------------------------------------------------
+  // Add tag to selected area.
   public void add_tag( FormatTag tag, string? extra, UndoTextBuffer undo_buffer ) {
     var spos = text.text.index_of_nth_char( _selstart );
     var epos = text.text.index_of_nth_char( _selend );
@@ -825,7 +870,8 @@ public class CanvasItemText : CanvasItem {
     undo_buffer.add_tag_add( spos, epos, tag, extra, _cursor );
   }
 
-  /* Removes the specified tag for the selected range */
+  //-------------------------------------------------------------
+  // Removes the specified tag for the selected range.
   public void remove_tag( FormatTag tag, UndoTextBuffer undo_buffer ) {
     var spos  = text.text.index_of_nth_char( _selstart );
     var epos  = text.text.index_of_nth_char( _selend );
@@ -834,7 +880,8 @@ public class CanvasItemText : CanvasItem {
     undo_buffer.add_tag_remove( spos, epos, tag, extra, _cursor );
   }
 
-  /* Removes the specified tag for the selected range */
+  //-------------------------------------------------------------
+  // Removes the specified tag for the selected range.
   public void remove_all_tags( UndoTextBuffer undo_buffer ) {
     var spos = text.text.index_of_nth_char( _selstart );
     var epos = text.text.index_of_nth_char( _selend );
@@ -843,10 +890,9 @@ public class CanvasItemText : CanvasItem {
     undo_buffer.add_tag_clear( spos, epos, tags, _cursor );
   }
 
-  /*
-   Call this method to change the current selection.  If a parameter
-   is specified as null, this selection index will not change value.
-  */
+  //-------------------------------------------------------------
+  // Call this method to change the current selection.  If a parameter
+  // is specified as null, this selection index will not change value.
   public void change_selection( int? selstart, int? selend, string? msg = null ) {
 
     if( _debug && (msg != null) ) {
@@ -879,11 +925,15 @@ public class CanvasItemText : CanvasItem {
 
   }
 
+  //-------------------------------------------------------------
+  // Returns true if the given coordinates are withing this item's
+  // bounding box.
   public override bool is_within( double x, double y ) {
     return( bbox.contains( x, y ) );
   }
 
-  /* Adds the contextual menu item values */
+  //-------------------------------------------------------------
+  // Adds the contextual menu item values.
   protected override void add_contextual_menu_items( CanvasItemMenu menu ) {
 
     if( edit ) {
@@ -919,7 +969,8 @@ public class CanvasItemText : CanvasItem {
 
   }
 
-  /* Draws the node font to the screen */
+  //-------------------------------------------------------------
+  // Draws the node font to the screen.
   public override void draw_item( Cairo.Context ctx, CanvasItemColor color ) {
 
     var layout = _pango_layout;

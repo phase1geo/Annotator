@@ -34,7 +34,8 @@ public enum CanvasPointType {
   CONTROL,
   SELECTOR;
 
-  /* Returns the string version of this type */
+  //-------------------------------------------------------------
+  // Returns the string version of this type.
   public string to_string() {
     switch( this ) {
       case RESIZER0 :  return( "resizer0" );
@@ -51,7 +52,26 @@ public enum CanvasPointType {
     }
   }
 
-  /* Returns the hidden/shown version of the current type */
+  //-------------------------------------------------------------
+  // Parses the given string and returns its CanvasPointType value.
+  public static CanvasPointType parse( string value ) {
+    switch( value ) {
+      case "resizer0" :  return( RESIZER0 );
+      case "resizer1" :  return( RESIZER1 );
+      case "resizer2" :  return( RESIZER2 );
+      case "resizer3" :  return( RESIZER3 );
+      case "hidden0"  :  return( HIDDEN0 );
+      case "hidden1"  :  return( HIDDEN1 );
+      case "hidden2"  :  return( HIDDEN2 );
+      case "hidden3"  :  return( HIDDEN3 );
+      case "control"  :  return( CONTROL );
+      case "selector" :  return( SELECTOR );
+      default         :  return( NONE );
+    }
+  }
+
+  //-------------------------------------------------------------
+  // Returns the hidden/shown version of the current type.
   public CanvasPointType version( bool hide ) {
     switch( this ) {
       case RESIZER0 :  return( hide ? HIDDEN0 : RESIZER0 );
@@ -66,12 +86,14 @@ public enum CanvasPointType {
     }
   }
 
-  /* Returns true if this point should be drawn */
+  //-------------------------------------------------------------
+  // Returns true if this point should be drawn.
   public bool draw() {
     return( (this == RESIZER0) || (this == RESIZER1) || (this == RESIZER2) || (this == RESIZER3) || (this == CONTROL) || (this == SELECTOR) );
   }
 
-  /* Returns the color to draw the given point */
+  //-------------------------------------------------------------
+  // Returns the color to draw the given point.
   public Gdk.RGBA color() {
     switch( this ) {
       case SELECTOR :
@@ -88,7 +110,8 @@ public enum CanvasPointType {
     }
   }
 
-  /* Returns true if the kind is hidden */
+  //-------------------------------------------------------------
+  // Returns true if the kind is hidden.
   public bool is_hidden() {
     return( (this == HIDDEN0) || (this == HIDDEN1) || (this == HIDDEN2) || (this == HIDDEN3) );
   }
@@ -101,56 +124,90 @@ public class CanvasPoint {
   public double          y    { get; set; default = 0.0; }
   public CanvasPointType kind { get; private set; default = CanvasPointType.NONE; }
 
-  /* Constructor */
+  //-------------------------------------------------------------
+  // Constructor.
   public CanvasPoint( CanvasPointType kind = CanvasPointType.NONE ) {
     this.kind = kind;
   }
 
-  /* Copy constructor */
+  //-------------------------------------------------------------
+  // Copy constructor
   public CanvasPoint.from_point( CanvasPoint point ) {
     copy( point );
   }
 
-  /* Constructor */
+  //-------------------------------------------------------------
+  // Constructor.
   public CanvasPoint.from_coords( double x, double y, CanvasPointType kind = CanvasPointType.NONE ) {
     copy_coords( x, y );
     this.kind = kind;
   }
 
-  /* Copies the point information to this instance */
+  //-------------------------------------------------------------
+  // Copies the point information to this instance.
   public void copy( CanvasPoint point ) {
     this.x    = point.x;
     this.y    = point.y;
     this.kind = point.kind;
   }
 
-  /* Copies the x,y coordinates to this instance */
+  //-------------------------------------------------------------
+  // Copies the x,y coordinates to this instance.
   public void copy_coords( double x, double y ) {
     this.x = x;
     this.y = y;
   }
 
-  /* Adjust the point by the given amounts */
+  //-------------------------------------------------------------
+  // Adjust the point by the given amounts.
   public void adjust( double diffx, double diffy ) {
     this.x += diffx;
     this.y += diffy;
   }
 
-  /* Resets the visual aspect of this point to non-hidden state */
+  //-------------------------------------------------------------
+  // Resets the visual aspect of this point to non-hidden state.
   public void reset_visual() {
     kind = kind.version( false );
   }
 
-  /* Updates the visual status of this point kind */
+  //-------------------------------------------------------------
+  // Updates the visual status of this point kind.
   public void set_visual( CanvasPointType point_kind, bool hide ) {
     if( point_kind != kind ) {
       kind = kind.version( hide );
     }
   }
 
-  /* Returns a printable version of this point */
+  //-------------------------------------------------------------
+  // Returns a printable version of this point.
   public string to_string() {
     return( "x: %g, y: %g, kind: %s".printf( x, y, kind.to_string() ) );
+  }
+
+  //-------------------------------------------------------------
+  // Saves the contents of this point in XML format.
+  public Xml.Node* save( string name ) {
+    Xml.Node* node = new Xml.Node( null, name );
+    node->set_prop( "x", x.to_string() );
+    node->set_prop( "y", y.to_string() );
+    return( node );
+  }
+
+  //-------------------------------------------------------------
+  // Loads the contents of this point
+  public void load( Xml.Node* node ) {
+
+    var x = node->get_prop( "x" );
+    if( x != null ) {
+      this.x = double.parse( x );
+    }
+
+    var y = node->get_prop( "y" );
+    if( y != null ) {
+      this.y = double.parse( y );
+    }
+
   }
 
 }

@@ -87,7 +87,8 @@ public class CanvasImage {
   public signal void image_changed();
   public signal void color_picked( RGBA color );
 
-  /* Constructor */
+  //-------------------------------------------------------------
+  // Constructor
   public CanvasImage( Canvas canvas ) {
 
     _canvas = canvas;
@@ -109,12 +110,14 @@ public class CanvasImage {
 
   }
 
-  /* Returns true if the surface image has been set */
+  //-------------------------------------------------------------
+  // Returns true if the surface image has been set.
   public bool is_surface_set() {
     return( _buf != null );
   }
 
-  /* Returns a surface which contains the given rectangle area of the base image */
+  //-------------------------------------------------------------
+  // Returns a surface which contains the given rectangle area of the base image.
   public Pixbuf get_pixbuf_for_rect( CanvasRect rect ) {
     var buf_rect = new CanvasRect.from_coords( 0, 0, _buf.width, _buf.height );
     rect.intersection( rect, buf_rect );
@@ -122,7 +125,8 @@ public class CanvasImage {
     return( sub );
   }
 
-  /* Changes the stored image to the given pixbuf and performs other related tasks */
+  //-------------------------------------------------------------
+  // Changes the stored image to the given pixbuf and performs other related tasks.
   public void change_image( Pixbuf buf, string? undo_name = _( "change image" ) ) {
 
     if( cropping ) {
@@ -146,7 +150,8 @@ public class CanvasImage {
 
   }
 
-  /* Pastes an image from the given pixbuf to the canvas */
+  //-------------------------------------------------------------
+  // Pastes an image from the given pixbuf to the canvas.
   public void set_image( Pixbuf buf, string? undo_name = _( "change image" ) ) {
 
     var items_removed = _canvas.items.items_exist();
@@ -164,7 +169,8 @@ public class CanvasImage {
 
   }
 
-  /* Resizes the current image */
+  //-------------------------------------------------------------
+  // Resizes the current image.
   public void resize_image() {
 
     var dialog = new Resizer( _canvas, info );
@@ -183,7 +189,8 @@ public class CanvasImage {
 
   }
 
-  /* This is the function that performs the actual resize */
+  //-------------------------------------------------------------
+  // This is the function that performs the actual resize.
   public void do_resize( CanvasImageInfo old_info, CanvasImageInfo new_info ) {
 
     /* Copy the new info into our info */
@@ -212,7 +219,8 @@ public class CanvasImage {
     _control_set = false;
   }
 
-  /* Handles a keypress event when cropping is enabled */
+  //-------------------------------------------------------------
+  // Handles a keypress event when cropping is enabled.
   public bool key_pressed( uint keyval, uint keycode, ModifierType state ) {
 
     /* Handle a press of the control key */
@@ -290,7 +298,8 @@ public class CanvasImage {
 
   }
 
-  /* Handles a key release event when cropping is enabled */
+  //-------------------------------------------------------------
+  // Handles a key release event when cropping is enabled.
   public bool key_released( uint keyval, uint keycode, ModifierType state ) {
     if( (keyval == Key.Control_L) || (keyval == Key.Control_R) ) {
       _control_set = false;
@@ -302,7 +311,8 @@ public class CanvasImage {
   //  MOUSE EVENT HANDLER
   /****************************************************************************/
 
-  /* Handles a cursor press event */
+  //-------------------------------------------------------------
+  // Handles a cursor press event.
   public bool cursor_pressed( double x, double y, int press_count ) {
 
     var rect = new CanvasRect();
@@ -343,7 +353,9 @@ public class CanvasImage {
 
   }
 
-  /* Returns true if the current cursor lies within a color picker pixel box.  Sets the pick_adjust_row/col to the current values. */
+  //-------------------------------------------------------------
+  // Returns true if the current cursor lies within a color picker
+  // pixel box.  Sets the pick_adjust_row/col to the current values.
   private bool check_in_pick_box() {
 
     var size   = (pick_size * pick_pixel_size);
@@ -360,7 +372,8 @@ public class CanvasImage {
 
   }
   
-  /* Handles a cursor motion event */
+  //-------------------------------------------------------------
+  // Handles a cursor motion event.
   public bool cursor_moved( double x, double y ) {
 
     var diffx = x - _last_x;
@@ -438,7 +451,8 @@ public class CanvasImage {
 
   }
 
-  /* If we are in color picking mode, finish it */
+  //-------------------------------------------------------------
+  // If we are in color picking mode, finish it.
   private bool complete_pick_mode( bool cancel ) {
 
     /* Handle the pick mode, if set and we are not cancelling */
@@ -463,7 +477,8 @@ public class CanvasImage {
 
   }
 
-  /* Handles a cursor release event */
+  //-------------------------------------------------------------
+  // Handles a cursor release event.
   public bool cursor_released( double x, double y ) {
 
     _crop_index = -2;
@@ -477,7 +492,8 @@ public class CanvasImage {
   //  CROP HANDLING CODE
   /****************************************************************************/
 
-  /* Start the cropping function */
+  //-------------------------------------------------------------
+  // Start the cropping function.
   public void start_crop() {
     int width, height;
     cropping = true;
@@ -486,7 +502,8 @@ public class CanvasImage {
     crop_started();
   }
 
-  /* Cancels the crop operation */
+  //-------------------------------------------------------------
+  // Cancels the crop operation.
   public bool cancel_crop() {
     cropping = false;
     _canvas.queue_draw();
@@ -494,7 +511,8 @@ public class CanvasImage {
     return( true );
   }
 
-  /* Completes the cropping operation */
+  //-------------------------------------------------------------
+  // Completes the cropping operation.
   public bool end_crop() {
     cropping = false;
     var buf = new Pixbuf.subpixbuf( _buf, (int)crop_rect.x, (int)crop_rect.y, (int)crop_rect.width, (int)crop_rect.height );
@@ -508,6 +526,7 @@ public class CanvasImage {
   /****************************************************************************/
   //  COLOR PICKER
   /****************************************************************************/
+
   public void pick_color( bool to_clipboard ) {
 
     _pick_mode = to_clipboard ? PickMode.CLIPBOARD : PickMode.COLOR;
@@ -525,37 +544,100 @@ public class CanvasImage {
   //  EXPORTING
   /****************************************************************************/
 
-  /* Make sure that everything is cleared from the image */
+  //-------------------------------------------------------------
+  // Make sure that everything is cleared from the image.
   private void clean_image() {
     cropping = false;
     _canvas.items.clear_selection();
     _canvas.queue_draw();
   }
 
-  /* Exports to the given image type */
+  //-------------------------------------------------------------
+  // Exports to the given image type.
   public void export_image( string type, string filename ) {
     clean_image();
     var export = exports.get_by_name( type );
     export.export( filename, _buf );
   }
 
-  /* Exports the image to the clipboard */
+  //-------------------------------------------------------------
+  // Exports the image to the clipboard.
   public void export_clipboard() {
     clean_image();
     exports.clipboard.export( _buf );
   }
 
-  /* Exports the image to the printer */
+  //-------------------------------------------------------------
+  // Exports the image to the printer.
   public void export_print() {
     clean_image();
     exports.printer.export( _buf );
   }
 
   /****************************************************************************/
+  //  SAVE/LOAD
+  /****************************************************************************/
+
+  //-------------------------------------------------------------
+  // Saves the contents of this canvas image to XML format.
+  public Xml.Node* save( string image_dir, int compression ) {
+
+    Xml.Node* node    = new Xml.Node( null, "image" );
+    string[]  options = { "compression" };
+    string[]  values  = { compression.to_string() };
+    var       fname   = GLib.Path.build_filename( image_dir, "background.png" );
+
+    try {
+      _buf.savev( fname, "png", options, values );
+      node->set_prop( "filename", fname );
+    } catch( GLib.Error e ) {
+      critical( e.message );
+    }
+
+    node->set_prop( "angle", _angle.to_string() );
+
+    node->add_child( info.save() );
+
+    return( node );
+
+  }
+
+  //-------------------------------------------------------------
+  // Load the contents of this canvas image from XML format.
+  public bool load( Xml.Node* node ) {
+
+    var loaded = false;
+
+    var fname = node->get_prop( "filename" );
+    if( fname != null ) {
+      loaded = _canvas.editor.open_image( fname ); 
+    }
+
+    var a = node->get_prop( "angle" );
+    if( a != null ) {
+      _angle = double.parse( a );
+      // TBD - We will probably want to handle the angle change in the canvas.
+    }
+
+    for( Xml.Node* it=node->children; it!=null; it=it->next ) {
+      if( (it->type == Xml.ElementType.ELEMENT_NODE) && (it->name == "image-info") ) {
+        var old_info = new CanvasImageInfo.from_info( info );
+        var new_info = new CanvasImageInfo.from_info( info );
+        new_info.load( it );
+        do_resize( old_info, new_info );
+      }
+    }
+
+    return( loaded );
+
+  }
+
+  /****************************************************************************/
   //  DRAWING
   /****************************************************************************/
 
-  /* Calculates the box for the given selector */
+  //-------------------------------------------------------------
+  // Calculates the box for the given selector.
   private void selector_bbox( int index, CanvasRect rect ) {
 
     switch( index ) {
@@ -587,7 +669,8 @@ public class CanvasImage {
 
   }
 
-  /* Draw the image being annotated */
+  //-------------------------------------------------------------
+  // Draw the image being annotated.
   private void draw_image( Context ctx ) {
 
     cairo_set_source_pixbuf( ctx, _buf, info.pixbuf_rect.x, info.pixbuf_rect.y );
@@ -595,12 +678,16 @@ public class CanvasImage {
 
   }
 
-  /* Draws the drop_outline */
+  //-------------------------------------------------------------
+  // Draws the drop_outline.
   private void draw_crop_outline( Context ctx ) {
 
     var black = Utils.color_from_string( "black" );
 
     Utils.set_context_color_with_alpha( ctx, black, 0.5 );
+
+    ctx.rectangle( crop_rect.x1(), crop_rect.y1(), crop_rect.width, crop_rect.height );
+    ctx.stroke();
 
     ctx.rectangle( 0, 0, crop_rect.x1(), info.height );
     ctx.fill();
@@ -616,7 +703,8 @@ public class CanvasImage {
 
   }
 
-  /* Draws the thirds dividers when cropping */
+  //-------------------------------------------------------------
+  // Draws the thirds dividers when cropping.
   private void draw_crop_dividers( Context ctx ) {
 
     var third_width  = crop_rect.width  / 3;
@@ -646,7 +734,8 @@ public class CanvasImage {
 
   }
 
-  /* Draws the cropping selectors */
+  //-------------------------------------------------------------
+  // Draws the cropping selectors.
   private void draw_crop_selectors( Context ctx ) {
 
     var blue   = Utils.color_from_string( "light blue" );
@@ -669,7 +758,8 @@ public class CanvasImage {
 
   }
 
-  /* Draws the rotation selector */
+  //-------------------------------------------------------------
+  // Draws the rotation selector.
   private void draw_rotate_selector( Context ctx ) {
 
     var yellow = Utils.color_from_string( "yellow" );
@@ -688,6 +778,9 @@ public class CanvasImage {
 
   }
 
+  //-------------------------------------------------------------
+  // Returns the color value at the given pixel location within the
+  // image buffer.
   private RGBA get_color_at( Pixbuf buf, int x, int y ) {
 
     var  start = (y * buf.rowstride) + (x * buf.n_channels);
@@ -701,7 +794,8 @@ public class CanvasImage {
 
   }
 
-  /* Draws the color picker on the canvas */
+  //-------------------------------------------------------------
+  // Draws the color picker on the canvas.
   public void draw_pick_mode( Context ctx ) {
 
     if( _pick_mode.enabled() ) {
@@ -757,7 +851,8 @@ public class CanvasImage {
 
   }
 
-  /* Draw the cropping area if we are in that mode */
+  //-------------------------------------------------------------
+  // Draw the cropping area if we are in that mode.
   private void draw_cropping( Context ctx ) {
     if( !cropping ) return;
     draw_crop_outline( ctx );
@@ -766,7 +861,8 @@ public class CanvasImage {
     // TODO - draw_rotate_selector( ctx );
   }
 
-  /* Draws the image */
+  //-------------------------------------------------------------
+  // Draws the image.
   public void draw( Context ctx ) {
     var w = info.width;
     var h = info.height;

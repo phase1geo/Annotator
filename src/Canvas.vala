@@ -118,7 +118,8 @@ public class Canvas : DrawingArea {
     set_cursor( cursor );
   }
 
-  /* Opens a new image and displays it in the drawing area */
+  //-------------------------------------------------------------
+  // Opens a new image and displays it in the drawing area.
   public bool open_image( string filename ) {
 
     try {
@@ -376,7 +377,7 @@ public class Canvas : DrawingArea {
 
     var retval = grab_focus();
     if( image.cropping ) {
-      if( image.cursor_pressed( x, y, n_press ) ) {
+      if( image.cursor_pressed( ex, ey, n_press ) ) {
         queue_draw();
       }
     } else if( items.cursor_pressed( x, y, n_press ) ) {
@@ -400,7 +401,7 @@ public class Canvas : DrawingArea {
     _last_y = y;
 
     if( image.cropping || image.picking ) {
-      if( image.cursor_moved( x, y ) ) {
+      if( image.cursor_moved( ex, ey ) ) {
         queue_draw();
       }
     } else if( items.cursor_moved( x, y ) ) {
@@ -416,7 +417,7 @@ public class Canvas : DrawingArea {
     var y = scale_y( ey );
 
     if( image.cropping || image.picking ) {
-      if( image.cursor_released( x, y ) ) {
+      if( image.cursor_released( ex, ey ) ) {
         queue_draw();
       }
     } else if( items.cursor_released( x, y ) ) {
@@ -491,6 +492,42 @@ public class Canvas : DrawingArea {
 
     /* Resize the canvas itself */
     set_size_request( new_info.width, new_info.height );
+
+  }
+
+  /****************************************************************************/
+  //  SAVE/LOAD
+  /****************************************************************************/
+
+  //-------------------------------------------------------------
+  // Saves this canvas and all canvas items in XML format.
+  public Xml.Node* save( string image_dir, int compression ) {
+
+    Xml.Node* node = new Xml.Node( null, "canvas" );
+
+    node->add_child( image.save( image_dir, compression ) );
+    node->add_child( items.save( image_dir ) );
+
+    return( node );
+
+  }
+
+  //-------------------------------------------------------------
+  // Loads this canvas and the canvas items from XML format.
+  public bool load( Xml.Node* node ) {
+
+    bool image_loaded = false;
+
+    for( Xml.Node* it=node->children; it!=null; it=it->next ) {
+      if( it->type == Xml.ElementType.ELEMENT_NODE ) {
+        switch( it->name ) {
+          case "image" :  image_loaded = image.load( it );  break;
+          case "items" :  items.load( it );  break;
+        }
+      }
+    }
+
+    return( image_loaded );
 
   }
 

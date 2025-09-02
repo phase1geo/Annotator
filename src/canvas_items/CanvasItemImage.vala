@@ -30,7 +30,8 @@ public class CanvasItemImage : CanvasItem {
   private Pixbuf? _buf  = null;
   private Cursor  _sel_cursor;
 
-  /* Constructor */
+  //-------------------------------------------------------------
+  // Constructor.
   public CanvasItemImage( Canvas canvas, string? name, bool file, CanvasItemProperties props ) {
     base( (file ? CanvasItemType.IMAGE : CanvasItemType.STICKER), canvas, props );
     create_points();
@@ -38,12 +39,15 @@ public class CanvasItemImage : CanvasItem {
     _sel_cursor = new Cursor.from_name( "se-resize", null );
   }
 
-  /* Creates the item points */
+  //-------------------------------------------------------------
+  // Creates the item points.
   private void create_points() {
     points.append_val( new CanvasPoint( CanvasPointType.RESIZER0 ) );  // Resizer
   }
 
-  /* Creates a pixbuf from the given filename or resource at full size */
+  //-------------------------------------------------------------
+  // Creates a pixbuf from the given filename or resource at full
+  // size.
   private void create_image( string? name, bool file, int width ) {
     if( name == null ) return;
     try {
@@ -61,14 +65,16 @@ public class CanvasItemImage : CanvasItem {
     }
   }
 
-  /* Creates an image from the specified filename */
+  //-------------------------------------------------------------
+  // Creates an image from the specified filename.
   private void resize_image( int width = 0 ) {
     if( (_buf != null) && (width != 0) ) {
       create_image( _name, _file, width );
     }
   }
 
-  /* Copies the contents of the given item to ourselves */
+  //-------------------------------------------------------------
+  // Copies the contents of the given item to ourselves.
   public override void copy( CanvasItem item ) {
     base.copy( item );
     var img_item = (CanvasItemImage)item;
@@ -80,14 +86,16 @@ public class CanvasItemImage : CanvasItem {
     }
   }
 
-  /* Returns a copy of this item */
+  //-------------------------------------------------------------
+  // Returns a copy of this item.
   public override CanvasItem duplicate() {
     var item = new CanvasItemImage( canvas, _name, _file, props );
     item.copy( this );
     return( item );
   }
 
-  /* Updates the selection boxes whenever the bounding box changes */
+  //-------------------------------------------------------------
+  // Updates the selection boxes whenever the bounding box changes.
   protected override void bbox_changed() {
 
     points.index( 0 ).copy_coords( bbox.x2(), bbox.y2() );
@@ -98,7 +106,8 @@ public class CanvasItemImage : CanvasItem {
 
   }
 
-  /* Adjusts the bounding box */
+  //-------------------------------------------------------------
+  // Adjusts the bounding box.
   public override void move_selector( int index, double diffx, double diffy, bool shift ) {
 
     var box = new CanvasRect.from_rect( bbox );
@@ -113,22 +122,38 @@ public class CanvasItemImage : CanvasItem {
 
   }
 
-  /* Provides cursor to display when mouse cursor is hovering over the given selector */
+  //-------------------------------------------------------------
+  // Provides cursor to display when mouse cursor is hovering over
+  // the given selector.
   public override Cursor? get_selector_cursor( int index ) {
     return( _sel_cursor );
   }
 
-  /* Saves this item as XML */
-  public override Xml.Node* save() {
-    Xml.Node* node = base.save();
-    node->set_prop( "name", _name );
-    node->set_prop( "file", _file.to_string() );
+  //-------------------------------------------------------------
+  // Saves this item as XML.
+  public override Xml.Node* save( int id, string image_dir ) {
+    Xml.Node* node = base.save( id, image_dir );
+    if( (image_dir != null) && _file ) {
+      string[] options = { "compression" };
+      string[] values  = { "9" };
+      var fname = GLib.Path.build_filename( image_dir, "image%d.png".printf( id ) );
+      try {
+        _buf.savev( fname, "png", options, values );
+        node->set_prop( "name", fname );
+        node->set_prop( "file", true.to_string() );
+      } catch( Error e ) {
+        critical( e.message );
+      }
+    } else {
+      node->set_prop( "name", _name );
+      node->set_prop( "file", _file.to_string() );
+    }
     return( node );
   }
 
-  /* Loads this item from XML */
+  //-------------------------------------------------------------
+  // Loads this item from XML.
   public override void load( Xml.Node* node ) {
-    base.load( node );
     var n = node->get_prop( "name" );
     if( n != null ) {
       _name = n;
@@ -138,9 +163,11 @@ public class CanvasItemImage : CanvasItem {
       _file = bool.parse( f );
     }
     create_image( _name, _file, (int)bbox.width );
+    base.load( node );
   }
 
-  /* Draw the rectangle */
+  //-------------------------------------------------------------
+  // Draw the rectangle.
   public override void draw_item( Context ctx, CanvasItemColor color ) {
 
     ctx.set_line_width( 0 );

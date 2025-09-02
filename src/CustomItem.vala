@@ -17,7 +17,8 @@ public class CustomItem {
     _dark_image  = null;
   }
 
-  /* Constructor */
+  //-------------------------------------------------------------
+  // Constructor
   public CustomItem.with_item( CanvasItem item ) {
     double x1, y1, x2, y2;
     item.get_extents( out x1, out y1, out x2, out y2 );
@@ -28,14 +29,16 @@ public class CustomItem {
     create_image( false );
   }
 
-  /* Returns the image associated with this item */
+  //-------------------------------------------------------------
+  // Returns the image associated with this item.
   public Image get_image( MainWindow win ) {
     var dark_mode = Gtk.Settings.get_default().gtk_application_prefer_dark_theme;
     var image     = new Image.from_paintable( dark_mode ? _dark_image.paintable : _light_image.paintable );
     return( image );
   }
 
-  /* Create an icon from the item */
+  //-------------------------------------------------------------
+  // Create an icon from the item.
   private void create_image( bool light ) {
     if( item != null ) {
       var snapshot = new Snapshot();
@@ -67,7 +70,7 @@ public class CustomItem {
   /* Saves this item as XML format */
   public Xml.Node* save() {
     Xml.Node* node = new Xml.Node( null, "custom-item" );
-    node->add_child( item.save() );
+    node->add_child( item.save( 0, null ) );
     return( node );
   }
 

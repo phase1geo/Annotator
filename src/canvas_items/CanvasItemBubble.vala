@@ -43,7 +43,7 @@ public enum CanvasBubbleType {
     }
   }
 
-  public CanvasBubbleType parse( string str ) {
+  public static CanvasBubbleType parse( string str ) {
     switch( str ) {
       case "talk"  :  return( TALK );
       case "think" :  return( THINK );
@@ -58,7 +58,6 @@ public class CanvasItemBubble : CanvasItem {
   private Cursor[]         _sel_cursors;
   private CanvasBubbleType _type;
   private bool             _point_moved = false;
-  private bool             _base_moved  = false;
   private double           _radius      = 40.0;
 
   /* Constructor */
@@ -97,7 +96,6 @@ public class CanvasItemBubble : CanvasItem {
     if( bubble_item != null ) {
       _type        = bubble_item._type;
       _point_moved = bubble_item._point_moved;
-      _base_moved  = bubble_item._base_moved;
     }
   }
  
@@ -152,12 +150,41 @@ public class CanvasItemBubble : CanvasItem {
 
   }
 
-  /* Provides cursor to display when mouse cursor is hovering over the given selector */
+  //-------------------------------------------------------------
+  // Provides cursor to display when mouse cursor is hovering over
+  // the given selector.
   public override Cursor? get_selector_cursor( int index ) {
     return( _sel_cursors[index] );
   }
 
-  /* Helper function that finds the two tangential points on a circle to a given point */
+  //-------------------------------------------------------------
+  // Saves the description of this item in XML format.
+  public override Xml.Node* save( int id, string image_dir ) {
+    Xml.Node* node = base.save( id, image_dir );
+    node->set_prop( "type", _type.to_string() );
+    node->add_child( points.index( 8 ).save( "talk-point" ) );
+    return( node );
+  }
+
+  //-------------------------------------------------------------
+  // Loads the description of this item from XML format.
+  public override void load( Xml.Node* node ) {
+    var t = node->get_prop( "type" );
+    if( t != null ) {
+      _type = CanvasBubbleType.parse( t );
+    }
+    for( Xml.Node* it=node->children; it!=null; it=it->next ) {
+      if( (it->type == Xml.ElementType.ELEMENT_NODE) && (it->name == "talk-point") ) {
+        points.index( 8 ).load( it );
+        _point_moved = true;
+      }
+    }
+    base.load( node );
+  }
+
+  //-------------------------------------------------------------
+  // Helper function that finds the two tangential points on a
+  // circle to a given point.
   private bool find_tangents( CanvasPoint center, double radius, CanvasPoint external, CanvasPoint pt1, CanvasPoint pt2 ) {
 
     var dx  = center.x - external.x;
@@ -173,7 +200,9 @@ public class CanvasItemBubble : CanvasItem {
 
   }
 
-  /* Helper function that finds the two points where two circles intersect */
+  //-------------------------------------------------------------
+  // Helper function that finds the two points where two circles
+  // intersect.
   private bool find_circle_circle_intersections( CanvasPoint c0, double r0, CanvasPoint c1, double r1, CanvasPoint pt1, CanvasPoint pt2 ) {
 
     var dx   = c0.x - c1.x;

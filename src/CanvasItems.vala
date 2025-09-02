@@ -1178,7 +1178,7 @@ public class CanvasItems {
     Xml.Node* root = new Xml.Node( null, "items" );
     doc->set_root_element( root );
     for( int i=0; i<items.length; i++ ) {
-      root->add_child( items.index( i ).save() );
+      root->add_child( items.index( i ).save( i, null ) );
     }
     doc->dump_memory( out serialized );
     delete doc;
@@ -1269,10 +1269,11 @@ public class CanvasItems {
   //  SAVE/LOAD METHODS
   /****************************************************************************/
 
-  public Xml.Node* save() {
+  public Xml.Node* save( string? image_dir = null ) {
     Xml.Node* node = new Xml.Node( null, "items" );
+    var       id   = 1;
     foreach( CanvasItem item in _items ) {
-      node->add_child( item.save() );
+      node->add_child( item.save( id++, image_dir ) );
     }
     return( node );
   }

@@ -415,7 +415,7 @@ public class CanvasItem {
   /****************************************************************************/
 
   /* Saves the item in XML format */
-  public virtual Xml.Node* save() {
+  public virtual Xml.Node* save( int id, string image_dir ) {
     Xml.Node* node = new Xml.Node( null, "item" );
     node->set_prop( "type", itype.to_string() );
     node->set_prop( "x",    bbox.x.to_string() );
@@ -460,6 +460,8 @@ public class CanvasItem {
         props.load( it );
       }
     }
+
+    bbox_changed();
 
   }
 

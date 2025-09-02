@@ -161,16 +161,18 @@ public class CanvasItemStar : CanvasItem {
 
   }
 
-  public override Xml.Node* save() {
-    Xml.Node* node = base.save();
+  //-------------------------------------------------------------
+  // Saves the contents of this canvas item in XML format.
+  public override Xml.Node* save( int id, string image_dir ) {
+    Xml.Node* node = base.save( id, image_dir );
     node->set_prop( "points",       num_points.to_string() );
     node->set_prop( "inner-radius", _inner_radius.to_string() );
     return( node );
   }
 
-  /* Loads this item from XML */
+  //-------------------------------------------------------------
+  // Loads this item from XML.
   public override void load( Xml.Node* node ) {
-    base.load( node );
     var p = node->get_prop( "points" );
     if( p != null ) {
       num_points = int.parse( p );
@@ -179,10 +181,11 @@ public class CanvasItemStar : CanvasItem {
     if( i != null ) {
       _inner_radius = double.parse( i );
     }
-    bbox_changed();
+    base.load( node );
   }
 
-  /* Draw the rectangle */
+  //-------------------------------------------------------------
+  // Draw the star.
   public override void draw_item( Context ctx, CanvasItemColor color ) {
 
     var outline = Granite.contrasting_foreground_color( props.color );

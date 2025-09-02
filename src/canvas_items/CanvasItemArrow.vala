@@ -29,7 +29,27 @@ public class CanvasItemArrow : CanvasItem {
     UPPER_LEFT,
     UPPER_RIGHT,
     LOWER_LEFT,
-    LOWER_RIGHT
+    LOWER_RIGHT;
+
+    public string to_string() {
+      switch( this ) {
+        case UPPER_LEFT  :  return( "ul" );
+        case UPPER_RIGHT :  return( "ur" );
+        case LOWER_LEFT  :  return( "ll" );
+        case LOWER_RIGHT :  return( "lr" );
+        default          :  assert_not_reached();
+      }
+    }
+
+    public static ArrowHeadDirection parse( string val ) {
+      switch( val ) {
+        case "ul" :  return( UPPER_LEFT );
+        case "ur" :  return( UPPER_RIGHT );
+        case "ll" :  return( LOWER_LEFT );
+        case "lr" :  return( LOWER_RIGHT );
+        default   :  return( UPPER_LEFT );
+      }
+    }
   }
 
   private enum PType {
@@ -48,14 +68,16 @@ public class CanvasItemArrow : CanvasItem {
   private ArrowHeadDirection _dir      = ArrowHeadDirection.UPPER_LEFT;
   private Cursor             _sel_cursor;
 
-  /* Constructor */
+  //-------------------------------------------------------------
+  // Constructor
   public CanvasItemArrow( Canvas canvas, CanvasItemProperties props ) {
     base( CanvasItemType.ARROW, canvas, props );
     create_points();
     _sel_cursor = new Cursor.from_name( "crosshair", null );
   }
 
-  /* Creates the selection points */
+  //-------------------------------------------------------------
+  // Creates the selection points.
   private void create_points() {
     points.append_val( new CanvasPoint( CanvasPointType.RESIZER0 ) );
     points.append_val( new CanvasPoint( CanvasPointType.RESIZER0 ) );
@@ -65,7 +87,8 @@ public class CanvasItemArrow : CanvasItem {
     points.append_val( new CanvasPoint() );
   }
 
-  /* Copies the given arrow item properties to this one */
+  //-------------------------------------------------------------
+  // Copies the given arrow item properties to this one.
   public override void copy( CanvasItem item ) {
     base.copy( item );
     var arrow_item = (CanvasItemArrow)item;
@@ -74,17 +97,20 @@ public class CanvasItemArrow : CanvasItem {
       _peak_c   = arrow_item._peak_c;
       _valley_a = arrow_item._valley_a;
       _valley_c = arrow_item._valley_c;
+      _dir      = arrow_item._dir;
     }
   }
 
-  /* Creates a duplicate of this item and returns it */
+  //-------------------------------------------------------------
+  // Creates a duplicate of this item and returns it.
   public override CanvasItem duplicate() {
     var item = new CanvasItemArrow( canvas, props );
     item.copy( this );
     return( item );
   }
 
-  /* Updates the selection boxes whenever the bounding box changes */
+  //-------------------------------------------------------------
+  // Updates the selection boxes whenever the bounding box changes.
   protected override void bbox_changed() {
 
     double pvw, pvh, ppw, pph;
@@ -133,7 +159,9 @@ public class CanvasItemArrow : CanvasItem {
 
   }
 
-  /* Calculates the width and height values for a peak/valley which are used in adjusting the selector */
+  //-------------------------------------------------------------
+  // Calculates the width and height values for a peak/valley
+  // which are used in adjusting the selector.
   private void calc_flight_point( double a, double c, bool primary, out double width, out double height ) {
 
     var spine_a = Math.atan( bbox.height / bbox.width );
@@ -143,7 +171,9 @@ public class CanvasItemArrow : CanvasItem {
 
   }
 
-  /* Adjusts the valley/peak length and angle based on the placement of the associated selector */
+  //-------------------------------------------------------------
+  // Adjusts the valley/peak length and angle based on the
+  // placement of the associated selector.
   private void adjust_flight_point( int selector_index, ref double a, ref double c ) {
 
     var point = points.index( selector_index );
@@ -170,7 +200,8 @@ public class CanvasItemArrow : CanvasItem {
 
   }
 
-  /* Adjusts the bounding box */
+  //-------------------------------------------------------------
+  // Adjusts the bounding box.
   public override void move_selector( int index, double diffx, double diffy, bool shift ) {
 
     double w = 0, h = 0;
@@ -242,24 +273,28 @@ public class CanvasItemArrow : CanvasItem {
 
   }
 
-  /* Provides cursor to display when mouse cursor is hovering over the given selector */
+  //-------------------------------------------------------------
+  // Provides cursor to display when mouse cursor is hovering
+  // over the given selector.
   public override Cursor? get_selector_cursor( int index ) {
     return( _sel_cursor );
   }
 
-  /* Saves this item as XML */
-  public override Xml.Node* save() {
-    Xml.Node* node = base.save();
+  //-------------------------------------------------------------
+  // Saves this item as XML.
+  public override Xml.Node* save( int id, string image_dir ) {
+    Xml.Node* node = base.save( id, image_dir );
     node->set_prop( "peak-angle",    _peak_a.to_string() );
     node->set_prop( "peak-length",   _peak_c.to_string() );
     node->set_prop( "valley-angle",  _valley_a.to_string() );
     node->set_prop( "valley-length", _valley_c.to_string() );
+    node->set_prop( "dir",           _dir.to_string() );
     return( node );
   }
 
-  /* Loads this item from XML */
+  //-------------------------------------------------------------
+  // Loads this item from XML.
   public override void load( Xml.Node* node ) {
-    base.load( node );
     var pa = node->get_prop( "peak-angle" );
     if( pa != null ) {
       _peak_a = double.parse( pa );
@@ -276,10 +311,15 @@ public class CanvasItemArrow : CanvasItem {
     if( vc != null ) {
       _valley_c = double.parse( vc );
     }
-    bbox_changed();
+    var d = node->get_prop( "dir" );
+    if( d != null ) {
+      _dir = ArrowHeadDirection.parse( d );
+    }
+    base.load( node );
   }
 
-  /* Draw the rectangle */
+  //-------------------------------------------------------------
+  // Draw the rectangle.
   public override void draw_item( Context ctx, CanvasItemColor color ) {
 
     var alpha = mode.alpha( props.alpha );
@@ -309,5 +349,3 @@ public class CanvasItemArrow : CanvasItem {
   }
 
 }
-
-

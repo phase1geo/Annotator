@@ -226,20 +226,29 @@ public class CanvasItemMagnifier : CanvasItem {
 
   }
 
-  /* Saves this item as XML */
-  public override Xml.Node* save() {
-    Xml.Node* node = base.save();
+  //-------------------------------------------------------------
+  // Saves this item as XML.
+  public override Xml.Node* save( int id, string image_dir ) {
+    Xml.Node* node = base.save( id, image_dir );
     node->set_prop( "zoom-factor", _zoom_factor.to_string() );
+    node->add_child( points.index( 2 ).save( "focus" ) );
     return( node );
   }
 
-  /* Loads this item from XML */
+  //-------------------------------------------------------------
+  // Loads this item from XML.
   public override void load( Xml.Node* node ) {
-    base.load( node );
     var f = node->get_prop( "zoom-factor" );
     if( f != null ) {
       _zoom_factor = double.parse( f );
     }
+    for( Xml.Node* it=node->children; it!=null; it=it->next ) {
+      if( (it->type == Xml.ElementType.ELEMENT_NODE) && (it->name == "focus") ) {
+        points.index( 2 ).load( it );
+        _focus_moved = true;
+      }
+    }
+    base.load( node );
   }
 
   /* Helper function that finds the two tangential points on a circle to a given point */
