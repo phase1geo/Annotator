@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-
 arg=$1
 
 function initialize {
@@ -91,6 +90,9 @@ case $1 in
     initialize 1
     ./com.github.phase1geo.annotator "${@:2}"
     ;;
+"run-flatpak")
+    flatpak run com.github.phase1geo.annotator "${@:2}"
+    ;;
 "debug")
     initialize 0
     G_DEBUG=fatal-criticals gdb --args ./com.github.phase1geo.annotator "${@:2}"
@@ -106,8 +108,13 @@ case $1 in
     initialize 0
     sudo ninja uninstall
     ;;
-"flatpak")
-    sudo flatpak-builder --install --force-clean ../build-annotator com.github.phase1geo.annotator.yml
+"elementary")
+    flatpak-builder --user --install --force-clean ../build-annotator-elementary elementary/com.github.phase1geo.annotator.yml
+    flatpak install --user --reinstall --assumeyes "$(pwd)/.flatpak-builder/cache" com.github.phase1geo.annotator.Debug
+    ;;
+"flathub")
+    flatpak-builder --user --install --force-clean ../build-annotator-flathub flathub/com.github.phase1geo.annotator.yml
+    flatpak install --user --reinstall --assumeyes "$(pwd)/.flatpak-builder/cache" com.github.phase1geo.annotator.Debug
     ;;
 *)
     echo "Usage:"

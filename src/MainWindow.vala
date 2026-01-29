@@ -567,6 +567,7 @@ public class MainWindow : Gtk.ApplicationWindow {
   // indicates that it can handle taking the screenshot, use the
   // backend to perform the screenshot; otherwise, use the portal.
   public void do_screenshot( Widget? parent ) {
+    /*
     if( ScreenshotBackend.can_do_screenshots() ) {
       if( parent == null ) {
         do_screenshot_nonportal( CaptureType.SCREEN );
@@ -574,8 +575,11 @@ public class MainWindow : Gtk.ApplicationWindow {
         show_screenshot_popover( parent );
       }
     } else {
+    */
       do_screenshot_portal();
+    /*
     }
+    */
   }
 
   //-------------------------------------------------------------
@@ -702,6 +706,7 @@ public class MainWindow : Gtk.ApplicationWindow {
 
   //-------------------------------------------------------------
   // Generate a screenshot using the screenshot portal.
+  /*
   private void do_screenshot_portal() {
 
     _welcome.sensitive = false;
@@ -726,6 +731,94 @@ public class MainWindow : Gtk.ApplicationWindow {
         show();
       }
     });
+
+  }
+  */
+
+  private async void do_screenshot_portal() {
+    _welcome.sensitive = false;
+    try {
+
+      var bus = Bus.get_sync (BusType.SESSION);
+
+      var proxy = new DBusProxy.sync (
+                bus,
+                DBusProxyFlags.NONE,
+                null,
+                "org.freedesktop.portal.Desktop",
+                "/org/freedesktop/portal/desktop",
+                "org.freedesktop.portal.Screenshot",
+                null
+      );
+
+      VariantDict options = new VariantDict( new Variant( "a{sv}" ) );
+      options.insert_value ("interactive", new Variant.boolean (true));
+
+      Variant dict_variant = options.end ();
+      Variant tuple_variant = new Variant ("(s@a{sv})", "interactive", dict_variant);
+
+      Variant result = yield proxy.call(
+        "Screenshot",
+        tuple_variant,
+        DBusCallFlags.NONE,
+        -1,
+        null
+      );
+
+      // Result is (o) → handle path
+      ObjectPath handle;
+      result.get ("(o)", out handle);
+
+      bus.signal_subscribe(
+        "org.freedesktop.portal.Desktop",
+        "org.freedesktop.portal.Request",
+        "Response",
+        handle,
+        null,
+        DBusSignalFlags.NONE,
+        handle_screenshot_callback
+      );
+
+    } catch (Error e) {
+      warning ("Screenshot failed: %s", e.message);
+    }
+
+  }
+
+  private void handle_screenshot_callback(
+    DBusConnection connection,
+    string? sender_name,
+    string object_path,
+    string interface_name,
+    string signal_name,
+    Variant parameters
+  ) {
+
+    uint response;
+    Variant dict;
+
+    parameters.get ("(u@a{sv})", out response, out dict);
+
+    stdout.printf( "In handle_screenshot_callback, response: %u\n", response );
+
+    if (response != 0) {
+      print ("Screenshot cancelled\n");
+      _welcome.sensitive = true;
+      _zoom_btn.set_sensitive( true );
+      _export_btn.set_sensitive( true );
+      show();
+    } else {
+      string uri;
+      if (dict.lookup ("uri", "s", out uri)) {
+        var file = File.new_for_uri( uri );
+        _editor.open_image( file.get_path() );
+        _zoom_btn.set_sensitive( true );
+        _export_btn.set_sensitive( true );
+        show();
+      } else {
+        stdout.printf( "Bad\n" );
+      }
+    }
 
   }
 

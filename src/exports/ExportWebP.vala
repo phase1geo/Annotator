@@ -19,7 +19,6 @@
 * Authored by: Trevor Williams <phase1geo@gmail.com>
 */
 
-using WebP;
 using Cairo;
 using Gdk;
 using Gtk;
@@ -42,20 +41,15 @@ public class ExportWebP : Export {
 
     /* Write the pixbuf to the file */
     var pixbuf = pixbuf_get_from_surface( surface, 0, 0, surface.get_width(), surface.get_height() );
+    pixbuf = pixbuf.add_alpha( false, 0, 0, 0 );
 
     uint8* output_buffer = null;
     size_t buffer_size   = 0;
-    switch( pixbuf.get_n_channels() ) {
-      case 3 :
-        buffer_size = WebP.encode_lossless_rgb( pixbuf.get_pixels(), pixbuf.get_width(), pixbuf.get_height(), pixbuf.get_rowstride(), out output_buffer );
-        break;
-      case 4 :
-        buffer_size = WebP.encode_lossless_rgb( pixbuf.get_pixels(), pixbuf.get_width(), pixbuf.get_height(), pixbuf.get_rowstride(), out output_buffer );
-        break;
-    }
+
+    buffer_size = WebPEncodeLosslessRGBA( pixbuf.get_pixels(), pixbuf.get_width(), pixbuf.get_height(), pixbuf.get_rowstride(), out output_buffer );
 
     if( buffer_size == 0 ) {
-      stdout.printf( "Failed to encode WebP image." );
+      stdout.printf( "Failed to encode WebP image.\n" );
       return( false );
     }
 
@@ -64,11 +58,12 @@ public class ExportWebP : Export {
       for( int i=0; i<buffer_size; i++ ) {
         obuf += output_buffer[i];
       }
-      WebP.free( output_buffer );
+      WebPFree( output_buffer );
       var file = File.new_for_path( fname );
       var output_stream = file.replace( null, false, FileCreateFlags.NONE, null );
       output_stream.write( obuf );
       output_stream.close();
+      stdout.printf( "Successfully exported %s\n", fname );
     } catch (IOError e) {
       stdout.printf( "Error saving WebP file: %s", e.message );
       return( false );
