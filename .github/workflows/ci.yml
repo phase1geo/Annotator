@@ -12,7 +12,7 @@ jobs:
 
     # This job runs in a special container designed for building Flatpaks for AppCenter
     container:
-      image: ghcr.io/elementary/flatpak-platform/runtime:6
+      image: ghcr.io/elementary/flatpak-platform/runtime:8
       options: --privileged
 
     # Steps represent a sequence of tasks that will be executed as part of the job
@@ -21,15 +21,12 @@ jobs:
     - uses: actions/checkout@v3
 
       # Builds your flatpak manifest using the Flatpak Builder action
-    - uses: bilelmoussaoui/flatpak-github-actions/flatpak-builder@v6
+    - uses: flatpak/flatpak-github-actions/flatpak-builder@v6
       with:
         # This is the name of the Bundle file we're building and can be anything you like
-        bundle: Annotator.flatpak
+        bundle: com.github.phase1geo.annotator.flatpak
         # This uses your app's RDNN ID
-        manifest-path: com.github.phase1geo.annotator.yml
-
-        # You can automatically run any of the tests you've created as part of this workflow
-        run-tests: true
+        manifest-path: elementary/com.github.phase1geo.annotator.yml
 
         # These lines specify the location of the elementary Runtime and Sdk
         repository-name: appcenter
