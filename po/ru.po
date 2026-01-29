@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.annotator\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-30 00:45-0500\n"
+"POT-Creation-Date: 2026-01-29 00:02-0600\n"
 "PO-Revision-Date: 2023-05-08 00:13+0900\n"
 "Last-Translator: lenemter <lenemter@gmail.com>\n"
 "Language-Team: none\n"
@@ -15,6 +15,24 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+
+#: src/About.vala:38
+msgid "Image annotation application"
+msgstr ""
+
+#: src/About.vala:39 src/StickerSet.vala:210
+#, fuzzy
+msgid "Copyright"
+msgstr "Копировать"
+
+#: src/About.vala:43
+msgid "Annotator in AppCenter"
+msgstr ""
+
+#: src/About.vala:60
+#, c-format
+msgid "Flatpak Runtime: %s"
+msgstr ""
 
 #: src/Application.vala:67
 msgid ""
@@ -50,20 +68,20 @@ msgstr "Сделать снимок экрана и открыть его."
 msgid "Uses image data from standard input"
 msgstr "Использует данные изображения из стандартного ввода"
 
-#: src/CanvasImage.vala:126 src/CanvasImage.vala:150
+#: src/CanvasImage.vala:130 src/CanvasImage.vala:155
 msgid "change image"
 msgstr "изменение изображения"
 
-#: src/CanvasImage.vala:450
+#: src/CanvasImage.vala:464
 #, fuzzy
 msgid "Color copied to clipboard"
 msgstr "Скопировать в буфер обмена"
 
-#: src/CanvasImage.vala:501
+#: src/CanvasImage.vala:519
 msgid "image crop"
 msgstr "обрезку изображения"
 
-#: src/canvas_items/CanvasItemBlur.vala:133
+#: src/canvas_items/CanvasItemBlur.vala:153
 msgid "Blur Amount:"
 msgstr "Сила размытия"
 
@@ -83,7 +101,7 @@ msgstr "Приближение:"
 msgid "Reset Focal Point"
 msgstr "Сбросить точку фокуса"
 
-#: src/canvas_items/CanvasItemSequence.vala:114
+#: src/canvas_items/CanvasItemSequence.vala:123
 msgid "Sequence Number:"
 msgstr "Число последовательности:"
 
@@ -95,25 +113,25 @@ msgstr "Точки:"
 msgid "Text"
 msgstr "Текст"
 
-#: src/canvas_items/CanvasItemText.vala:894 src/CanvasItems.vala:1055
+#: src/canvas_items/CanvasItemText.vala:944 src/CanvasItems.vala:1055
 #: src/FormatBar.vala:59
 msgid "Copy"
 msgstr "Копировать"
 
-#: src/canvas_items/CanvasItemText.vala:897 src/CanvasItems.vala:1056
+#: src/canvas_items/CanvasItemText.vala:947 src/CanvasItems.vala:1056
 #: src/FormatBar.vala:65
 msgid "Cut"
 msgstr "Вырезать"
 
-#: src/canvas_items/CanvasItemText.vala:901
+#: src/canvas_items/CanvasItemText.vala:951
 msgid "Paste"
 msgstr "Вставить"
 
-#: src/canvas_items/CanvasItemText.vala:907
+#: src/canvas_items/CanvasItemText.vala:957
 msgid "Select All"
 msgstr "Выбрать всё"
 
-#: src/canvas_items/CanvasItemText.vala:913
+#: src/canvas_items/CanvasItemText.vala:963
 msgid "Insert Emoji"
 msgstr "Встать эмодзи"
 
@@ -190,11 +208,11 @@ msgstr "Обрезать изображение"
 msgid "Open Insertion Image"
 msgstr "Открыть изображение"
 
-#: src/CanvasItems.vala:389 src/MainWindow.vala:460
+#: src/CanvasItems.vala:389 src/MainWindow.vala:481
 msgid "Open"
 msgstr "Открыть"
 
-#: src/CanvasItems.vala:389 src/Exporter.vala:164 src/MainWindow.vala:460
+#: src/CanvasItems.vala:389 src/Exporter.vala:166 src/MainWindow.vala:481
 #: src/Resizer.vala:189 src/StickerSet.vala:75
 msgid "Cancel"
 msgstr "Отменить"
@@ -297,11 +315,11 @@ msgstr "Свойства шрифта"
 msgid "Drag PNG Image"
 msgstr ""
 
-#: src/Canvas.vala:190
+#: src/Canvas.vala:191
 msgid "Annotate new image?"
 msgstr "Открыть новое изображение?"
 
-#: src/Canvas.vala:191
+#: src/Canvas.vala:192
 msgid "Pasting a new image to annotate will destroy the current annotation."
 msgstr "Вставка новое изображения откроет его и уничтожит текущие изменения."
 
@@ -321,22 +339,32 @@ msgstr "Экспортировать…"
 msgid "Export With Current Settings"
 msgstr "Экспортировать с текущими параметрами"
 
-#: src/Exporter.vala:140
+#: src/Exporter.vala:142
 msgid "Export Options"
 msgstr "Параметры экспорта"
 
-#: src/Exporter.vala:163
+#: src/Exporter.vala:165
 #, c-format
 msgid "Export As %s"
 msgstr "Экспортировать как %s"
 
-#: src/Exporter.vala:164 src/StickerSet.vala:352
+#: src/Exporter.vala:166 src/StickerSet.vala:352
 msgid "Export"
 msgstr "Экспорт"
 
-#: src/Exporter.vala:187
+#: src/Exporter.vala:189
 msgid "Export Completed"
 msgstr "Экспорт завершён"
+
+#: src/exports/ExportEditable.vala:31 src/MainWindow.vala:188
+#: src/MainWindow.vala:460
+msgid "Annotator"
+msgstr "Annotator"
+
+#: src/exports/ExportEditable.vala:255
+#, fuzzy
+msgid "Image Compression"
+msgstr "Сжатие"
 
 #: src/exports/ExportImage.vala:72
 msgid "Quality"
@@ -362,6 +390,10 @@ msgstr "Добавить прозрачность"
 #: src/exports/ExportSVG.vala:29
 msgid "SVG"
 msgstr "SVG"
+
+#: src/exports/ExportWebP.vala:29
+msgid "WebP"
+msgstr ""
 
 #: src/Exports.vala:35
 msgid "JPEG"
@@ -431,100 +463,111 @@ msgstr "Изменить цвет текста"
 msgid "Clear all formatting"
 msgstr "Очистить форматирование"
 
-#: src/MainWindow.vala:186
-msgid "Annotator"
-msgstr "Annotator"
-
-#: src/MainWindow.vala:191
+#: src/MainWindow.vala:193
 msgid "Open Image"
 msgstr "Открыть изображение"
 
-#: src/MainWindow.vala:197
+#: src/MainWindow.vala:199
 #, fuzzy
 msgid "Take Screenshot"
 msgstr "Сделать снимок экрана"
 
-#: src/MainWindow.vala:203 src/StickerSet.vala:307 src/UndoBuffer.vala:84
+#: src/MainWindow.vala:207 src/StickerSet.vala:307 src/UndoBuffer.vala:84
 msgid "Undo"
 msgstr "Отменить"
 
-#: src/MainWindow.vala:210 src/StickerSet.vala:308 src/UndoBuffer.vala:90
+#: src/MainWindow.vala:214 src/StickerSet.vala:308 src/UndoBuffer.vala:90
 msgid "Redo"
 msgstr "Повторить"
 
-#: src/MainWindow.vala:230
+#: src/MainWindow.vala:234
 #, fuzzy
 msgid "Shortcuts Cheatsheet…"
 msgstr "Шпаргалка сочетаний клавиш"
 
-#: src/MainWindow.vala:235
+#: src/MainWindow.vala:237
+#, fuzzy
+msgid "About Annotator"
+msgstr "Annotator"
+
+#: src/MainWindow.vala:246
 msgid "Properties"
 msgstr "Параметры"
 
-#: src/MainWindow.vala:255
+#: src/MainWindow.vala:267
 msgid "Copy To Clipboard"
 msgstr "Скопировать в буфер обмена"
 
-#: src/MainWindow.vala:256
+#: src/MainWindow.vala:268
 msgid "Print…"
 msgstr "Печать…"
 
-#: src/MainWindow.vala:275
+#: src/MainWindow.vala:287
 msgid "Export Image"
 msgstr "Экспортировать изображение"
 
-#: src/MainWindow.vala:302
+#: src/MainWindow.vala:315
 msgid "Zoom to Fit Window"
 msgstr "Масштабировать по размеру окна"
 
-#: src/MainWindow.vala:310 src/MainWindow.vala:682
+#: src/MainWindow.vala:323 src/MainWindow.vala:953
 #, c-format
 msgid "Zoom (%d%%)"
 msgstr "Масштаб (%d%%)"
 
-#: src/MainWindow.vala:322
+#: src/MainWindow.vala:335
 msgid "Welcome to Annotator"
 msgstr "Добро пожаловать в Annotator"
 
-#: src/MainWindow.vala:324
+#: src/MainWindow.vala:337
 msgid "Let's get started annotating an image"
 msgstr "Давайте начнём комментировать изображения"
 
-#: src/MainWindow.vala:351
+#: src/MainWindow.vala:364
 msgid "Open Image From File"
 msgstr "Открыть изображение из файла"
 
-#: src/MainWindow.vala:351
-msgid "Open a PNG, JPEG, TIFF or BMP file"
+#: src/MainWindow.vala:364
+#, fuzzy
+msgid "Open a PNG, JPEG, TIFF, BMP or Annotator file"
 msgstr "Открыть PNG, JPEG, TIFF или BMP файл"
 
-#: src/MainWindow.vala:354
+#: src/MainWindow.vala:367
 msgid "Paste Image From Clipboard"
 msgstr "Вставить изображение из буфера обмена"
 
-#: src/MainWindow.vala:354
+#: src/MainWindow.vala:367
 msgid "Open an image from the clipboard"
 msgstr "Открыть изображение из буфера обмена"
 
-#: src/MainWindow.vala:357
+#: src/MainWindow.vala:370
 msgid "Take A Screenshot"
 msgstr "Сделать снимок экрана"
 
-#: src/MainWindow.vala:357
+#: src/MainWindow.vala:370
 msgid "Open an image from a screenshot"
 msgstr "Открыть изображение из буфера обмена"
 
-#: src/MainWindow.vala:391
+#: src/MainWindow.vala:406
 msgid "Font:"
 msgstr "Шрифт:"
 
-#: src/MainWindow.vala:446
-msgid "All Image Formats  (*)"
+#: src/MainWindow.vala:467
+#, fuzzy
+msgid "All Loadable Formats"
 msgstr "Все форматы изображений (*)"
 
-#: src/MainWindow.vala:460
+#: src/MainWindow.vala:481
 msgid "Open Image File"
 msgstr "Открыть файл изображения"
+
+#: src/MainWindow.vala:610
+msgid "Delay (in seconds)"
+msgstr "Задержка (в секундах)"
+
+#: src/MainWindow.vala:634
+msgid "Include Annotator window"
+msgstr "Показывать окно Annotator"
 
 #: src/Resizer.vala:190
 msgid "Resize"
@@ -574,6 +617,18 @@ msgstr "Предварительный просмотр"
 #, c-format
 msgid "%d x %d pixels"
 msgstr "%d на %d пикселей"
+
+#: src/ScreenshotBackend.vala:20
+msgid "Entire Screen"
+msgstr "Весь экран"
+
+#: src/ScreenshotBackend.vala:21
+msgid "Current Window"
+msgstr "Текущее окно"
+
+#: src/ScreenshotBackend.vala:22
+msgid "Selectable Area"
+msgstr "Область"
 
 #: src/StickerSet.vala:25 src/StickerSet.vala:68
 msgid "Photo and Video"
@@ -1302,11 +1357,6 @@ msgstr ""
 #: src/StickerSet.vala:209
 msgid "Trademark"
 msgstr ""
-
-#: src/StickerSet.vala:210
-#, fuzzy
-msgid "Copyright"
-msgstr "Копировать"
 
 #: src/StickerSet.vala:211
 #, fuzzy
@@ -2253,18 +2303,3 @@ msgstr "Добавить текст под курсором к выделени�
 
 #~ msgid "No"
 #~ msgstr "Нет"
-
-#~ msgid "Delay (in seconds)"
-#~ msgstr "Задержка (в секундах)"
-
-#~ msgid "Include Annotator window"
-#~ msgstr "Показывать окно Annotator"
-
-#~ msgid "Entire Screen"
-#~ msgstr "Весь экран"
-
-#~ msgid "Current Window"
-#~ msgstr "Текущее окно"
-
-#~ msgid "Selectable Area"
-#~ msgstr "Область"

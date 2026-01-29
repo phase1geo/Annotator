@@ -32,7 +32,7 @@ public class Annotator : Gtk.Application {
   public  static bool          use_clipboard     = false;
   public  static bool          take_screenshot   = false;
   public  static bool          std_input         = false;
-  public  static string        version           = "2.0.0";
+  public  static string        version           = "2.0.1";
 
   public Annotator () {
 

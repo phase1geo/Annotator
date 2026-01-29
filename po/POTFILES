@@ -1,3 +1,4 @@
+src/About.vala
 src/Application.vala
 src/CanvasImage.vala
 src/canvas_items/CanvasItemBlur.vala
@@ -11,14 +12,17 @@ src/CanvasToolbar.vala
 src/Canvas.vala
 src/CustomItems.vala
 src/Exporter.vala
+src/exports/ExportEditable.vala
 src/exports/ExportImage.vala
 src/exports/ExportPDF.vala
 src/exports/ExportPNG.vala
 src/exports/ExportSVG.vala
+src/exports/ExportWebP.vala
 src/Exports.vala
 src/FormatBar.vala
 src/MainWindow.vala
 src/Resizer.vala
+src/ScreenshotBackend.vala
 src/StickerSet.vala
 src/undo_actions/UndoImageResize.vala
 src/undo_actions/UndoItemAdd.vala
