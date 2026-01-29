@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <gresources>
+    <gresource prefix="/com/github/phase1geo/annotator">
+        <file alias="annotator-logo.svg" compressed="true">images/com.github.phase1geo.annotator.svg</file>
+    </gresource>
     <gresource prefix="/com/github/phase1geo/annotator/css">
         <file alias="style.css" compressed="true">css/style.css</file>
     </gresource>

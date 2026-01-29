@@ -56,6 +56,7 @@ public class MainWindow : Gtk.ApplicationWindow {
     { "action_zoom_actual",       do_zoom_actual },
     { "action_zoom_fit",          do_zoom_fit },
     { "action_shortcuts",         do_shortcuts },
+    { "action_about",             do_about },
     { "action_contextual_menu",   do_contextual_menu },
     { "action_copy_to_clipboard", do_copy_to_clipboard },
     { "action_print",             do_print },
@@ -229,8 +230,15 @@ public class MainWindow : Gtk.ApplicationWindow {
 
   private MenuButton create_preferences() {
 
+    var sc_menu = new GLib.Menu();
+    sc_menu.append( _( "Shortcuts Cheatsheet…" ), "win.action_shortcuts" );
+
+    var about_menu = new GLib.Menu();
+    about_menu.append( _( "About Annotator" ), "win.action_about" );
+
     var menu = new GLib.Menu();
-    menu.append( _( "Shortcuts Cheatsheet…" ), "win.action_shortcuts" );
+    menu.append_section( null, sc_menu );
+    menu.append_section( null, about_menu );
 
     var pref_btn = new MenuButton() {
       has_frame    = !on_elementary,
@@ -897,6 +905,13 @@ public class MainWindow : Gtk.ApplicationWindow {
 
     win.show();
 
+  }
+
+  //-------------------------------------------------------------
+  // Displays the about window.
+  private void do_about() {
+    var about_win = new About( this );
+    about_win.show();
   }
 
   /* Displays the contextual menu for the item under the cursor */
