@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2020-2021 (https://github.com/phase1geo/Annotator)
+* Copyright (c) 2020-2026 (https://github.com/phase1geo/Annotator)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -55,22 +55,27 @@ public enum CanvasItemMode {
     }
   }
 
-  /* Returns true if the item can be moved */
+  //-------------------------------------------------------------
+  // Returns true if the item can be moved
   public bool can_move() {
     return( (this == SELECTED) || (this == MOVING) );
   }
 
-  /* Returns true if the item is being moved/resized */
+  //-------------------------------------------------------------
+  // Returns true if the item is being moved/resized
   public bool moving() {
     return( (this == MOVING) || (this == RESIZING) );
   }
 
-  /* Returns the alpha value to use for drawing an item based on the current mode */
+  //-------------------------------------------------------------
+  // Returns the alpha value to use for drawing an item based on
+  // the current mode
   public double alpha( double dflt = 1.0 ) {
     return( ((this == MOVING) || (this == RESIZING)) ? (dflt * 0.5) : dflt );
   }
 
-  /* Returns true if the canvas item should display the selectors */
+  //-------------------------------------------------------------
+  // Returns true if the canvas item should display the selectors
   public bool draw_selectors() {
     return( (this == SELECTED) || (this == RESIZING) );
   }
@@ -88,7 +93,9 @@ public enum CanvasItemPathType {
   FILL,
   CLIP;
 
-  /* Returns true when the given coordinates are within the given path */
+  //-------------------------------------------------------------
+  // Returns true when the given coordinates are within the given
+  // path
   public bool is_within( Context ctx, double x, double y ) {
     switch( this ) {
       case FILL   :  return( ctx.in_fill( x, y ) );
@@ -178,7 +185,8 @@ public class CanvasItem {
   public CanvasItemProperties last_props { get; private set; default = new CanvasItemProperties(); }
   public CanvasRect           last_bbox  { get; private set; default = new CanvasRect(); }
 
-  /* Constructor */
+  //-------------------------------------------------------------
+  // Constructor
   public CanvasItem( CanvasItemType type, Canvas canvas, CanvasItemProperties props ) {
 
     this.canvas = canvas;
@@ -190,7 +198,8 @@ public class CanvasItem {
 
   }
 
-  /* Creates a copy of the given canvas item */
+  //-------------------------------------------------------------
+  // Creates a copy of the given canvas item
   public virtual void copy( CanvasItem item ) {
 
     _bbox.copy( item.bbox );
@@ -205,21 +214,23 @@ public class CanvasItem {
 
   }
 
-  /*
-   Creates a duplicate of this canvas item and returns it to the calling
-   function.
-  */
+  //-------------------------------------------------------------
+  // Creates a duplicate of this canvas item and returns it to
+  // the calling function.
   public virtual CanvasItem duplicate() {
     assert_not_reached();
   }
 
-  /* Called whenever the bounding box changes */
+  //-------------------------------------------------------------
+  // Called whenever the bounding box changes
   protected virtual void bbox_changed() {}
 
-  /* Called whenever the mode changes */
+  //-------------------------------------------------------------
+  // Called whenever the mode changes
   protected virtual void mode_changed() {}
 
-  /* Moves the item by the given amount */
+  //-------------------------------------------------------------
+  // Moves the item by the given amount
   public virtual void move_item( double diffx, double diffy, bool moving = true ) {
     if( moving ) {
       mode = CanvasItemMode.MOVING;
@@ -229,10 +240,9 @@ public class CanvasItem {
     bbox_changed();
   }
 
-  /*
-   This should be called in the move_selector method if the item responds to the
-   shift key.
-  */
+  //-------------------------------------------------------------
+  // This should be called in the move_selector method if the item
+  // responds to the shift key.
   protected void adjust_diffs( bool shift, CanvasRect box, ref double diffx, ref double diffy ) {
     if( !shift ) return;
     if( box.width != box.height ) {
@@ -246,7 +256,8 @@ public class CanvasItem {
     }
   }
 
-  /* Returns true if any of the selectors are hidden */
+  //-------------------------------------------------------------
+  // Returns true if any of the selectors are hidden
   private bool any_selectors_hidden() {
     bool hidden = false;
     for( int i=0; i<points.length; i++ ) {
@@ -255,14 +266,17 @@ public class CanvasItem {
     return( hidden );
   }
 
-  /* Resets all selectors to be shown */
+  //-------------------------------------------------------------
+  // Resets all selectors to be shown
   private void reset_selectors() {
     for( int i=0; i<points.length; i++ ) {
       points.index( i ).reset_visual();
     }
   }
 
-  /* Called when the selectors need to be adjusted from shown or hidden */
+  //-------------------------------------------------------------
+  // Called when the selectors need to be adjusted from shown or
+  // hidden
   protected void set_selector_visual( int index, bool hide ) {
     CanvasPointType kind = points.index( index ).kind;
     for( int i=0; i<points.length; i++ ) {
@@ -270,31 +284,39 @@ public class CanvasItem {
     }
   }
 
-  /* Adjusts the specified selector by the given amount */
+  //-------------------------------------------------------------
+  // Adjusts the specified selector by the given amount
   public virtual void move_selector( int index, double diffx, double diffy, bool shift ) {}
 
-  /* If we need to draw something, update the item with the given cursor location */
+  //-------------------------------------------------------------
+  // If we need to draw something, update the item with the given
+  // cursor location
   public virtual void draw( double x, double y ) {}
 
-  /* Returns the type of cursor to use for the given selection cursor */
+  //-------------------------------------------------------------
+  // Returns the type of cursor to use for the given selection
+  // cursor
   public virtual Cursor? get_selector_cursor( int index ) {
     return( _sel_cursor );
   }
 
-  /*
-   Returns a tooltip to display for the given selector.  Only control points should
-   return a valid string.  To avoid displaying a tooltip, return a value of null.
-  */
+  //-------------------------------------------------------------
+  // Returns a tooltip to display for the given selector.  Only
+  // control points should return a valid string.  To avoid
+  // displaying a tooltip, return a value of null.
   public virtual string? get_selector_tooltip( int index ) {
     return( null );
   }
 
-  /* Returns the undo item associated with a release of the given selector */
+  //-------------------------------------------------------------
+  // Returns the undo item associated with a release of the given
+  // selector
   public virtual UndoItem? get_undo_item_for_selector( int index ) {
     return( new UndoItemBoxChange.with_item( _( "resize item" ), this ) );
   }
 
-  /* Returns the bounding box of the given selector */
+  //-------------------------------------------------------------
+  // Returns the bounding box of the given selector
   private void selector_bbox( int index, CanvasRect rect ) {
     var sel     = points.index( index );
     rect.x      = sel.x - (selector_width  / 2);
@@ -303,7 +325,8 @@ public class CanvasItem {
     rect.height = selector_height;
   }
 
-  /* Returns true if the given coordinates are within this item */
+  //-------------------------------------------------------------
+  // Returns true if the given coordinates are within this item
   public virtual bool is_within( double x, double y ) {
     var surface = new ImageSurface( Cairo.Format.ARGB32, canvas.image.info.width, canvas.image.info.height );
     var context = new Context( surface );
@@ -312,7 +335,8 @@ public class CanvasItem {
     return( _path_type.is_within( context, x, y ) );
   }
 
-  /* Returns the extents of the shape */
+  //-------------------------------------------------------------
+  // Returns the extents of the shape
   public void get_extents( out double x1, out double y1, out double x2, out double y2 ) {
     var surface = new ImageSurface( Cairo.Format.ARGB32, (int)(bbox.width * 2), (int)(bbox.height * 2) );
     var context = new Context( surface );
@@ -324,7 +348,9 @@ public class CanvasItem {
     context.stroke_extents( out x1, out y1, out x2, out y2 );
   }
 
-  /* Returns the selector index that is below the current pointer coordinate */
+  //-------------------------------------------------------------
+  // Returns the selector index that is below the current pointer
+  // coordinate
   public int is_within_selector( double x, double y ) {
     if( !mode.draw_selectors() ) return( -1 );
     var box = new CanvasRect();
@@ -339,25 +365,27 @@ public class CanvasItem {
     return( -1 );
   }
 
-  /* Saves the current path so that we can calculate is_within */
+  //-------------------------------------------------------------
+  // Saves the current path so that we can calculate is_within
   protected void save_path( Context ctx, CanvasItemPathType type ) {
     _path      = ctx.copy_path_flat();
     _path_type = type;
   }
 
-  /****************************************************************************/
+  //-------------------------------------------------------------
   //  CONTEXTUAL MENU
-  /****************************************************************************/
+  //-------------------------------------------------------------
 
   //-------------------------------------------------------------
   // Add contextual menu fields from the associated item
   public virtual void add_contextual_menu_items( CanvasItemMenu menu ) {}
 
-  /****************************************************************************/
+  //-------------------------------------------------------------
   //  DRAW METHODS
-  /****************************************************************************/
+  //-------------------------------------------------------------
 
-  /* Draw the current item */
+  //-------------------------------------------------------------
+  // Draw the current item
   public virtual void draw_item( Context ctx, CanvasItemColor color = CanvasItemColor.COLOR ) {}
 
   public void draw_extents( Context ctx ) {
@@ -370,7 +398,8 @@ public class CanvasItem {
     ctx.stroke();
   }
 
-  /* Draw the selection boxes */
+  //-------------------------------------------------------------
+  // Draw the selection boxes
   public void draw_selectors( Context ctx ) {
 
     if( !mode.draw_selectors() ) return;
@@ -386,12 +415,12 @@ public class CanvasItem {
 
         ctx.set_line_width( 1 );
 
-        /* Draw the selection rectangle */
+        // Draw the selection rectangle
         Utils.set_context_color( ctx, points.index( i ).kind.color() );
         ctx.rectangle( box.x, box.y, box.width, box.height );
         ctx.fill_preserve();
 
-        /* Draw the stroke */
+        // Draw the stroke
         Utils.set_context_color( ctx, black );
         ctx.stroke();
 
@@ -401,7 +430,9 @@ public class CanvasItem {
 
   }
 
-  /* Sets the color of the given Context based on the provided color attribute, property color and alpha value. */
+  //-------------------------------------------------------------
+  // Sets the color of the given Context based on the provided
+  // color attribute, property color and alpha value.
   protected void set_color( Context ctx, CanvasItemColor color_type, Gdk.RGBA color, double alpha ) {
     switch( color_type ) {
       case CanvasItemColor.COLOR :  Utils.set_context_color_with_alpha( ctx, color, alpha );  break;
@@ -410,11 +441,12 @@ public class CanvasItem {
     }
   }
 
-  /****************************************************************************/
+  //-------------------------------------------------------------
   //  SAVE/LOAD
-  /****************************************************************************/
+  //-------------------------------------------------------------
 
-  /* Saves the item in XML format */
+  //-------------------------------------------------------------
+  // Saves the item in XML format
   public virtual Xml.Node* save( int id, string image_dir ) {
     Xml.Node* node = new Xml.Node( null, "item" );
     node->set_prop( "type", itype.to_string() );
@@ -427,7 +459,8 @@ public class CanvasItem {
     return( node );
   }
 
-  /* Loads the item in XML format */
+  //-------------------------------------------------------------
+  // Loads the item in XML format
   public virtual void load( Xml.Node* node ) {
 
     var t = node->get_prop( "type" );
@@ -465,7 +498,8 @@ public class CanvasItem {
 
   }
 
-  /* Returns the canvas item type from the given XML node */
+  //-------------------------------------------------------------
+  // Returns the canvas item type from the given XML node
   public static CanvasItemType get_type_from_xml( Xml.Node* node ) {
     var t = node->get_prop( "type" );
     if( t != null ) {

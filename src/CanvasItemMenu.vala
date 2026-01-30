@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2024 (https://github.com/phase1geo/Annotator)
+* Copyright (c) 2024-2026 (https://github.com/phase1geo/Annotator)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -78,7 +78,7 @@ public class CanvasItemMenu {
       popover.add_child( widget, "item%d".printf( i ) );
     }
 
-    /* Set the stage for menu actions */
+    // Set the stage for menu actions
     _canvas.insert_action_group( "item_menu", _actions );
 
     return( popover );

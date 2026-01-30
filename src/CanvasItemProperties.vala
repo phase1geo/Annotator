@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2020-2021 (https://github.com/phase1geo/Annotator)
+* Copyright (c) 2020-2026 (https://github.com/phase1geo/Annotator)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -68,7 +68,8 @@ public enum CanvasItemDashPattern {
   LONG,
   NUM;
 
-  /* Converts this value to a string */
+  //-------------------------------------------------------------
+  // Converts this value to a string
   public string to_string() {
     switch( this ) {
       case NONE  :  return( "none" );
@@ -78,7 +79,8 @@ public enum CanvasItemDashPattern {
     }
   }
 
-  /* Converts a string to this value type */
+  //-------------------------------------------------------------
+  // Converts a string to this value type
   public static CanvasItemDashPattern parse( string value ) {
     switch( value ) {
       case "none"  :  return( NONE );
@@ -88,7 +90,8 @@ public enum CanvasItemDashPattern {
     }
   }
 
-  /* Sets the background dash pattern based on the current value */
+  //-------------------------------------------------------------
+  // Sets the background dash pattern based on the current value
   public void set_bg_pattern( Cairo.Context ctx ) {
     switch( this ) {
       case NONE  :  ctx.set_dash( {},      0 );  break;
@@ -98,7 +101,8 @@ public enum CanvasItemDashPattern {
     }
   }
 
-  /* Sets the foreground dash pattern based on the current value */
+  //-------------------------------------------------------------
+  // Sets the foreground dash pattern based on the current value
   public void set_fg_pattern( Cairo.Context ctx ) {
     switch( this ) {
       case NONE  :  ctx.set_dash( {},        0 );  break;
@@ -109,7 +113,8 @@ public enum CanvasItemDashPattern {
   }
 }
 
-/* Structure containing formatting properties used by canvas items */
+//-------------------------------------------------------------
+// Structure containing formatting properties used by canvas items
 public class CanvasItemProperties {
 
   private bool                  _use_settings = false;
@@ -222,7 +227,8 @@ public class CanvasItemProperties {
 
   public signal void changed();
 
-  /* Default constructor */
+  //-------------------------------------------------------------
+  // Default constructor
   public CanvasItemProperties( bool use_settings = false ) {
     _use_settings = use_settings;
     if( _use_settings ) {
@@ -238,7 +244,8 @@ public class CanvasItemProperties {
     }
   }
 
-  /* Copies the properties to this class */
+  //-------------------------------------------------------------
+  // Copies the properties to this class
   public void copy( CanvasItemProperties props ) {
     _use_settings = props._use_settings;
     color         = props.color;
@@ -250,7 +257,9 @@ public class CanvasItemProperties {
     font          = props.font.copy();
   }
 
-  /* Returns true if the given properties element matches values with us */
+  //-------------------------------------------------------------
+  // Returns true if the given properties element matches values
+  // with us
   public bool equals( CanvasItemProperties props ) {
     return(
       color.equal( props.color ) &&
@@ -263,14 +272,17 @@ public class CanvasItemProperties {
     );
   }
 
-  /* Outputs the contents of the class for debugging purposes in string format */
+  //-------------------------------------------------------------
+  // Outputs the contents of the class for debugging purposes in
+  // string format
   public string to_string() {
     return( "color: %s, alpha: %g, stroke: %d, outline: %s, dash: %s, blur: %d, font: %s\n".printf(
       Utils.color_to_string( color ), alpha, stroke_width, outline.to_string(), dash.to_string(),
       blur_radius, font.to_string() ) );
   }
 
-  /* Saves the contents of this properties class as XML */
+  //-------------------------------------------------------------
+  // Saves the contents of this properties class as XML
   public Xml.Node* save() {
     Xml.Node* node = new Xml.Node( null, "properties" );
     node->set_prop( "color",        Utils.color_to_string( color ) );
@@ -283,7 +295,8 @@ public class CanvasItemProperties {
     return( node );
   }
 
-  /* Loads the contents of this properties class from XML */
+  //-------------------------------------------------------------
+  // Loads the contents of this properties class from XML
   public void load( Xml.Node* node ) {
     var c = node->get_prop( "color" );
     if( c != null ) {

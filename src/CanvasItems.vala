@@ -1,5 +1,5 @@
-   /*
-* Copyright (c) 2020-2021 (https://github.com/phase1geo/Annotator)
+/*
+* Copyright (c) 2020-2026 (https://github.com/phase1geo/Annotator)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -191,35 +191,38 @@ public class CanvasItems {
   public signal void text_item_edit_changed( CanvasItemText item );
   public signal void selection_changed( CanvasItemProperties props );
 
-  /* Constructor */
+  //-------------------------------------------------------------
+  // Constructor
   public CanvasItems( Canvas canvas ) {
 
     _canvas = canvas;
 
-    /* Create storage for the canvas items */
+    // Create storage for the canvas items
     _items = new List<CanvasItem>();
 
-    /* Create the overall properties structure */
+    // Create the overall properties structure
     props = new CanvasItemProperties( true );
     props.changed.connect( update_selected_attributes );
 
-    /* Create the CustomItems object */
+    // Create the CustomItems object
     custom_items = new CustomItems();
     custom_items.load( this );
 
-    /* Set the stage for menu actions */
+    // Set the stage for menu actions
     var actions = new SimpleActionGroup ();
     actions.add_action_entries( action_entries, this );
     _canvas.insert_action_group( "items", actions );
 
   }
 
-  /* Returns true if at least one item exists in the canvas */
+  //-------------------------------------------------------------
+  // Returns true if at least one item exists in the canvas
   public bool items_exist() {
     return( _items.length() > 0 );
   }
 
-  /* Returns the box to place a canvas item into */
+  //-------------------------------------------------------------
+  // Returns the box to place a canvas item into
   public CanvasRect center_box( double width, double height ) {
     var rect = _canvas.editor.get_displayed_rect();
     rect.copy_coords( (rect.x + ((rect.width - width) / 2)), (rect.y + ((rect.height - height) / 2)), width, height );
@@ -354,7 +357,8 @@ public class CanvasItems {
     }
   }
 
-  /* Adds the given shape to the top of the item stack */
+  //-------------------------------------------------------------
+  // Adds the given shape to the top of the item stack
   public void add_shape_item( CanvasItemType type ) {
     CanvasItem? item = null;
     switch( type ) {
@@ -385,11 +389,11 @@ public class CanvasItems {
 
   public void add_image() {
 
-    /* Get the file to open from the user */
+    // Get the file to open from the user
     var dialog = new FileChooserNative( _( "Open Insertion Image" ), _canvas.win, FileChooserAction.OPEN, _( "Open" ), _( "Cancel" ) );
     Utils.set_chooser_folder( dialog );
 
-    /* Create file filters for each supported format */
+    // Create file filters for each supported format
     foreach( FileFilter filter in _canvas.win.image_filters ) {
       dialog.add_filter( filter );
     }
@@ -408,7 +412,8 @@ public class CanvasItems {
 
   }
 
-  /* Removes all of the canvas items */
+  //-------------------------------------------------------------
+  // Removes all of the canvas items
   public void clear() {
     while( _items.first() != null ) {
       _items.delete_link( _items.first() );
@@ -420,23 +425,27 @@ public class CanvasItems {
     _items.insert( item, position );
   }
 
-  /* Removes the item at the given position without undo addition */
+  //-------------------------------------------------------------
+  // Removes the item at the given position without undo addition
   public void remove_item( CanvasItem item ) {
     _items.remove( item );
     hide_format_bar();
   }
 
-  /* Adds the given item at the top of the item stack */
+  //-------------------------------------------------------------
+  // Adds the given item at the top of the item stack
   public void move_to_front( CanvasItem item ) {
     _items.append( item );
   }
 
-  /* Adds the given item at the bottom of the item stack */
+  //-------------------------------------------------------------
+  // Adds the given item at the bottom of the item stack
   public void move_to_back( CanvasItem item ) {
     _items.prepend( item );
   }
 
-  /* Returns true if an item is currently selected */
+  //-------------------------------------------------------------
+  // Returns true if an item is currently selected
   public bool is_item_selected() {
     foreach( CanvasItem item in _items ) {
       if( item.mode == CanvasItemMode.SELECTED ) {
@@ -446,7 +455,8 @@ public class CanvasItems {
     return( false );
   }
 
-  /* Returns the currently selected item */
+  //-------------------------------------------------------------
+  // Returns the currently selected item
   public CanvasItem? get_selected_item() {
     foreach( CanvasItem item in _items ) {
       if( item.mode == CanvasItemMode.SELECTED ) {
@@ -456,7 +466,8 @@ public class CanvasItems {
     return( null );
   }
 
-  /* Deletes all of the selected items */
+  //-------------------------------------------------------------
+  // Deletes all of the selected items
   private bool remove_selected() {
     var retval    = false;
     var position  = 0;
@@ -481,7 +492,8 @@ public class CanvasItems {
     return( retval );
   }
 
-  /* Clears the currently selected items */
+  //-------------------------------------------------------------
+  // Clears the currently selected items
   public bool clear_selection() {
     var retval = false;
     _selector_index = -1;
@@ -492,7 +504,8 @@ public class CanvasItems {
     return( retval );
   }
 
-  /* Update the selected attributes */
+  //-------------------------------------------------------------
+  // Update the selected attributes
   private void update_selected_attributes() {
     var undo_item = new UndoItemPropChange();
     foreach( CanvasItem item in _items ) {
@@ -507,7 +520,9 @@ public class CanvasItems {
     _canvas.queue_draw();
   }
 
-  /* Returns the position of the given canvas item in the list of items */
+  //-------------------------------------------------------------
+  // Returns the position of the given canvas item in the list of
+  // items
   private int item_position( CanvasItem item ) {
     var pos = 0;
     foreach( CanvasItem it in _items ) {
@@ -519,45 +534,54 @@ public class CanvasItems {
     return( -1 );
   }
 
-  /* Adjusts all items by the given diff amounts */
+  //-------------------------------------------------------------
+  // Adjusts all items by the given diff amounts
   public void adjust_items( double diffx, double diffy, bool moving = true ) {
     foreach( CanvasItem item in _items ) {
       item.move_item( diffx, diffy, moving );
     }
   }
 
-  /* Returns true if the shift key is enabled in the given state */
+  //-------------------------------------------------------------
+  // Returns true if the shift key is enabled in the given state
   private bool shift_state( ModifierType state ) {
     return( (bool)(state & ModifierType.SHIFT_MASK) );
   }
 
-  /* Returns true if the control key is enabled in the given state */
+  //-------------------------------------------------------------
+  // Returns true if the control key is enabled in the given state
   private bool control_state( ModifierType state ) {
     return( (bool)(state & ModifierType.CONTROL_MASK) );
   }
 
-  /* Returns true if the alt key is enabled in the given state */
+  //-------------------------------------------------------------
+  // Returns true if the alt key is enabled in the given state
   private bool alt_state( ModifierType state ) {
     return( (bool)(state & ModifierType.ALT_MASK) );
   }
 
-  /* Returns the active text item, if it is set; otherwise, returns null */
+  //-------------------------------------------------------------
+  // Returns the active text item, if it is set; otherwise,
+  // returns null
   public CanvasItemText? get_active_text() {
     return( ((_active == null) || (_active.itype != CanvasItemType.TEXT)) ? null : (_active as CanvasItemText) );
   }
 
-  /* Returns true if we are currently editing a text item */
+  //-------------------------------------------------------------
+  // Returns true if we are currently editing a text item
   public bool in_edit_mode() {
     var text = get_active_text();
     return( (text != null) ? text.edit : false );
   }
 
-  /* Returns true if we are currently drawing something */
+  //-------------------------------------------------------------
+  // Returns true if we are currently drawing something
   public bool in_draw_mode() {
     return( (_active != null) && (_active.mode == CanvasItemMode.DRAWING) );
   }
 
-  /* Sets the edit mode of the active text item to the given value */
+  //-------------------------------------------------------------
+  // Sets the edit mode of the active text item to the given value
   private bool set_edit_mode( bool value ) {
     var text = get_active_text();
     if( text != null ) {
@@ -579,11 +603,13 @@ public class CanvasItems {
     return( false );
   }
 
-  /*****************************/
-  /*  HANDLE KEY PRESS EVENTS  */
-  /*****************************/
+  //-------------------------------------------------------------
+  // HANDLE KEY PRESS EVENTS
+  //-------------------------------------------------------------
 
-  /* Handles keypress events.  Returns true if the canvas should be redrawn. */
+  //-------------------------------------------------------------
+  // Handles keypress events.  Returns true if the canvas should
+  // be redrawn.
   public bool key_pressed( uint keyval, uint keycode, ModifierType state ) {
 
     var control = control_state( state );
@@ -634,10 +660,9 @@ public class CanvasItems {
 
   }
 
-  /*
-   If we editing text, handle the backspace character; otherwise, delete the selected
-   items.
-  */
+  //-------------------------------------------------------------
+  // If we editing text, handle the backspace character; otherwise,
+  // delete the selected items.
   private bool handle_backspace() {
     if( in_edit_mode() ) {
       var text = get_active_text();
@@ -648,10 +673,9 @@ public class CanvasItems {
     return( true );
   }
 
-  /*
-   If we editing text, handle the delete character; otherwise, delete the selected
-   items.
-  */
+  //-------------------------------------------------------------
+  // If we editing text, handle the delete character; otherwise,
+  // delete the selected items.
   private bool handle_delete() {
     if( in_edit_mode() ) {
       var text = get_active_text();
@@ -662,7 +686,9 @@ public class CanvasItems {
     return( true );
   }
 
-  /* If we are in text editing mode, mark the node as being not in edit mode */
+  //-------------------------------------------------------------
+  // If we are in text editing mode, mark the node as being not
+  // in edit mode
   private bool handle_return( bool shift ) {
     if( in_edit_mode() ) {
       if( shift ) {
@@ -676,7 +702,9 @@ public class CanvasItems {
     return( false );
   }
 
-  /* If we are in text editing mode, remove the active node from editing mode */
+  //-------------------------------------------------------------
+  // If we are in text editing mode, remove the active node from
+  // editing mode
   private bool handle_escape() {
     if( in_edit_mode() ) {
       set_edit_mode( false );
@@ -687,7 +715,9 @@ public class CanvasItems {
     return( false );
   }
 
-  /* If we are in edit mode, moves cursor to the left/right or adds to the selection */
+  //-------------------------------------------------------------
+  // If we are in edit mode, moves cursor to the left/right or
+  // adds to the selection
   private bool handle_cursor( bool control, bool shift, uint keyval ) {
     if( in_edit_mode() ) {
       var text = get_active_text();
@@ -739,7 +769,8 @@ public class CanvasItems {
     return( false );
   }
 
-  /* Handles the control key */
+  //-------------------------------------------------------------
+  // Handles the control key
   private bool handle_control() {
     control_set = true;
     foreach( CanvasItem item in _items ) {
@@ -756,7 +787,9 @@ public class CanvasItems {
     return( false );
   }
 
-  /* Handles key release events.  Returns true if the canvas should be redrawn. */
+  //-------------------------------------------------------------
+  // Handles key release events.  Returns true if the canvas should
+  // be redrawn.
   public bool key_released( uint keyval, ModifierType state ) {
     switch( keyval ) {
       case Key.Control_L :  return( handle_release_control() );
@@ -765,7 +798,8 @@ public class CanvasItems {
     return( false );
   }
 
-  /* Called when the control key is released */
+  //-------------------------------------------------------------
+  // Called when the control key is released
   private bool handle_release_control() {
     control_set = false;
     foreach( CanvasItem item in _items ) {
@@ -783,31 +817,30 @@ public class CanvasItems {
     return( false );
   }
 
-  /*****************************/
-  /*  HANDLE MOUSE EVENTS  */
-  /*****************************/
+  //-------------------------------------------------------------
+  // HANDLE MOUSE EVENTS
+  //-------------------------------------------------------------
 
-  /*
-   Called whenever the cursor is pressed.  Returns true if the canvas should
-   draw itself.
-  */
+  //-------------------------------------------------------------
+  // Called whenever the cursor is pressed.  Returns true if the
+  // canvas should draw itself.
   public bool cursor_pressed( double x, double y, int press_count ) {
 
     var retval  = false;
 
-    /* Keep track of the press count */
+    // Keep track of the press count
     _press_count = press_count;
 
-    /* If the active item is a pencil, indicate that we are drawing */
+    // If the active item is a pencil, indicate that we are drawing
     if( (_active != null) && (_active.itype == CanvasItemType.PENCIL) ) {
       _active.mode = CanvasItemMode.DRAWING;
       return( false );
     }
 
-    /* Reverse the list so that we grab the top-most item */
+    // Reverse the list so that we grab the top-most item
     _items.reverse();
 
-    /* Handle a click within a selector */
+    // Handle a click within a selector
     foreach( CanvasItem item in _items ) {
       _selector_index = item.is_within_selector( x, y );
       if( _selector_index != -1 ) {
@@ -818,7 +851,7 @@ public class CanvasItems {
       }
     }
 
-    /* Handle a click within an item */
+    // Handle a click within an item
     foreach( CanvasItem item in _items ) {
       if( item.is_within( x, y ) ) {
         _active = item;
@@ -856,26 +889,25 @@ public class CanvasItems {
       }
     }
 
-    /* Return the list order */
+    // Return the list order
     _items.reverse();
 
-    /* If we didn't click on anything, clear the selection */
+    // If we didn't click on anything, clear the selection
     clear_selection();
 
-    /* Clear the edit mode, if we are in it */
+    // Clear the edit mode, if we are in it
     retval = set_edit_mode( false );
 
-    /* Clear the active indicator */
+    // Clear the active indicator
     _active = null;
 
     return( retval );
 
   }
 
-  /*
-   Called whenever the cursor is moved.  Returns true if the canvas should draw
-   itself.
-  */
+  //-------------------------------------------------------------
+  // Called whenever the cursor is moved.  Returns true if the
+  // canvas should draw itself.
   public bool cursor_moved( double x, double y ) {
 
     var diff_x  = x - _last_x;
@@ -884,12 +916,12 @@ public class CanvasItems {
     _last_x = x;
     _last_y = y;
 
-    /* Since we pressed on a selector, move the selector */
+    // Since we pressed on a selector, move the selector
     if( _selector_index != -1 ) {
       _active.move_selector( _selector_index, diff_x, diff_y, shift_set );
       return( true );
 
-    /* If we are in edit mode, drag out the selection */
+    // If we are in edit mode, drag out the selection
     } else if( in_edit_mode() ) {
       var text = get_active_text();
       if( text.is_within( x, y ) ) {
@@ -904,12 +936,12 @@ public class CanvasItems {
       }
       return( true );
 
-    /* If we are in drawing mode, indicate that the cursor has moved */
+    // If we are in drawing mode, indicate that the cursor has moved
     } else if( in_draw_mode() ) {
       _active.draw( x, y );
       return( true );
 
-    /* Otherwise, move any selected items by the given amount */
+    // Otherwise, move any selected items by the given amount
     } else if( (_active != null) && !in_edit_mode() ) {
       var retval = false;
       foreach( CanvasItem item in _items ) {
@@ -920,7 +952,7 @@ public class CanvasItems {
       }
       return( retval );
 
-    /* Otherwise, we are just moving the cursor around the screen */
+    // Otherwise, we are just moving the cursor around the screen
     } else {
       foreach( CanvasItem item in _items ) {
         if( item.mode == CanvasItemMode.SELECTED ) {
@@ -950,17 +982,16 @@ public class CanvasItems {
 
   }
 
-  /*
-   Called whenever the cursor button is released.  Returns true if the canvas
-   should draw itself.
-  */
+  //-------------------------------------------------------------
+  // Called whenever the cursor button is released.  Returns true
+  // if the canvas should draw itself.
   public bool cursor_released( double x, double y ) {
 
     var retval = false;
 
     _press_count = -1;
 
-    /* If we are finished dragging the selector, clear it */
+    // If we are finished dragging the selector, clear it
     if( _selector_index != -1 ) {
       _canvas.undo_buffer.add_item( _active.get_undo_item_for_selector( _selector_index ) );
       _selector_index = -1;
@@ -968,17 +999,17 @@ public class CanvasItems {
       _active         = null;
       retval = true;
 
-    /* If we are editing text, do nothing */
+    // If we are editing text, do nothing
     } else if( in_edit_mode() ) {
       return( true );
 
-    /* Indicate that we are done editing */
+    // Indicate that we are done editing
     } else if( in_draw_mode() ) {
       _active.mode = CanvasItemMode.SELECTED;
       selection_changed( _active.props );
       retval = true;
 
-    /* If we were move one or more items, make sure that they stay selected */
+    // If we were move one or more items, make sure that they stay selected
     } else if( _active != null ) {
       var undo_item = new UndoItemBoxChange( _( "move items" ) );
       foreach( CanvasItem item in _items ) {
@@ -992,30 +1023,32 @@ public class CanvasItems {
         _canvas.undo_buffer.add_item( undo_item );
       }
 
-    /* If we have not clicked/moved anything important, clear the selection */
+    // If we have not clicked/moved anything important, clear the selection
     } else if( _active == null ) {
       clear_selection();
       retval = true;
     }
 
-    /* Clear the active element */
+    // Clear the active element
     _active = null;
 
-    /* Clear the cursor */
+    // Clear the cursor
     _canvas.set_cursor( null );
 
-    /* Make sure that the canvas has input focus */
+    // Make sure that the canvas has input focus
     _canvas.grab_focus();
 
     return( retval );
 
   }
 
-  /****************************************************************************/
-  //  CONTEXTUAL MENU
-  /****************************************************************************/
+  //-------------------------------------------------------------
+  // CONTEXTUAL MENU
+  //-------------------------------------------------------------
 
-  /* Displays the contextual menu for the currently selected item, if one exists */
+  //-------------------------------------------------------------
+  // Displays the contextual menu for the currently selected item,
+  // if one exists
   public void show_contextual_menu( double x, double y ) {
 
     CanvasItem? within = null;
@@ -1030,7 +1063,7 @@ public class CanvasItems {
       }
     }
 
-    /* If a node was not selected, display it for the item under the given cursor position */
+    // If a node was not selected, display it for the item under the given cursor position
     if( within != null ) {
       create_contextual_menu( within );
       within.mode = CanvasItemMode.SELECTED;
@@ -1046,7 +1079,7 @@ public class CanvasItems {
     var last = (int)(_items.length() - 1);
     var menu = new CanvasItemMenu( _canvas );
 
-    /* Add the item's contextual menu items */
+    // Add the item's contextual menu items
     item.add_contextual_menu_items( menu );
     menu.complete_section();
 
@@ -1070,7 +1103,7 @@ public class CanvasItems {
 
     }
 
-    /* Create and display the popover */
+    // Create and display the popover
     var popover = menu.create_popover( item.bbox.to_rectangle( _canvas.zoom_factor ) );
     popover.popup();
 
@@ -1082,7 +1115,8 @@ public class CanvasItems {
     do_copy( get_selected_item() );
   }
 
-  /* Creates a copy of the item and sends it to the clipboard */
+  //-------------------------------------------------------------
+  // Creates a copy of the item and sends it to the clipboard
   public void do_copy( CanvasItem item ) {
     if( in_edit_mode() ) {
       var text = get_active_text();
@@ -1100,13 +1134,16 @@ public class CanvasItems {
     do_cut( get_selected_item() );
   }
 
-  /* Creates a copy of the item, sends it to the clipboard, and removes the item */
+  //-------------------------------------------------------------
+  // Creates a copy of the item, sends it to the clipboard, and
+  // removes the item
   public void do_cut( CanvasItem item ) {
     do_copy( item );
     do_delete( item );
   }
 
-  /* Pastes the given item from the clipboard (if one exists) */
+  //-------------------------------------------------------------
+  // Pastes the given item from the clipboard (if one exists)
   private void do_paste( CanvasItem item ) {
     AnnotatorClipboard.paste( _canvas.editor );
   }
@@ -1115,7 +1152,8 @@ public class CanvasItems {
     do_delete( get_selected_item() );
   }
 
-  /* Deletes the item */
+  //-------------------------------------------------------------
+  // Deletes the item
   private void do_delete( CanvasItem item ) {
     if( in_edit_mode() ) {
       var text = get_active_text();
@@ -1141,7 +1179,8 @@ public class CanvasItems {
     do_send_to_front( get_selected_item() );
   }
 
-  /* Moves the item to the top of the item list */
+  //-------------------------------------------------------------
+  // Moves the item to the top of the item list
   private void do_send_to_front( CanvasItem item ) {
     _canvas.undo_buffer.add_item( new UndoItemSendFront( item, item_position( item ) ) );
     remove_item( item );
@@ -1153,7 +1192,8 @@ public class CanvasItems {
     do_send_to_back( get_selected_item() );
   }
 
-  /* Moves the item to the bottom of the item list */
+  //-------------------------------------------------------------
+  // Moves the item to the bottom of the item list
   private void do_send_to_back( CanvasItem item ) {
     _canvas.undo_buffer.add_item( new UndoItemSendBack( item, item_position( item ) ) );
     remove_item( item );
@@ -1165,13 +1205,15 @@ public class CanvasItems {
     do_save_custom( get_selected_item() );
   }
 
-  /* Saves the given item as a custom item */
+  //-------------------------------------------------------------
+  // Saves the given item as a custom item
   private void do_save_custom( CanvasItem item ) {
     var save_item = new CustomItem.with_item( item.duplicate() );
     custom_items.add( save_item );
   }
 
-  /* Serialize the canvas items for the copy buffer */
+  //-------------------------------------------------------------
+  // Serialize the canvas items for the copy buffer
   public string serialize_for_copy( Array<CanvasItem> items ) {
     var       serialized = "";
     Xml.Doc*  doc = new Xml.Doc( "1.0" );
@@ -1185,7 +1227,9 @@ public class CanvasItems {
     return( serialized );
   }
 
-  /* Deserialize the given string and add the elements to the item list */
+  //-------------------------------------------------------------
+  // Deserialize the given string and add the elements to the
+  // item list
   public void deserialize_for_paste( string serialized ) {
     Xml.Doc* doc = Xml.Parser.parse_doc( serialized );
     if( doc == null ) return;
@@ -1223,17 +1267,16 @@ public class CanvasItems {
     _canvas.queue_draw();
   }
 
-  /****************************************************************************/
+  //-------------------------------------------------------------
   //  TEXT FORMATTING
-  /****************************************************************************/
+  //-------------------------------------------------------------
 
-  /*
-   If the format bar needs to be created, create it.  Place it at the current
-   cursor position and make sure that it is visible.
-  */
+  //-------------------------------------------------------------
+  // If the format bar needs to be created, create it.  Place it
+  // at the current cursor position and make sure that it is visible.
   private void show_format_bar() {
 
-    /* If the format bar is currently displayed, just reposition it */
+    // If the format bar is currently displayed, just reposition it
     if( _format_bar == null ) {
       _format_bar = new FormatBar( _canvas );
     }
@@ -1243,12 +1286,12 @@ public class CanvasItems {
 
     text.get_cursor_info( out cursor, out selstart, out selend );
 
-    /* Position the popover */
+    // Position the popover
     double left, top, bottom;
     int    line;
     text.get_char_pos( cursor, out left, out top, out bottom, out line );
 
-    /* If this is the first line of the first row, change the popover point to the bottom of the text */
+    // If this is the first line of the first row, change the popover point to the bottom of the text
     Gdk.Rectangle rect = {(int)left, (int)top, 1, 1};
     _format_bar.pointing_to = rect;
     _format_bar.position    = PositionType.TOP;
@@ -1257,7 +1300,8 @@ public class CanvasItems {
 
   }
 
-  /* Hides the format bar if it is currently visible and destroys it */
+  //-------------------------------------------------------------
+  // Hides the format bar if it is currently visible and destroys it
   private void hide_format_bar() {
     if( _format_bar != null ) {
       _format_bar.popdown();
@@ -1265,9 +1309,9 @@ public class CanvasItems {
     }
   }
 
-  /****************************************************************************/
+  //-------------------------------------------------------------
   //  SAVE/LOAD METHODS
-  /****************************************************************************/
+  //-------------------------------------------------------------
 
   public Xml.Node* save( string? image_dir = null ) {
     Xml.Node* node = new Xml.Node( null, "items" );
@@ -1317,7 +1361,8 @@ public class CanvasItems {
     }
   }
 
-  /* Draws all of the canvas items on the given context */
+  //-------------------------------------------------------------
+  // Draws all of the canvas items on the given context
   public void draw( Context ctx ) {
     foreach( CanvasItem item in _items ) {
       item.draw_item( ctx );

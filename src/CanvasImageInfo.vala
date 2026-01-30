@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2020-2021 (https://github.com/phase1geo/Annotator)
+* Copyright (c) 2020-2026 (https://github.com/phase1geo/Annotator)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -25,21 +25,25 @@ public class CanvasImageInfo {
   public int        height      { get; private set; default = 0; }
   public CanvasRect pixbuf_rect { get; private set; default = new CanvasRect(); }
 
-  /* Constructor */
+  //-------------------------------------------------------------
+  // Constructor
   public CanvasImageInfo( Gdk.Pixbuf buf ) {
     width       = buf.width;
     height      = buf.height;
     pixbuf_rect = new CanvasRect.from_coords( 0, 0, width, height );
   }
 
-  /* Constructor */
+  //-------------------------------------------------------------
+  // Constructor
   public CanvasImageInfo.from_resizer( int pixbuf_width, int pixbuf_height, int top_margin, int right_margin, int bottom_margin, int left_margin ) {
     width  = left_margin + pixbuf_width + right_margin;
     height = top_margin + pixbuf_height + bottom_margin;
     pixbuf_rect = new CanvasRect.from_coords( left_margin, top_margin, pixbuf_width, pixbuf_height );
   }
 
-  /* Constructor - Creates an image info based on the amount of angular rotation of the pixbuf with the given dimensions */
+  //-------------------------------------------------------------
+  // Constructor - Creates an image info based on the amount of
+  // angular rotation of the pixbuf with the given dimensions
   public CanvasImageInfo.with_rotation( int pixbuf_width, int pixbuf_height, double angle ) {
 
     var theta    = angle * (Math.PI / 180.0);
@@ -52,45 +56,57 @@ public class CanvasImageInfo {
 
   }
 
-  /* Copy constructor */
+  //-------------------------------------------------------------
+  // Copy constructor
   public CanvasImageInfo.from_info( CanvasImageInfo info ) {
     pixbuf_rect = new CanvasRect();
     copy( info );
   }
 
-  /* Copies the given information instance to ours */
+  //-------------------------------------------------------------
+  // Copies the given information instance to ours
   public void copy( CanvasImageInfo info ) {
     width  = info.width;
     height = info.height;
     pixbuf_rect.copy( info.pixbuf_rect );
   }
 
-  /* Returns the proportional value of width to height of the pixbuf */
+  //-------------------------------------------------------------
+  // Returns the proportional value of width to height of the pixbuf
   public double get_proportion() {
     return( (double)pixbuf_rect.width / pixbuf_rect.height );
   }
 
-  /* Returns the value of the largest side */
+  //-------------------------------------------------------------
+  // Returns the value of the largest side
   public int largest_side() {
     return( (width < height) ? height : width );
   }
 
-  /* Returns the amount of margin (in pixels) of the top margin area */
+  //-------------------------------------------------------------
+  // Returns the amount of margin (in pixels) of the top margin
+  // area
   public int top_margin() {
     return( (int)pixbuf_rect.y );
   }
 
-  /* Returns the amount of margin (in pixels) of the bottom margin area */
+  //-------------------------------------------------------------
+  // Returns the amount of margin (in pixels) of the bottom margin
+  // area
   public int bottom_margin() {
     return( height - (int)(pixbuf_rect.height + pixbuf_rect.y) );
   }
 
-  /* Returns the amount of margin (in pixels) of the left margin area */
+  //-------------------------------------------------------------
+  // Returns the amount of margin (in pixels) of the left margin
+  // area
   public int left_margin() {
     return( (int)pixbuf_rect.x );
   }
 
-  /* Returns the amount of margin (in pixels) of the right margin area */
+  //-------------------------------------------------------------
+  // Returns the amount of margin (in pixels) of the right margin
+  // area
   public int right_margin() {
     return( width - (int)(pixbuf_rect.width + pixbuf_rect.x) );
   }

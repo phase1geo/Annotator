@@ -44,7 +44,6 @@ public class MainWindow : Gtk.ApplicationWindow {
     { "action_open",              do_open },
     { "action_screenshot",           action_screenshot },
     { "action_screenshot_nonportal", action_screenshot_nonportal, "i" },
-    { "action_save",              do_save },
     { "action_quit",              do_quit },
     { "action_undo",              do_undo },
     { "action_redo",              do_redo },
@@ -83,12 +82,13 @@ public class MainWindow : Gtk.ApplicationWindow {
 
   public signal void theme_changed( bool dark );
 
-  /* Constructor */
+  //-------------------------------------------------------------
+  // Constructor
   public MainWindow( Gtk.Application app ) {
 
     Object( application: app );
 
-    /* Add the application CSS */
+    // Add the application CSS
     var provider = new Gtk.CssProvider ();
     provider.load_from_resource( "/com/github/phase1geo/annotator/css/style.css" );
     StyleContext.add_provider_for_display( get_display(), provider, STYLE_PROVIDER_PRIORITY_APPLICATION );
@@ -97,34 +97,34 @@ public class MainWindow : Gtk.ApplicationWindow {
 
     can_focus = true;
 
-    /* Create the sticker set */
+    // Create the sticker set
     _sticker_set = new StickerSet();
 
-    /* Create editor */
+    // Create editor
     create_editor( box );
 
-    /* Create the header */
+    // Create the header
     create_header();
 
     child = box;
 
-    /* Handle any changes to the dark mode preference setting */
+    // Handle any changes to the dark mode preference setting
     handle_prefer_dark_changes();
 
     show();
 
-    /* Set the stage for menu actions */
+    // Set the stage for menu actions
     var actions = new SimpleActionGroup ();
     actions.add_action_entries( action_entries, this );
     insert_action_group( "win", actions );
 
-    /* Add keyboard shortcuts */
+    // Add keyboard shortcuts
     add_keyboard_shortcuts( app );
 
-    /* Gather the image filters */
+    // Gather the image filters
     gather_image_filters();
 
-    /* Load the exports */
+    // Load the exports
     _editor.canvas.image.exports.load();
 
     close_request.connect(() => {
@@ -132,17 +132,19 @@ public class MainWindow : Gtk.ApplicationWindow {
       return( false );
     });
 
-    /* Set the window size based on saved settings */
+    // Set the window size based on saved settings
     set_window_size();
 
   }
 
-  /* Returns the name of the icon to use for a headerbar icon */
+  //-------------------------------------------------------------
+  // Returns the name of the icon to use for a headerbar icon
   private string get_icon_name( string icon_name ) {
     return( "%s%s".printf( icon_name, (on_elementary ? "" : "-symbolic") ) );
   }
 
-  /* Adds keyboard shortcuts for the menu actions */
+  //-------------------------------------------------------------
+  // Adds keyboard shortcuts for the menu actions
   private void add_keyboard_shortcuts( Gtk.Application app ) {
     app.set_accels_for_action( "win.action_open",            { "<Control>o" } );
     app.set_accels_for_action( "win.action_screenshot",      { "<Control>t" } );
@@ -164,7 +166,9 @@ public class MainWindow : Gtk.ApplicationWindow {
     app.set_accels_for_action( "win.action_emoji",           { "<Control>slash" } );
   }
 
-  /* Handles any changes to the dark mode preference gsettings for the desktop */
+  //-------------------------------------------------------------
+  // Handles any changes to the dark mode preference gsettings
+  // for the desktop
   private void handle_prefer_dark_changes() {
     var granite_settings = Granite.Settings.get_default();
     update_dark_mode( granite_settings );
@@ -173,14 +177,16 @@ public class MainWindow : Gtk.ApplicationWindow {
     });
   }
 
-  /* Updates the current dark mode setting in the UI */
+  //-------------------------------------------------------------
+  // Updates the current dark mode setting in the UI
   private void update_dark_mode( Granite.Settings granite_settings ) {
     var gtk_settings = Gtk.Settings.get_default();
     gtk_settings.gtk_application_prefer_dark_theme = granite_settings.prefers_color_scheme == Granite.Settings.ColorScheme.DARK;
     theme_changed( gtk_settings.gtk_application_prefer_dark_theme );
   }
 
-  /* Create the header bar */
+  //-------------------------------------------------------------
+  // Create the header bar
   private void create_header() {
 
     var header = new HeaderBar() {
@@ -255,7 +261,7 @@ public class MainWindow : Gtk.ApplicationWindow {
   // Create the exports menubutton and associated menu.
   private MenuButton create_exports() {
 
-    /* Add the export UI */
+    // Add the export UI
     var export_ui = new Exporter( this );
     var export_mi = new GLib.MenuItem( null, null );
     export_mi.set_attribute( "custom", "s", "export" );
@@ -317,7 +323,7 @@ public class MainWindow : Gtk.ApplicationWindow {
     var zoom_popover = new PopoverMenu.from_model( menu );
     zoom_popover.add_child( _zoom, "zoom" );
 
-    /* Add the button */
+    // Add the button
     var zoom_btn = new MenuButton() {
       icon_name    = get_icon_name( "zoom-fit-best" ),
       tooltip_text = _( "Zoom (%d%%)" ).printf( 100 ),
@@ -331,7 +337,7 @@ public class MainWindow : Gtk.ApplicationWindow {
 
   private void create_editor( Box box ) {
 
-    /* Create the welcome screen */
+    // Create the welcome screen
     _welcome = new Granite.Placeholder( _( "Welcome to Annotator" ) ) {
       vexpand = true,
       description = _( "Let's get started annotating an image" )
@@ -372,12 +378,12 @@ public class MainWindow : Gtk.ApplicationWindow {
       do_screenshot( screenshot );
     });
 
-    /* Initialize the clipboard */
+    // Initialize the clipboard
     AnnotatorClipboard.get_clipboard().changed.connect(() => {
       paste.sensitive = AnnotatorClipboard.image_pasteable();
     });
 
-    /* Create the editor */
+    // Create the editor
     _editor = new Editor( this );
     _editor.image_loaded.connect(() => {
       _stack.visible_child_name = "editor";
@@ -386,7 +392,7 @@ public class MainWindow : Gtk.ApplicationWindow {
     _editor.canvas.undo_text.buffer_changed.connect( do_undo_changed );
     _editor.canvas.zoom_changed.connect( do_zoom_changed );
 
-    /* Add the elements to the stack */
+    // Add the elements to the stack
     _stack = new Stack() {
       transition_type = StackTransitionType.NONE
     };
@@ -399,7 +405,8 @@ public class MainWindow : Gtk.ApplicationWindow {
 
   }
 
-  /* Create font selection box */
+  //-------------------------------------------------------------
+  // Create font selection box
   private Box create_font_selection() {
 
     var box = new Box( Orientation.HORIZONTAL, 10 );
@@ -425,7 +432,7 @@ public class MainWindow : Gtk.ApplicationWindow {
       Annotator.settings.set_int( "default-font-size", size );
     });
 
-    /* Set the font button defaults */
+    // Set the font button defaults
     var fd = _font.get_font_desc();
     fd.set_family( Annotator.settings.get_string( "default-font-family" ) );
     fd.set_size( Annotator.settings.get_int( "default-font-size" ) * Pango.SCALE );
@@ -438,7 +445,9 @@ public class MainWindow : Gtk.ApplicationWindow {
 
   }
 
-  /* Creates a list of image filters that can be used in the open dialog */
+  //-------------------------------------------------------------
+  // Creates a list of image filters that can be used in the open
+  // dialog
   private void gather_image_filters() {
 
     _image_filters = new SList<FileFilter>();
@@ -462,7 +471,7 @@ public class MainWindow : Gtk.ApplicationWindow {
     patterns += "*.annotator";
     _image_filters.append( afilter );
 
-    /* Add the 'all image formats' filter first */
+    // Add the 'all image formats' filter first
     var filter = new FileFilter();
     filter.set_filter_name( _( "All Loadable Formats" ) );
     foreach( string pattern in patterns ) {
@@ -472,16 +481,17 @@ public class MainWindow : Gtk.ApplicationWindow {
 
   }
 
-  /* Opens an image file for loading */
+  //-------------------------------------------------------------
+  // Opens an image file for loading
   private void do_open() {
 
     _welcome.sensitive = false;
 
-    /* Get the file to open from the user */
+    // Get the file to open from the user
     var dialog = new FileChooserNative( _( "Open Image File" ), this, FileChooserAction.OPEN, _( "Open" ), _( "Cancel" ) );
     Utils.set_chooser_folder( dialog );
 
-    /* Create file filters for each supported format */
+    // Create file filters for each supported format
     foreach( FileFilter filter in _image_filters ) {
       dialog.add_filter( filter );
     }
@@ -501,10 +511,9 @@ public class MainWindow : Gtk.ApplicationWindow {
 
   }
 
-  /*
-   Opens the given image file in the canvas and displays the canvas if the
-   image is successfully read and displayed.
-  */
+  //-------------------------------------------------------------
+  // Opens the given image file in the canvas and displays the
+  // canvas if the image is successfully read and displayed.
   public void open_file( string filename ) {
     var opened = false;
     if( filename.has_suffix( ".annotator" ) ) {
@@ -521,7 +530,8 @@ public class MainWindow : Gtk.ApplicationWindow {
     }
   }
 
-  /* Parses image data from standard output to use as pixbuf */
+  //-------------------------------------------------------------
+  // Parses image data from standard output to use as pixbuf
   public bool handle_standard_input() {
     var max_size  = Annotator.settings.get_int( "maximum-image-size" ) * (1 << 20);
     var buf       = new uint8[max_size];
@@ -539,17 +549,23 @@ public class MainWindow : Gtk.ApplicationWindow {
     return( false );
   }
 
-  /* Copies the relevant part of the currently selected item (if it exists) */
+  //-------------------------------------------------------------
+  // Copies the relevant part of the currently selected item (if
+  // it exists)
   public void do_copy() {
     _editor.canvas.do_copy();
   }
 
-  /* Cuts the relevant part of the currently selected item (if it exists) */
+  //-------------------------------------------------------------
+  // Cuts the relevant part of the currently selected item (if it
+  // exists)
   public void do_cut() {
     _editor.canvas.do_cut();
   }
 
-  /* Pastes clipboard contents to the editor.  This may also paste only images, if specified. */
+  //-------------------------------------------------------------
+  // Pastes clipboard contents to the editor.  This may also paste
+  // only images, if specified.
   private bool do_paste_internal( bool image_only ) {
     if( AnnotatorClipboard.paste( _editor, image_only ) ) {
       _welcome.sensitive = false;
@@ -560,12 +576,14 @@ public class MainWindow : Gtk.ApplicationWindow {
     return( false );
   }
 
-  /* Pastes text, images or items to the editor */
+  //-------------------------------------------------------------
+  // Pastes text, images or items to the editor
   public void do_paste() {
     do_paste_internal( false );
   }
 
-  /* Pasts only an image from the clipboard to the editor */
+  //-------------------------------------------------------------
+  // Pastes only an image from the clipboard to the editor
   public bool do_paste_image() {
     return( do_paste_internal( true ) );
   }
@@ -575,19 +593,7 @@ public class MainWindow : Gtk.ApplicationWindow {
   // indicates that it can handle taking the screenshot, use the
   // backend to perform the screenshot; otherwise, use the portal.
   public void do_screenshot( Widget? parent ) {
-    /*
-    if( ScreenshotBackend.can_do_screenshots() ) {
-      if( parent == null ) {
-        do_screenshot_nonportal( CaptureType.SCREEN );
-      } else {
-        show_screenshot_popover( parent );
-      }
-    } else {
-    */
-      do_screenshot_portal();
-    /*
-    }
-    */
+    do_screenshot_portal();
   }
 
   //-------------------------------------------------------------
@@ -679,14 +685,14 @@ public class MainWindow : Gtk.ApplicationWindow {
 
   public void do_screenshot_nonportal( CaptureType capture_mode ) {
 
-    /* If we aren't capturing anything, end now */
+    // If we aren't capturing anything, end now
     if( capture_mode == CaptureType.NONE ) return;
 
     var backend = new ScreenshotBackend();
     var delay   = Annotator.settings.get_int( "screenshot-delay" );
     var include = Annotator.settings.get_boolean( "screenshot-include-win" );
 
-    /* Hide the application */
+    // Hide the application
     if( !include ) {
       hide();
     }
@@ -711,37 +717,6 @@ public class MainWindow : Gtk.ApplicationWindow {
     });
 
   }
-
-  //-------------------------------------------------------------
-  // Generate a screenshot using the screenshot portal.
-  /*
-  private void do_screenshot_portal() {
-
-    _welcome.sensitive = false;
-
-    var portal = new Xdp.Portal();
-    var parent = Xdp.parent_new_gtk( this );
-
-    hide();
-
-    portal.take_screenshot.begin( parent, Xdp.ScreenshotFlags.INTERACTIVE, null, (obj, res) => {
-      try {
-        var screenshot = portal.take_screenshot.end( res );
-        var file       = File.new_for_uri( screenshot );
-        _editor.open_image( file.get_path() );
-        _zoom_btn.set_sensitive( true );
-        _export_btn.set_sensitive( true );
-        show();
-      } catch( Error e ) {
-        _welcome.sensitive = true;
-        _zoom_btn.set_sensitive( true );
-        _export_btn.set_sensitive( true );
-        show();
-      }
-    });
-
-  }
-  */
 
   private async void do_screenshot_portal() {
     _welcome.sensitive = false;
@@ -823,62 +798,66 @@ public class MainWindow : Gtk.ApplicationWindow {
 
   }
 
-  private void do_save() {
-
-    /* TBD */
-
-  }
-
-  /* Save the window size to settings */
+  //-------------------------------------------------------------
+  // Save the window size to settings
   private void save_window_size() {
     Annotator.settings.set_int( "window-w", get_width() );
     Annotator.settings.set_int( "window-h", get_height() );
   }
 
-  /* Restore window size from settings */
+  //-------------------------------------------------------------
+  // Restore window size from settings
   private void set_window_size() {
     var size_w = Annotator.settings.get_int( "window-w" );
     var size_h = Annotator.settings.get_int( "window-h" );
     set_default_size( size_w, size_h );
   }
 
-  /* Quits the application */
+  //-------------------------------------------------------------
+  // Quits the application
   private void do_quit() {
     save_window_size();
     destroy();
   }
 
-  /* Performs an undo operation */
+  //-------------------------------------------------------------
+  // Performs an undo operation
   private void do_undo() {
     _editor.canvas.do_undo();
   }
 
-  /* Performs a redo operation */
+  //-------------------------------------------------------------
+  // Performs a redo operation
   private void do_redo() {
     _editor.canvas.do_redo();
   }
 
-  /* Zooms in by one */
+  //-------------------------------------------------------------
+  // Zooms in by one
   private void do_zoom_in() {
     _editor.canvas.zoom_in();
   }
 
-  /* Zooms out by one */
+  //-------------------------------------------------------------
+  // Zooms out by one
   private void do_zoom_out() {
     _editor.canvas.zoom_out();
   }
 
-  /* Zooms to 1:1 */
+  //-------------------------------------------------------------
+  // Zooms to 1:1
   private void do_zoom_actual() {
     _editor.canvas.zoom_actual();
   }
 
-  /* Zooms in/out to fit image to window width */
+  //-------------------------------------------------------------
+  // Zooms in/out to fit image to window width
   private void do_zoom_fit() {
     _editor.canvas.zoom_fit();
   }
 
-  /* Displays the keyboard shortcuts cheatsheet */
+  //-------------------------------------------------------------
+  // Displays the keyboard shortcuts cheatsheet
   private void do_shortcuts() {
 
     var builder = new Builder.from_resource( "/com/github/phase1geo/annotator/shortcuts/shortcuts.ui" );
@@ -887,7 +866,7 @@ public class MainWindow : Gtk.ApplicationWindow {
     win.transient_for = this;
     win.view_name     = null;
 
-    /* Display the most relevant information based on the current state */
+    // Display the most relevant information based on the current state
     if( _editor.canvas.items.in_edit_mode() ) {
       win.section_name = "text-editing";
     } else if( _editor.canvas.items.is_item_selected() ) {
@@ -907,12 +886,14 @@ public class MainWindow : Gtk.ApplicationWindow {
     about_win.show();
   }
 
-  /* Displays the contextual menu for the item under the cursor */
+  //-------------------------------------------------------------
+  // Displays the contextual menu for the item under the cursor
   private void do_contextual_menu() {
     _editor.canvas.show_contextual_menu();
   }
 
-  /* Performs an image export */
+  //-------------------------------------------------------------
+  // Performs an image export
   public void do_export( string type, string filename ) {
     _editor.canvas.image.export_image( type, filename );
   }
@@ -923,7 +904,8 @@ public class MainWindow : Gtk.ApplicationWindow {
     _editor.canvas.image.export_clipboard();
   }
 
-  /* Prints the current image */
+  //-------------------------------------------------------------
+  // Prints the current image
   private void do_print() {
     _editor.canvas.image.export_print();
   }
@@ -932,7 +914,8 @@ public class MainWindow : Gtk.ApplicationWindow {
     _editor.canvas.insert_emoji();
   }
 
-  /* Called whenever the undo buffer changes */
+  //-------------------------------------------------------------
+  // Called whenever the undo buffer changes
   private void do_undo_changed( UndoBuffer buffer ) {
     _undo_btn.set_sensitive( buffer.undoable() );
     _undo_btn.set_tooltip_markup( Utils.tooltip_with_accel( buffer.undo_tooltip(), "<Control>z" ) );
@@ -940,13 +923,15 @@ public class MainWindow : Gtk.ApplicationWindow {
     _redo_btn.set_tooltip_markup( Utils.tooltip_with_accel( buffer.redo_tooltip(), "<Control><Shift>z" ) );
   }
 
-  /* Called whenever the zoom value changes */
+  //-------------------------------------------------------------
+  // Called whenever the zoom value changes
   private void do_zoom_changed( double zoom_factor ) {
     _zoom.value = (int)(zoom_factor * 100);
     _zoom_btn.set_tooltip_text( _( "Zoom (%d%%)" ).printf( (int)_zoom.value ) );
   }
 
-  /* Generate a notification */
+  //-------------------------------------------------------------
+  // Generate a notification
   public void notification( string title, string msg, NotificationPriority priority = NotificationPriority.NORMAL ) {
     GLib.Application? app = null;
     @get( "application", ref app );

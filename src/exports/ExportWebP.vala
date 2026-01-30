@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2018-2026 (https://github.com/phase1geo/Annotator)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -29,17 +29,18 @@ public class ExportWebP : Export {
     base( canvas, "webp", _( "WebP" ), { ".webp" } );
   }
 
-  /* Default constructor */
+  //-------------------------------------------------------------
+  // Default constructor
   public override bool export( string filename, Pixbuf source ) {
 
     var fname = repair_filename( filename );
 
-    /* Create the drawing surface */
+    // Create the drawing surface
     var surface = new ImageSurface( Format.RGB24, source.width, source.height );
     var context = new Context( surface );
     canvas.draw_all( context );
 
-    /* Write the pixbuf to the file */
+    // Write the pixbuf to the file
     var pixbuf = pixbuf_get_from_surface( surface, 0, 0, surface.get_width(), surface.get_height() );
     pixbuf = pixbuf.add_alpha( false, 0, 0, 0 );
 

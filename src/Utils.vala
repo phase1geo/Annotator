@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2020-2021 (https://github.com/phase1geo/Annotator)
+* Copyright (c) 2020-2026 (https://github.com/phase1geo/Annotator)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -25,7 +25,9 @@ using Cairo;
 
 public class Utils {
 
-  /* Creates the given directory (and all parent directories) with appropriate permissions */
+  //-------------------------------------------------------------
+  // Creates the given directory (and all parent directories) with
+  // appropriate permissions
   public static bool create_dir( string path ) {
     return( DirUtils.create_with_parents( path, 0755 ) == 0 );
   }
@@ -47,9 +49,8 @@ public class Utils {
 
   }
 
-  /*
-   Returns a regular expression useful for parsing clickable URLs.
-  */
+  //-------------------------------------------------------------
+  // Returns a regular expression useful for parsing clickable URLs.
   public static string url_re() {
     string[] res = {
       "mailto:.+@[a-z0-9-]+\\.[a-z0-9.-]+",
@@ -59,35 +60,37 @@ public class Utils {
     return( "(" + string.joinv( "|",res ) + ")" );
   }
 
-  /*
-   Helper function for converting an RGBA color value to a stringified color
-   that can be used by a markup parser.
-  */
+  //-------------------------------------------------------------
+  // Helper function for converting an RGBA color value to a
+  // stringified color that can be used by a markup parser.
   public static string color_to_string( RGBA rgba ) {
     return( "#%02x%02x%02x".printf( (int)(rgba.red * 255), (int)(rgba.green * 255), (int)(rgba.blue * 255) ) );
   }
 
-  /* Returns the RGBA color for the given color value */
+  //-------------------------------------------------------------
+  // Returns the RGBA color for the given color value
   public static RGBA color_from_string( string value ) {
     RGBA c = {(float)1.0, (float)1.0, (float)1.0, (float)1.0};
     c.parse( value );
     return( c );
   }
 
-  /* Sets the context source color to the given color value */
+  //-------------------------------------------------------------
+  // Sets the context source color to the given color value
   public static void set_context_color( Context ctx, RGBA color ) {
     ctx.set_source_rgba( color.red, color.green, color.blue, color.alpha );
   }
 
-  /*
-   Sets the context source color to the given color value overriding the
-   alpha value with the given value.
-  */
+  //-------------------------------------------------------------
+  // Sets the context source color to the given color value
+  // overriding the alpha value with the given value.
   public static void set_context_color_with_alpha( Context ctx, RGBA color, double alpha ) {
     ctx.set_source_rgba( color.red, color.green, color.blue, alpha );
   }
 
-  /* Returns the red, green and blue color values that are needed by the Pango color attributes */
+  //-------------------------------------------------------------
+  // Returns the red, green and blue color values that are needed
+  // by the Pango color attributes
   public static void get_attribute_color( RGBA color, out uint16 red, out uint16 green, out uint16 blue ) {
     var maxval = 65535;
     red   = (uint16)(color.red   * maxval);
@@ -95,12 +98,16 @@ public class Utils {
     blue  = (uint16)(color.blue  * maxval);
   }
 
-  /* Returns true if the given coordinates are within the specified bounds */
+  //-------------------------------------------------------------
+  // Returns true if the given coordinates are within the
+  // specified bounds
   public static bool is_within_bounds( double x, double y, double bx, double by, double bw, double bh ) {
     return( (bx < x) && (x < (bx + bw)) && (by < y) && (y < (by + bh)) );
   }
 
-  /* Returns true if the given set of coordinates is within the given polygon */
+  //-------------------------------------------------------------
+  // Returns true if the given set of coordinates is within the
+  // given polygon
   public static bool is_within_polygon( double x, double y, Array<CanvasPoint> points, int length = -1 ) {
 
     var corners   = (length == -1) ? (int)points.length : length;
@@ -120,27 +127,30 @@ public class Utils {
 
   }
 
-  /*
-   Returns true if the given point exists within the given ellipsis.
-     where h = mid_x, k = mid_y, a = widest width, b = narrowest width
-  */
+  //-------------------------------------------------------------
+  // Returns true if the given point exists within the given ellipsis.
+  // where h = mid_x, k = mid_y, a = widest width, b = narrowest width
   public static bool is_within_oval( double x, double y, double h, double k, double a, double b ) {
     var p = (Math.pow( (x - h), 2 ) / Math.pow( a, 2 )) + (Math.pow( (y - k), 2 ) / Math.pow( b, 2 ));
     return( p <= 1 );
   }
 
-  /* Returns a string that is suitable to use as an inspector title */
+  //-------------------------------------------------------------
+  // Returns a string that is suitable to use as an inspector title
   public static string make_title( string str ) {
     return( "<b>" + str + "</b>" );
   }
 
-  /* Returns a string that is used to display a tooltip with displayed accelerator */
+  //-------------------------------------------------------------
+  // Returns a string that is used to display a tooltip with
+  // displayed accelerator
   public static string tooltip_with_accel( string tooltip, string accel ) {
     string[] accels = {accel};
     return( Granite.markup_accel_tooltip( accels, tooltip ) );
   }
 
-  /* Opens the given URL in the proper external default application */
+  //-------------------------------------------------------------
+  // Opens the given URL in the proper external default application
   public static void open_url( string url ) {
     if( (url.substring( 0, 7 ) == "file://") || (url.get_char( 0 ) == '/') ) {
       var app = AppInfo.get_default_for_type( "inode/directory", true );
@@ -160,7 +170,9 @@ public class Utils {
     }
   }
 
-  /* Returns the line height of the first line of the given pango layout */
+  //-------------------------------------------------------------
+  // Returns the line height of the first line of the given pango
+  // layout
   public static double get_line_height( Pango.Layout layout ) {
     int height;
     var line = layout.get_line_readonly( 0 );
@@ -175,7 +187,8 @@ public class Utils {
     return( height / Pango.SCALE );
   }
 
-  /* Searches for the beginning or ending word */
+  //-------------------------------------------------------------
+  // Searches for the beginning or ending word
   public static int find_word( string str, int cursor, bool wordstart ) {
     try {
       MatchInfo match_info;
@@ -190,7 +203,8 @@ public class Utils {
     return( -1 );
   }
 
-  /* Returns true if the given string is a valid URL */
+  //-------------------------------------------------------------
+  // Returns true if the given string is a valid URL
   public static bool is_url( string str ) {
     return( Regex.match_simple( url_re(), str ) );
   }
@@ -210,7 +224,9 @@ public class Utils {
     Annotator.settings.set_string( "last-directory", dir );
   }
 
-  /* Returns the child widget at the given index of the parent widget (or null if one does not exist) */
+  //-------------------------------------------------------------
+  // Returns the child widget at the given index of the parent
+  // widget (or null if one does not exist)
   public static Widget? get_child_at_index( Widget parent, int index ) {
     var child = parent.get_first_child();
     while( (child != null) && (index-- > 0) ) {
@@ -219,7 +235,8 @@ public class Utils {
     return( child );
   }
 
-  /* Creates a menu item for a popover */
+  //-------------------------------------------------------------
+  // Creates a menu item for a popover
   public static Button make_menu_item( string label ) {
     var lbl = new Label( label ) {
       xalign = (float)0
@@ -232,7 +249,8 @@ public class Utils {
     return( btn );
   }
 
-  /* Creates a pixbuf from a Cairo surface */
+  //-------------------------------------------------------------
+  // Creates a pixbuf from a Cairo surface
   public static Gdk.Pixbuf? surface_to_pixbuf( Cairo.Surface surface ) {
 
     FileIOStream iostream;
@@ -248,7 +266,8 @@ public class Utils {
 
   }
 
-  /* Creates a pixbuf from a Texture */
+  //-------------------------------------------------------------
+  // Creates a pixbuf from a Texture
   public static Gdk.Pixbuf? texture_to_pixbuf( Gdk.Texture texture ) {
 
     FileIOStream iostream;
@@ -264,10 +283,9 @@ public class Utils {
 
   }
 
-  /*
-   Returns true if the following key was found to be pressed (regardless of
-   keyboard layout).
-  */
+  //-------------------------------------------------------------
+  // Returns true if the following key was found to be pressed
+  // (regardless of keyboard layout).
   public static bool has_key( uint[] kvs, uint key ) {
     foreach( uint kv in kvs ) {
       if( kv == key ) return( true );
