@@ -152,7 +152,7 @@ public class Annotator : Gtk.Application {
   public static int main( string[] args ) {
 
     // Keep application from crashing if screenshot portal is used on Wayland displays
-    Environment.set_variable( "GDK_BACKEND", "x11", true );
+    // Environment.set_variable( "GDK_BACKEND", "x11", true );
 
     var app = new Annotator();
     app.parse_arguments( ref args );
