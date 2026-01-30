@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2020-2021 (https://github.com/phase1geo/Annotator)
+* Copyright (c) 2020-2026 (https://github.com/phase1geo/Annotator)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -804,28 +804,21 @@ public class MainWindow : Gtk.ApplicationWindow {
 
     uint response;
     Variant dict;
+    string uri = "";
 
-    parameters.get ("(u@a{sv})", out response, out dict);
+    parameters.get( "(u@a{sv})", out response, out dict );
 
-    stdout.printf( "In handle_screenshot_callback, response: %u\n", response );
-
-    if (response != 0) {
-      print ("Screenshot cancelled\n");
-      _welcome.sensitive = true;
+    if( (response == 0) && dict.lookup( "uri", "s", out uri ) ) {
+      var file = File.new_for_uri( uri );
+      _editor.open_image( file.get_path() );
       _zoom_btn.set_sensitive( true );
       _export_btn.set_sensitive( true );
       show();
     } else {
-      string uri;
-      if (dict.lookup ("uri", "s", out uri)) {
-        var file = File.new_for_uri( uri );
-        _editor.open_image( file.get_path() );
-        _zoom_btn.set_sensitive( true );
-        _export_btn.set_sensitive( true );
-        show();
-      } else {
-        stdout.printf( "Bad\n" );
-      }
+      _welcome.sensitive = true;
+      _zoom_btn.set_sensitive( true );
+      _export_btn.set_sensitive( true );
+      show();
     }
 
   }
