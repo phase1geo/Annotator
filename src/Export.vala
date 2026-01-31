@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2020 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2020-2026 (https://github.com/phase1geo/Annotator)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -33,7 +33,8 @@ public class Export {
   public string   label      { get; private set; }
   public string[] extensions { get; private set; }
 
-  /* Constructor */
+  //-------------------------------------------------------------
+  // Constructor
   public Export( Canvas canvas, string name, string label, string[] extensions ) {
     _settings = new HashMap<string,Widget>();
     this.canvas     = canvas;
@@ -44,12 +45,14 @@ public class Export {
 
   public signal void settings_changed();
 
-  /* Performs export to the given filename */
+  //-------------------------------------------------------------
+  // Performs export to the given filename
   public virtual bool export( string filename, Pixbuf source ) {
     return( false );
   }
 
-  /* Returns filename with the export extension */
+  //-------------------------------------------------------------
+  // Returns filename with the export extension
   public string repair_filename( string fname ) {
     foreach( string ext in extensions ) {
       if( fname.has_suffix( ext ) ) {
@@ -63,7 +66,8 @@ public class Export {
     return( _settings.size > 0 );
   }
 
-  /* Adds settings to the export dialog page */
+  //-------------------------------------------------------------
+  // Adds settings to the export dialog page
   public virtual void add_settings( Grid grid ) {}
 
   private Label make_help( string help ) {
@@ -170,13 +174,17 @@ public class Export {
     return( (int)scale.get_value() );
   }
 
-  /* Saves the settings */
+  //-------------------------------------------------------------
+  // Saves the settings
   public virtual void save_settings( Xml.Node* node ) {}
 
-  /* Loads the settings */
+  //-------------------------------------------------------------
+  // Loads the settings
   public virtual void load_settings( Xml.Node* node ) {}
 
-  /* Returns true if the given filename is targeted for this export type */
+  //-------------------------------------------------------------
+  // Returns true if the given filename is targeted for this
+  // export type
   public bool filename_matches( string fname, out string basename ) {
     foreach( string extension in extensions ) {
       if( fname.has_suffix( extension ) ) {
@@ -187,7 +195,8 @@ public class Export {
     return( false );
   }
 
-  /* Saves the state of this export */
+  //-------------------------------------------------------------
+  // Saves the state of this export
   public Xml.Node* save() {
     Xml.Node* node = new Xml.Node( null, "export" );
     node->set_prop( "name", name );
@@ -195,7 +204,8 @@ public class Export {
     return( node );
   }
 
-  /* Loads the state of this export */
+  //-------------------------------------------------------------
+  // Loads the state of this export
   public void load( Xml.Node* node ) {
     load_settings( node );
   }

@@ -1,5 +1,5 @@
-/*s
-* Copyright (c) 2020-2021 (https://github.com/phase1geo/Annotator)
+/*
+* Copyright (c) 2020-2026 (https://github.com/phase1geo/Annotator)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -190,7 +190,7 @@ public class CanvasItemLine : CanvasItem {
     var outline = Granite.contrasting_foreground_color( props.color );
     var sw      = props.stroke_width.width();
 
-    /* Draw the outline */
+    // Draw the outline
     if( props.outline ) {
       set_color( ctx, color, outline, (alpha / 2) );
       ctx.set_line_width( sw + 2 );

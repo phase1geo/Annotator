@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2020-2021 (https://github.com/phase1geo/Annotator)
+* Copyright (c) 2020-2026 (https://github.com/phase1geo/Annotator)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -36,25 +36,29 @@ public class UndoItemBoxChange : UndoItem {
 
   private Array<UndoItemChangeElem?> _list;
 
-  /* Default constructor */
+  //-------------------------------------------------------------
+  // Default constructor
   public UndoItemBoxChange( string name ) {
     base( name );
     _list = new Array<UndoItemChangeElem?>();
   }
 
-  /* Constructor */
+  //-------------------------------------------------------------
+  // Constructor
   public UndoItemBoxChange.with_item( string name, CanvasItem item ) {
     base( name );
     _list = new Array<UndoItemChangeElem?>();
     _list.append_val( UndoItemChangeElem( item ) );
   }
 
-  /* Adds a canvas item to this undo list */
+  //-------------------------------------------------------------
+  // Adds a canvas item to this undo list
   public void add( CanvasItem item ) {
     _list.append_val( UndoItemChangeElem( item ) );
   }
 
-  /* Causes the stored item to be put into the before state */
+  //-------------------------------------------------------------
+  // Causes the stored item to be put into the before state
   public override void undo( Canvas canvas ) {
     for( int i=0; i<_list.length; i++ ) {
       var elem = _list.index( i );
@@ -63,7 +67,8 @@ public class UndoItemBoxChange : UndoItem {
     canvas.queue_draw();
   }
 
-  /* Causes the stored item to be put into the after state */
+  //-------------------------------------------------------------
+  // Causes the stored item to be put into the after state
   public override void redo( Canvas canvas ) {
     for( int i=0; i<_list.length; i++ ) {
       var elem = _list.index( i );

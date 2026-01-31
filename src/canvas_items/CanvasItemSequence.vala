@@ -1,5 +1,5 @@
-/*s
-* Copyright (c) 2020-2021 (https://github.com/phase1geo/Annotator)
+/*
+* Copyright (c) 2020-2026 (https://github.com/phase1geo/Annotator)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -180,7 +180,7 @@ public class CanvasItemSequence : CanvasItem {
     var seq_color = Granite.contrasting_foreground_color( props.color );
     var alpha     = mode.alpha( props.alpha );
 
-    /* Draw the sequence circle */
+    // Draw the sequence circle
     Utils.set_context_color_with_alpha( ctx, props.color, alpha );
     ctx.arc( bbox.mid_x(), bbox.mid_y(), (bbox.width / 2), 0, (2 * Math.PI) );
     save_path( ctx, CanvasItemPathType.FILL );
@@ -190,7 +190,7 @@ public class CanvasItemSequence : CanvasItem {
     ctx.set_line_width( 1 );
     ctx.stroke();
 
-    /* Draw the sequence number inside the circle */
+    // Draw the sequence number inside the circle
     TextExtents extents;
     ctx.select_font_face( "Sans", Cairo.FontSlant.NORMAL, Cairo.FontWeight.BOLD );
     set_font_size( ctx, out extents );

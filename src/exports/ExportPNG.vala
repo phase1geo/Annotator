@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2018-2026 (https://github.com/phase1geo/Annotator)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -25,18 +25,20 @@ using Cairo;
 
 public class ExportPNG : Export {
 
-  /* Constructor */
+  //-------------------------------------------------------------
+  // Constructor
   public ExportPNG( Canvas canvas ) {
     base( canvas, "png", _( "PNG" ), { ".png" } );
   }
 
-  /* Default constructor */
+  //-------------------------------------------------------------
+  // Default constructor
   public override bool export( string filename, Pixbuf source ) {
 
-    /* Make sure that the filename is sane */
+    // Make sure that the filename is sane
     var fname = repair_filename( filename );
 
-    /* Create the drawing surface */
+    // Create the drawing surface
     var format = get_bool( "transparency" ) ? Format.ARGB32 : Format.RGB24;
     var surface = new ImageSurface( format, source.width, source.height );
     var context = new Context( surface );
@@ -60,19 +62,22 @@ public class ExportPNG : Export {
 
   }
 
-  /* Add the PNG settings */
+  //-------------------------------------------------------------
+  // Add the PNG settings
   public override void add_settings( Grid grid ) {
     add_setting_scale( "compression", grid, _( "Compression" ), null, 0, 9, 1, 5 );
     add_setting_bool( "transparency", grid, _( "Transparency"), null, false);
   }
 
-  /* Save the settings */
+  //-------------------------------------------------------------
+  // Save the settings
   public override void save_settings( Xml.Node* node ) {
     node->set_prop( "compression", get_scale( "compression" ).to_string() );
     node->set_prop( "transparency", get_bool( "transparency" ).to_string() );
   }
 
-  /* Load the settings */
+  //-------------------------------------------------------------
+  // Load the settings
   public override void load_settings( Xml.Node* node ) {
 
     var c = node->get_prop( "compression" );

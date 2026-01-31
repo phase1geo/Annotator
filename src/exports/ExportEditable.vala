@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2018-2026 (https://github.com/phase1geo/Annotator)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -35,10 +35,10 @@ public class ExportEditable : Export {
   // Main export function.
   public override bool export( string filename, Pixbuf source ) {
 
-    /* Make sure that the filename is sane */
+    // Make sure that the filename is sane
     var fname = repair_filename( filename );
 
-    /* Figure out if the user wants to include the images or not */
+    // Figure out if the user wants to include the images or not
     save( fname );
 
     return( true );
@@ -74,7 +74,7 @@ public class ExportEditable : Export {
     archive.set_format_pax_restricted();
     archive.open_filename( fname );
 
-    // Add the Minder file to the archive
+    // Add the annotations file to the archive
     archive_file( archive, annotations_file );
 
     // Add the images
@@ -102,7 +102,7 @@ public class ExportEditable : Export {
       var input_stream      = file.read();
       var data_input_stream = new DataInputStream( input_stream );
 
-      /* Add an entry to the archive */
+      // Add an entry to the archive
       var entry = new Archive.Entry();
       entry.set_pathname( file.get_basename() );
       entry.set_size( (Archive.int64_t)file_info.get_size() );
@@ -118,7 +118,7 @@ public class ExportEditable : Export {
         return( false );
       }
 
-      /* Add the actual content of the file */
+      // Add the actual content of the file
       size_t bytes_read;
       uint8[] buffer = new uint8[64];
       while( data_input_stream.read_all( buffer, out bytes_read ) ) {
@@ -203,7 +203,7 @@ public class ExportEditable : Export {
     extractor.set_options( flags );
     extractor.set_standard_lookup();
 
-    /* Open the portable Minder file for reading */
+    // Open the portable annotator file for reading
     if( archive.open_filename( filename, 16384 ) != Archive.Result.OK ) {
       return( false );
     }
@@ -212,17 +212,15 @@ public class ExportEditable : Export {
 
     while( archive.next_header( out entry ) == Archive.Result.OK ) {
 
-      /*
-       We will need to modify the entry pathname so the file is written to the
-       proper location.
-      */
+      // We will need to modify the entry pathname so the file is written to the
+      // proper location.
       if( entry.pathname() == "annotations.xml" ) {
         entry.set_pathname( GLib.Path.build_filename( temp_dir, entry.pathname() ) );
       } else {
         entry.set_pathname( GLib.Path.build_filename( temp_dir, "images", entry.pathname() ) );
       }
 
-      /* Read from the archive and write the files to disk */
+      // Read from the archive and write the files to disk
       if( extractor.write_header( entry ) != Archive.Result.OK ) {
         continue;
       }
@@ -237,13 +235,13 @@ public class ExportEditable : Export {
 
     }
 
-    /* Close the archive */
+    // Close the archive
     if( archive.close () != Archive.Result.OK) {
       error( "Error: %s (%d)", archive.error_string(), archive.errno() );
       return( false );
     }
 
-    /* Finally, load the XML file */
+    // Finally, load the XML file
     return( load_xml( GLib.Path.build_filename( temp_dir, "annotations.xml" ) ) );
 
   }

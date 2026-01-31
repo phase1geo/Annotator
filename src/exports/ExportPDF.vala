@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2018-2026 (https://github.com/phase1geo/Annotator)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -24,23 +24,25 @@ using Gdk;
 
 public class ExportPDF : Export {
 
-  /* Constructor */
+  //-------------------------------------------------------------
+  // Constructor
   public ExportPDF( Canvas canvas ) {
     base( canvas, "pdf", _( "PDF" ), { ".pdf" } );
   }
 
-  /* Default constructor */
+  //-------------------------------------------------------------
+  // Default constructor
   public override bool export( string filename, Pixbuf source ) {
 
-    /* Make sure that the filename is sane */
+    // Make sure that the filename is sane
     var fname = repair_filename( filename );
 
-    /* Get the width and height of the page */
+    // Get the width and height of the page
     double page_width  = 8.5 * 72;
     double page_height = 11  * 72;
     double margin      = 0.5 * 72;
 
-    /* Create the drawing surface */
+    // Create the drawing surface
     var surface = new PdfSurface( fname, page_width, page_height );
     var context = new Context( surface );
     var x       = 0;
@@ -48,19 +50,19 @@ public class ExportPDF : Export {
     var w       = source.width;
     var h       = source.height;
 
-    /* Calculate the required scaling factor to get the document to fit */
+    // Calculate the required scaling factor to get the document to fit
     double width  = (page_width  - (2 * margin)) / w;
     double height = (page_height - (2 * margin)) / h;
     double sf     = (width < height) ? width : height;
 
-    /* Scale and translate the image */
+    // Scale and translate the image
     context.scale( sf, sf );
     context.translate( ((0 - x) + (margin / sf)), ((0 - y) + (margin / sf)) );
 
-    /* Recreate the image */
+    // Recreate the image
     canvas.draw_all( context );
 
-    /* Draw the page to the PDF file */
+    // Draw the page to the PDF file
     context.show_page();
 
     return( true );

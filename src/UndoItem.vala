@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2020-2021 (https://github.com/phase1geo/Annotator)
+* Copyright (c) 2020-2026 (https://github.com/phase1geo/Annotator)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -26,24 +26,29 @@ public class UndoItem : GLib.Object {
   public string name { set; get; default = ""; }
   public int    id   { set; get; default = -1; }
 
-  /* Default constructor */
+  //-------------------------------------------------------------
+  // Default constructor
   public UndoItem( string name ) {
     this.name = name;
   }
 
-  /* Causes the stored item to be put into the before state */
+  //-------------------------------------------------------------
+  // Causes the stored item to be put into the before state
   public virtual void undo( Canvas canvas ) {}
 
-  /* Causes the stored item to be put into the after state */
+  //-------------------------------------------------------------
+  // Causes the stored item to be put into the after state
   public virtual void redo( Canvas canvas ) {}
 
-  /* Checks to see if the given undo item is "mergeable" with this one */
+  //-------------------------------------------------------------
+  // Checks to see if the given undo item is "mergeable" with this
+  // one
   public virtual bool matches( UndoItem item ) {
     return( false );
   }
 
   public virtual void replace_with_item( UndoItem item ) {
-    /* Do nothing by default */
+    // Do nothing by default
   }
 
   public virtual string to_string() {

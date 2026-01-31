@@ -1,6 +1,5 @@
-
 /*
-* Copyright (c) 2020-2021 (https://github.com/phase1geo/Annotator)
+* Copyright (c) 2020-2026 (https://github.com/phase1geo/Annotator)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -28,24 +27,29 @@ public class AnnotatorClipboard {
 
   const string ITEMS_MIME_TYPE = "x-application/annotator-items";
 
+  //-------------------------------------------------------------
+  // Returns the system's primary clipboard.
   public static Clipboard get_clipboard() {
     return( Display.get_default().get_clipboard() );
   }
 
-  /* Copies the selected text to the clipboard */
+  //-------------------------------------------------------------
+  // Copies the selected text to the clipboard
   public static void copy_text( string txt ) {
     var clipboard = Display.get_default().get_clipboard();
     clipboard.set_text( txt );
   }
 
-  /* Copies the selected image to the clipboard */
+  //-------------------------------------------------------------
+  // Copies the selected image to the clipboard
   public static void copy_image( Pixbuf img ) {
     var clipboard = Display.get_default().get_clipboard();
     var texture   = Texture.for_pixbuf( img );
     clipboard.set_texture( texture );
   }
 
-  /* Copies the selected items to the clipboard */
+  //-------------------------------------------------------------
+  // Copies the selected items to the clipboard
   public static void copy_items( string it ) {
     var bytes     = new Bytes( it.data );
     var provider  = new ContentProvider.for_bytes( "application/xml", bytes );
@@ -53,25 +57,29 @@ public class AnnotatorClipboard {
     clipboard.set_content( provider );
   }
 
-  /* Returns true if text is pasteable from the clipboard */
+  //-------------------------------------------------------------
+  // Returns true if text is pasteable from the clipboard
   public static bool text_pasteable() {
     var clipboard = Display.get_default().get_clipboard();
     return( clipboard.get_formats().contain_gtype( Type.STRING ) );
   }
 
-  /* Returns true if image is pastable from the clipboard */
+  //-------------------------------------------------------------
+  // Returns true if image is pastable from the clipboard
   public static bool image_pasteable() {
     var clipboard = Display.get_default().get_clipboard();
     return( clipboard.get_formats().contain_mime_type( "image/png" ) );
   }
 
-  /* Returns true if CanvasItems are pasteable from the clipboard */
+  //-------------------------------------------------------------
+  // Returns true if CanvasItems are pasteable from the clipboard
   public static bool items_pasteable() {
     var clipboard = Display.get_default().get_clipboard();
     return( clipboard.get_formats().contain_mime_type( "application/xml" ) );
   }
 
-  /* Called to paste current item in clipboard to the given Canvas */
+  //-------------------------------------------------------------
+  // Called to paste current item in clipboard to the given Canvas
   public static bool paste( Editor editor, bool image_only = false ) {
 
     var clipboard = Display.get_default().get_clipboard();

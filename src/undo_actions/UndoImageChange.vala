@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2020-2021 (https://github.com/phase1geo/Annotator)
+* Copyright (c) 2020-2026 (https://github.com/phase1geo/Annotator)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -26,20 +26,23 @@ public class UndoImageChange : UndoItem {
   private Pixbuf _old_pixbuf;
   private Pixbuf _new_pixbuf;
 
-  /* Default constructor */
+  //-------------------------------------------------------------
+  // Default constructor
   public UndoImageChange( string name, Pixbuf old_pixbuf, Pixbuf new_pixbuf ) {
     base( name );
     _old_pixbuf = old_pixbuf.copy();
     _new_pixbuf = new_pixbuf.copy();
   }
 
-  /* Causes the stored item to be put into the before state */
+  //-------------------------------------------------------------
+  // Causes the stored item to be put into the before state
   public override void undo( Canvas canvas ) {
     canvas.image.change_image( _old_pixbuf, null );
     canvas.queue_draw();
   }
 
-  /* Causes the stored item to be put into the after state */
+  //-------------------------------------------------------------
+  // Causes the stored item to be put into the after state
   public override void redo( Canvas canvas ) {
     canvas.image.change_image( _new_pixbuf, null );
     canvas.queue_draw();

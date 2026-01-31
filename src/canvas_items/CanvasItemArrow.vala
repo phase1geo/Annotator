@@ -1,5 +1,5 @@
-/*s
-* Copyright (c) 2020-2021 (https://github.com/phase1geo/Annotator)
+/*
+* Copyright (c) 2020-2026 (https://github.com/phase1geo/Annotator)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -116,7 +116,7 @@ public class CanvasItemArrow : CanvasItem {
     double pvw, pvh, ppw, pph;
     double svw, svh, spw, sph;
 
-    /* Calculate the peak and valley width and height */
+    // Calculate the peak and valley width and height
     calc_flight_point( _valley_a, _valley_c, true,  out pvw, out pvh );
     calc_flight_point( _peak_a,   _peak_c,   true,  out ppw, out pph );
     calc_flight_point( _valley_a, _valley_c, false, out svw, out svh );
@@ -180,7 +180,7 @@ public class CanvasItemArrow : CanvasItem {
     var width = 0.0, height = 0.0;
     var peak  = _peak_a == a;
 
-    /* Calculate _valley_c (length from head) */
+    // Calculate _valley_c (length from head)
     switch( _dir ) {
       case ArrowHeadDirection.UPPER_LEFT  :  width = point.x - bbox.x1();  height = point.y - bbox.y1();  break;
       case ArrowHeadDirection.LOWER_LEFT  :  width = point.x - bbox.x1();  height = bbox.y2() - point.y;  break;
@@ -193,7 +193,7 @@ public class CanvasItemArrow : CanvasItem {
     a = angle - Math.atan( bbox.height / bbox.width );
     c = height / Math.sin( angle );
 
-    /* Make sure that the arrow shape doesn't get weird */
+    // Make sure that the arrow shape doesn't get weird
     if( (_peak_a - _valley_a) < 0.25 ) {
       // a = peak ? (_valley_a + 0.25) : (_peak_a - 0.25);
     }

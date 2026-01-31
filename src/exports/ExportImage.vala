@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2018-2026 (https://github.com/phase1geo/Annotator)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -29,13 +29,14 @@ public class ExportImage : Export {
     base( canvas, type, label, extensions );
   }
   
-  /* Default constructor */
+  //-------------------------------------------------------------
+  // Default constructor
   public override bool export( string filename, Pixbuf source ) {
 
-    /* Make sure that the filename is sane */
+    // Make sure that the filename is sane
     var fname = repair_filename( filename );
 
-    /* Create the drawing surface */
+    // Create the drawing surface
     var surface = new ImageSurface( Format.RGB24, source.width, source.height );
     var context = new Context( surface );
     canvas.draw_all( context );
@@ -72,7 +73,8 @@ public class ExportImage : Export {
     add_setting_scale( "quality", grid, _( "Quality" ), null, 0, 100, 1, 90 );
   }
 
-  /* Save the settings */
+  //-------------------------------------------------------------
+  // Save the settings
   public override void save_settings( Xml.Node* node ) {
     switch( name ) {
       case "jpeg" :  save_settings_jpeg( node );  break;
@@ -84,7 +86,8 @@ public class ExportImage : Export {
     node->set_prop( "quality", value.to_string() );
   }
 
-  /* Load the settings */
+  //-------------------------------------------------------------
+  // Load the settings
   public override void load_settings( Xml.Node* node ) {
     switch( name ) {
       case "jpeg" :  load_settings_jpeg( node );  break;

@@ -1,5 +1,5 @@
-/*s
-* Copyright (c) 2020-2021 (https://github.com/phase1geo/Annotator)
+/*
+* Copyright (c) 2020-2026 (https://github.com/phase1geo/Annotator)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -55,7 +55,8 @@ public class CanvasItemMagnifier : CanvasItem {
     }
   }
 
-  /* Constructor */
+  //-------------------------------------------------------------
+  // Constructor
   public CanvasItemMagnifier( Canvas canvas, double zoom_factor, CanvasItemProperties props ) {
     base( CanvasItemType.MAGNIFIER, canvas, props );
     _image       = canvas.image;
@@ -67,14 +68,16 @@ public class CanvasItemMagnifier : CanvasItem {
     _sel_cursors[2] = new Cursor.from_name( "crosshair", null );
   }
 
-  /* Creates the item points */
+  //-------------------------------------------------------------
+  // Creates the item points
   private void create_points() {
     points.append_val( new CanvasPoint( CanvasPointType.CONTROL ) );  // Magnification
     points.append_val( new CanvasPoint( CanvasPointType.RESIZER0 ) );  // Resizer
     points.append_val( new CanvasPoint( CanvasPointType.CONTROL ) );  // Focus point
   }
 
-  /* Copies the contents of the given item to ourselves */
+  //-------------------------------------------------------------
+  // Copies the contents of the given item to ourselves
   public override void copy( CanvasItem item ) {
     base.copy( item );
     var mag_item = (CanvasItemMagnifier)item;
@@ -84,14 +87,16 @@ public class CanvasItemMagnifier : CanvasItem {
     }
   }
 
-  /* Returns a copy of this item */
+  //-------------------------------------------------------------
+  // Returns a copy of this item
   public override CanvasItem duplicate() {
     var item = new CanvasItemMagnifier( canvas, _zoom_factor, props );
     item.copy( this );
     return( item );
   }
 
-  /* Updates the selection boxes whenever the bounding box changes */
+  //-------------------------------------------------------------
+  // Updates the selection boxes whenever the bounding box changes
   protected override void bbox_changed() {
 
     var radius        = bbox.width / 2;
@@ -117,10 +122,10 @@ public class CanvasItemMagnifier : CanvasItem {
 
   }
 
-  /*
-   If the mode changes to RESIZING, capture the current zoom factor point in case it
-   is the one being moved so that we can recalculate the proper zoom_factor value.
-  */
+  //-------------------------------------------------------------
+  // If the mode changes to RESIZING, capture the current zoom
+  // factor point in case it is the one being moved so that we can
+  // recalculate the proper zoom_factor value.
   protected override void mode_changed() {
     if( mode == CanvasItemMode.RESIZING ) {
       _press0.copy( points.index( 0 ) );
@@ -129,7 +134,8 @@ public class CanvasItemMagnifier : CanvasItem {
     }
   }
 
-  /* Adjusts the bounding box */
+  //-------------------------------------------------------------
+  // Adjusts the bounding box
   public override void move_selector( int index, double diffx, double diffy, bool shift ) {
 
     var box = new CanvasRect.from_rect( bbox );
@@ -159,14 +165,17 @@ public class CanvasItemMagnifier : CanvasItem {
 
   }
 
-  /* Returns the zoom rectangle */
+  //-------------------------------------------------------------
+  // Returns the zoom rectangle
   private void update_zoom_rect() {
     var width  = bbox.width / _zoom_factor;
     var adjust = width / 2;
     _zoom_rect.copy_coords( (points.index( 2 ).x - adjust), (points.index( 2 ).y - adjust), width, width );
   }
 
-  /* Provides cursor to display when mouse cursor is hovering over the given selector */
+  //-------------------------------------------------------------
+  // Provides cursor to display when mouse cursor is hovering over
+  // the given selector
   public override Cursor? get_selector_cursor( int index ) {
     switch( index ) {
       case 0  :  return( _sel_cursors[0] );
@@ -193,14 +202,16 @@ public class CanvasItemMagnifier : CanvasItem {
     }
   }
 
-  /* Called to restore the given point */
+  //-------------------------------------------------------------
+  // Called to restore the given point
   public void set_focus_point( CanvasPoint point ) {
     points.index( 2 ).copy( point );
     _focus_moved = (point.x != bbox.mid_x()) || (point.y != bbox.mid_y());
     bbox_changed();
   }
 
-  /* Creates the contextual menu items */
+  //-------------------------------------------------------------
+  // Creates the contextual menu items
   protected override void add_contextual_menu_items( CanvasItemMenu menu ) {
 
     menu.add_scale( this, _( "Magnification:" ), min_zoom, max_zoom, step_zoom, _zoom_factor,
@@ -251,7 +262,9 @@ public class CanvasItemMagnifier : CanvasItem {
     base.load( node );
   }
 
-  /* Helper function that finds the two tangential points on a circle to a given point */
+  //-------------------------------------------------------------
+  // Helper function that finds the two tangential points on a
+  // circle to a given point
   private bool find_tangents( CanvasPoint center, double radius, CanvasPoint external, CanvasPoint pt1, CanvasPoint pt2 ) {
 
     var dx  = center.x - external.x;
@@ -267,7 +280,9 @@ public class CanvasItemMagnifier : CanvasItem {
 
   }
 
-  /* Helper function that finds the two points where two circles intersect */
+  //-------------------------------------------------------------
+  // Helper function that finds the two points where two circles
+  // intersect
   private bool find_circle_circle_intersections( CanvasPoint c0, double r0, CanvasPoint c1, double r1, CanvasPoint pt1, CanvasPoint pt2 ) {
 
     var dx   = c0.x - c1.x;
@@ -288,7 +303,8 @@ public class CanvasItemMagnifier : CanvasItem {
 
   }
 
-  /* Draw the focal point triangle */
+  //-------------------------------------------------------------
+  // Draw the focal point triangle
   private void draw_focal_point( Context ctx ) {
 
     if( !_focus_moved ) return;
@@ -299,7 +315,7 @@ public class CanvasItemMagnifier : CanvasItem {
 
     if( !find_tangents( center, (bbox.width / 2), points.index( 2 ), pt1, pt2 ) ) return;
 
-    /* Draw the triangle */
+    // Draw the triangle
     Utils.set_context_color_with_alpha( ctx, props.color, 0.2 );
     ctx.set_line_width( 1 );
     ctx.move_to( pt1.x, pt1.y );
@@ -308,14 +324,10 @@ public class CanvasItemMagnifier : CanvasItem {
     ctx.close_path();
     ctx.fill();
 
-    /*
-    Utils.set_context_color_with_alpha( ctx, _image.average_color, 0.5 );
-    ctx.stroke();
-    */
-
   }
 
-  /* Draw the rectangle */
+  //-------------------------------------------------------------
+  // Draw the rectangle
   public override void draw_item( Context ctx, CanvasItemColor color ) {
 
     var pixbuf = _image.get_pixbuf_for_rect( _zoom_rect );

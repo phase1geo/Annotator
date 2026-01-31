@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2020-2021 (https://github.com/phase1geo/Annotator)
+* Copyright (c) 2020-2026 (https://github.com/phase1geo/Annotator)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -25,7 +25,8 @@ public class UndoItemMagnifierFocus : UndoItem {
   private CanvasPoint         _old_point;
   private CanvasPoint         _new_point;
 
-  /* Default constructor */
+  //-------------------------------------------------------------
+  // Default constructor
   public UndoItemMagnifierFocus( CanvasItemMagnifier item, CanvasPoint old_point, CanvasPoint new_point ) {
     base( _( "magnifier focus change") );
     _item      = item;
@@ -33,13 +34,15 @@ public class UndoItemMagnifierFocus : UndoItem {
     _new_point = new CanvasPoint.from_point( new_point );
   }
 
-  /* Causes the stored item to be put into the before state */
+  //-------------------------------------------------------------
+  // Causes the stored item to be put into the before state
   public override void undo( Canvas canvas ) {
     _item.set_focus_point( _old_point );
     canvas.queue_draw();
   }
 
-  /* Causes the stored item to be put into the after state */
+  //-------------------------------------------------------------
+  // Causes the stored item to be put into the after state
   public override void redo( Canvas canvas ) {
     _item.set_focus_point( _new_point );
     canvas.queue_draw();

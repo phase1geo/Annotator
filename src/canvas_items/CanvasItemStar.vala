@@ -1,5 +1,5 @@
-/*s
-* Copyright (c) 2020-2021 (https://github.com/phase1geo/Annotator)
+/*
+* Copyright (c) 2020-2026 (https://github.com/phase1geo/Annotator)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -31,7 +31,8 @@ public class CanvasItemStar : CanvasItem {
 
   public int num_points { get; set; default = 5; }
 
-  /* Constructor */
+  //-------------------------------------------------------------
+  // Constructor
   public CanvasItemStar( Canvas canvas, bool fill, int point_num, double inner_radius, CanvasItemProperties props ) {
     base( (fill ? CanvasItemType.STAR_FILL : CanvasItemType.STAR_STROKE), canvas, props );
     num_points    = point_num;
@@ -40,7 +41,8 @@ public class CanvasItemStar : CanvasItem {
     _sel_cursor = new Cursor.from_name( "crosshair", null );
   }
 
-  /* Creates the item points */
+  //-------------------------------------------------------------
+  // Creates the item points
   private void create_points() {
     points.append_val( new CanvasPoint( CanvasPointType.RESIZER0 ) );  // Outer radius
     points.append_val( new CanvasPoint( CanvasPointType.RESIZER0 ) );  // Inner radius
@@ -50,7 +52,8 @@ public class CanvasItemStar : CanvasItem {
     points.append_val( new CanvasPoint( CanvasPointType.RESIZER0 ) );  // Lower right
   }
 
-  /* Copies the contents of the given item to ourselves */
+  //-------------------------------------------------------------
+  // Copies the contents of the given item to ourselves
   public override void copy( CanvasItem item ) {
     base.copy( item );
     var star = (CanvasItemStar)item;
@@ -58,7 +61,8 @@ public class CanvasItemStar : CanvasItem {
     num_points    = star.num_points;
   }
 
-  /* Returns a duplicate of this item */
+  //-------------------------------------------------------------
+  // Returns a duplicate of this item
   public override CanvasItem duplicate() {
     var item = new CanvasItemStar( canvas, (itype == CanvasItemType.STAR_FILL), num_points, _inner_radius, props );
     item.copy( this );
@@ -88,14 +92,15 @@ public class CanvasItemStar : CanvasItem {
 
   }
 
-  /* Updates the selection boxes whenever the bounding box changes */
+  //-------------------------------------------------------------
+  // Updates the selection boxes whenever the bounding box changes
   protected override void bbox_changed() {
 
-    /* Calculate the inner and outer control points */
+    // Calculate the inner and outer control points
     calculate_point( 0, points.index( 0 ) );
     calculate_point( ((num_points * 2) - 1), points.index( 1 ) );
 
-    /* Update the selector positions for changing the boundary */
+    // Update the selector positions for changing the boundary
     points.index( 2 ).copy_coords( bbox.x1(), bbox.y1() );
     points.index( 3 ).copy_coords( bbox.x2(), bbox.y1() );
     points.index( 4 ).copy_coords( bbox.x1(), bbox.y2() );
@@ -103,13 +108,14 @@ public class CanvasItemStar : CanvasItem {
 
   }
 
-  /* Adjusts the bounding box */
+  //-------------------------------------------------------------
+  // Adjusts the bounding box
   public override void move_selector( int index, double diffx, double diffy, bool shift ) {
 
     var box          = new CanvasRect.from_rect( bbox );
     var inner_radius = _inner_radius;
 
-    /* If we are moving the selector representing the outer radius, update the box */
+    // If we are moving the selector representing the outer radius, update the box
     switch( index ) {
       case 0 :  inner_radius -= diffy;  break;
       case 1 :  box.x += diffy;  box.y += diffy;  box.width -= (diffy * 2);  box.height -= (diffy * 2);  break;
@@ -119,16 +125,14 @@ public class CanvasItemStar : CanvasItem {
       case 5 :                                    box.width += diffy;        box.height += diffy;  break;
     }
 
-    /* Adjust the inner radius if the bbox resizers were moved */
+    // Adjust the inner radius if the bbox resizers were moved
     if( index >= 2 ) {
       var inner_ratio = inner_radius / (box.height * 0.5);
       inner_radius = (box.height / 2) * inner_ratio;
     }
 
-    /*
-     If the inner radius value is greater than zero and the inner radius is less than
-     the outer radius.
-    */
+    // If the inner radius value is greater than zero and the inner radius is less than
+    // the outer radius.
     if( (inner_radius > 5) && ((box.height / 2) > inner_radius) ) {
       _inner_radius = inner_radius;
       bbox          = box;
@@ -136,7 +140,9 @@ public class CanvasItemStar : CanvasItem {
 
   }
 
-  /* Provides cursor to display when mouse cursor is hovering over the given selector */
+  //-------------------------------------------------------------
+  // Provides cursor to display when mouse cursor is hovering over
+  // the given selector
   public override Cursor? get_selector_cursor( int index ) {
     return( _sel_cursor );
   }

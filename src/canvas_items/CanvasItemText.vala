@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2020-2021 (https://github.com/phase1geo/Annotator)
+* Copyright (c) 2020-2026 (https://github.com/phase1geo/Annotator)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -28,11 +28,11 @@ public class CanvasItemText : CanvasItem {
 
   private const double _padding = 10;
 
-  /* Member variables */
+  // Member variables
   private FormattedText  _text;
   private bool           _edit         = false;
-  private int            _cursor       = 0;   /* Location of the cursor when editing */
-  private int            _column       = 0;   /* Character column to use when moving vertically */
+  private int            _cursor       = 0;   // Location of the cursor when editing
+  private int            _column       = 0;   // Character column to use when moving vertically
   private Pango.Layout   _pango_layout = null;
   private Pango.Layout   _line_layout  = null;
   private int            _selstart     = 0;
@@ -46,11 +46,11 @@ public class CanvasItemText : CanvasItem {
   private int            _font_size    = 16;
   private Cursor         _sel_cursor;
 
-  /* Signals */
+  // Signals
   public signal void select_mode( bool mode );
   public signal void cursor_changed();
 
-  /* Properties */
+  // Properties
   public FormattedText text {
     get {
       return( _text );
@@ -98,7 +98,8 @@ public class CanvasItemText : CanvasItem {
     }
   }
 
-  /* Default constructor */
+  //-------------------------------------------------------------
+  // Default constructor
   public CanvasItemText( Canvas canvas, CanvasItemProperties props ) {
     base( CanvasItemType.TEXT, canvas, props );
     initialize( canvas );
@@ -106,7 +107,8 @@ public class CanvasItemText : CanvasItem {
     _sel_cursor = new Cursor.from_name( "e-resize", null );
   }
 
-  /* Initializes this contents of this item */
+  //-------------------------------------------------------------
+  // Initializes this contents of this item
   private void initialize( Canvas canvas ) {
     _text = new FormattedText.with_text( _( "Text" ) );
     _text.changed.connect( text_changed );
@@ -119,18 +121,21 @@ public class CanvasItemText : CanvasItem {
     props.changed.connect( update_font );
   }
 
-  /* Creates the items points */
+  //-------------------------------------------------------------
+  // Creates the items points
   private void create_points() {
     points.append_val( new CanvasPoint( CanvasPointType.RESIZER0 ) );   // Drag handle to right of text
   }
 
-  /* Allocates and initializes the font description for the layouts */
+  //-------------------------------------------------------------
+  // Allocates and initializes the font description for the layouts
   private void initialize_font_description() {
     _line_layout.set_font_description( props.font );
     _pango_layout.set_font_description( props.font );
   }
 
-  /* Copies an existing CanvasText to this CanvasText */
+  //-------------------------------------------------------------
+  // Copies an existing CanvasText to this CanvasText
   public override void copy( CanvasItem item ) {
     base.copy( item );
     var ct = (CanvasItemText)item;
@@ -145,24 +150,25 @@ public class CanvasItemText : CanvasItem {
     }
   }
 
-  /* Returns a copy of this item */
+  //-------------------------------------------------------------
+  // Returns a copy of this item
   public override CanvasItem duplicate() {
     var item = new CanvasItemText( canvas, props );
     item.copy( this );
     return( item );
   }
 
-  /* If we start to resize, capture the original width */
+  //-------------------------------------------------------------
+  // If we start to resize, capture the original width
   public override void mode_changed() {
     if( mode == CanvasItemMode.RESIZING ) {
       _orig_width = max_width;
     }
   }
 
-  /*
-   Called whenever the bbox for the text changes size.  Updates the drawable
-   selectors
-  */
+  //-------------------------------------------------------------
+  // Called whenever the bbox for the text changes size.  Updates
+  // the drawable selectors
   protected override void bbox_changed() {
     var pad        = _padding;
     var sel_width  = (selector_width  / 2);
@@ -182,24 +188,28 @@ public class CanvasItemText : CanvasItem {
     return( new UndoItemTextResize( this, _orig_width, max_width ) );
   }
 
-  /* Returns the font description set for this text */
+  //-------------------------------------------------------------
+  // Returns the font description set for this text
   public FontDescription get_font_fd() {
     return( _line_layout.get_font_description() );
   }
 
-  /* Sets the font size to the given size */
+  //-------------------------------------------------------------
+  // Sets the font size to the given size
   public void update_font() {
     _line_layout.set_font_description( props.font );
     _pango_layout.set_font_description( props.font );
     update_size();
   }
 
-  /* Returns true if the text is currently wrapped */
+  //-------------------------------------------------------------
+  // Returns true if the text is currently wrapped
   public bool is_wrapped() {
     return( _pango_layout.is_wrapped() );
   }
 
-  /* Returns true if text is currently selected */
+  //-------------------------------------------------------------
+  // Returns true if text is currently selected
   public bool is_selected() {
     return( _selstart != _selend );
   }
@@ -899,24 +909,24 @@ public class CanvasItemText : CanvasItem {
       stdout.printf( "In change_selection, msg: %s\n", msg );
     }
 
-    /* Get the selection state prior to changing it */
+    // Get the selection state prior to changing it
     var old_selected = (_selstart != _selend);
 
-    /* Update the selection range */
+    // Update the selection range
     _selstart = selstart ?? _selstart;
     _selend   = selend   ?? _selend;
 
-    /* Get the selection state after the change */
+    // Get the selection state after the change
     var new_selected = (_selstart != _selend);
 
-    /* Update the selection tag */
+    // Update the selection tag
     if( new_selected ) {
       _text.replace_tag( FormatTag.SELECT, text.text.index_of_nth_char( _selstart ), text.text.index_of_nth_char( _selend ) );
     } else if( old_selected ) {
       _text.remove_tag_all( FormatTag.SELECT );
     }
 
-    /* Alert anyone listening if the selection mode changed */
+    // Alert anyone listening if the selection mode changed
     if( old_selected && !new_selected ) {
       select_mode( false );
     } else if( !old_selected && new_selected ) {
@@ -977,19 +987,19 @@ public class CanvasItemText : CanvasItem {
     var fd     = _pango_layout.get_font_description();
     var alpha  = mode.alpha( props.alpha );
 
-    /* Output the text */
+    // Output the text
     ctx.move_to( bbox.x, bbox.y );
     Utils.set_context_color_with_alpha( ctx, props.color, alpha );
     Pango.cairo_show_layout( ctx, layout );
     ctx.new_path();
 
-    /* Draw the text outline */
+    // Draw the text outline
     var x = bbox.x - _padding;
     var y = bbox.y - _padding;
     var w = bbox.width + (_padding * 2);
     var h = bbox.height + (_padding * 2);
 
-    /* Draw the selection box, if needed */
+    // Draw the selection box, if needed
     if( (mode == CanvasItemMode.SELECTED) || (mode == CanvasItemMode.EDITING) ) {
 
       var dash = CanvasItemDashPattern.LONG;
@@ -1012,7 +1022,7 @@ public class CanvasItemText : CanvasItem {
 
     }
 
-    /* Draw the insertion cursor if we are in the 'editable' state */
+    // Draw the insertion cursor if we are in the 'editable' state
     if( edit ) {
       var cpos = text.text.index_of_nth_char( _cursor );
       var rect = layout.index_to_pos( cpos );

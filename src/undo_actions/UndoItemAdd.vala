@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2020-2021 (https://github.com/phase1geo/Annotator)
+* Copyright (c) 2020-2026 (https://github.com/phase1geo/Annotator)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -24,20 +24,23 @@ public class UndoItemAdd : UndoItem {
   private CanvasItem _item;
   private int        _position;
 
-  /* Default constructor */
+  //-------------------------------------------------------------
+  // Default constructor
   public UndoItemAdd( CanvasItem item, int position ) {
     base( _( "item add" ) );
     _item     = item;
     _position = position;
   }
 
-  /* Causes the stored item to be put into the before state */
+  //-------------------------------------------------------------
+  // Causes the stored item to be put into the before state
   public override void undo( Canvas canvas ) {
     canvas.items.remove_item( _item );
     canvas.queue_draw();
   }
 
-  /* Causes the stored item to be put into the after state */
+  //-------------------------------------------------------------
+  // Causes the stored item to be put into the after state
   public override void redo( Canvas canvas ) {
     canvas.items.add_item( _item, _position, false, false );
     canvas.queue_draw();

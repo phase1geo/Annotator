@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2020-2021 (https://github.com/phase1geo/Annotator)
+* Copyright (c) 2020-2026 (https://github.com/phase1geo/Annotator)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -26,32 +26,38 @@ public class CurrentItem {
   private CanvasItemType _canvas = CanvasItemType.NONE;
   private CustomItem?    _custom = null;
 
-  /* Default constructor */
+  //-------------------------------------------------------------
+  // Default constructor
   public CurrentItem() {}
 
-  /* Constructor */
+  //-------------------------------------------------------------
+  // Constructor
   public CurrentItem.with_canvas_item( CanvasItemType type ) {
     _canvas = type;
   }
 
-  /* Constructor */
+  //-------------------------------------------------------------
+  // Constructor
   public CurrentItem.with_custom_item( CustomItem item ) {
     _custom = item;
   }
 
-  /* Sets the current item to a canvas item */
+  //-------------------------------------------------------------
+  // Sets the current item to a canvas item
   public void canvas_item( CanvasItemType type ) {
     _canvas = type;
     _custom = null;
   }
 
-  /* Sets the current item to a custom item */
+  //-------------------------------------------------------------
+  // Sets the current item to a custom item
   public void custom_item( CustomItem item ) {
     _canvas = CanvasItemType.NONE;
     _custom = item;
   }
 
-  /* Adds the current item to the canvas */
+  //-------------------------------------------------------------
+  // Adds the current item to the canvas
   public void add_item( CanvasItems items ) {
     if( _canvas != CanvasItemType.NONE ) {
       items.add_shape_item( _canvas );

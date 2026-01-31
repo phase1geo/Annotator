@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2020 (https://github.com/phase1geo/Annotator)
+* Copyright (c) 2020-2026 (https://github.com/phase1geo/Annotator)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -26,12 +26,13 @@ public class Exports {
   public ExportClipboard clipboard { get; private set; }
   public ExportPrint     printer   { get; private set; }
 
-  /* Constructor */
+  //-------------------------------------------------------------
+  // Constructor
   public Exports( Canvas canvas ) {
 
     _exports = new Array<Export>();
 
-    /* Add the exports */
+    // Add the exports
     add( new ExportImage( canvas, "jpeg", _( "JPEG" ), { ".jpg", ",.jpeg" } ) );
     add( new ExportImage( canvas, "tiff", _( "TIFF" ), { ".tiff" } ) );
     add( new ExportImage( canvas, "bmp",  _( "BMP" ),  { ".bmp" } ) );
@@ -53,20 +54,21 @@ public class Exports {
     _exports.append_val( export );
   }
 
-  /* Returns the number of stored exports */
+  //-------------------------------------------------------------
+  // Returns the number of stored exports
   public int length() {
     return( (int)_exports.length );
   }
 
-  /* Returns the export at the given index */
+  //-------------------------------------------------------------
+  // Returns the export at the given index
   public Export index( int idx ) {
     return( _exports.index( idx ) );
   }
 
-  /*
-   Returns the export as determined by the given name; otherwise, returns null
-   if name does not refer to a valid export type.
-  */
+  //-------------------------------------------------------------
+  // Returns the export as determined by the given name; otherwise,
+  // returns null if name does not refer to a valid export type.
   public Export? get_by_name( string name ) {
     for( int i=0; i<_exports.length; i++ ) {
       if( _exports.index( i ).name == name ) {
@@ -76,7 +78,9 @@ public class Exports {
     return( null );
   }
 
-  /* Gets the save filename and creates the parent directory if it doesn't exist */
+  //-------------------------------------------------------------
+  // Gets the save filename and creates the parent directory if
+  // it doesn't exist
   private string? settings_file( bool make_dir ) {
     var dir = GLib.Path.build_filename( Environment.get_user_data_dir(), "annotator" );
     if( make_dir && !Utils.create_dir( dir ) ) {
@@ -85,7 +89,8 @@ public class Exports {
     return( GLib.Path.build_filename( dir, "exports.xml" ) );
   }
 
-  /* Saves the settings to the save file */
+  //-------------------------------------------------------------
+  // Saves the settings to the save file
   public void save() {
     var sfile = settings_file( true );
     if( sfile == null ) {
@@ -102,7 +107,8 @@ public class Exports {
     delete doc;
   }
 
-  /* Loads the settings from the save file */
+  //-------------------------------------------------------------
+  // Loads the settings from the save file
   public void load() {
     var sfile = settings_file( false );
     if( (sfile == null) || !FileUtils.test( sfile, FileTest.EXISTS ) ) return;

@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2020-2021 (https://github.com/phase1geo/Annotator)
+* Copyright (c) 2020-2026 (https://github.com/phase1geo/Annotator)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -32,18 +32,21 @@ public class UndoItemDelete : UndoItem {
 
   private Array<UndoItemDeleteElem?> _list;
 
-  /* Default constructor */
+  //-------------------------------------------------------------
+  // Default constructor
   public UndoItemDelete() {
     base( _( "item delete" ) );
     _list = new Array<UndoItemDeleteElem?>();
   }
 
-  /* Adds a canvas item to this undo list */
+  //-------------------------------------------------------------
+  // Adds a canvas item to this undo list
   public void add( CanvasItem item, int position ) {
     _list.append_val( UndoItemDeleteElem( item, position ) );
   }
 
-  /* Causes the stored item to be put into the before state */
+  //-------------------------------------------------------------
+  // Causes the stored item to be put into the before state
   public override void undo( Canvas canvas ) {
     for( int i=0; i<_list.length; i++ ) {
       var elem = _list.index( i );
@@ -52,7 +55,8 @@ public class UndoItemDelete : UndoItem {
     canvas.queue_draw();
   }
 
-  /* Causes the stored item to be put into the after state */
+  //-------------------------------------------------------------
+  // Causes the stored item to be put into the after state
   public override void redo( Canvas canvas ) {
     for( int i=0; i<_list.length; i++ ) {
       canvas.items.remove_item( _list.index( i ).item );

@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2020-2021 (https://github.com/phase1geo/Annotator)
+* Copyright (c) 2020-2026 (https://github.com/phase1geo/Annotator)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -25,7 +25,8 @@ public class UndoItemMagnifierZoom : UndoItem {
   private double              _old_zoom;
   private double              _new_zoom;
 
-  /* Default constructor */
+  //-------------------------------------------------------------
+  // Default constructor
   public UndoItemMagnifierZoom( CanvasItemMagnifier item, double old_zoom, double new_zoom ) {
     base( _( "magnifier zoom") );
     _item     = item;
@@ -33,13 +34,15 @@ public class UndoItemMagnifierZoom : UndoItem {
     _new_zoom = new_zoom;
   }
 
-  /* Causes the stored item to be put into the before state */
+  //-------------------------------------------------------------
+  // Causes the stored item to be put into the before state
   public override void undo( Canvas canvas ) {
     _item.zoom_factor = _old_zoom;
     canvas.queue_draw();
   }
 
-  /* Causes the stored item to be put into the after state */
+  //-------------------------------------------------------------
+  // Causes the stored item to be put into the after state
   public override void redo( Canvas canvas ) {
     _item.zoom_factor = _new_zoom;
     canvas.queue_draw();

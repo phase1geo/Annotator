@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2018-2026 (https://github.com/phase1geo/Annotator)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -28,12 +28,14 @@ public class ExportPrint : Object {
   private Canvas _canvas;
   private Pixbuf _source;
 
-  /* Default constructor */
+  //-------------------------------------------------------------
+  // Default constructor
   public ExportPrint( Canvas canvas ) {
     _canvas = canvas;
   }
 
-  /* Perform print operation */
+  //-------------------------------------------------------------
+  // Perform print operation
   public void export( Pixbuf source ) {
 
     _source = source;
@@ -44,7 +46,7 @@ public class ExportPrint : Object {
     op.set_n_pages( 1 );
     op.set_unit( Unit.MM );
 
-    /* Connect to the draw_page signal */
+    // Connect to the draw_page signal
     op.draw_page.connect( draw_page );
 
     try {
@@ -55,19 +57,20 @@ public class ExportPrint : Object {
           // Save the settings to a file - settings.to_file( fname );
           break;
         case PrintOperationResult.ERROR :
-          /* TBD - Display the print error */
+          // TBD - Display the print error
           break;
         case PrintOperationResult.IN_PROGRESS :
-          /* TBD */
+          // TBD 
           break;
       }
     } catch( GLib.Error e ) {
-      /* TBD */
+      // TBD
     }
 
   }
 
-  /* Draws the page */
+  //-------------------------------------------------------------
+  // Draws the page
   public void draw_page( PrintOperation op, PrintContext context, int page_nr ) {
 
     var ctx         = context.get_cairo_context();
@@ -76,22 +79,22 @@ public class ExportPrint : Object {
     var margin_x    = 0.5 * context.get_dpi_x();
     var margin_y    = 0.5 * context.get_dpi_y();
 
-    /* Get the rectangle holding the entire document */
+    // Get the rectangle holding the entire document
     var x = 0;
     var y = 0;
     var w = _source.width;
     var h = _source.height;
 
-    /* Calculate the required scaling factor to get the document to fit */
+    // Calculate the required scaling factor to get the document to fit
     double width  = (page_width  - (2 * margin_x)) / w;
     double height = (page_height - (2 * margin_y)) / h;
     double sf     = (width < height) ? width : height;
 
-    /* Scale and translate the image */
+    // Scale and translate the image
     ctx.scale( sf, sf );
     ctx.translate( ((0 - x) + margin_x), ((0 - y) + margin_y) );
 
-    /* Set the source */
+    // Set the source
     _canvas.draw_all( ctx );
 
   }

@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2020-2021 (https://github.com/phase1geo/Annotator)
+* Copyright (c) 2020-2026 (https://github.com/phase1geo/Annotator)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -26,7 +26,8 @@ public class UndoTextTagAdd : UndoTextItem {
   public FormatTag tag   { private set; get; }
   public string?   extra { private set; get; }
 
-  /* Default constructor */
+  //-------------------------------------------------------------
+  // Default constructor
   public UndoTextTagAdd( int start, int end, FormatTag tag, string? extra, int cursor ) {
     base( _( "format tag add" ), UndoTextOp.TAGADD, cursor, cursor );
     this.start = start;
@@ -35,21 +36,24 @@ public class UndoTextTagAdd : UndoTextItem {
     this.extra = extra;
   }
 
-  /* Causes the stored item to be put into the before state */
+  //-------------------------------------------------------------
+  // Causes the stored item to be put into the before state
   public override void undo_text( Canvas canvas, CanvasItemText ct ) {
     ct.text.remove_tag( tag, start, end );
     ct.set_cursor_only( start_cursor );
     canvas.queue_draw();
   }
 
-  /* Causes the stored item to be put into the after state */
+  //-------------------------------------------------------------
+  // Causes the stored item to be put into the after state
   public override void redo_text( Canvas canvas, CanvasItemText ct ) {
     ct.text.add_tag( tag, start, end, extra );
     ct.set_cursor_only( end_cursor );
     canvas.queue_draw();
   }
 
-  /* Merges the given item with the current one */
+  //-------------------------------------------------------------
+  // Merges the given item with the current one
   public override bool merge( CanvasItemText ct, UndoTextItem item ) {
     return( false );
   }

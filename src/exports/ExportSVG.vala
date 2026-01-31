@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2018-2026 (https://github.com/phase1geo/Annotator)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -24,33 +24,35 @@ using Gdk;
 
 public class ExportSVG : Export {
 
-  /* Constructor */
+  //-------------------------------------------------------------
+  // Constructor
   public ExportSVG( Canvas canvas ) {
     base( canvas, "svg", _( "SVG" ), { ".svg" } );
   }
 
-  /* Default constructor */
+  //-------------------------------------------------------------
+  // Default constructor
   public override bool export( string filename, Pixbuf source ) {
 
-    /* Make sure that the filename is sane */
+    // Make sure that the filename is sane
     var fname = repair_filename( filename );
 
-    /* Get the rectangle holding the entire document */
+    // Get the rectangle holding the entire document
     var x = 0;
     var y = 0;
     var w = source.width;
     var h = source.height;
 
-    /* Create the drawing surface */
+    // Create the drawing surface
     var surface = new SvgSurface( fname, w, h );
     var context = new Context( surface );
 
     surface.restrict_to_version( SvgVersion.VERSION_1_1 );
 
-    /* Recreate the image */
+    // Recreate the image
     canvas.draw_all( context );
 
-    /* Draw the page to the PDF file */
+    // Draw the page to the PDF file
     context.show_page();
 
     return( true );

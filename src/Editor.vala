@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2020-2021 (https://github.com/phase1geo/Annotator)
+* Copyright (c) 2020-2026 (https://github.com/phase1geo/Annotator)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -36,12 +36,13 @@ public class Editor : Box {
 
   public signal void image_loaded();
 
-  /* Constructor */
+  //-------------------------------------------------------------
+  // Constructor
   public Editor( MainWindow win ) {
 
     Object( orientation: Orientation.VERTICAL, spacing: 0, can_focus: true );
 
-    /* Create the canvas */
+    // Create the canvas
     canvas = new Canvas( win, this ) {
       halign = Align.CENTER,
       valign = Align.CENTER
@@ -64,7 +65,7 @@ public class Editor : Box {
     ((Viewport)_sw.child).scroll_to_focus = false;
     _sw.get_style_context().add_class( Granite.STYLE_CLASS_CHECKERBOARD );
 
-    /* Create the toolbar */
+    // Create the toolbar
     var toolbar = new CanvasToolbar( canvas ) {
       halign = Align.CENTER,
       hexpand = true
@@ -97,7 +98,7 @@ public class Editor : Box {
     };
     box.append( toolbar );
 
-    /* Pack the box */
+    // Pack the box
     append( box );
     append( sep );
     append( _sw );

@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2020-2021 (https://github.com/phase1geo/Annotator)
+* Copyright (c) 2020-2026 (https://github.com/phase1geo/Annotator)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -25,7 +25,8 @@ public class UndoItemStarPoints : UndoItem {
   private int            _old_num;
   private int            _new_num;
 
-  /* Default constructor */
+  //-------------------------------------------------------------
+  // Default constructor
   public UndoItemStarPoints( CanvasItemStar item, int old_num, int new_num ) {
     base( _( "start points change") );
     _item    = item;
@@ -33,13 +34,15 @@ public class UndoItemStarPoints : UndoItem {
     _new_num = new_num;
   }
 
-  /* Causes the stored item to be put into the before state */
+  //-------------------------------------------------------------
+  // Causes the stored item to be put into the before state
   public override void undo( Canvas canvas ) {
     _item.num_points = _old_num;
     canvas.queue_draw();
   }
 
-  /* Causes the stored item to be put into the after state */
+  //-------------------------------------------------------------
+  // Causes the stored item to be put into the after state
   public override void redo( Canvas canvas ) {
     _item.num_points = _new_num;
     canvas.queue_draw();

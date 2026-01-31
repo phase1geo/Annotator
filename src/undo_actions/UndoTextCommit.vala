@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2020-2021 (https://github.com/phase1geo/Annotator)
+* Copyright (c) 2020-2026 (https://github.com/phase1geo/Annotator)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -27,7 +27,8 @@ public class UndoTextCommit : UndoItem {
   private CanvasItemText _old_item;
   private CanvasItemText _new_item;
 
-  /* Constructor for a text item commit */
+  //-------------------------------------------------------------
+  // Constructor for a text item commit
   public UndoTextCommit( Canvas canvas, CanvasItemText item, CanvasItemText orig_item ) {
     base( _( "text changed" ) );
     var props = new CanvasItemProperties();
@@ -38,13 +39,15 @@ public class UndoTextCommit : UndoItem {
     _old_item.copy( orig_item );
   }
 
-  /* Undoes a node name change */
+  //-------------------------------------------------------------
+  // Undoes a node name change
   public override void undo( Canvas canvas ) {
     _item.copy( _old_item );
     canvas.queue_draw();
   }
 
-  /* Redoes a node name change */
+  //-------------------------------------------------------------
+  // Redoes a node name change
   public override void redo( Canvas canvas ) {
     _item.copy( _new_item );
     canvas.queue_draw();

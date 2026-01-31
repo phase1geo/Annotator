@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2020-2021 (https://github.com/phase1geo/Annotator)
+* Copyright (c) 2020-2026 (https://github.com/phase1geo/Annotator)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -26,20 +26,23 @@ public class UndoImageResize : UndoItem {
   private CanvasImageInfo _old_info;
   private CanvasImageInfo _new_info;
 
-  /* Default constructor */
+  //-------------------------------------------------------------
+  // Default constructor
   public UndoImageResize( CanvasImageInfo old_info, CanvasImageInfo new_info ) {
     base( _( "image resize" ) );
     _old_info = new CanvasImageInfo.from_info( old_info );
     _new_info = new CanvasImageInfo.from_info( new_info );
   }
 
-  /* Causes the stored item to be put into the before state */
+  //-------------------------------------------------------------
+  // Causes the stored item to be put into the before state
   public override void undo( Canvas canvas ) {
     canvas.image.do_resize( _new_info, _old_info );
     canvas.queue_draw();
   }
 
-  /* Causes the stored item to be put into the after state */
+  //-------------------------------------------------------------
+  // Causes the stored item to be put into the after state
   public override void redo( Canvas canvas ) {
     canvas.image.do_resize( _old_info, _new_info );
     canvas.queue_draw();

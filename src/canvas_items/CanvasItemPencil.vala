@@ -1,5 +1,5 @@
-/*s
-* Copyright (c) 2020-2021 (https://github.com/phase1geo/Annotator)
+/*
+* Copyright (c) 2020-2026 (https://github.com/phase1geo/Annotator)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -28,20 +28,23 @@ public class CanvasItemPencil : CanvasItem {
   private Array<CanvasPoint> _edit_points = new Array<CanvasPoint>();
   private Cursor             _sel_cursor;
 
-  /* Constructor */
+  //-------------------------------------------------------------
+  // Constructor
   public CanvasItemPencil( Canvas canvas, CanvasItemProperties props ) {
     base( CanvasItemType.PENCIL, canvas, props );
     create_points();
     _sel_cursor = new Cursor.from_name( "grab", null );
   }
 
-  /* Creates the selection points */
+  //-------------------------------------------------------------
+  // Creates the selection points
   private void create_points() {
     points.append_val( new CanvasPoint( CanvasPointType.RESIZER0 ) );  // Start
     points.append_val( new CanvasPoint( CanvasPointType.RESIZER0 ) );  // End
   }
 
-  /* Copies the given arrow item properties to this one */
+  //-------------------------------------------------------------
+  // Copies the given arrow item properties to this one
   public override void copy( CanvasItem item ) {
     var cast_item = (item as CanvasItemPencil);
     if( cast_item == null ) return;
@@ -53,19 +56,22 @@ public class CanvasItemPencil : CanvasItem {
     }
   }
 
-  /* Returns a copy of this item */
+  //-------------------------------------------------------------
+  // Returns a copy of this item
   public override CanvasItem duplicate() {
     var item = new CanvasItemPencil( canvas, props );
     item.copy( this );
     return( item );
   }
 
-  /* If a selector is moved, move the entire thing */
+  //-------------------------------------------------------------
+  // If a selector is moved, move the entire thing
   public override void move_selector( int index, double diffx, double diffy, bool shift ) {
     move_item( diffx, diffy );
   }
 
-  /* Move the item */
+  //-------------------------------------------------------------
+  // Move the item
   public override void move_item( double diffx, double diffy, bool moving = true ) {
     for( int i=0; i<_edit_points.length; i++ ) {
       _edit_points.index( i ).adjust( diffx, diffy );
@@ -120,7 +126,7 @@ public class CanvasItemPencil : CanvasItem {
     var outline = Granite.contrasting_foreground_color( props.color );
     var sw      = props.stroke_width.width();
 
-    /* Draw the outline */
+    // Draw the outline
     if( props.outline ) {
       set_color( ctx, color, outline, (alpha / 2) );
       ctx.set_line_width( sw + 2 );

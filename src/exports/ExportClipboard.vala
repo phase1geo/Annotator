@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018 (https://github.com/phase1geo/Minder)
+* Copyright (c) 2018-2026 (https://github.com/phase1geo/Annotator)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -27,22 +27,23 @@ public class ExportClipboard : Object {
 
   private Canvas _canvas;
 
-  /* Default constructor */
+  //-------------------------------------------------------------
+  // Default constructor
   public ExportClipboard( Canvas canvas ) {
     _canvas = canvas;
   }
 
   public void export( Pixbuf source ) {
 
-    /* Create the drawing surface */
+    // Create the drawing surface
     var surface = new ImageSurface( Format.RGB24, source.width, source.height );
     var context = new Context( surface );
     _canvas.draw_all( context );
 
-    /* Get the pixbuf */
+    // Get the pixbuf
     var pixbuf = pixbuf_get_from_surface( surface, 0, 0, surface.get_width(), surface.get_height() );
 
-    /* Copy the image to the clipboard */
+    // Copy the image to the clipboard
     AnnotatorClipboard.copy_image( pixbuf );
 
   }

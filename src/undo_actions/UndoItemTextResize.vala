@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2020-2021 (https://github.com/phase1geo/Annotator)
+* Copyright (c) 2020-2026 (https://github.com/phase1geo/Annotator)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -25,7 +25,8 @@ public class UndoItemTextResize : UndoItem {
   private double         _old_width;
   private double         _new_width;
 
-  /* Default constructor */
+  //-------------------------------------------------------------
+  // Default constructor
   public UndoItemTextResize( CanvasItemText item, double old_width, double new_width ) {
     base( _( "text resize") );
     _item      = item;
@@ -33,13 +34,15 @@ public class UndoItemTextResize : UndoItem {
     _new_width = new_width;
   }
 
-  /* Causes the stored item to be put into the before state */
+  //-------------------------------------------------------------
+  // Causes the stored item to be put into the before state
   public override void undo( Canvas canvas ) {
     _item.max_width = _old_width;
     canvas.queue_draw();
   }
 
-  /* Causes the stored item to be put into the after state */
+  //-------------------------------------------------------------
+  // Causes the stored item to be put into the after state
   public override void redo( Canvas canvas ) {
     _item.max_width = _new_width;
     canvas.queue_draw();

@@ -1,5 +1,5 @@
-/*s
-* Copyright (c) 2020-2021 (https://github.com/phase1geo/Annotator)
+/*
+* Copyright (c) 2020-2026 (https://github.com/phase1geo/Annotator)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -60,7 +60,8 @@ public class CanvasItemBubble : CanvasItem {
   private bool             _point_moved = false;
   private double           _radius      = 40.0;
 
-  /* Constructor */
+  //-------------------------------------------------------------
+  // Constructor
   public CanvasItemBubble( Canvas canvas, CanvasBubbleType type, CanvasItemProperties props ) {
     base( type.item_type(), canvas, props );
     _type = type;
@@ -77,7 +78,8 @@ public class CanvasItemBubble : CanvasItem {
     _sel_cursors[8]  = new Cursor.from_name( "crosshair", null );  // Talking point
   }
 
-  /* Create the points */
+  //-------------------------------------------------------------
+  // Create the points
   private void create_points() {
     points.append_val( new CanvasPoint( CanvasPointType.RESIZER0 ) );  // upper-left
     points.append_val( new CanvasPoint( CanvasPointType.RESIZER1 ) );  // upper-right
@@ -99,14 +101,16 @@ public class CanvasItemBubble : CanvasItem {
     }
   }
  
-  /* Returns a duplicate of this item */
+  //-------------------------------------------------------------
+  // Returns a duplicate of this item
   public override CanvasItem duplicate() {
     var item = new CanvasItemBubble( canvas, _type, props );
     item.copy( this );
     return( item );
   }
 
-  /* Updates the selection boxes whenever the bounding box changes */
+  //-------------------------------------------------------------
+  // Updates the selection boxes whenever the bounding box changes
   protected override void bbox_changed() {
 
     points.index( 0 ).copy_coords( bbox.x1(), bbox.y1() );
@@ -125,7 +129,8 @@ public class CanvasItemBubble : CanvasItem {
 
   }
 
-  /* Adjusts the bounding box */
+  //-------------------------------------------------------------
+  // Adjusts the bounding box
   public override void move_selector( int index, double diffx, double diffy, bool shift ) {
 
     var box = new CanvasRect.from_rect( bbox );
@@ -537,31 +542,10 @@ public class CanvasItemBubble : CanvasItem {
 
     }
 
-    /*
-    FOOBAR
-    var y0 = points.index( 9 ).y;
-    var r1 = (w / 2);
-    var y1 = y0 + r1;
-    var r2 = ((r1 - 10) / 2) + 10;
-    var y2 = ((points.index( 8 ).y - y1) / 2) + y1;
-
-    // Draw thinking circles
-    ctx.new_sub_path();
-    ctx.arc( get_talking_x( y1 ), y1, r1, (0 * deg), (360 * deg) );
-    ctx.close_path();
-
-    ctx.new_sub_path();
-    ctx.arc( get_talking_x( y2 ), y2, r2, (0 * deg), (360 * deg) );
-    ctx.close_path();
-
-    ctx.new_sub_path();
-    ctx.arc( points.index( 8 ).x, points.index( 8 ).y, 10, (0 * deg), (360 * deg) );
-    ctx.close_path();
-    */
-
   }
 
-  /* Draw the rectangle */
+  //-------------------------------------------------------------
+  // Draw the rectangle
   public override void draw_item( Context ctx, CanvasItemColor color ) {
 
     var fill   = Granite.contrasting_foreground_color( props.color );

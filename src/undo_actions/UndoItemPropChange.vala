@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2020-2021 (https://github.com/phase1geo/Annotator)
+* Copyright (c) 2020-2026 (https://github.com/phase1geo/Annotator)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -47,23 +47,27 @@ public class UndoItemPropChange : UndoItem {
 
   private Array<UndoItemChangeElem?> _list;
 
-  /* Default constructor */
+  //-------------------------------------------------------------
+  // Default constructor
   public UndoItemPropChange() {
     base( _( "item property change" ) );
     _list = new Array<UndoItemChangeElem?>();
   }
 
-  /* Adds a canvas item to this undo list */
+  //-------------------------------------------------------------
+  // Adds a canvas item to this undo list
   public void add( CanvasItem item ) {
     _list.append_val( UndoItemChangeElem( item ) );
   }
 
-  /* Returns the length of the item list */
+  //-------------------------------------------------------------
+  // Returns the length of the item list
   public bool empty() {
     return( _list.length == 0 );
   }
 
-  /* Causes the stored item to be put into the before state */
+  //-------------------------------------------------------------
+  // Causes the stored item to be put into the before state
   public override void undo( Canvas canvas ) {
     for( int i=0; i<_list.length; i++ ) {
       var elem = _list.index( i );
@@ -72,7 +76,8 @@ public class UndoItemPropChange : UndoItem {
     canvas.queue_draw();
   }
 
-  /* Causes the stored item to be put into the after state */
+  //-------------------------------------------------------------
+  // Causes the stored item to be put into the after state
   public override void redo( Canvas canvas ) {
     for( int i=0; i<_list.length; i++ ) {
       var elem = _list.index( i );
@@ -81,7 +86,8 @@ public class UndoItemPropChange : UndoItem {
     canvas.queue_draw();
   }
 
-  /* Returns true if the given undo item is mergeable with us */
+  //-------------------------------------------------------------
+  // Returns true if the given undo item is mergeable with us
   public override bool matches( UndoItem item ) {
     var cast_item = (item as UndoItemPropChange);
     if( (cast_item == null) || (_list.length != cast_item._list.length) ) return( false );
@@ -91,7 +97,8 @@ public class UndoItemPropChange : UndoItem {
     return( true );
   }
 
-  /* Replaces the current item with the new item */
+  //-------------------------------------------------------------
+  // Replaces the current item with the new item
   public override void replace_with_item( UndoItem item ) {
     var cast_item = (item as UndoItemPropChange);
     for( int i=0; i<_list.length; i++ ) {

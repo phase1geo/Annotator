@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2020-2021 (https://github.com/phase1geo/Annotator)
+* Copyright (c) 2020-2026 (https://github.com/phase1geo/Annotator)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -25,7 +25,8 @@ public class UndoItemBlur : UndoItem {
   private int            _old_blur;
   private int            _new_blur;
 
-  /* Default constructor */
+  //-------------------------------------------------------------
+  // Default constructor
   public UndoItemBlur( CanvasItemBlur item, int old_blur, int new_blur ) {
     base( _( "blur amount") );
     _item     = item;
@@ -33,13 +34,15 @@ public class UndoItemBlur : UndoItem {
     _new_blur = new_blur;
   }
 
-  /* Causes the stored item to be put into the before state */
+  //-------------------------------------------------------------
+  // Causes the stored item to be put into the before state
   public override void undo( Canvas canvas ) {
     _item.blur_radius = _old_blur;
     canvas.queue_draw();
   }
 
-  /* Causes the stored item to be put into the after state */
+  //-------------------------------------------------------------
+  // Causes the stored item to be put into the after state
   public override void redo( Canvas canvas ) {
     _item.blur_radius = _new_blur;
     canvas.queue_draw();

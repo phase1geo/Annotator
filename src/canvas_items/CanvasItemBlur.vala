@@ -1,5 +1,5 @@
-/*s
-* Copyright (c) 2020-2021 (https://github.com/phase1geo/Annotator)
+/*
+* Copyright (c) 2020-2026 (https://github.com/phase1geo/Annotator)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -33,7 +33,8 @@ public class CanvasItemBlur : CanvasItem {
 
   public int blur_radius { set; get; default = 20; }
 
-  /* Constructor */
+  //-------------------------------------------------------------
+  // Constructor
   public CanvasItemBlur( Canvas canvas, CanvasItemProperties props ) {
     base( CanvasItemType.BLUR, canvas, props );
     create_points();
@@ -48,7 +49,8 @@ public class CanvasItemBlur : CanvasItem {
     _sel_cursors[7] = new Cursor.from_name( "w-resize", null );
   }
 
-  /* Create the points */
+  //-------------------------------------------------------------
+  // Create the points
   private void create_points() {
     points.append_val( new CanvasPoint( CanvasPointType.RESIZER0 ) );  // upper-left
     points.append_val( new CanvasPoint( CanvasPointType.RESIZER1 ) );  // upper-right
@@ -60,7 +62,8 @@ public class CanvasItemBlur : CanvasItem {
     points.append_val( new CanvasPoint( CanvasPointType.RESIZER3 ) );  // left
   }
 
-  /* Copies the information from the given item to ourselves */
+  //-------------------------------------------------------------
+  // Copies the information from the given item to ourselves
   public override void copy( CanvasItem item) {
     base.copy( item );
     var blur_item = (CanvasItemBlur)item;
@@ -69,14 +72,16 @@ public class CanvasItemBlur : CanvasItem {
     }
   }
 
-  /* Returns a copy of this item */
+  //-------------------------------------------------------------
+  // Returns a copy of this item
   public override CanvasItem duplicate() {
     var item = new CanvasItemBlur( canvas, props );
     item.copy( this );
     return( item );
   }
 
-  /* Updates the selection boxes whenever the bounding box changes */
+  //-------------------------------------------------------------
+  // Updates the selection boxes whenever the bounding box changes
   protected override void bbox_changed() {
 
     points.index( 0 ).copy_coords( bbox.x1(), bbox.y1() );
@@ -91,7 +96,8 @@ public class CanvasItemBlur : CanvasItem {
 
   }
 
-  /* Adjusts the bounding box */
+  //-------------------------------------------------------------
+  // Adjusts the bounding box
   public override void move_selector( int index, double diffx, double diffy, bool shift ) {
 
     var box = new CanvasRect.from_rect( bbox );
@@ -164,7 +170,8 @@ public class CanvasItemBlur : CanvasItem {
 
   }
 
-  /* Draw the rectangle */
+  //-------------------------------------------------------------
+  // Draw the rectangle
   public override void draw_item( Context ctx, CanvasItemColor color ) {
 
     var black = Utils.color_from_string( "black" );
@@ -175,25 +182,25 @@ public class CanvasItemBlur : CanvasItem {
     ctx.rectangle( bbox.x, bbox.y, bbox.width, bbox.height );
     save_path( ctx, CanvasItemPathType.FILL );
 
-    /* If we are moving the node or resizing it, just draw an alpha box */
+    // If we are moving the node or resizing it, just draw an alpha box
     if( mode.moving() ) {
       ctx.fill();
 
-    /* Otherwise, calculate and apply the blur */
+    // Otherwise, calculate and apply the blur
     } else {
       ctx.stroke();
 
       var pixbuf = canvas.image.get_pixbuf_for_rect( bbox );
       var buffer = new BufferSurface.with_pixbuf( (int)bbox.width, (int)bbox.height, pixbuf );
 
-      /* Copy the surface contents over */
+      // Copy the surface contents over
       cairo_set_source_pixbuf( buffer.context, pixbuf, 0, 0 );
       buffer.context.paint();
 
-      /* Perform the blur */
+      // Perform the blur
       buffer.exponential_blur( blur_radius );
 
-      /* Draw the blurred pixbuf onto the context */
+      // Draw the blurred pixbuf onto the context
       ctx.set_source_surface( buffer.surface, bbox.x, bbox.y );
       ctx.paint();
 

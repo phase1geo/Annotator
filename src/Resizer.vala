@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2020-2021 (https://github.com/phase1geo/Annotator)
+* Copyright (c) 2020-2026 (https://github.com/phase1geo/Annotator)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -138,14 +138,15 @@ public class ResizerMargin {
     grid.attach( _entry, 1, row );
     grid.attach( _mb,    2, row );
 
-    /* Set the stage for menu actions */
+    // Set the stage for menu actions
     var actions = new SimpleActionGroup ();
     actions.add_action_entries( action_entries, this );
     grid.insert_action_group( "resize_margin", actions );
 
   }
 
-  /* Performs resize format change */
+  //-------------------------------------------------------------
+  // Performs resize format change
   private void action_format( SimpleAction action, Variant? variant ) {
     if( variant != null ) {
       _mb.label = variant.get_string();
@@ -175,12 +176,13 @@ public class Resizer : Dialog {
     { "action_resize", action_resize, "s" },
   };
 
-  /* Constructor */
+  //-------------------------------------------------------------
+  // Constructor
   public Resizer( Canvas canvas, CanvasImageInfo info ) {
 
     _canvas = canvas;
 
-    /* Setup dialog window */
+    // Setup dialog window
     title         = _( "Resize Image" );
     transient_for = _canvas.win;
     modal         = true;
@@ -210,14 +212,15 @@ public class Resizer : Dialog {
 
     update_preview();
 
-    /* Set the stage for menu actions */
+    // Set the stage for menu actions
     var actions = new SimpleActionGroup ();
     actions.add_action_entries( action_entries, this );
     insert_action_group( "resizer", actions );
 
   }
 
-  /* Returns the resize dimensions and border space */
+  //-------------------------------------------------------------
+  // Returns the resize dimensions and border space
   public CanvasImageInfo get_image_info() {
 
     var width  = int.parse( _width.text );
@@ -239,7 +242,8 @@ public class Resizer : Dialog {
 
   }
 
-  /* Commits the current width value to the rest of the UI */
+  //-------------------------------------------------------------
+  // Commits the current width value to the rest of the UI
   private void commit_width() {
 
     if( _lock.active ) {
@@ -256,7 +260,8 @@ public class Resizer : Dialog {
 
   }
 
-  /* Commits the current height value to the rest of the UI */
+  //-------------------------------------------------------------
+  // Commits the current height value to the rest of the UI
   private void commit_height() {
 
     if( _lock.active ) {
@@ -273,7 +278,8 @@ public class Resizer : Dialog {
 
   }
 
-  /* Performs resize */
+  //-------------------------------------------------------------
+  // Performs resize
   private void action_resize( SimpleAction action, Variant? variant ) {
     if( variant != null ) {
       _format.label = variant.get_string();
@@ -283,7 +289,8 @@ public class Resizer : Dialog {
     }
   }
 
-  /* Create the sizing options */
+  //-------------------------------------------------------------
+  // Create the sizing options
   private Widget create_size() {
 
     var wlbl = new Label( _( "Width:" ) ) {
@@ -330,7 +337,7 @@ public class Resizer : Dialog {
     _height.activate.connect( commit_height );
     height_focus.leave.connect( commit_height );
 
-    /* Create the proportion control */
+    // Create the proportion control
     _lock = new ToggleButton() {
       icon_name    = _lock_prevent,
       tooltip_text = _( "Scale proportionally" ),
@@ -392,10 +399,9 @@ public class Resizer : Dialog {
 
   }
 
-  /*
-   Called whenever the format value changes, adjusts the height and width
-   values, respectively.
-  */
+  //-------------------------------------------------------------
+  // Called whenever the format value changes, adjusts the height
+  // and width values, respectively.
   private void format_changed() {
 
     var orig_width  = _info.pixbuf_rect.width;
@@ -447,7 +453,8 @@ public class Resizer : Dialog {
 
   }
 
-  /* Create the preview panel */
+  //-------------------------------------------------------------
+  // Create the preview panel
   private Widget create_preview() {
 
     _preview = new Image() {
@@ -488,7 +495,8 @@ public class Resizer : Dialog {
 
   }
 
-  /* Draw image in the proper location at the correct position */
+  //-------------------------------------------------------------
+  // Draw image in the proper location at the correct position
   private void update_preview() {
 
     var current  = get_image_info();
@@ -497,10 +505,10 @@ public class Resizer : Dialog {
     rect.init( 0, 0, (float)200, (float)200 );
     var ctx      = snapshot.append_cairo( rect );
 
-    /* Update the resulting image size */
+    // Update the resulting image size
     _size.label = _( "%d x %d pixels" ).printf( current.width, current.height );
 
-    /* Create a background color */
+    // Create a background color
     var scale = 200.0 / current.largest_side();
     ctx.scale( scale, scale );
 
@@ -516,7 +524,7 @@ public class Resizer : Dialog {
     cairo_set_source_pixbuf( ctx, buf, current.pixbuf_rect.x, current.pixbuf_rect.y );
     ctx.paint();
 
-    /* Update the surface */
+    // Update the surface
     _preview.paintable = snapshot.free_to_paintable( null );
 
   }

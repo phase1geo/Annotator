@@ -1,5 +1,5 @@
-/*s
-* Copyright (c) 2020-2021 (https://github.com/phase1geo/Annotator)
+/*
+* Copyright (c) 2020-2026 (https://github.com/phase1geo/Annotator)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -27,7 +27,8 @@ public class CanvasItemRect : CanvasItem {
 
   private Cursor[] _sel_cursors;
 
-  /* Constructor */
+  //-------------------------------------------------------------
+  // Constructor
   public CanvasItemRect( Canvas canvas, bool fill, CanvasItemProperties props ) {
     base( (fill ? CanvasItemType.RECT_FILL : CanvasItemType.RECT_STROKE), canvas, props );
     create_points();
@@ -42,7 +43,8 @@ public class CanvasItemRect : CanvasItem {
     _sel_cursors[7] = new Cursor.from_name( "w-resize", null );
   }
 
-  /* Create the points */
+  //-------------------------------------------------------------
+  // Create the points
   private void create_points() {
     points.append_val( new CanvasPoint( CanvasPointType.RESIZER0 ) );  // upper-left
     points.append_val( new CanvasPoint( CanvasPointType.RESIZER1 ) );  // upper-right
@@ -54,14 +56,16 @@ public class CanvasItemRect : CanvasItem {
     points.append_val( new CanvasPoint( CanvasPointType.RESIZER3 ) );  // left
   }
 
-  /* Returns a duplicate of this item */
+  //-------------------------------------------------------------
+  // Returns a duplicate of this item
   public override CanvasItem duplicate() {
     var item = new CanvasItemRect( canvas, (itype == CanvasItemType.RECT_FILL), props );
     item.copy( this );
     return( item );
   }
 
-  /* Updates the selection boxes whenever the bounding box changes */
+  //-------------------------------------------------------------
+  // Updates the selection boxes whenever the bounding box changes
   protected override void bbox_changed() {
 
     points.index( 0 ).copy_coords( bbox.x1(), bbox.y1() );
@@ -76,7 +80,8 @@ public class CanvasItemRect : CanvasItem {
 
   }
 
-  /* Adjusts the bounding box */
+  //-------------------------------------------------------------
+  // Adjusts the bounding box
   public override void move_selector( int index, double diffx, double diffy, bool shift ) {
 
     var box = new CanvasRect.from_rect( bbox );
@@ -106,12 +111,15 @@ public class CanvasItemRect : CanvasItem {
 
   }
 
-  /* Provides cursor to display when mouse cursor is hovering over the given selector */
+  //-------------------------------------------------------------
+  // Provides cursor to display when mouse cursor is hovering over
+  // the given selector
   public override Cursor? get_selector_cursor( int index ) {
     return( _sel_cursors[index] );
   }
 
-  /* Draw the rectangle */
+  //-------------------------------------------------------------
+  // Draw the rectangle
   public override void draw_item( Context ctx, CanvasItemColor color ) {
 
     var outline = Granite.contrasting_foreground_color( props.color );

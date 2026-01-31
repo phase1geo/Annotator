@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2020-2021 (https://github.com/phase1geo/Annotator)
+* Copyright (c) 2020-2026 (https://github.com/phase1geo/Annotator)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -44,7 +44,8 @@ public class FormatBar : Gtk.Popover {
     { "action_header", action_header, "i" },
   };
 
-  /* Construct the formatting bar */
+  //-------------------------------------------------------------
+  // Construct the formatting bar
   public FormatBar( Canvas canvas ) {
 
     _canvas = canvas;
@@ -212,7 +213,7 @@ public class FormatBar : Gtk.Popover {
 
     initialize();
 
-    /* Set the stage for menu actions */
+    // Set the stage for menu actions
     var actions = new SimpleActionGroup ();
     actions.add_action_entries( action_entries, this );
     insert_action_group( "formatbar", actions );
@@ -247,19 +248,22 @@ public class FormatBar : Gtk.Popover {
     _canvas.grab_focus();
   }
 
-  /* Copies the selected text to the clipboard */
+  //-------------------------------------------------------------
+  // Copies the selected text to the clipboard
   private void handle_copy() {
     // TBD - _canvas.do_copy();
     popdown();
   }
 
-  /* Cuts the selected text to the clipboard */
+  //-------------------------------------------------------------
+  // Cuts the selected text to the clipboard
   private void handle_cut() {
     // TBD - _canvas.do_cut();
     popdown();
   }
 
-  /* Toggles the bold status of the currently selected text */
+  //-------------------------------------------------------------
+  // Toggles the bold status of the currently selected text
   private void handle_bold() {
     if( !_ignore_active ) {
       if( _bold.active ) {
@@ -270,7 +274,8 @@ public class FormatBar : Gtk.Popover {
     }
   }
 
-  /* Toggles the italics status of the currently selected text */
+  //-------------------------------------------------------------
+  // Toggles the italics status of the currently selected text
   private void handle_italics() {
     if( !_ignore_active ) {
       if( _italics.active ) {
@@ -281,7 +286,8 @@ public class FormatBar : Gtk.Popover {
     }
   }
 
-  /* Toggles the underline status of the currently selected text */
+  //-------------------------------------------------------------
+  // Toggles the underline status of the currently selected text
   private void handle_underline() {
     if( !_ignore_active ) {
       if( _underline.active ) {
@@ -292,7 +298,8 @@ public class FormatBar : Gtk.Popover {
     }
   }
 
-  /* Toggles the strikethru status of the currently selected text */
+  //-------------------------------------------------------------
+  // Toggles the strikethru status of the currently selected text
   private void handle_strikethru() {
     if( !_ignore_active ) {
       if( _strike.active ) {
@@ -303,7 +310,8 @@ public class FormatBar : Gtk.Popover {
     }
   }
 
-  /* Toggles the code status of the currently selected text */
+  //-------------------------------------------------------------
+  // Toggles the code status of the currently selected text
   private void handle_code() {
     if( !_ignore_active ) {
       if( _code.active ) {
@@ -314,7 +322,8 @@ public class FormatBar : Gtk.Popover {
     }
   }
 
-  /* Toggles the superscript status of the currently selected text */
+  //-------------------------------------------------------------
+  // Toggles the superscript status of the currently selected text
   private void handle_superscript() {
     if( !_ignore_active ) {
       if( _super.active ) {
@@ -325,7 +334,8 @@ public class FormatBar : Gtk.Popover {
     }
   }
 
-  /* Toggles the superscript status of the currently selected text */
+  //-------------------------------------------------------------
+  // Toggles the superscript status of the currently selected text
   private void handle_subscript() {
     if( !_ignore_active ) {
       if( _sub.active ) {
@@ -336,7 +346,8 @@ public class FormatBar : Gtk.Popover {
     }
   }
 
-  /* Toggles the header status of the currently selected text */
+  //-------------------------------------------------------------
+  // Toggles the header status of the currently selected text
   private void action_header( SimpleAction action, Variant? variant ) {
     if( variant != null ) {
       var level = variant.get_int32();
@@ -350,7 +361,8 @@ public class FormatBar : Gtk.Popover {
     }
   }
 
-  /* Toggles the highlight status of the currently selected text */
+  //-------------------------------------------------------------
+  // Toggles the highlight status of the currently selected text
   private void handle_hilite( RGBA? rgba ) {
     if( !_ignore_active ) {
       if( rgba != null ) {
@@ -362,7 +374,8 @@ public class FormatBar : Gtk.Popover {
     }
   }
 
-  /* Toggles the foreground color of the currently selected text */
+  //-------------------------------------------------------------
+  // Toggles the foreground color of the currently selected text
   private void handle_color( RGBA? rgba ) {
     if( !_ignore_active ) {
       if( rgba != null ) {
@@ -374,7 +387,8 @@ public class FormatBar : Gtk.Popover {
     }
   }
 
-  /* Clears all tags from selected text */
+  //-------------------------------------------------------------
+  // Clears all tags from selected text
   private void handle_clear() {
     var text = _canvas.items.get_active_text();
     text.remove_all_tags( _canvas.undo_text );
@@ -394,20 +408,21 @@ public class FormatBar : Gtk.Popover {
     _canvas.grab_focus();
   }
 
-  /* Sets the active status of the given toggle button */
+  //-------------------------------------------------------------
+  // Sets the active status of the given toggle button
   private void set_toggle_button( CanvasItemText text, FormatTag tag, ToggleButton btn ) {
     btn.set_active( text.text.is_tag_applied_in_range( tag, text.selstart, text.selend ) );
   }
 
-  /* Sets the active status of the given color picker */
+  //-------------------------------------------------------------
+  // Sets the active status of the given color picker
   private void set_color_picker( CanvasItemText text, FormatTag tag, ColorPicker cp ) {
     cp.set_active( text.text.is_tag_applied_in_range( tag, text.selstart, text.selend ) );
   }
 
-  /*
-   Updates the state of the format bar based on the state of the current
-   text.
-  */
+  //-------------------------------------------------------------
+  // Updates the state of the format bar based on the state of the
+  // current text.
   private void update_from_text( CanvasItemText? text ) {
     _ignore_active = true;
     set_toggle_button( text, FormatTag.BOLD,       _bold );
@@ -423,10 +438,9 @@ public class FormatBar : Gtk.Popover {
     _ignore_active = false;
   }
 
-  /*
-   Updates the state of the format bar based on which tags are applied at the
-   current cursor position.
-  */
+  //-------------------------------------------------------------
+  // Updates the state of the format bar based on which tags are
+  // applied at the current cursor position.
   public void initialize() {
     update_from_text( _canvas.items.get_active_text() );
   }

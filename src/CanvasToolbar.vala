@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2020-2021 (https://github.com/phase1geo/Annotator)
+* Copyright (c) 2020-2026 (https://github.com/phase1geo/Annotator)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -38,7 +38,8 @@ public class CanvasToolbar : Box {
   private int                _current_shape;
   private HashMap<CanvasItemCategory,CurrentItem> _current_item;
 
-  /* Constructor */
+  //-------------------------------------------------------------
+  // Constructor
   public CanvasToolbar( Canvas canvas ) {
 
     Object( orientation: Orientation.HORIZONTAL, spacing: 5 );
@@ -48,7 +49,7 @@ public class CanvasToolbar : Box {
     _dash_btns    = new Array<CheckButton>();
     _current_item = new HashMap<CanvasItemCategory,CurrentItem>();
 
-    /* Create current items */
+    // Create current items
     _current_item.set( CanvasItemCategory.ARROW, new CurrentItem.with_canvas_item( CanvasItemType.ARROW ) );
     _current_item.set( CanvasItemCategory.SHAPE, new CurrentItem.with_canvas_item( CanvasItemType.RECT_STROKE ) );
 
@@ -72,12 +73,13 @@ public class CanvasToolbar : Box {
     create_separator();
     create_drag_label();
 
-    /* If the selection changes, update the toolbar */
+    // If the selection changes, update the toolbar
     _canvas.items.selection_changed.connect( selection_changed );
 
   }
 
-  /* Creates the shape toolbar item */
+  //-------------------------------------------------------------
+  // Creates the shape toolbar item
   private void create_shapes( CanvasItemCategory category, string tooltip, string mb_tooltip, string custom_label ) {
 
     var granite_settings = Granite.Settings.get_default();
@@ -165,14 +167,15 @@ public class CanvasToolbar : Box {
 
     append( shape_box );
 
-    /* If the system dark mode changes, hide the popover */
+    // If the system dark mode changes, hide the popover
     _canvas.win.theme_changed.connect((dark_mode) => {
       popover.hide();
     });
 
   }
 
-  /* Creates the sticker toolbar item */
+  //-------------------------------------------------------------
+  // Creates the sticker toolbar item
   private void create_sticker() {
 
     var sticker = CanvasItemType.STICKER;
@@ -198,19 +201,13 @@ public class CanvasToolbar : Box {
 
     mb.popover.child = sw;
 
-    /*
-    var btn = new Button() {
-      margin_start = margin,
-      margin_end   = margin,
-      child        = mb
-    };
-    */
-
     append( mb );
 
   }
 
-  /* Creates the rest of the UI from the stickers XML file that is stored in a gresource */
+  //-------------------------------------------------------------
+  // Creates the rest of the UI from the stickers XML file that
+  // is stored in a gresource
   private void create_sticker_set( Box box, Popover popover ) {
 
     var sticker_set = _canvas.win.sticker_set;
@@ -227,10 +224,12 @@ public class CanvasToolbar : Box {
 
   }
 
-  /* Creates the expander flowbox for the given category name and adds it to the sidebar */
+  //-------------------------------------------------------------
+  // Creates the expander flowbox for the given category name and
+  // adds it to the sidebar
   private FlowBox create_sticker_category( Box box, string name ) {
 
-    /* Create the flowbox which will contain the stickers */
+    // Create the flowbox which will contain the stickers
     var fbox = new FlowBox() {
       homogeneous = true,
       selection_mode = SelectionMode.NONE,
@@ -238,7 +237,7 @@ public class CanvasToolbar : Box {
       max_children_per_line = 4
     };
 
-    /* Create expander */
+    // Create expander
     var exp = new Expander( Utils.make_title( name ) ) {
       margin_start = 20,
       margin_end   = 20,
@@ -254,7 +253,9 @@ public class CanvasToolbar : Box {
 
   }
 
-  /* Creates the image from the given name and adds it to the flow box */
+  //-------------------------------------------------------------
+  // Creates the image from the given name and adds it to the
+  // flow box
   private void create_sticker_image( FlowBox box, StickerInfo info, Popover popover ) {
 
     var buf     = _canvas.win.sticker_set.make_pixbuf( info.resource );
@@ -277,7 +278,8 @@ public class CanvasToolbar : Box {
 
   }
 
-  /* Add an image button */
+  //-------------------------------------------------------------
+  // Add an image button
   private void create_image() {
 
     var btn = new Button.from_icon_name( "insert-image-symbolic" ) {
@@ -294,7 +296,8 @@ public class CanvasToolbar : Box {
 
   }
 
-  /* Adds the sequence button */
+  //-------------------------------------------------------------
+  // Adds the sequence button
   private void create_sequence() {
 
     var sequence = CanvasItemType.SEQUENCE;
@@ -316,7 +319,8 @@ public class CanvasToolbar : Box {
 
   }
 
-  /* Starts a drawing operation with the pencil tool */
+  //-------------------------------------------------------------
+  // Starts a drawing operation with the pencil tool
   private void create_pencil() {
 
     var pencil = CanvasItemType.PENCIL;
@@ -338,7 +342,8 @@ public class CanvasToolbar : Box {
 
   }
 
-  /* Adds the text insertion button */
+  //-------------------------------------------------------------
+  // Adds the text insertion button
   private void create_text() {
 
     var btn = new Button.from_icon_name( "insert-text-symbolic" ) {
@@ -376,7 +381,8 @@ public class CanvasToolbar : Box {
 
   }
 
-  /* Create the blur button */
+  //-------------------------------------------------------------
+  // Create the blur button
   private void create_blur() {
 
     var blur = CanvasItemType.BLUR;
@@ -398,7 +404,8 @@ public class CanvasToolbar : Box {
 
   }
 
-  /* Create the crop button */
+  //-------------------------------------------------------------
+  // Create the crop button
   private void create_crop() {
 
     _crop_btn = new ToggleButton() {
@@ -427,7 +434,8 @@ public class CanvasToolbar : Box {
 
   }
 
-  /* Create the image resizer button */
+  //-------------------------------------------------------------
+  // Create the image resizer button
   private void create_resize() {
 
     var btn = new Button.from_icon_name( "view-fullscreen-symbolic" ) {
@@ -447,7 +455,8 @@ public class CanvasToolbar : Box {
 
   }
 
-  /* Creates the color picker */
+  //-------------------------------------------------------------
+  // Creates the color picker
   private void create_dropper() {
 
     var btn = new Button() {
@@ -467,7 +476,8 @@ public class CanvasToolbar : Box {
 
   }
 
-  /* Creates the color dropdown */
+  //-------------------------------------------------------------
+  // Creates the color dropdown
   private void create_color() {
 
     var mb = new MenuButton() {
@@ -502,7 +512,8 @@ public class CanvasToolbar : Box {
 
   }
 
-  /* Sets the current color */
+  //-------------------------------------------------------------
+  // Sets the current color
   public void set_color( Gdk.RGBA color ) {
 
     _color_chooser.rgba = color;
@@ -578,7 +589,8 @@ public class CanvasToolbar : Box {
 
   }
 
-  /* Adds the stroke dropdown */
+  //-------------------------------------------------------------
+  // Adds the stroke dropdown
   private void create_stroke() {
 
     var mb = new MenuButton() {
@@ -595,7 +607,7 @@ public class CanvasToolbar : Box {
       margin_bottom = 10
     };
 
-    /* Add stroke width */
+    // Add stroke width
     var width_title = new Label( Utils.make_title( _( "Border Width" ) ) ) {
       halign     = Align.START,
       use_markup = true
@@ -627,7 +639,7 @@ public class CanvasToolbar : Box {
       box.append( rbox );
     }
 
-    /* Add dash patterns */
+    // Add dash patterns
     var dash_title = new Label( Utils.make_title( _( "Dash Pattern" ) ) ) {
       halign     = Align.START,
       margin_top = 20,
@@ -660,7 +672,7 @@ public class CanvasToolbar : Box {
       box.append( rbox );
     }
 
-    /* Add outline */
+    // Add outline
     var outline_title = new Label( Utils.make_title( _( "Show Outline" ) ) ) {
       halign     = Align.START,
       use_markup = true
@@ -686,7 +698,8 @@ public class CanvasToolbar : Box {
 
   }
 
-  /* Adds the font menubutton */
+  //-------------------------------------------------------------
+  // Adds the font menubutton
   private void create_fonts() {
 
     var mb = new MenuButton() {
@@ -796,7 +809,7 @@ public class CanvasToolbar : Box {
     rect.init( 0, 0, (float)30, (float)24 );
     var ctx      = snapshot.append_cairo( rect );
 
-    /* Draw the image */
+    // Draw the image
     var stroke = Granite.contrasting_foreground_color( _canvas.items.props.color );
     Utils.set_context_color_with_alpha( ctx, _canvas.items.props.color, _canvas.items.props.alpha );
     ctx.rectangle( 0, 0, 30, 24 );
@@ -811,7 +824,8 @@ public class CanvasToolbar : Box {
 
   }
 
-  /* Returns true if the current mode is dark mode */
+  //-------------------------------------------------------------
+  // Returns true if the current mode is dark mode
   private bool is_dark_mode() {
 
     var settings = Gtk.Settings.get_default();
@@ -832,7 +846,7 @@ public class CanvasToolbar : Box {
     rect.init( 0, 0, (float)width, (float)height );
     var ctx      = snapshot.append_cairo( rect );
 
-    /* Draw the stroke */
+    // Draw the stroke
     Utils.set_context_color( ctx, Utils.color_from_string( is_dark_mode() ? "white" : "black" ) );
     ctx.set_line_width( stroke_width );
     ctx.move_to( 0, (height / 2) );
@@ -856,7 +870,7 @@ public class CanvasToolbar : Box {
     rect.init( 0, 0, (float)width, (float)height );
     var ctx      = snapshot.append_cairo( rect );
 
-    /* Draw the image */
+    // Draw the image
     Utils.set_context_color( ctx, Utils.color_from_string( is_dark_mode() ? "white" : "black" ) );
     ctx.set_line_width( height );
     dash.set_fg_pattern( ctx );
@@ -882,7 +896,7 @@ public class CanvasToolbar : Box {
     rect.init( 0, 0, (float)50, (float)height );
     var ctx      = snapshot.append_cairo( rect );
 
-    /* Draw the image */
+    // Draw the image
     Utils.set_context_color( ctx, Utils.color_from_string( is_dark_mode() ? "white" : "black" ) );
     ctx.set_line_width( height );
     _canvas.items.props.dash.set_fg_pattern( ctx );
@@ -896,7 +910,8 @@ public class CanvasToolbar : Box {
 
   }
 
-  /* Adds a separator to the toolbar */
+  //-------------------------------------------------------------
+  // Adds a separator to the toolbar
   private void create_separator() {
 
     var sep = new Separator( Orientation.VERTICAL ) {
@@ -908,40 +923,41 @@ public class CanvasToolbar : Box {
 
   }
 
-  /* Called when the canvas image crop ends */
+  //-------------------------------------------------------------
+  // Called when the canvas image crop ends
   public void crop_ended() {
     _crop_btn.active = false;
   }
 
-  /* Called whenever the item selection changes */
+  //-------------------------------------------------------------
+  // Called whenever the item selection changes
   private void selection_changed( CanvasItemProperties props ) {
 
     var p = new CanvasItemProperties();
     p.copy( props );
 
-    /* Updates the width group */
+    // Updates the width group
     _width_btns.index( (int)p.stroke_width ).set_active( true );
 
-    /* Updates the dash group */
+    // Updates the dash group
     _dash_btns.index( (int)p.dash ).set_active( true );
 
-    /* Set the color */
+    // Set the color
     _color_chooser.rgba = p.color;
 
-    /* Handle the alpha value */
+    // Handle the alpha value
     _ascale.set_value( p.alpha );
     _areveal.reveal_child = (p.alpha < 1.0);
     _asw.set_active( p.alpha < 1.0 );
 
-    /* Set the font */
+    // Set the font
     _font_chooser.font_desc = p.font;
 
   }
 
-  /*
-   Displays the custom menu for the specified item category type
-   relative to the given widget.
-  */
+  //-------------------------------------------------------------
+  // Displays the custom menu for the specified item category type
+  // relative to the given widget.
   /*
   private void show_custom_menu( Widget w, CanvasItemCategory category ) {
 
