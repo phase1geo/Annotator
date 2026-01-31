@@ -251,14 +251,14 @@ public class FormatBar : Gtk.Popover {
   //-------------------------------------------------------------
   // Copies the selected text to the clipboard
   private void handle_copy() {
-    // TBD - _canvas.do_copy();
+    _canvas.do_copy();
     popdown();
   }
 
   //-------------------------------------------------------------
   // Cuts the selected text to the clipboard
   private void handle_cut() {
-    // TBD - _canvas.do_cut();
+    _canvas.do_cut();
     popdown();
   }
 

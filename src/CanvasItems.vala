@@ -773,15 +773,19 @@ public class CanvasItems {
   // Handles the control key
   private bool handle_control() {
     control_set = true;
-    foreach( CanvasItem item in _items ) {
-      if( item.is_within( _last_x, _last_y ) ) {
-        _canvas.set_cursor_from_name( "copy" );
-        break;
+    if( !in_edit_mode() ) {
+      foreach( CanvasItem item in _items ) {
+        if( item.is_within( _last_x, _last_y ) ) {
+          _canvas.set_cursor_from_name( "copy" );
+          break;
+        }
       }
     }
     return( false );
   }
 
+  //-------------------------------------------------------------
+  // Called when the shift key is pressed.
   private bool handle_shift() {
     shift_set = true;
     return( false );
@@ -802,16 +806,20 @@ public class CanvasItems {
   // Called when the control key is released
   private bool handle_release_control() {
     control_set = false;
-    foreach( CanvasItem item in _items ) {
-      if( item.is_within( _last_x, _last_y ) ) {
-        _canvas.set_cursor_from_name( "grabbing" );
-        return( false );
+    if( !in_edit_mode() ) {
+      foreach( CanvasItem item in _items ) {
+        if( item.is_within( _last_x, _last_y ) ) {
+          _canvas.set_cursor_from_name( "grabbing" );
+          return( false );
+        }
       }
+      _canvas.set_cursor( null );
     }
-    _canvas.set_cursor( null );
     return( false );
   }
 
+  //-------------------------------------------------------------
+  // Called when the shift key is released.
   private bool handle_release_shift() {
     shift_set = false;
     return( false );
@@ -1117,13 +1125,13 @@ public class CanvasItems {
 
   //-------------------------------------------------------------
   // Creates a copy of the item and sends it to the clipboard
-  public void do_copy( CanvasItem item ) {
+  public void do_copy( CanvasItem? item ) {
     if( in_edit_mode() ) {
       var text = get_active_text();
       if( text.is_selected() ) {
         AnnotatorClipboard.copy_text( text.get_selected_text() );
       }
-    } else {
+    } else if( item != null ) {
       var items = new Array<CanvasItem>();
       items.append_val( item );
       AnnotatorClipboard.copy_items( serialize_for_copy( items ) );
@@ -1137,7 +1145,7 @@ public class CanvasItems {
   //-------------------------------------------------------------
   // Creates a copy of the item, sends it to the clipboard, and
   // removes the item
-  public void do_cut( CanvasItem item ) {
+  public void do_cut( CanvasItem? item ) {
     do_copy( item );
     do_delete( item );
   }
@@ -1154,13 +1162,13 @@ public class CanvasItems {
 
   //-------------------------------------------------------------
   // Deletes the item
-  private void do_delete( CanvasItem item ) {
+  private void do_delete( CanvasItem? item ) {
     if( in_edit_mode() ) {
       var text = get_active_text();
       if( text.is_selected() ) {
         text.backspace( _canvas.undo_text );
       }
-    } else {
+    } else if( item != null ) {
       var position  = 0;
       var undo_item = new UndoItemDelete();
       for( unowned List<CanvasItem> it=_items.first(); it!=null; it=it.next ) {
