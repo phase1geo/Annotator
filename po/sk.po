@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.annotator\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-29 00:02-0600\n"
+"POT-Creation-Date: 2026-01-30 22:03-0600\n"
 "PO-Revision-Date: 2021-10-10 14:15+0100\n"
 "Last-Translator: MartinIIOT <https://www.github.com/MartinIIOT>\n"
 "Language-Team: SLOVAKIA\n"
@@ -82,23 +82,23 @@ msgstr "Kopírovať do schránky"
 msgid "image crop"
 msgstr "orezať obrázok"
 
-#: src/canvas_items/CanvasItemBlur.vala:153
+#: src/canvas_items/CanvasItemBlur.vala:159
 msgid "Blur Amount:"
 msgstr "Rozmazanie:"
 
-#: src/canvas_items/CanvasItemMagnifier.vala:180
+#: src/canvas_items/CanvasItemMagnifier.vala:189
 msgid "Drag to control amount of zoom"
 msgstr "Potiahnutím ovládate mieru priblíženia"
 
-#: src/canvas_items/CanvasItemMagnifier.vala:181
+#: src/canvas_items/CanvasItemMagnifier.vala:190
 msgid "Drag to change area to magnify"
 msgstr "Potiahnutím zmeníte oblasť a zväčšíte ju"
 
-#: src/canvas_items/CanvasItemMagnifier.vala:206
+#: src/canvas_items/CanvasItemMagnifier.vala:217
 msgid "Magnification:"
 msgstr "Zväčšenie:"
 
-#: src/canvas_items/CanvasItemMagnifier.vala:219
+#: src/canvas_items/CanvasItemMagnifier.vala:230
 msgid "Reset Focal Point"
 msgstr "Resetovať ohnisko"
 
@@ -106,34 +106,34 @@ msgstr "Resetovať ohnisko"
 msgid "Sequence Number:"
 msgstr "Poradové číslo:"
 
-#: src/canvas_items/CanvasItemStar.vala:148
+#: src/canvas_items/CanvasItemStar.vala:154
 msgid "Points:"
 msgstr "Body:"
 
-#: src/canvas_items/CanvasItemText.vala:111 src/CanvasItems.vala:134
+#: src/canvas_items/CanvasItemText.vala:113 src/CanvasItems.vala:134
 msgid "Text"
 msgstr "Text"
 
-#: src/canvas_items/CanvasItemText.vala:944 src/CanvasItems.vala:1055
-#: src/FormatBar.vala:59
+#: src/canvas_items/CanvasItemText.vala:954 src/CanvasItems.vala:1096
+#: src/FormatBar.vala:60
 msgid "Copy"
 msgstr "Kopírovať"
 
-#: src/canvas_items/CanvasItemText.vala:947 src/CanvasItems.vala:1056
-#: src/FormatBar.vala:65
+#: src/canvas_items/CanvasItemText.vala:957 src/CanvasItems.vala:1097
+#: src/FormatBar.vala:66
 msgid "Cut"
 msgstr "Vystrihnúť"
 
-#: src/canvas_items/CanvasItemText.vala:951
+#: src/canvas_items/CanvasItemText.vala:961
 msgid "Paste"
 msgstr ""
 
-#: src/canvas_items/CanvasItemText.vala:957
+#: src/canvas_items/CanvasItemText.vala:967
 #, fuzzy
 msgid "Select All"
 msgstr "Vybrať všetok text"
 
-#: src/canvas_items/CanvasItemText.vala:963
+#: src/canvas_items/CanvasItemText.vala:973
 msgid "Insert Emoji"
 msgstr ""
 
@@ -211,121 +211,121 @@ msgstr "Nálepka"
 msgid "Image"
 msgstr "Orezať obrázok"
 
-#: src/CanvasItems.vala:389
+#: src/CanvasItems.vala:393
 #, fuzzy
 msgid "Open Insertion Image"
 msgstr "Otvoriť obrázok"
 
-#: src/CanvasItems.vala:389 src/MainWindow.vala:481
+#: src/CanvasItems.vala:393 src/MainWindow.vala:491
 msgid "Open"
 msgstr "Otvoriť"
 
-#: src/CanvasItems.vala:389 src/Exporter.vala:166 src/MainWindow.vala:481
-#: src/Resizer.vala:189 src/StickerSet.vala:75
+#: src/CanvasItems.vala:393 src/Exporter.vala:173 src/MainWindow.vala:491
+#: src/Resizer.vala:191 src/StickerSet.vala:75
 msgid "Cancel"
 msgstr "Zrušiť"
 
-#: src/CanvasItems.vala:983
+#: src/CanvasItems.vala:1022
 msgid "move items"
 msgstr "presunúť položky"
 
-#: src/CanvasItems.vala:1059
+#: src/CanvasItems.vala:1100
 msgid "Delete"
 msgstr "Zmazať"
 
-#: src/CanvasItems.vala:1062
+#: src/CanvasItems.vala:1103
 msgid "Send to Front"
 msgstr "Presunúť dopredu"
 
-#: src/CanvasItems.vala:1063
+#: src/CanvasItems.vala:1104
 msgid "Send to Back"
 msgstr "Presunúť dozadu"
 
-#: src/CanvasItems.vala:1067
+#: src/CanvasItems.vala:1108
 msgid "Save As Custom"
 msgstr ""
 
-#: src/CanvasItem.vala:294
+#: src/CanvasItem.vala:315
 msgid "resize item"
 msgstr "zmeniť veľkosť položky"
 
-#: src/CanvasToolbar.vala:55
+#: src/CanvasToolbar.vala:56
 #, fuzzy
 msgid "Add Arrow"
 msgstr "Šípka"
 
-#: src/CanvasToolbar.vala:55
+#: src/CanvasToolbar.vala:56
 #, fuzzy
 msgid "More Arrows"
 msgstr "Nová šípka"
 
-#: src/CanvasToolbar.vala:55
+#: src/CanvasToolbar.vala:56
 msgid "Custom Arrows"
 msgstr ""
 
-#: src/CanvasToolbar.vala:56
+#: src/CanvasToolbar.vala:57
 #: data/com.github.phase1geo.annotator.shortcuts.ui:132
 #, fuzzy
 msgid "Add Shape"
 msgstr "Tvary"
 
-#: src/CanvasToolbar.vala:56
+#: src/CanvasToolbar.vala:57
 #, fuzzy
 msgid "More Shapes"
 msgstr "Tvary"
 
-#: src/CanvasToolbar.vala:56
+#: src/CanvasToolbar.vala:57
 #, fuzzy
 msgid "Custom Shapes"
 msgstr "Tvary"
 
-#: src/CanvasToolbar.vala:407
+#: src/CanvasToolbar.vala:414
 msgid "Crop Image"
 msgstr "Orezať obrázok"
 
-#: src/CanvasToolbar.vala:435 src/Resizer.vala:184
+#: src/CanvasToolbar.vala:443 src/Resizer.vala:186
 msgid "Resize Image"
 msgstr "Zmeniť veľkosť obrázku"
 
-#: src/CanvasToolbar.vala:455
+#: src/CanvasToolbar.vala:464
 #, fuzzy
 msgid "Pick Color To Clipboard"
 msgstr "Kopírovať do schránky"
 
-#: src/CanvasToolbar.vala:475
+#: src/CanvasToolbar.vala:485
 msgid "Shape Color"
 msgstr "Farba tvaru"
 
-#: src/CanvasToolbar.vala:545
+#: src/CanvasToolbar.vala:556
 msgid "Add Transparency"
 msgstr "Pridať priehľadnosť"
 
-#: src/CanvasToolbar.vala:552
+#: src/CanvasToolbar.vala:563
 msgid "Pick Color From Image"
 msgstr ""
 
-#: src/CanvasToolbar.vala:586
+#: src/CanvasToolbar.vala:598
 msgid "Shape Border"
 msgstr "Orámovanie tvaru"
 
-#: src/CanvasToolbar.vala:599
+#: src/CanvasToolbar.vala:611
 msgid "Border Width"
 msgstr "Hrúbka orámovania"
 
-#: src/CanvasToolbar.vala:631
+#: src/CanvasToolbar.vala:643
 msgid "Dash Pattern"
 msgstr "Prerušovaný vzor"
 
-#: src/CanvasToolbar.vala:664
+#: src/CanvasToolbar.vala:676
 #, fuzzy
 msgid "Show Outline"
 msgstr "Orámovanie hviezdy"
 
-#: src/CanvasToolbar.vala:694
+#: src/CanvasToolbar.vala:707
 msgid "Font Properties"
 msgstr "Vlastnosti písma"
 
-#: src/CanvasToolbar.vala:734
+#: src/CanvasToolbar.vala:747
 msgid "Drag PNG Image"
 msgstr ""
 
@@ -347,66 +347,66 @@ msgstr "Úprava"
 msgid "Done"
 msgstr ""
 
-#: src/Exporter.vala:52
+#: src/Exporter.vala:53
 #, fuzzy
 msgid "Export…"
 msgstr "Export"
 
-#: src/Exporter.vala:54
+#: src/Exporter.vala:55
 msgid "Export With Current Settings"
 msgstr ""
 
-#: src/Exporter.vala:142
+#: src/Exporter.vala:148
 #, fuzzy
 msgid "Export Options"
 msgstr "Export"
 
-#: src/Exporter.vala:165
+#: src/Exporter.vala:172
 #, fuzzy, c-format
 msgid "Export As %s"
 msgstr "Exportovať ako PNG…"
 
-#: src/Exporter.vala:166 src/StickerSet.vala:352
+#: src/Exporter.vala:173 src/StickerSet.vala:352
 msgid "Export"
 msgstr "Export"
 
-#: src/Exporter.vala:189
+#: src/Exporter.vala:196
 #, fuzzy
 msgid "Export Completed"
 msgstr "Exportovať obrázok"
 
-#: src/exports/ExportEditable.vala:31 src/MainWindow.vala:188
-#: src/MainWindow.vala:460
+#: src/exports/ExportEditable.vala:31 src/MainWindow.vala:194
+#: src/MainWindow.vala:469
 msgid "Annotator"
 msgstr "Annotator"
 
-#: src/exports/ExportEditable.vala:255
+#: src/exports/ExportEditable.vala:253
 #, fuzzy
 msgid "Image Compression"
 msgstr "zmena veľkosti obrázku"
 
-#: src/exports/ExportImage.vala:72
+#: src/exports/ExportImage.vala:73
 msgid "Quality"
 msgstr ""
 
-#: src/exports/ExportPDF.vala:29
+#: src/exports/ExportPDF.vala:30
 msgid "PDF"
 msgstr ""
 
-#: src/exports/ExportPNG.vala:30
+#: src/exports/ExportPNG.vala:31
 msgid "PNG"
 msgstr ""
 
-#: src/exports/ExportPNG.vala:65
+#: src/exports/ExportPNG.vala:68
 msgid "Compression"
 msgstr ""
 
-#: src/exports/ExportPNG.vala:66
+#: src/exports/ExportPNG.vala:69
 #, fuzzy
 msgid "Transparency"
 msgstr "Pridať priehľadnosť"
 
-#: src/exports/ExportSVG.vala:29
+#: src/exports/ExportSVG.vala:30
 msgid "SVG"
 msgstr ""
 
@@ -414,226 +414,226 @@ msgstr ""
 msgid "WebP"
 msgstr ""
 
-#: src/Exports.vala:35
+#: src/Exports.vala:36
 msgid "JPEG"
 msgstr ""
 
-#: src/Exports.vala:36
+#: src/Exports.vala:37
 msgid "TIFF"
 msgstr ""
 
-#: src/Exports.vala:37
+#: src/Exports.vala:38
 msgid "BMP"
 msgstr ""
 
-#: src/FormatBar.vala:71
+#: src/FormatBar.vala:72
 msgid "Bold"
 msgstr "Tučné"
 
-#: src/FormatBar.vala:78
+#: src/FormatBar.vala:79
 msgid "Italic"
 msgstr "Kurzíva"
 
-#: src/FormatBar.vala:85
+#: src/FormatBar.vala:86
 msgid "Underline"
 msgstr "Podčiarknutie"
 
-#: src/FormatBar.vala:92
+#: src/FormatBar.vala:93
 msgid "Strikethrough"
 msgstr "Prečiarknutie"
 
-#: src/FormatBar.vala:99
+#: src/FormatBar.vala:100
 msgid "Code Block"
 msgstr "Blok kódu"
 
-#: src/FormatBar.vala:106
+#: src/FormatBar.vala:107
 msgid "Superscript"
 msgstr "Horný index"
 
-#: src/FormatBar.vala:113
+#: src/FormatBar.vala:114
 msgid "Subscript"
 msgstr "Dolný index"
 
-#: src/FormatBar.vala:121
+#: src/FormatBar.vala:122
 msgid "Header"
 msgstr "Hlavička"
 
-#: src/FormatBar.vala:127
+#: src/FormatBar.vala:128
 msgid "None"
 msgstr "Nič"
 
-#: src/FormatBar.vala:132
+#: src/FormatBar.vala:133
 msgid "Apply Highlight Color"
 msgstr "Použiť farbu zvýraznenia"
 
-#: src/FormatBar.vala:133
+#: src/FormatBar.vala:134
 msgid "Change Highlight Color"
 msgstr "Zmeniť farbu zvýraznenia"
 
-#: src/FormatBar.vala:137
+#: src/FormatBar.vala:138
 msgid "Apply Font Color"
 msgstr "Použiť farbu písma"
 
-#: src/FormatBar.vala:138
+#: src/FormatBar.vala:139
 msgid "Change Font Color"
 msgstr "Zmeniť farbu písma"
 
-#: src/FormatBar.vala:143
+#: src/FormatBar.vala:144
 msgid "Clear all formatting"
 msgstr "Vymazať formátovanie"
 
-#: src/MainWindow.vala:193
+#: src/MainWindow.vala:199
 msgid "Open Image"
 msgstr "Otvoriť obrázok"
 
-#: src/MainWindow.vala:199
+#: src/MainWindow.vala:205
 #, fuzzy
 msgid "Take Screenshot"
 msgstr "Otvoriť obrázok zo schránky"
 
-#: src/MainWindow.vala:207 src/StickerSet.vala:307 src/UndoBuffer.vala:84
+#: src/MainWindow.vala:213 src/StickerSet.vala:307 src/UndoBuffer.vala:91
 msgid "Undo"
 msgstr "Späť"
 
-#: src/MainWindow.vala:214 src/StickerSet.vala:308 src/UndoBuffer.vala:90
+#: src/MainWindow.vala:220 src/StickerSet.vala:308 src/UndoBuffer.vala:98
 msgid "Redo"
 msgstr "Vpred"
 
-#: src/MainWindow.vala:234
+#: src/MainWindow.vala:240
 #, fuzzy
 msgid "Shortcuts Cheatsheet…"
 msgstr "Zoznam klávesových skratiek"
 
-#: src/MainWindow.vala:237
+#: src/MainWindow.vala:243
 #, fuzzy
 msgid "About Annotator"
 msgstr "Annotator"
 
-#: src/MainWindow.vala:246
+#: src/MainWindow.vala:252
 msgid "Properties"
 msgstr "Vlastnosti"
 
-#: src/MainWindow.vala:267
+#: src/MainWindow.vala:273
 msgid "Copy To Clipboard"
 msgstr "Kopírovať do schránky"
 
-#: src/MainWindow.vala:268
+#: src/MainWindow.vala:274
 msgid "Print…"
 msgstr "Tlačiť…"
 
-#: src/MainWindow.vala:287
+#: src/MainWindow.vala:293
 msgid "Export Image"
 msgstr "Exportovať obrázok"
 
-#: src/MainWindow.vala:315
+#: src/MainWindow.vala:321
 msgid "Zoom to Fit Window"
 msgstr "Prispôsobiť veľkosti okna"
 
-#: src/MainWindow.vala:323 src/MainWindow.vala:953
+#: src/MainWindow.vala:329 src/MainWindow.vala:930
 #, c-format
 msgid "Zoom (%d%%)"
 msgstr "Priblíženie (%d%%)"
 
-#: src/MainWindow.vala:335
+#: src/MainWindow.vala:341
 msgid "Welcome to Annotator"
 msgstr "Vitajte v Annotatore"
 
-#: src/MainWindow.vala:337
+#: src/MainWindow.vala:343
 msgid "Let's get started annotating an image"
 msgstr "Začnime popisovať obrázok"
 
-#: src/MainWindow.vala:364
+#: src/MainWindow.vala:370
 msgid "Open Image From File"
 msgstr "Otvoriť obrázok zo súboru"
 
-#: src/MainWindow.vala:364
+#: src/MainWindow.vala:370
 #, fuzzy
 msgid "Open a PNG, JPEG, TIFF, BMP or Annotator file"
 msgstr "Otvoriť PNG, JPEG, TIFF o BMP"
 
-#: src/MainWindow.vala:367
+#: src/MainWindow.vala:373
 msgid "Paste Image From Clipboard"
 msgstr "Prilepiť obrázok zo schránky"
 
-#: src/MainWindow.vala:367
+#: src/MainWindow.vala:373
 msgid "Open an image from the clipboard"
 msgstr "Otvoriť obrázok zo schránky"
 
-#: src/MainWindow.vala:370
+#: src/MainWindow.vala:376
 msgid "Take A Screenshot"
 msgstr ""
 
-#: src/MainWindow.vala:370
+#: src/MainWindow.vala:376
 #, fuzzy
 msgid "Open an image from a screenshot"
 msgstr "Otvoriť obrázok zo schránky"
 
-#: src/MainWindow.vala:406
+#: src/MainWindow.vala:413
 msgid "Font:"
 msgstr "Písmo:"
 
-#: src/MainWindow.vala:467
+#: src/MainWindow.vala:476
 #, fuzzy
 msgid "All Loadable Formats"
 msgstr "Všetky formáty obrázkov  (*)"
 
-#: src/MainWindow.vala:481
+#: src/MainWindow.vala:491
 msgid "Open Image File"
 msgstr "Otvoriť súbor s obrázkom"
 
-#: src/MainWindow.vala:610
+#: src/MainWindow.vala:616
 msgid "Delay (in seconds)"
 msgstr ""
 
-#: src/MainWindow.vala:634
+#: src/MainWindow.vala:640
 msgid "Include Annotator window"
 msgstr ""
 
-#: src/Resizer.vala:190
+#: src/Resizer.vala:192
 msgid "Resize"
 msgstr "Zmeniť veľkosť"
 
-#: src/Resizer.vala:289
+#: src/Resizer.vala:296
 msgid "Width:"
 msgstr "Šírka:"
 
-#: src/Resizer.vala:311
+#: src/Resizer.vala:318
 msgid "Height:"
 msgstr "Výška:"
 
-#: src/Resizer.vala:336
+#: src/Resizer.vala:343
 msgid "Scale proportionally"
 msgstr "Mierka proporcionálne"
 
-#: src/Resizer.vala:378
+#: src/Resizer.vala:385
 msgid "Image Size"
 msgstr "Veľkosť obrázku"
 
-#: src/Resizer.vala:422
+#: src/Resizer.vala:428
 msgid "Top"
 msgstr "Hore"
 
-#: src/Resizer.vala:422 src/StickerSet.vala:291
+#: src/Resizer.vala:428 src/StickerSet.vala:291
 msgid "Right"
 msgstr "Vpravo"
 
-#: src/Resizer.vala:422
+#: src/Resizer.vala:428
 msgid "Bottom"
 msgstr "Dole"
 
-#: src/Resizer.vala:422 src/StickerSet.vala:290
+#: src/Resizer.vala:428 src/StickerSet.vala:290
 msgid "Left"
 msgstr "Vľavo"
 
-#: src/Resizer.vala:433
+#: src/Resizer.vala:439
 msgid "Margins"
 msgstr "Okraje"
 
-#: src/Resizer.vala:474
+#: src/Resizer.vala:481
 msgid "Preview"
 msgstr "Náhľad"
 
-#: src/Resizer.vala:501
+#: src/Resizer.vala:509
 #, c-format
 msgid "%d x %d pixels"
 msgstr "%d x %d pixelov"
@@ -1931,104 +1931,104 @@ msgstr ""
 msgid "View details"
 msgstr ""
 
-#: src/undo_actions/UndoImageResize.vala:31
+#: src/undo_actions/UndoImageResize.vala:32
 msgid "image resize"
 msgstr "zmena veľkosti obrázku"
 
-#: src/undo_actions/UndoItemAdd.vala:29
+#: src/undo_actions/UndoItemAdd.vala:30
 msgid "item add"
 msgstr "pridať položku"
 
-#: src/undo_actions/UndoItemBlur.vala:30
+#: src/undo_actions/UndoItemBlur.vala:31
 msgid "blur amount"
 msgstr "rozmazanie"
 
-#: src/undo_actions/UndoItemDelete.vala:37
+#: src/undo_actions/UndoItemDelete.vala:38
 msgid "item delete"
 msgstr "vymazať položku"
 
-#: src/undo_actions/UndoItemMagnifierFocus.vala:30
+#: src/undo_actions/UndoItemMagnifierFocus.vala:31
 msgid "magnifier focus change"
 msgstr "zmena zaostrenia"
 
-#: src/undo_actions/UndoItemMagnifierZoom.vala:30
+#: src/undo_actions/UndoItemMagnifierZoom.vala:31
 msgid "magnifier zoom"
 msgstr "lupa"
 
-#: src/undo_actions/UndoItemPaste.vala:28
+#: src/undo_actions/UndoItemPaste.vala:29
 msgid "item paste"
 msgstr "prilepiť položku"
 
-#: src/undo_actions/UndoItemPropChange.vala:52
+#: src/undo_actions/UndoItemPropChange.vala:53
 msgid "item property change"
 msgstr "zmena vlastnosti položky"
 
-#: src/undo_actions/UndoItemSendBack.vala:29
+#: src/undo_actions/UndoItemSendBack.vala:30
 msgid "move item to back"
 msgstr "presunúť položku dozadu"
 
-#: src/undo_actions/UndoItemSendFront.vala:29
+#: src/undo_actions/UndoItemSendFront.vala:30
 msgid "move item to front"
 msgstr "presunúť položku dopredu"
 
-#: src/undo_actions/UndoItemSequenceNum.vala:30
+#: src/undo_actions/UndoItemSequenceNum.vala:31
 msgid "sequence number change"
 msgstr "zmena poradového čísla"
 
-#: src/undo_actions/UndoItemStarPoints.vala:30
+#: src/undo_actions/UndoItemStarPoints.vala:31
 msgid "start points change"
 msgstr "zmena štartovacích bodov"
 
-#: src/undo_actions/UndoItemTextResize.vala:30
+#: src/undo_actions/UndoItemTextResize.vala:31
 msgid "text resize"
 msgstr "zmena veľkosti textu"
 
-#: src/undo_actions/UndoTextClearTags.vala:30
+#: src/undo_actions/UndoTextClearTags.vala:31
 msgid "clear formatting"
 msgstr "vymazať formátovanie"
 
-#: src/undo_actions/UndoTextCommit.vala:32
+#: src/undo_actions/UndoTextCommit.vala:33
 msgid "text changed"
 msgstr "zmeniť text"
 
-#: src/undo_actions/UndoTextDelete.vala:30
+#: src/undo_actions/UndoTextDelete.vala:31
 msgid "text deletion"
 msgstr "zmazať text"
 
-#: src/undo_actions/UndoTextInsert.vala:29
-#: src/undo_actions/UndoTextMultiInsert.vala:33
+#: src/undo_actions/UndoTextInsert.vala:30
+#: src/undo_actions/UndoTextMultiInsert.vala:34
 msgid "text insertion"
 msgstr "vloženie textu"
 
-#: src/undo_actions/UndoTextReplace.vala:31
+#: src/undo_actions/UndoTextReplace.vala:32
 msgid "text replacement"
 msgstr "výmena textu"
 
-#: src/undo_actions/UndoTextTagAdd.vala:31
+#: src/undo_actions/UndoTextTagAdd.vala:32
 msgid "format tag add"
 msgstr "pridať značku formátu"
 
-#: src/undo_actions/UndoTextTagRemove.vala:31
+#: src/undo_actions/UndoTextTagRemove.vala:32
 msgid "format tag remove"
 msgstr "odstrániť značku formátu"
 
-#: src/UndoBuffer.vala:85
+#: src/UndoBuffer.vala:92
 msgid "Undo "
 msgstr "Späť "
 
-#: src/UndoBuffer.vala:91
+#: src/UndoBuffer.vala:99
 msgid "Redo "
 msgstr "Vpred "
 
-#: src/ZoomWidget.vala:92 data/com.github.phase1geo.annotator.shortcuts.ui:75
+#: src/ZoomWidget.vala:93 data/com.github.phase1geo.annotator.shortcuts.ui:75
 msgid "Zoom Out"
 msgstr "Oddialiť"
 
-#: src/ZoomWidget.vala:98
+#: src/ZoomWidget.vala:99
 msgid "Zoom Actual"
 msgstr "Aktuálne priblíženie"
 
-#: src/ZoomWidget.vala:104 data/com.github.phase1geo.annotator.shortcuts.ui:68
+#: src/ZoomWidget.vala:105 data/com.github.phase1geo.annotator.shortcuts.ui:68
 msgid "Zoom In"
 msgstr "Priblížiť"
 

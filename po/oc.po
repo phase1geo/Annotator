@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.annotator\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-29 00:02-0600\n"
+"POT-Creation-Date: 2026-01-30 22:03-0600\n"
 "PO-Revision-Date: 2021-10-08 09:11+0200\n"
 "Last-Translator: Quentin PAGÈS\n"
 "Language-Team: \n"
@@ -83,23 +83,23 @@ msgstr "Copiar al quichapapièrs"
 msgid "image crop"
 msgstr "requadrar imatge"
 
-#: src/canvas_items/CanvasItemBlur.vala:153
+#: src/canvas_items/CanvasItemBlur.vala:159
 msgid "Blur Amount:"
 msgstr ""
 
-#: src/canvas_items/CanvasItemMagnifier.vala:180
+#: src/canvas_items/CanvasItemMagnifier.vala:189
 msgid "Drag to control amount of zoom"
 msgstr "Lisatz per contrarotlar l’agrandiment"
 
-#: src/canvas_items/CanvasItemMagnifier.vala:181
+#: src/canvas_items/CanvasItemMagnifier.vala:190
 msgid "Drag to change area to magnify"
 msgstr "Lisatz per cambiar l’airal d’agrandir"
 
-#: src/canvas_items/CanvasItemMagnifier.vala:206
+#: src/canvas_items/CanvasItemMagnifier.vala:217
 msgid "Magnification:"
 msgstr "Agrandiment :"
 
-#: src/canvas_items/CanvasItemMagnifier.vala:219
+#: src/canvas_items/CanvasItemMagnifier.vala:230
 msgid "Reset Focal Point"
 msgstr "Reïnicializar lo punt focal"
 
@@ -107,34 +107,34 @@ msgstr "Reïnicializar lo punt focal"
 msgid "Sequence Number:"
 msgstr "Numèro de sequéncia :"
 
-#: src/canvas_items/CanvasItemStar.vala:148
+#: src/canvas_items/CanvasItemStar.vala:154
 msgid "Points:"
 msgstr "Punts :"
 
-#: src/canvas_items/CanvasItemText.vala:111 src/CanvasItems.vala:134
+#: src/canvas_items/CanvasItemText.vala:113 src/CanvasItems.vala:134
 msgid "Text"
 msgstr "Tèxte"
 
-#: src/canvas_items/CanvasItemText.vala:944 src/CanvasItems.vala:1055
-#: src/FormatBar.vala:59
+#: src/canvas_items/CanvasItemText.vala:954 src/CanvasItems.vala:1096
+#: src/FormatBar.vala:60
 msgid "Copy"
 msgstr "Copiar"
 
-#: src/canvas_items/CanvasItemText.vala:947 src/CanvasItems.vala:1056
-#: src/FormatBar.vala:65
+#: src/canvas_items/CanvasItemText.vala:957 src/CanvasItems.vala:1097
+#: src/FormatBar.vala:66
 msgid "Cut"
 msgstr "Copar"
 
-#: src/canvas_items/CanvasItemText.vala:951
+#: src/canvas_items/CanvasItemText.vala:961
 msgid "Paste"
 msgstr ""
 
-#: src/canvas_items/CanvasItemText.vala:957
+#: src/canvas_items/CanvasItemText.vala:967
 #, fuzzy
 msgid "Select All"
 msgstr "Seleccionar tot lo tèxte"
 
-#: src/canvas_items/CanvasItemText.vala:963
+#: src/canvas_items/CanvasItemText.vala:973
 msgid "Insert Emoji"
 msgstr ""
 
@@ -211,120 +211,120 @@ msgstr "Apondre pegasolet"
 msgid "Image"
 msgstr "Retalhar l'imatge"
 
-#: src/CanvasItems.vala:389
+#: src/CanvasItems.vala:393
 #, fuzzy
 msgid "Open Insertion Image"
 msgstr "Dobrir un imatge"
 
-#: src/CanvasItems.vala:389 src/MainWindow.vala:481
+#: src/CanvasItems.vala:393 src/MainWindow.vala:491
 msgid "Open"
 msgstr "Dobrir"
 
-#: src/CanvasItems.vala:389 src/Exporter.vala:166 src/MainWindow.vala:481
-#: src/Resizer.vala:189 src/StickerSet.vala:75
+#: src/CanvasItems.vala:393 src/Exporter.vala:173 src/MainWindow.vala:491
+#: src/Resizer.vala:191 src/StickerSet.vala:75
 msgid "Cancel"
 msgstr "Anullar"
 
-#: src/CanvasItems.vala:983
+#: src/CanvasItems.vala:1022
 msgid "move items"
 msgstr "desplaçar elements"
 
-#: src/CanvasItems.vala:1059
+#: src/CanvasItems.vala:1100
 msgid "Delete"
 msgstr "Suprimir"
 
-#: src/CanvasItems.vala:1062
+#: src/CanvasItems.vala:1103
 msgid "Send to Front"
 msgstr "Enviar al davant"
 
-#: src/CanvasItems.vala:1063
+#: src/CanvasItems.vala:1104
 msgid "Send to Back"
 msgstr "Enviar enrèire"
 
-#: src/CanvasItems.vala:1067
+#: src/CanvasItems.vala:1108
 msgid "Save As Custom"
 msgstr ""
 
-#: src/CanvasItem.vala:294
+#: src/CanvasItem.vala:315
 msgid "resize item"
 msgstr "retalhar element"
 
-#: src/CanvasToolbar.vala:55
+#: src/CanvasToolbar.vala:56
 #, fuzzy
 msgid "Add Arrow"
 msgstr "Sageta novèla"
 
-#: src/CanvasToolbar.vala:55
+#: src/CanvasToolbar.vala:56
 #, fuzzy
 msgid "More Arrows"
 msgstr "Sageta novèla"
 
-#: src/CanvasToolbar.vala:55
+#: src/CanvasToolbar.vala:56
 msgid "Custom Arrows"
 msgstr ""
 
-#: src/CanvasToolbar.vala:56
+#: src/CanvasToolbar.vala:57
 #: data/com.github.phase1geo.annotator.shortcuts.ui:132
 #, fuzzy
 msgid "Add Shape"
 msgstr "Apondre fòrma"
 
-#: src/CanvasToolbar.vala:56
+#: src/CanvasToolbar.vala:57
 #, fuzzy
 msgid "More Shapes"
 msgstr "Apondre fòrma"
 
-#: src/CanvasToolbar.vala:56
+#: src/CanvasToolbar.vala:57
 #, fuzzy
 msgid "Custom Shapes"
 msgstr "Apondre fòrma"
 
-#: src/CanvasToolbar.vala:407
+#: src/CanvasToolbar.vala:414
 msgid "Crop Image"
 msgstr "Retalhar l'imatge"
 
-#: src/CanvasToolbar.vala:435 src/Resizer.vala:184
+#: src/CanvasToolbar.vala:443 src/Resizer.vala:186
 msgid "Resize Image"
 msgstr "Redimensionar l'imatge"
 
-#: src/CanvasToolbar.vala:455
+#: src/CanvasToolbar.vala:464
 #, fuzzy
 msgid "Pick Color To Clipboard"
 msgstr "Copiar al quichapapièrs"
 
-#: src/CanvasToolbar.vala:475
+#: src/CanvasToolbar.vala:485
 msgid "Shape Color"
 msgstr "Color de fòrma"
 
-#: src/CanvasToolbar.vala:545
+#: src/CanvasToolbar.vala:556
 msgid "Add Transparency"
 msgstr "Apondre transparéncia"
 
-#: src/CanvasToolbar.vala:552
+#: src/CanvasToolbar.vala:563
 msgid "Pick Color From Image"
 msgstr ""
 
-#: src/CanvasToolbar.vala:586
+#: src/CanvasToolbar.vala:598
 msgid "Shape Border"
 msgstr "Bordadura de fòrma"
 
-#: src/CanvasToolbar.vala:599
+#: src/CanvasToolbar.vala:611
 msgid "Border Width"
 msgstr "Largor de la bordadura"
 
-#: src/CanvasToolbar.vala:631
+#: src/CanvasToolbar.vala:643
 msgid "Dash Pattern"
 msgstr ""
 
-#: src/CanvasToolbar.vala:664
+#: src/CanvasToolbar.vala:676
 msgid "Show Outline"
 msgstr ""
 
-#: src/CanvasToolbar.vala:694
+#: src/CanvasToolbar.vala:707
 msgid "Font Properties"
 msgstr "Proprietats de poliça"
 
-#: src/CanvasToolbar.vala:734
+#: src/CanvasToolbar.vala:747
 msgid "Drag PNG Image"
 msgstr ""
 
@@ -346,65 +346,65 @@ msgstr "Edicion"
 msgid "Done"
 msgstr ""
 
-#: src/Exporter.vala:52
+#: src/Exporter.vala:53
 #, fuzzy
 msgid "Export…"
 msgstr "Exportar"
 
-#: src/Exporter.vala:54
+#: src/Exporter.vala:55
 msgid "Export With Current Settings"
 msgstr ""
 
-#: src/Exporter.vala:142
+#: src/Exporter.vala:148
 #, fuzzy
 msgid "Export Options"
 msgstr "Exportar"
 
-#: src/Exporter.vala:165
+#: src/Exporter.vala:172
 #, fuzzy, c-format
 msgid "Export As %s"
 msgstr "Exportar coma PNG…"
 
-#: src/Exporter.vala:166 src/StickerSet.vala:352
+#: src/Exporter.vala:173 src/StickerSet.vala:352
 msgid "Export"
 msgstr "Exportar"
 
-#: src/Exporter.vala:189
+#: src/Exporter.vala:196
 #, fuzzy
 msgid "Export Completed"
 msgstr "Exportar l'imatge"
 
-#: src/exports/ExportEditable.vala:31 src/MainWindow.vala:188
-#: src/MainWindow.vala:460
+#: src/exports/ExportEditable.vala:31 src/MainWindow.vala:194
+#: src/MainWindow.vala:469
 msgid "Annotator"
 msgstr "Annotator"
 
-#: src/exports/ExportEditable.vala:255
+#: src/exports/ExportEditable.vala:253
 msgid "Image Compression"
 msgstr ""
 
-#: src/exports/ExportImage.vala:72
+#: src/exports/ExportImage.vala:73
 msgid "Quality"
 msgstr ""
 
-#: src/exports/ExportPDF.vala:29
+#: src/exports/ExportPDF.vala:30
 msgid "PDF"
 msgstr ""
 
-#: src/exports/ExportPNG.vala:30
+#: src/exports/ExportPNG.vala:31
 msgid "PNG"
 msgstr ""
 
-#: src/exports/ExportPNG.vala:65
+#: src/exports/ExportPNG.vala:68
 msgid "Compression"
 msgstr ""
 
-#: src/exports/ExportPNG.vala:66
+#: src/exports/ExportPNG.vala:69
 #, fuzzy
 msgid "Transparency"
 msgstr "Apondre transparéncia"
 
-#: src/exports/ExportSVG.vala:29
+#: src/exports/ExportSVG.vala:30
 msgid "SVG"
 msgstr ""
 
@@ -412,226 +412,226 @@ msgstr ""
 msgid "WebP"
 msgstr ""
 
-#: src/Exports.vala:35
+#: src/Exports.vala:36
 msgid "JPEG"
 msgstr ""
 
-#: src/Exports.vala:36
+#: src/Exports.vala:37
 msgid "TIFF"
 msgstr ""
 
-#: src/Exports.vala:37
+#: src/Exports.vala:38
 msgid "BMP"
 msgstr ""
 
-#: src/FormatBar.vala:71
+#: src/FormatBar.vala:72
 msgid "Bold"
 msgstr "En gras"
 
-#: src/FormatBar.vala:78
+#: src/FormatBar.vala:79
 msgid "Italic"
 msgstr "Italica"
 
-#: src/FormatBar.vala:85
+#: src/FormatBar.vala:86
 msgid "Underline"
 msgstr "Soslinhar"
 
-#: src/FormatBar.vala:92
+#: src/FormatBar.vala:93
 msgid "Strikethrough"
 msgstr "Raiat"
 
-#: src/FormatBar.vala:99
+#: src/FormatBar.vala:100
 msgid "Code Block"
 msgstr "Blòt de còdi"
 
-#: src/FormatBar.vala:106
+#: src/FormatBar.vala:107
 msgid "Superscript"
 msgstr "Suscrit"
 
-#: src/FormatBar.vala:113
+#: src/FormatBar.vala:114
 msgid "Subscript"
 msgstr "Soscrit"
 
-#: src/FormatBar.vala:121
+#: src/FormatBar.vala:122
 msgid "Header"
 msgstr "Entèsta"
 
-#: src/FormatBar.vala:127
+#: src/FormatBar.vala:128
 msgid "None"
 msgstr "Pas cap"
 
-#: src/FormatBar.vala:132
+#: src/FormatBar.vala:133
 msgid "Apply Highlight Color"
 msgstr "Aplicar la color d’enlusiment"
 
-#: src/FormatBar.vala:133
+#: src/FormatBar.vala:134
 msgid "Change Highlight Color"
 msgstr "Cambiar la color d’enlusiment"
 
-#: src/FormatBar.vala:137
+#: src/FormatBar.vala:138
 msgid "Apply Font Color"
 msgstr "Aplicar color de poliça"
 
-#: src/FormatBar.vala:138
+#: src/FormatBar.vala:139
 msgid "Change Font Color"
 msgstr "Cambiar color de poliça"
 
-#: src/FormatBar.vala:143
+#: src/FormatBar.vala:144
 msgid "Clear all formatting"
 msgstr "Escafar tot lo formatatge"
 
-#: src/MainWindow.vala:193
+#: src/MainWindow.vala:199
 msgid "Open Image"
 msgstr "Dobrir un imatge"
 
-#: src/MainWindow.vala:199
+#: src/MainWindow.vala:205
 #, fuzzy
 msgid "Take Screenshot"
 msgstr "Dobrir imatge del quichapapièrs"
 
-#: src/MainWindow.vala:207 src/StickerSet.vala:307 src/UndoBuffer.vala:84
+#: src/MainWindow.vala:213 src/StickerSet.vala:307 src/UndoBuffer.vala:91
 msgid "Undo"
 msgstr "Desfar"
 
-#: src/MainWindow.vala:214 src/StickerSet.vala:308 src/UndoBuffer.vala:90
+#: src/MainWindow.vala:220 src/StickerSet.vala:308 src/UndoBuffer.vala:98
 msgid "Redo"
 msgstr "Refar"
 
-#: src/MainWindow.vala:234
+#: src/MainWindow.vala:240
 #, fuzzy
 msgid "Shortcuts Cheatsheet…"
 msgstr "Resumit dels acorchis"
 
-#: src/MainWindow.vala:237
+#: src/MainWindow.vala:243
 #, fuzzy
 msgid "About Annotator"
 msgstr "Annotator"
 
-#: src/MainWindow.vala:246
+#: src/MainWindow.vala:252
 msgid "Properties"
 msgstr "Proprietats"
 
-#: src/MainWindow.vala:267
+#: src/MainWindow.vala:273
 msgid "Copy To Clipboard"
 msgstr "Copiar al quichapapièrs"
 
-#: src/MainWindow.vala:268
+#: src/MainWindow.vala:274
 msgid "Print…"
 msgstr "Imprimir…"
 
-#: src/MainWindow.vala:287
+#: src/MainWindow.vala:293
 msgid "Export Image"
 msgstr "Exportar l'imatge"
 
-#: src/MainWindow.vala:315
+#: src/MainWindow.vala:321
 msgid "Zoom to Fit Window"
 msgstr "Agrandir per garnir la fenèstra"
 
-#: src/MainWindow.vala:323 src/MainWindow.vala:953
+#: src/MainWindow.vala:329 src/MainWindow.vala:930
 #, c-format
 msgid "Zoom (%d%%)"
 msgstr "Zoom (%d%%)"
 
-#: src/MainWindow.vala:335
+#: src/MainWindow.vala:341
 msgid "Welcome to Annotator"
 msgstr "La benvenguda a Annotator"
 
-#: src/MainWindow.vala:337
+#: src/MainWindow.vala:343
 msgid "Let's get started annotating an image"
 msgstr "Comencem d’anotar un imatge"
 
-#: src/MainWindow.vala:364
+#: src/MainWindow.vala:370
 msgid "Open Image From File"
 msgstr "Dobrir un imatge a partir de Fichièr"
 
-#: src/MainWindow.vala:364
+#: src/MainWindow.vala:370
 #, fuzzy
 msgid "Open a PNG, JPEG, TIFF, BMP or Annotator file"
 msgstr "Dobrir un fichièr PNG, JPEG, TIFF o BMP"
 
-#: src/MainWindow.vala:367
+#: src/MainWindow.vala:373
 msgid "Paste Image From Clipboard"
 msgstr "Pegar imatge del quichapapièrs"
 
-#: src/MainWindow.vala:367
+#: src/MainWindow.vala:373
 msgid "Open an image from the clipboard"
 msgstr "Dobrir imatge del quichapapièrs"
 
-#: src/MainWindow.vala:370
+#: src/MainWindow.vala:376
 msgid "Take A Screenshot"
 msgstr ""
 
-#: src/MainWindow.vala:370
+#: src/MainWindow.vala:376
 #, fuzzy
 msgid "Open an image from a screenshot"
 msgstr "Dobrir imatge del quichapapièrs"
 
-#: src/MainWindow.vala:406
+#: src/MainWindow.vala:413
 msgid "Font:"
 msgstr "Poliça :"
 
-#: src/MainWindow.vala:467
+#: src/MainWindow.vala:476
 #, fuzzy
 msgid "All Loadable Formats"
 msgstr "Totes los formats d’imatges (*)"
 
-#: src/MainWindow.vala:481
+#: src/MainWindow.vala:491
 msgid "Open Image File"
 msgstr "Dobrir un fichièr imatge"
 
-#: src/MainWindow.vala:610
+#: src/MainWindow.vala:616
 msgid "Delay (in seconds)"
 msgstr ""
 
-#: src/MainWindow.vala:634
+#: src/MainWindow.vala:640
 msgid "Include Annotator window"
 msgstr ""
 
-#: src/Resizer.vala:190
+#: src/Resizer.vala:192
 msgid "Resize"
 msgstr "Redimensionar"
 
-#: src/Resizer.vala:289
+#: src/Resizer.vala:296
 msgid "Width:"
 msgstr "Largor :"
 
-#: src/Resizer.vala:311
+#: src/Resizer.vala:318
 msgid "Height:"
 msgstr "Nautor :"
 
-#: src/Resizer.vala:336
+#: src/Resizer.vala:343
 msgid "Scale proportionally"
 msgstr ""
 
-#: src/Resizer.vala:378
+#: src/Resizer.vala:385
 msgid "Image Size"
 msgstr "Talha de l'imatge"
 
-#: src/Resizer.vala:422
+#: src/Resizer.vala:428
 msgid "Top"
 msgstr "Superior"
 
-#: src/Resizer.vala:422 src/StickerSet.vala:291
+#: src/Resizer.vala:428 src/StickerSet.vala:291
 msgid "Right"
 msgstr "Drecha"
 
-#: src/Resizer.vala:422
+#: src/Resizer.vala:428
 msgid "Bottom"
 msgstr "Inferior"
 
-#: src/Resizer.vala:422 src/StickerSet.vala:290
+#: src/Resizer.vala:428 src/StickerSet.vala:290
 msgid "Left"
 msgstr "Pagina d'esquèrra"
 
-#: src/Resizer.vala:433
+#: src/Resizer.vala:439
 msgid "Margins"
 msgstr "Marges"
 
-#: src/Resizer.vala:474
+#: src/Resizer.vala:481
 msgid "Preview"
 msgstr "Apercebut"
 
-#: src/Resizer.vala:501
+#: src/Resizer.vala:509
 #, c-format
 msgid "%d x %d pixels"
 msgstr "%d x %d pixèls"
@@ -1926,104 +1926,104 @@ msgstr ""
 msgid "View details"
 msgstr ""
 
-#: src/undo_actions/UndoImageResize.vala:31
+#: src/undo_actions/UndoImageResize.vala:32
 msgid "image resize"
 msgstr ""
 
-#: src/undo_actions/UndoItemAdd.vala:29
+#: src/undo_actions/UndoItemAdd.vala:30
 msgid "item add"
 msgstr ""
 
-#: src/undo_actions/UndoItemBlur.vala:30
+#: src/undo_actions/UndoItemBlur.vala:31
 msgid "blur amount"
 msgstr ""
 
-#: src/undo_actions/UndoItemDelete.vala:37
+#: src/undo_actions/UndoItemDelete.vala:38
 msgid "item delete"
 msgstr ""
 
-#: src/undo_actions/UndoItemMagnifierFocus.vala:30
+#: src/undo_actions/UndoItemMagnifierFocus.vala:31
 msgid "magnifier focus change"
 msgstr ""
 
-#: src/undo_actions/UndoItemMagnifierZoom.vala:30
+#: src/undo_actions/UndoItemMagnifierZoom.vala:31
 msgid "magnifier zoom"
 msgstr ""
 
-#: src/undo_actions/UndoItemPaste.vala:28
+#: src/undo_actions/UndoItemPaste.vala:29
 msgid "item paste"
 msgstr ""
 
-#: src/undo_actions/UndoItemPropChange.vala:52
+#: src/undo_actions/UndoItemPropChange.vala:53
 msgid "item property change"
 msgstr ""
 
-#: src/undo_actions/UndoItemSendBack.vala:29
+#: src/undo_actions/UndoItemSendBack.vala:30
 msgid "move item to back"
 msgstr ""
 
-#: src/undo_actions/UndoItemSendFront.vala:29
+#: src/undo_actions/UndoItemSendFront.vala:30
 msgid "move item to front"
 msgstr ""
 
-#: src/undo_actions/UndoItemSequenceNum.vala:30
+#: src/undo_actions/UndoItemSequenceNum.vala:31
 msgid "sequence number change"
 msgstr ""
 
-#: src/undo_actions/UndoItemStarPoints.vala:30
+#: src/undo_actions/UndoItemStarPoints.vala:31
 msgid "start points change"
 msgstr ""
 
-#: src/undo_actions/UndoItemTextResize.vala:30
+#: src/undo_actions/UndoItemTextResize.vala:31
 msgid "text resize"
 msgstr ""
 
-#: src/undo_actions/UndoTextClearTags.vala:30
+#: src/undo_actions/UndoTextClearTags.vala:31
 msgid "clear formatting"
 msgstr "escafar lo formatatge"
 
-#: src/undo_actions/UndoTextCommit.vala:32
+#: src/undo_actions/UndoTextCommit.vala:33
 msgid "text changed"
 msgstr "tèxt cambiat"
 
-#: src/undo_actions/UndoTextDelete.vala:30
+#: src/undo_actions/UndoTextDelete.vala:31
 msgid "text deletion"
 msgstr ""
 
-#: src/undo_actions/UndoTextInsert.vala:29
-#: src/undo_actions/UndoTextMultiInsert.vala:33
+#: src/undo_actions/UndoTextInsert.vala:30
+#: src/undo_actions/UndoTextMultiInsert.vala:34
 msgid "text insertion"
 msgstr ""
 
-#: src/undo_actions/UndoTextReplace.vala:31
+#: src/undo_actions/UndoTextReplace.vala:32
 msgid "text replacement"
 msgstr ""
 
-#: src/undo_actions/UndoTextTagAdd.vala:31
+#: src/undo_actions/UndoTextTagAdd.vala:32
 msgid "format tag add"
 msgstr ""
 
-#: src/undo_actions/UndoTextTagRemove.vala:31
+#: src/undo_actions/UndoTextTagRemove.vala:32
 msgid "format tag remove"
 msgstr ""
 
-#: src/UndoBuffer.vala:85
+#: src/UndoBuffer.vala:92
 msgid "Undo "
 msgstr "Desfar "
 
-#: src/UndoBuffer.vala:91
+#: src/UndoBuffer.vala:99
 msgid "Redo "
 msgstr "Restablir "
 
-#: src/ZoomWidget.vala:92 data/com.github.phase1geo.annotator.shortcuts.ui:75
+#: src/ZoomWidget.vala:93 data/com.github.phase1geo.annotator.shortcuts.ui:75
 msgid "Zoom Out"
 msgstr "Reduire el zoom"
 
-#: src/ZoomWidget.vala:98
+#: src/ZoomWidget.vala:99
 msgid "Zoom Actual"
 msgstr "Zoom actual"
 
-#: src/ZoomWidget.vala:104 data/com.github.phase1geo.annotator.shortcuts.ui:68
+#: src/ZoomWidget.vala:105 data/com.github.phase1geo.annotator.shortcuts.ui:68
 msgid "Zoom In"
 msgstr "Agrandir lo zoom"
 
