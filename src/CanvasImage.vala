@@ -28,7 +28,8 @@ public enum PickMode {
   CLIPBOARD,
   COLOR;
 
-  /* Returns true if enabled */
+  //-------------------------------------------------------------
+  // Returns true if enabled
   public bool enabled() {
     return( this != NONE );
   }
@@ -142,10 +143,10 @@ public class CanvasImage {
     _canvas.set_size_request( _buf.width, _buf.height );
     _angle = 0;
 
-    /* Create the image information */
+    // Create the image information
     info = new CanvasImageInfo( _buf );
 
-    /* Indicate that the image changed to anyone listening */
+    // Indicate that the image changed to anyone listening
     image_changed();
 
   }
@@ -156,13 +157,13 @@ public class CanvasImage {
 
     var items_removed = _canvas.items.items_exist();
 
-    /* Delete the canvas items */
+    // Delete the canvas items
     _canvas.items.clear();
 
-    /* Update the image */
+    // Update the image
     change_image( buf, undo_name );
 
-    /* If we removed items, clear the undo buffer */
+    // If we removed items, clear the undo buffer
     if( items_removed ) {
       _canvas.undo_buffer.clear();
     }
@@ -193,27 +194,27 @@ public class CanvasImage {
   // This is the function that performs the actual resize.
   public void do_resize( CanvasImageInfo old_info, CanvasImageInfo new_info ) {
 
-    /* Copy the new info into our info */
+    // Copy the new info into our info
     info.copy( new_info );
 
-    /* Create a new buffer with the added margin */
+    // Create a new buffer with the added margin
     var sbuf = pixbuf.scale_simple( (int)info.pixbuf_rect.width, (int)info.pixbuf_rect.height, InterpType.BILINEAR );
     _buf = new Pixbuf( pixbuf.colorspace, pixbuf.has_alpha, pixbuf.bits_per_sample, info.width, info.height );
     _buf.fill( (uint32)0xffffffff );
     sbuf.copy_area( 0, 0, (int)info.pixbuf_rect.width, (int)info.pixbuf_rect.height, _buf, (int)info.pixbuf_rect.x, (int)info.pixbuf_rect.y );
 
-    /* Calculate the scaling factors */
+    // Calculate the scaling factors
     width_scale  = info.pixbuf_rect.width  / pixbuf.width;
     height_scale = info.pixbuf_rect.height / pixbuf.height;
 
-    /* Resize the canvas */
+    // Resize the canvas
     _canvas.resize( old_info, new_info );
 
   }
 
-  /****************************************************************************/
-  //  KEY EVENT HANDLER
-  /****************************************************************************/
+  //-------------------------------------------------------------
+  // KEY EVENT HANDLER
+  //-------------------------------------------------------------
 
   public void focus_leave() {
     _control_set = false;
@@ -223,7 +224,7 @@ public class CanvasImage {
   // Handles a keypress event when cropping is enabled.
   public bool key_pressed( uint keyval, uint keycode, ModifierType state ) {
 
-    /* Handle a press of the control key */
+    // Handle a press of the control key
     if( (keyval == Key.Control_L) || (keyval == Key.Control_R) ) {
       _control_set = true;
       if( _pick_mode.enabled() ) {
@@ -307,9 +308,9 @@ public class CanvasImage {
     return( false );
   }
 
-  /****************************************************************************/
-  //  MOUSE EVENT HANDLER
-  /****************************************************************************/
+  //-------------------------------------------------------------
+  // MOUSE EVENT HANDLER
+  //-------------------------------------------------------------
 
   //-------------------------------------------------------------
   // Handles a cursor press event.
@@ -384,12 +385,12 @@ public class CanvasImage {
     _last_x = x;
     _last_y = y;
 
-    /* If we are picking a color, queue the draw */
+    // If we are picking a color, queue the draw
     if( _pick_mode.enabled() ) {
       return( !_control_set || check_in_pick_box() );
     }
 
-    /* If we clicked into the crop rectangle, move the rectangle */
+    // If we clicked into the crop rectangle, move the rectangle
     if( _crop_index == -1 ) {
       box.x += diffx;
       box.y += diffy;
@@ -401,7 +402,7 @@ public class CanvasImage {
         return( true );
       }
 
-    /* If we are dragging a selector box, handle the move and resize */
+    // If we are dragging a selector box, handle the move and resize
     } else if( _crop_index >= 0 ) {
       switch( _crop_index ) {
         case 0  :  box.x += diffx;  box.y += diffy;  box.width -= diffx;  box.height -= diffy;  break;
@@ -434,7 +435,7 @@ public class CanvasImage {
         return( true );
       }
 
-    /* If we are hovering over a crop selector, change the cursor */
+    // If we are hovering over a crop selector, change the cursor
     } else {
       var rect = new CanvasRect();
       for( int i=0; i<crop_selectors; i++ ) {
@@ -455,7 +456,7 @@ public class CanvasImage {
   // If we are in color picking mode, finish it.
   private bool complete_pick_mode( bool cancel ) {
 
-    /* Handle the pick mode, if set and we are not cancelling */
+    // Handle the pick mode, if set and we are not cancelling
     if( !cancel ) {
       switch( _pick_mode ) {
         case PickMode.CLIPBOARD : { 
@@ -488,9 +489,9 @@ public class CanvasImage {
 
   }
 
-  /****************************************************************************/
-  //  CROP HANDLING CODE
-  /****************************************************************************/
+  //-------------------------------------------------------------
+  // CROP HANDLING CODE
+  //-------------------------------------------------------------
 
   //-------------------------------------------------------------
   // Start the cropping function.
@@ -523,26 +524,26 @@ public class CanvasImage {
     return( true );
   }
 
-  /****************************************************************************/
-  //  COLOR PICKER
-  /****************************************************************************/
+  //-------------------------------------------------------------
+  // COLOR PICKER
+  //-------------------------------------------------------------
 
   public void pick_color( bool to_clipboard ) {
 
     _pick_mode = to_clipboard ? PickMode.CLIPBOARD : PickMode.COLOR;
 
-    /* Select the middle-most row and column */
+    // Select the middle-most row and column
     _pick_adjust_row = (pick_size / 2);
     _pick_adjust_col = (pick_size / 2);
 
-    /* Make sure that the canvas has the keyboard focus to handle keypresses */
+    // Make sure that the canvas has the keyboard focus to handle keypresses
     _canvas.grab_focus();
 
   }
 
-  /****************************************************************************/
-  //  EXPORTING
-  /****************************************************************************/
+  //-------------------------------------------------------------
+  // EXPORTING
+  //-------------------------------------------------------------
 
   //-------------------------------------------------------------
   // Make sure that everything is cleared from the image.
@@ -574,9 +575,9 @@ public class CanvasImage {
     exports.printer.export( _buf );
   }
 
-  /****************************************************************************/
-  //  SAVE/LOAD
-  /****************************************************************************/
+  //-------------------------------------------------------------
+  // SAVE/LOAD
+  //-------------------------------------------------------------
 
   //-------------------------------------------------------------
   // Saves the contents of this canvas image to XML format.
@@ -589,7 +590,7 @@ public class CanvasImage {
 
     try {
       _buf.savev( fname, "png", options, values );
-      node->set_prop( "filename", fname );
+      node->set_prop( "filename", "background.png" );
     } catch( GLib.Error e ) {
       critical( e.message );
     }
@@ -604,13 +605,13 @@ public class CanvasImage {
 
   //-------------------------------------------------------------
   // Load the contents of this canvas image from XML format.
-  public bool load( Xml.Node* node ) {
+  public bool load( Xml.Node* node, string image_dir ) {
 
     var loaded = false;
 
     var fname = node->get_prop( "filename" );
     if( fname != null ) {
-      loaded = _canvas.editor.open_image( fname ); 
+      loaded = _canvas.editor.open_image( GLib.Path.build_filename( image_dir, fname ) ); 
     }
 
     var a = node->get_prop( "angle" );
@@ -621,9 +622,11 @@ public class CanvasImage {
 
     for( Xml.Node* it=node->children; it!=null; it=it->next ) {
       if( (it->type == Xml.ElementType.ELEMENT_NODE) && (it->name == "image-info") ) {
+        if( info == null ) {
+          info = new CanvasImageInfo.from_xml( it );
+        }
         var old_info = new CanvasImageInfo.from_info( info );
-        var new_info = new CanvasImageInfo.from_info( info );
-        new_info.load( it );
+        var new_info = new CanvasImageInfo.from_xml( it );
         do_resize( old_info, new_info );
       }
     }
@@ -632,9 +635,9 @@ public class CanvasImage {
 
   }
 
-  /****************************************************************************/
-  //  DRAWING
-  /****************************************************************************/
+  //-------------------------------------------------------------
+  // DRAWING
+  //-------------------------------------------------------------
 
   //-------------------------------------------------------------
   // Calculates the box for the given selector.
@@ -714,7 +717,7 @@ public class CanvasImage {
     Utils.set_context_color_with_alpha( ctx, black, 0.5 );
     ctx.set_line_width( 1 );
 
-    /* Draw vertical lines */
+    // Draw vertical lines
     ctx.move_to( (crop_rect.x1() + third_width), crop_rect.y1() );
     ctx.line_to( (crop_rect.x1() + third_width), crop_rect.y2() );
     ctx.stroke();
@@ -723,7 +726,7 @@ public class CanvasImage {
     ctx.line_to( (crop_rect.x2() - third_width), crop_rect.y2() );
     ctx.stroke();
 
-    /* Draw horizontal lines */
+    // Draw horizontal lines
     ctx.move_to( crop_rect.x1(), (crop_rect.y1() + third_height) );
     ctx.line_to( crop_rect.x2(), (crop_rect.y1() + third_height) );
     ctx.stroke();
@@ -804,12 +807,12 @@ public class CanvasImage {
       var pick_y = _control_set ? _pick_y : _last_y;
       var mid    = (pick_size / 2);
 
-      /* If we are too close to the border, just return */
+      // If we are too close to the border, just return
       if( (pick_x < mid) || (pick_y < mid) || ((pick_x + mid) >= _buf.width) || ((pick_y + mid) >= _buf.height) ) {
         return;
       }
 
-      /* Get the color at the last motion location */
+      // Get the color at the last motion location
       var buf    = new Pixbuf.subpixbuf( _buf, (int)(pick_x - mid), (int)(pick_y - mid), pick_size, pick_size );
       var black  = Utils.color_from_string( "black" );
       var size   = pick_size * pick_pixel_size;
@@ -838,10 +841,10 @@ public class CanvasImage {
 
       }
 
-      /* Get the pixel color */
+      // Get the pixel color
       _pick_color = get_color_at( buf, _pick_adjust_row, _pick_adjust_col );
 
-      /* Draw a border around the selected color pixel box */
+      // Draw a border around the selected color pixel box
       Utils.set_context_color( ctx, Granite.contrasting_foreground_color( _pick_color ) );
       ctx.set_line_width( 2 );
       ctx.rectangle( (box_x + (_pick_adjust_row * pick_pixel_size)), (box_y + (_pick_adjust_col * pick_pixel_size)), pick_pixel_size, pick_pixel_size );

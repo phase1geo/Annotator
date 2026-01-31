@@ -34,6 +34,12 @@ public class CanvasImageInfo {
   }
 
   //-------------------------------------------------------------
+  // Constructor from XML
+  public CanvasImageInfo.from_xml( Xml.Node* node ) {
+    load( node );
+  }
+
+  //-------------------------------------------------------------
   // Constructor
   public CanvasImageInfo.from_resizer( int pixbuf_width, int pixbuf_height, int top_margin, int right_margin, int bottom_margin, int left_margin ) {
     width  = left_margin + pixbuf_width + right_margin;
@@ -134,7 +140,7 @@ public class CanvasImageInfo {
 
   //-------------------------------------------------------------
   // Loads the canvas image information from XML format.
-  public void load( Xml.Node* node ) {
+  private void load( Xml.Node* node ) {
 
     var w = node->get_prop( "width" );
     if( w != null ) {

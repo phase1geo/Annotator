@@ -157,7 +157,7 @@ public class ExportEditable : Export {
 
   //-------------------------------------------------------------
   // Loads the XML file and updates the editor.
-  private bool load_xml( string fname ) {
+  private bool load_xml( string fname, string image_dir ) {
 
     Xml.Doc* doc = Xml.Parser.read_file( fname, null, Xml.ParserOption.HUGE );
     if( doc == null ) return( false );
@@ -165,7 +165,7 @@ public class ExportEditable : Export {
     var loaded = false;
     for( Xml.Node* it=doc->get_root_element()->children; it!=null; it=it->next ) {
       if( (it->type == Xml.ElementType.ELEMENT_NODE) && (it->name == "canvas") ) {
-        loaded = canvas.load( it );
+        loaded = canvas.load( it, image_dir );
       }
     }
 
@@ -180,10 +180,12 @@ public class ExportEditable : Export {
   public bool import( string filename ) {
 
     string temp_dir;
+    string image_dir;
 
     // Make the temporary directory
     try {
-      temp_dir = DirUtils.make_tmp( "annotator-XXXXXX" );
+      temp_dir  = DirUtils.make_tmp( "annotator-XXXXXX" );
+      image_dir = GLib.Path.build_filename( temp_dir, "images" );
     } catch( Error e ) {
       critical( e.message );
       return( false );
@@ -217,7 +219,8 @@ public class ExportEditable : Export {
       if( entry.pathname() == "annotations.xml" ) {
         entry.set_pathname( GLib.Path.build_filename( temp_dir, entry.pathname() ) );
       } else {
-        entry.set_pathname( GLib.Path.build_filename( temp_dir, "images", entry.pathname() ) );
+        var image_name = GLib.Path.build_filename( temp_dir, "images", entry.pathname() );
+        entry.set_pathname( GLib.Path.build_filename( image_dir, entry.pathname() ) );
       }
 
       // Read from the archive and write the files to disk
@@ -242,7 +245,7 @@ public class ExportEditable : Export {
     }
 
     // Finally, load the XML file
-    return( load_xml( GLib.Path.build_filename( temp_dir, "annotations.xml" ) ) );
+    return( load_xml( GLib.Path.build_filename( temp_dir, "annotations.xml" ), image_dir ) );
 
   }
 

@@ -1,7 +1,6 @@
 project('com.github.phase1geo.annotator', ['vala', 'c'],
     version : '2.0.1',
     license: 'GPL-2.0-or-later',
-    meson_version: '>= 0.61.0',
 )
 
 add_project_arguments([
@@ -77,12 +76,7 @@ e = executable('com.github.phase1geo.annotator',
 gnome.post_install(
     glib_compile_schemas: true,
     gtk_update_icon_cache: true,
+    update_mime_database: true,
     update_desktop_database: true,
 )
 
-# If our version of Meson supports it, update the mime database
-#if meson.version().version_compare('>=0.64.0')
-#  gnome.post_install(
-#    update_mime_database: true,
-#  )
-#endif
