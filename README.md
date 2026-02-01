@@ -38,10 +38,10 @@ You will need the following dependencies to build Annotator:
 - gobject-2.0
 - glib-2.0
 - libgee-0.8-dev
-- libgranite-dev
+- libgranite-7-dev
+- libgtk-4-dev
 - libxml2-dev
-- libgtk-3-dev
-- libhandy-1-dev
+- libarchive-dev
 - libwebp-dev
 
 To install Annotator from source, run `./app install`.
