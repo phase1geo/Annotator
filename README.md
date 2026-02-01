@@ -72,9 +72,11 @@ If you're an Arch Linux user, there's an
 
 Additionally, Annotator can be installed and run via Flatpak.
 
-To build and install the Flatpak from source, run `./app flatpak`.
+To build the elementary Flatpak from source, run `./app elementary`.
 
-Afterwards, you can run it via: `flatpak run com.github.phase1geo.annotator`.
+To build the Flathub Flatpak from source, run `./app flathub`.
+
+Afterwards, you can run it via: `./app run-flatpak`.
 
 <p align="center">
   <a href="https://appcenter.elementary.io/com.github.phase1geo.annotator">
