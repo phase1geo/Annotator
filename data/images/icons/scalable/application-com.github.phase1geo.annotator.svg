@@ -10,6 +10,7 @@
    inkscape:version="1.4.3 (0d15f75042, 2025-12-25)"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns="http://www.w3.org/2000/svg"
    xmlns:svg="http://www.w3.org/2000/svg">
   <sodipodi:namedview
@@ -35,17 +36,17 @@
      id="layer1"
      inkscape:label="Rectangle">
     <rect
-       style="display:inline;fill:none;stroke:#313131;stroke-width:0.935414;stroke-opacity:1"
+       style="display:inline;fill:url(#linearGradient2);stroke:#313131;stroke-width:0.935414;stroke-opacity:1"
        id="rect1-3"
        width="94.369202"
        height="126.26048"
-       x="17.716856"
+       x="16.815399"
        y="0.63644767" />
   </g>
   <g
      clip-path="url(#clip0)"
      id="g105"
-     transform="matrix(0.70750207,0,0,0.70750207,20.044492,20.018506)">
+     transform="matrix(0.50169862,0,0,0.50169862,31.782577,14.235554)">
     <path
        opacity="0.6"
        d="m 128.299,91.5994 -15.646,2.1245 1.345,9.9091 15.646,-2.125 z"
@@ -646,6 +647,18 @@
   </g>
   <defs
      id="defs180">
+    <linearGradient
+       id="linearGradient1"
+       inkscape:collect="always">
+      <stop
+         style="stop-color:#ffffff;stop-opacity:1;"
+         offset="0"
+         id="stop1" />
+      <stop
+         style="stop-color:#c0c0c0;stop-opacity:1;"
+         offset="1"
+         id="stop2" />
+    </linearGradient>
     <radialGradient
        id="paint0_radial"
        cx="0"
@@ -1205,5 +1218,15 @@
          fill="white"
          id="rect180" />
     </clipPath>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient1"
+       id="linearGradient2"
+       x1="64.901443"
+       y1="16.114403"
+       x2="64.901443"
+       y2="111.41904"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(-0.90145683)" />
   </defs>
 </svg>
