@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.annotator\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-30 22:03-0600\n"
+"POT-Creation-Date: 2026-01-31 22:04-0600\n"
 "PO-Revision-Date: 2023-05-08 00:13+0900\n"
 "Last-Translator: lenemter <lenemter@gmail.com>\n"
 "Language-Team: none\n"
@@ -34,7 +34,7 @@ msgstr ""
 msgid "Flatpak Runtime: %s"
 msgstr ""
 
-#: src/Application.vala:67
+#: src/Application.vala:68
 msgid ""
 "\n"
 "ERROR:  Unable to read image from standard input\n"
@@ -43,41 +43,44 @@ msgstr ""
 "ОШИБКА:  Невозможно прочитать изображение из стандартного ввода\n"
 
 #: src/Application.vala:73
-msgid ""
-"\n"
-"ERROR:  Image does not exist on the clipboard\n"
+msgid "Image paste error"
 msgstr ""
 
-#: src/Application.vala:103
+#: src/Application.vala:73
+#, fuzzy
+msgid "Image does not exist on the clipboard"
+msgstr "Открыть изображение из буфера обмена"
+
+#: src/Application.vala:87
 msgid "Opening file"
 msgstr "Открываем файл"
 
-#: src/Application.vala:119
+#: src/Application.vala:105
 msgid "Display version number."
 msgstr "Вывести номер версии."
 
-#: src/Application.vala:120
+#: src/Application.vala:106
 msgid "Annotate clipboard image."
 msgstr "Открыть изображение из буфер обмена."
 
-#: src/Application.vala:121
+#: src/Application.vala:107
 msgid "Take and annotate a screenshot."
 msgstr "Сделать снимок экрана и открыть его."
 
-#: src/Application.vala:122
+#: src/Application.vala:108
 msgid "Uses image data from standard input"
 msgstr "Использует данные изображения из стандартного ввода"
 
-#: src/CanvasImage.vala:130 src/CanvasImage.vala:155
+#: src/CanvasImage.vala:131 src/CanvasImage.vala:156
 msgid "change image"
 msgstr "изменение изображения"
 
-#: src/CanvasImage.vala:464
+#: src/CanvasImage.vala:465
 #, fuzzy
 msgid "Color copied to clipboard"
 msgstr "Скопировать в буфер обмена"
 
-#: src/CanvasImage.vala:519
+#: src/CanvasImage.vala:520
 msgid "image crop"
 msgstr "обрезку изображения"
 
@@ -208,11 +211,11 @@ msgstr "Обрезать изображение"
 msgid "Open Insertion Image"
 msgstr "Открыть изображение"
 
-#: src/CanvasItems.vala:393 src/MainWindow.vala:491
+#: src/CanvasItems.vala:393 src/MainWindow.vala:492
 msgid "Open"
 msgstr "Открыть"
 
-#: src/CanvasItems.vala:393 src/Exporter.vala:173 src/MainWindow.vala:491
+#: src/CanvasItems.vala:393 src/Exporter.vala:173 src/MainWindow.vala:492
 #: src/Resizer.vala:191 src/StickerSet.vala:75
 msgid "Cancel"
 msgstr "Отменить"
@@ -357,11 +360,11 @@ msgid "Export Completed"
 msgstr "Экспорт завершён"
 
 #: src/exports/ExportEditable.vala:31 src/MainWindow.vala:194
-#: src/MainWindow.vala:469
+#: src/MainWindow.vala:470
 msgid "Annotator"
 msgstr "Annotator"
 
-#: src/exports/ExportEditable.vala:253
+#: src/exports/ExportEditable.vala:256
 #, fuzzy
 msgid "Image Compression"
 msgstr "Сжатие"
@@ -510,7 +513,7 @@ msgstr "Экспортировать изображение"
 msgid "Zoom to Fit Window"
 msgstr "Масштабировать по размеру окна"
 
-#: src/MainWindow.vala:329 src/MainWindow.vala:930
+#: src/MainWindow.vala:329 src/MainWindow.vala:931
 #, c-format
 msgid "Zoom (%d%%)"
 msgstr "Масштаб (%d%%)"
@@ -548,24 +551,24 @@ msgstr "Сделать снимок экрана"
 msgid "Open an image from a screenshot"
 msgstr "Открыть изображение из буфера обмена"
 
-#: src/MainWindow.vala:413
+#: src/MainWindow.vala:414
 msgid "Font:"
 msgstr "Шрифт:"
 
-#: src/MainWindow.vala:476
+#: src/MainWindow.vala:477
 #, fuzzy
 msgid "All Loadable Formats"
 msgstr "Все форматы изображений (*)"
 
-#: src/MainWindow.vala:491
+#: src/MainWindow.vala:492
 msgid "Open Image File"
 msgstr "Открыть файл изображения"
 
-#: src/MainWindow.vala:616
+#: src/MainWindow.vala:617
 msgid "Delay (in seconds)"
 msgstr "Задержка (в секундах)"
 
-#: src/MainWindow.vala:640
+#: src/MainWindow.vala:641
 msgid "Include Annotator window"
 msgstr "Показывать окно Annotator"
 

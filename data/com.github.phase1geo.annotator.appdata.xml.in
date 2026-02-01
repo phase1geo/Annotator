@@ -25,7 +25,10 @@
     </screenshot>
   </screenshots>
   <description>
-    <p>Communicate with images. Better.</p>
+    <p>
+      Communicate with images. Better.  Open image files or take screenshots, add various types
+      of image annotations, and export the annotated image in a number of image formats.
+    </p>
     <ul>
       <li>Load image from the file system, clipboard or a screenshot.</li>
       <li>Add shapes, stickers, images, text, drawings, and other callouts to highlight image details.</li>
@@ -37,41 +40,13 @@
       <li>Built-in color picker to copy image pixel color to clipboard.</li>
       <li>Zoom support.</li>
       <li>Unlimited undo/redo of any change.</li>
-      <li>Export to JPEG, PNG, TIFF, BMP, PDF and SVG image formats.</li>
+      <li>Export to JPEG, PNG, TIFF, BMP, PDF, SVG and WebP image formats.</li>
       <li>Support for copying annotated image to clipboard.</li>
       <li>Support for dragging out a PNG image to another app or location.</li>
       <li>Printer support.</li>
     </ul>
   </description>
-  <content_rating type="oars-1.1">
-    <content_attribute id="violence-cartoon">none</content_attribute>
-    <content_attribute id="violence-fantasy">none</content_attribute>
-    <content_attribute id="violence-realistic">none</content_attribute>
-    <content_attribute id="violence-bloodshed">none</content_attribute>
-    <content_attribute id="violence-sexual">none</content_attribute>
-    <content_attribute id="violence-desecration">none</content_attribute>
-    <content_attribute id="violence-slavery">none</content_attribute>
-    <content_attribute id="violence-worship">none</content_attribute>
-    <content_attribute id="drugs-alcohol">none</content_attribute>
-    <content_attribute id="drugs-narcotics">none</content_attribute>
-    <content_attribute id="drugs-tobacco">none</content_attribute>
-    <content_attribute id="sex-nudity">none</content_attribute>
-    <content_attribute id="sex-themes">none</content_attribute>
-    <content_attribute id="sex-homosexuality">none</content_attribute>
-    <content_attribute id="sex-prostitution">none</content_attribute>
-    <content_attribute id="sex-adultery">none</content_attribute>
-    <content_attribute id="sex-appearance">none</content_attribute>
-    <content_attribute id="language-profanity">none</content_attribute>
-    <content_attribute id="language-humor">none</content_attribute>
-    <content_attribute id="language-discrimination">none</content_attribute>
-    <content_attribute id="social-chat">none</content_attribute>
-    <content_attribute id="social-info">none</content_attribute>
-    <content_attribute id="social-audio">none</content_attribute>
-    <content_attribute id="social-location">none</content_attribute>
-    <content_attribute id="social-contacts">none</content_attribute>
-    <content_attribute id="money-purchasing">none</content_attribute>
-    <content_attribute id="money-gambling">none</content_attribute>
-  </content_rating>
+  <content_rating type="oars-1.1" />
   <url type="homepage">https://github.com/phase1geo/Annotator/</url>
   <url type="bugtracker">https://github.com/phase1geo/Annotator/issues/</url>
   <custom>
@@ -81,6 +56,32 @@
     <value key="x-appcenter-stripe">pk_live_51Ccoj4BJm4hDdHaF1YKGdyGLCLtShzElKsr4GM9hJDJAoZArcWrNHsjL9b8SBs01GQBYpakj0l1tYenVJOqke93300TULHWdph</value>
   </custom>
   <releases>
+    <release version="2.0.1" date="2026-01-31">
+      <description>
+        <p>New</p>
+        <ul>
+          <li>Added ability to export to an editable Annotator file.</li>
+          <li>Added support for WebP export.</li>
+          <li>Added about window.</li>
+        </ul>
+        <p>Changes</p>
+        <ul>
+          <li>Updated screenshot to use D-Bus capture mechanism.</li>
+          <li>Removed references to gtk3 in build files.</li>
+          <li>Improved export menu UI.</li>
+          <li>Updated issues with GitHub continuous improvement action.</li>
+          <li>Removed Debian packaging files.</li>
+        </ul>
+        <p>Bug Fixes</p>
+        <ul>
+          <li>Fixed default export values.</li>
+          <li>Fixed display issue for Flatpak.</li>
+          <li>Fixed text copy/paste button functionality from format bar.</li>
+          <li>Fixed cursor display when Control key is pressed when in text edit mode.</li>
+          <li>Fixed issues with application desktop actions.</li>
+        </ul>
+      </description>
+    </release>
     <release version="2.0.0" date="2024-10-30">
       <description>
         <p>New</p>

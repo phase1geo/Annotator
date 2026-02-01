@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.annotator\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-30 22:03-0600\n"
+"POT-Creation-Date: 2026-01-31 22:04-0600\n"
 "PO-Revision-Date: 2021-11-07 17:58-0300\n"
 "Last-Translator: Fúlvio Alves <fga.fulvio@gmail.com>\n"
 "Language-Team: \n"
@@ -36,51 +36,54 @@ msgstr ""
 msgid "Flatpak Runtime: %s"
 msgstr ""
 
-#: src/Application.vala:67
+#: src/Application.vala:68
 msgid ""
 "\n"
 "ERROR:  Unable to read image from standard input\n"
 msgstr ""
 
 #: src/Application.vala:73
-msgid ""
-"\n"
-"ERROR:  Image does not exist on the clipboard\n"
+msgid "Image paste error"
 msgstr ""
 
-#: src/Application.vala:103
+#: src/Application.vala:73
+#, fuzzy
+msgid "Image does not exist on the clipboard"
+msgstr "Abra uma imagem da área de transferência"
+
+#: src/Application.vala:87
 msgid "Opening file"
 msgstr "Abrindo arquivo"
 
-#: src/Application.vala:119
+#: src/Application.vala:105
 #, fuzzy
 msgid "Display version number."
 msgstr "Número da versão de exibição"
 
-#: src/Application.vala:120
+#: src/Application.vala:106
 #, fuzzy
 msgid "Annotate clipboard image."
 msgstr "Faça anotações em imagens da área de transferência"
 
-#: src/Application.vala:121
+#: src/Application.vala:107
 #, fuzzy
 msgid "Take and annotate a screenshot."
 msgstr "Abra uma imagem da área de transferência"
 
-#: src/Application.vala:122
+#: src/Application.vala:108
 msgid "Uses image data from standard input"
 msgstr ""
 
-#: src/CanvasImage.vala:130 src/CanvasImage.vala:155
+#: src/CanvasImage.vala:131 src/CanvasImage.vala:156
 msgid "change image"
 msgstr "alterar imagem"
 
-#: src/CanvasImage.vala:464
+#: src/CanvasImage.vala:465
 #, fuzzy
 msgid "Color copied to clipboard"
 msgstr "Copiar para a área de transferência"
 
-#: src/CanvasImage.vala:519
+#: src/CanvasImage.vala:520
 msgid "image crop"
 msgstr "recorte de imagem"
 
@@ -212,11 +215,11 @@ msgstr "Cortar imagem"
 msgid "Open Insertion Image"
 msgstr "Abrir imagem"
 
-#: src/CanvasItems.vala:393 src/MainWindow.vala:491
+#: src/CanvasItems.vala:393 src/MainWindow.vala:492
 msgid "Open"
 msgstr "Abrir"
 
-#: src/CanvasItems.vala:393 src/Exporter.vala:173 src/MainWindow.vala:491
+#: src/CanvasItems.vala:393 src/Exporter.vala:173 src/MainWindow.vala:492
 #: src/Resizer.vala:191 src/StickerSet.vala:75
 msgid "Cancel"
 msgstr "Cancelar"
@@ -372,11 +375,11 @@ msgid "Export Completed"
 msgstr "Exportar imagem"
 
 #: src/exports/ExportEditable.vala:31 src/MainWindow.vala:194
-#: src/MainWindow.vala:469
+#: src/MainWindow.vala:470
 msgid "Annotator"
 msgstr "Annotator"
 
-#: src/exports/ExportEditable.vala:253
+#: src/exports/ExportEditable.vala:256
 msgid "Image Compression"
 msgstr ""
 
@@ -524,7 +527,7 @@ msgstr "Exportar imagem"
 msgid "Zoom to Fit Window"
 msgstr "Zoom para ajustar à janela"
 
-#: src/MainWindow.vala:329 src/MainWindow.vala:930
+#: src/MainWindow.vala:329 src/MainWindow.vala:931
 #, c-format
 msgid "Zoom (%d%%)"
 msgstr "Zoom (%d%%)"
@@ -563,24 +566,24 @@ msgstr ""
 msgid "Open an image from a screenshot"
 msgstr "Abra uma imagem da área de transferência"
 
-#: src/MainWindow.vala:413
+#: src/MainWindow.vala:414
 msgid "Font:"
 msgstr "Fonte:"
 
-#: src/MainWindow.vala:476
+#: src/MainWindow.vala:477
 #, fuzzy
 msgid "All Loadable Formats"
 msgstr "Todos os formatos de imagem  (*)"
 
-#: src/MainWindow.vala:491
+#: src/MainWindow.vala:492
 msgid "Open Image File"
 msgstr "Abrir arquivo de imagem"
 
-#: src/MainWindow.vala:616
+#: src/MainWindow.vala:617
 msgid "Delay (in seconds)"
 msgstr ""
 
-#: src/MainWindow.vala:640
+#: src/MainWindow.vala:641
 msgid "Include Annotator window"
 msgstr ""
 

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.annotator\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-30 22:03-0600\n"
+"POT-Creation-Date: 2026-01-31 22:04-0600\n"
 "PO-Revision-Date: 2021-10-10 14:15+0100\n"
 "Last-Translator: MartinIIOT <https://www.github.com/MartinIIOT>\n"
 "Language-Team: SLOVAKIA\n"
@@ -34,51 +34,54 @@ msgstr ""
 msgid "Flatpak Runtime: %s"
 msgstr ""
 
-#: src/Application.vala:67
+#: src/Application.vala:68
 msgid ""
 "\n"
 "ERROR:  Unable to read image from standard input\n"
 msgstr ""
 
 #: src/Application.vala:73
-msgid ""
-"\n"
-"ERROR:  Image does not exist on the clipboard\n"
+msgid "Image paste error"
 msgstr ""
 
-#: src/Application.vala:103
+#: src/Application.vala:73
+#, fuzzy
+msgid "Image does not exist on the clipboard"
+msgstr "Otvoriť obrázok zo schránky"
+
+#: src/Application.vala:87
 msgid "Opening file"
 msgstr "Otvoriť súbor"
 
-#: src/Application.vala:119
+#: src/Application.vala:105
 #, fuzzy
 msgid "Display version number."
 msgstr "Zobraziť číslo verzie"
 
-#: src/Application.vala:120
+#: src/Application.vala:106
 #, fuzzy
 msgid "Annotate clipboard image."
 msgstr "Popíšte obrázok schránky"
 
-#: src/Application.vala:121
+#: src/Application.vala:107
 #, fuzzy
 msgid "Take and annotate a screenshot."
 msgstr "Otvoriť obrázok zo schránky"
 
-#: src/Application.vala:122
+#: src/Application.vala:108
 msgid "Uses image data from standard input"
 msgstr ""
 
-#: src/CanvasImage.vala:130 src/CanvasImage.vala:155
+#: src/CanvasImage.vala:131 src/CanvasImage.vala:156
 msgid "change image"
 msgstr "vymeniť obrázok"
 
-#: src/CanvasImage.vala:464
+#: src/CanvasImage.vala:465
 #, fuzzy
 msgid "Color copied to clipboard"
 msgstr "Kopírovať do schránky"
 
-#: src/CanvasImage.vala:519
+#: src/CanvasImage.vala:520
 msgid "image crop"
 msgstr "orezať obrázok"
 
@@ -216,11 +219,11 @@ msgstr "Orezať obrázok"
 msgid "Open Insertion Image"
 msgstr "Otvoriť obrázok"
 
-#: src/CanvasItems.vala:393 src/MainWindow.vala:491
+#: src/CanvasItems.vala:393 src/MainWindow.vala:492
 msgid "Open"
 msgstr "Otvoriť"
 
-#: src/CanvasItems.vala:393 src/Exporter.vala:173 src/MainWindow.vala:491
+#: src/CanvasItems.vala:393 src/Exporter.vala:173 src/MainWindow.vala:492
 #: src/Resizer.vala:191 src/StickerSet.vala:75
 msgid "Cancel"
 msgstr "Zrušiť"
@@ -376,11 +379,11 @@ msgid "Export Completed"
 msgstr "Exportovať obrázok"
 
 #: src/exports/ExportEditable.vala:31 src/MainWindow.vala:194
-#: src/MainWindow.vala:469
+#: src/MainWindow.vala:470
 msgid "Annotator"
 msgstr "Annotator"
 
-#: src/exports/ExportEditable.vala:253
+#: src/exports/ExportEditable.vala:256
 #, fuzzy
 msgid "Image Compression"
 msgstr "zmena veľkosti obrázku"
@@ -529,7 +532,7 @@ msgstr "Exportovať obrázok"
 msgid "Zoom to Fit Window"
 msgstr "Prispôsobiť veľkosti okna"
 
-#: src/MainWindow.vala:329 src/MainWindow.vala:930
+#: src/MainWindow.vala:329 src/MainWindow.vala:931
 #, c-format
 msgid "Zoom (%d%%)"
 msgstr "Priblíženie (%d%%)"
@@ -568,24 +571,24 @@ msgstr ""
 msgid "Open an image from a screenshot"
 msgstr "Otvoriť obrázok zo schránky"
 
-#: src/MainWindow.vala:413
+#: src/MainWindow.vala:414
 msgid "Font:"
 msgstr "Písmo:"
 
-#: src/MainWindow.vala:476
+#: src/MainWindow.vala:477
 #, fuzzy
 msgid "All Loadable Formats"
 msgstr "Všetky formáty obrázkov  (*)"
 
-#: src/MainWindow.vala:491
+#: src/MainWindow.vala:492
 msgid "Open Image File"
 msgstr "Otvoriť súbor s obrázkom"
 
-#: src/MainWindow.vala:616
+#: src/MainWindow.vala:617
 msgid "Delay (in seconds)"
 msgstr ""
 
-#: src/MainWindow.vala:640
+#: src/MainWindow.vala:641
 msgid "Include Annotator window"
 msgstr ""
 
