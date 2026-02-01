@@ -19,4 +19,4 @@ Exec=com.github.phase1geo.annotator --use-clipboard
 
 [Desktop Action EditScreenshot]
 Name=Take Screenshot
-Exec=com.github.phase1geo.annotator --screenshot-area
+Exec=com.github.phase1geo.annotator --screenshot

@@ -379,6 +379,7 @@ public class MainWindow : Gtk.ApplicationWindow {
     });
 
     // Initialize the clipboard
+    paste.sensitive = AnnotatorClipboard.image_pasteable();
     AnnotatorClipboard.get_clipboard().changed.connect(() => {
       paste.sensitive = AnnotatorClipboard.image_pasteable();
     });
