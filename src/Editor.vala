@@ -145,6 +145,36 @@ public class Editor : Box {
   }
 
   //-------------------------------------------------------------
+  // Returns the current scroll offsets.
+  public void get_scroll_offsets( out double x, out double y ) {
+    x = _sw.hadjustment.value;
+    y = _sw.vadjustment.value;
+  }
+
+  //-------------------------------------------------------------
+  // Sets the scroll offsets, clamping to valid ranges.
+  public void set_scroll_offsets( double x, double y ) {
+    var hadj = _sw.hadjustment;
+    var vadj = _sw.vadjustment;
+    hadj.value = clamp_adjustment( hadj, x );
+    vadj.value = clamp_adjustment( vadj, y );
+  }
+
+  private double clamp_adjustment( Adjustment adj, double value ) {
+    var min = adj.lower;
+    var max = adj.upper - adj.page_size;
+    if( max < min ) {
+      max = min;
+    }
+    if( value < min ) {
+      return( min );
+    } else if( value > max ) {
+      return( max );
+    }
+    return( value );
+  }
+
+  //-------------------------------------------------------------
   // Returns the width and height of the overlay area of the canvas.
   public CanvasRect get_displayed_rect() {
     var x = (int)_sw.hadjustment.value;
@@ -155,4 +185,3 @@ public class Editor : Box {
   }
 
 }
-
