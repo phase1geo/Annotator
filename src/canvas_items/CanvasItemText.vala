@@ -410,10 +410,19 @@ public class CanvasItemText : CanvasItem {
   }
 
   //-------------------------------------------------------------
+  // The parameter dir assumes left-to-right; however, if the
+  // current layout is a right-to-left language, we will invert
+  // the value.
+  private int calc_direction( int dir ) {
+    var ldir = _pango_layout.get_direction( text.text.index_of_nth_char( _cursor ) );
+    return( (ldir == Pango.Direction.RTL) ? (0 - dir) : dir );
+  }
+
+  //-------------------------------------------------------------
   // Adjusts the cursor by the given amount of characters.
   private void cursor_by_char( int dir ) {
     var last = text.text.char_count();
-    var cpos = _cursor + dir;
+    var cpos = _cursor + calc_direction( dir );
     if( cpos < 0 ) {
       cpos = 0;
     } else if( cpos > last ) {
@@ -573,7 +582,7 @@ public class CanvasItemText : CanvasItem {
   // Finds the next/previous word boundary.
   private int find_word( int start, int dir ) {
     bool alnum_found = false;
-    if( dir == 1 ) {
+    if( calc_direction( dir ) == 1 ) {
       for( int i=start; i<text.text.char_count(); i++ ) {
         int index = text.text.index_of_nth_char( i );
         if( text.text.get_char( index ).isalnum() ) {
@@ -840,23 +849,36 @@ public class CanvasItemText : CanvasItem {
   //-------------------------------------------------------------
   // Returns the current cursor position.
   public void get_cursor_pos( out int x, out int ytop, out int ybot ) {
+
     var index = text.text.index_of_nth_char( _cursor );
     var rect  = _pango_layout.index_to_pos( index );
-    x    = (int)(bbox.x + (rect.x / Pango.SCALE));
+
+    Pango.Rectangle ink_rect, log_rect;
+    _pango_layout.get_extents( out ink_rect, out log_rect );
+
+    x    = (int)((bbox.x + (rect.x / Pango.SCALE)) - (log_rect.x / Pango.SCALE));
     ytop = (int)(bbox.y + (rect.y / Pango.SCALE));
     ybot = ytop + (int)(rect.height / Pango.SCALE);
+
   }
 
   //-------------------------------------------------------------
   // Returns the x and y position of the given character position.
   public void get_char_pos( int pos, out double left, out double top, out double bottom, out int line ) {
+
     var index = text.text.index_of_nth_char( pos );
     var rect  = _pango_layout.index_to_pos( index );
-    left   = bbox.x + (rect.x / Pango.SCALE);
+
+    Pango.Rectangle ink_rect, log_rect;
+    _pango_layout.get_extents( out ink_rect, out log_rect );
+
+    left   = (bbox.x + (rect.x / Pango.SCALE)) - (log_rect.x / Pango.SCALE);
     top    = bbox.y + (rect.y / Pango.SCALE);
     bottom = top + (rect.height / Pango.SCALE);
+
     int x_pos;
     _pango_layout.index_to_line_x( index, false, out line, out x_pos );
+
   }
 
   //-------------------------------------------------------------
@@ -987,8 +1009,11 @@ public class CanvasItemText : CanvasItem {
     var fd     = _pango_layout.get_font_description();
     var alpha  = mode.alpha( props.alpha );
 
+    Pango.Rectangle ink_rect, log_rect;
+    layout.get_extents( out ink_rect, out log_rect );
+
     // Output the text
-    ctx.move_to( bbox.x, bbox.y );
+    ctx.move_to( (bbox.x - (log_rect.x / Pango.SCALE)), bbox.y );
     Utils.set_context_color_with_alpha( ctx, props.color, alpha );
     Pango.cairo_show_layout( ctx, layout );
     ctx.new_path();
@@ -1028,7 +1053,7 @@ public class CanvasItemText : CanvasItem {
       var rect = layout.index_to_pos( cpos );
       Utils.set_context_color( ctx, props.color );
       double ix, iy;
-      ix = bbox.x + (rect.x / Pango.SCALE) - 1;
+      ix = (bbox.x + (rect.x / Pango.SCALE) - 1) - (log_rect.x / Pango.SCALE);
       iy = bbox.y + (rect.y / Pango.SCALE);
       ctx.rectangle( ix, iy, 1, (rect.height / Pango.SCALE) );
       ctx.fill();

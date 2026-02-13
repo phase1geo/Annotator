@@ -86,6 +86,10 @@ case $1 in
     initialize 0
     ./com.github.phase1geo.annotator "${@:2}"
     ;;
+"run-rtl")
+    initialize 0
+    LANG=he_IL.utf8 ./com.github.phase1geo.annotator "${@:2}"
+    ;;
 "run-emmet")
     initialize 1
     ./com.github.phase1geo.annotator "${@:2}"
