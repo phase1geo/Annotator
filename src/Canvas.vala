@@ -31,9 +31,12 @@ public class Canvas : DrawingArea {
 
   private ImageSurface?      _surface = null;
   private EventControllerKey _key_controller;
+  private EventControllerMotion _motion_controller;
   private IMMulticontext     _im_context;
   private double             _last_x = 0;
   private double             _last_y = 0;
+  private double             _pan_last_root_x = 0;
+  private double             _pan_last_root_y = 0;
 
   public MainWindow     win          { get; private set; }
   public Editor         editor       { get; private set; }
@@ -76,13 +79,15 @@ public class Canvas : DrawingArea {
     var sec_btn_controller = new GestureClick() {
       button = Gdk.BUTTON_SECONDARY
     };
-    var motion_controller = new EventControllerMotion();
+    var scroll_controller = new EventControllerScroll( EventControllerScrollFlags.VERTICAL | EventControllerScrollFlags.DISCRETE );
+    _motion_controller = new EventControllerMotion();
     var focus_controller = new EventControllerFocus();
 
     add_controller( _key_controller );
     add_controller( pri_btn_controller );
     add_controller( sec_btn_controller );
-    add_controller( motion_controller );
+    add_controller( scroll_controller );
+    add_controller( _motion_controller );
     add_controller( focus_controller );
 
     _key_controller.key_pressed.connect( on_keypress );
@@ -93,7 +98,20 @@ public class Canvas : DrawingArea {
 
     sec_btn_controller.pressed.connect( on_secondary_press );
 
-    motion_controller.motion.connect( on_motion );
+    scroll_controller.scroll.connect((dx, dy) => {
+      var state = scroll_controller.get_current_event_state();
+      if( (state & ModifierType.CONTROL_MASK) != 0 ) {
+        if( dy < 0 ) {
+          zoom_in();
+        } else if( dy > 0 ) {
+          zoom_out();
+        }
+        return( true );
+      }
+      return( false );
+    });
+
+    _motion_controller.motion.connect( on_motion );
 
     focus_controller.leave.connect( on_focus_leave );
 
@@ -393,6 +411,22 @@ public class Canvas : DrawingArea {
 
   /* Handles a mouse cursor motion event */
   private void on_motion( double ex, double ey ) {
+    var state = _motion_controller.get_current_event_state();
+    if( (state & ModifierType.BUTTON2_MASK) != 0 ) {
+      double root_x, root_y;
+      get_root_coords( _motion_controller, ex, ey, out root_x, out root_y );
+      if( (_pan_last_root_x != 0) || (_pan_last_root_y != 0) ) {
+        double sx, sy;
+        editor.get_scroll_offsets( out sx, out sy );
+        editor.set_scroll_offsets( sx - (root_x - _pan_last_root_x), sy - (root_y - _pan_last_root_y) );
+      }
+      _pan_last_root_x = root_x;
+      _pan_last_root_y = root_y;
+      return;
+    }
+
+    _pan_last_root_x = 0;
+    _pan_last_root_y = 0;
 
     var x = scale_x( ex );
     var y = scale_y( ey );
@@ -408,6 +442,20 @@ public class Canvas : DrawingArea {
       queue_draw();
     }
 
+  }
+
+  private void get_root_coords( EventController controller, double fallback_x, double fallback_y,
+                                out double root_x, out double root_y ) {
+    var ev = controller.get_current_event();
+    var device = controller.get_current_event_device();
+    if( (ev != null) && (device != null) ) {
+      var surface = ev.get_surface();
+      if( (surface != null) && surface.get_device_position( device, out root_x, out root_y, null ) ) {
+        return;
+      }
+    }
+    root_x = fallback_x;
+    root_y = fallback_y;
   }
 
   /* Handles a mouse cursor button release event */
@@ -549,5 +597,3 @@ public class Canvas : DrawingArea {
   }
 
 }
-
-
