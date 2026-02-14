@@ -91,6 +91,13 @@
                 <property name="visible">1</property>
               </object>
             </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes">Mouse Zoom In/Out</property>
+                <property name="subtitle" translatable="yes">[Control + Scroll]</property>
+                <property name="visible">1</property>
+              </object>
+            </child>
           </object>
         </child>
         <child>
@@ -115,6 +122,13 @@
               <object class="GtkShortcutsShortcut">
                 <property name="title" translatable="yes">Quit Application</property>
                 <property name="accelerator">&lt;ctrl&gt;q</property>
+                <property name="visible">1</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes">Pan</property>
+                <property name="subtitle" translatable="yes">[Middle-button + Drag]</property>
                 <property name="visible">1</property>
               </object>
             </child>
