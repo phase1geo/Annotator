@@ -37,6 +37,8 @@ public class CanvasToolbar : Box {
   private FontChooserWidget  _font_chooser;
   private int                _current_shape;
   private HashMap<CanvasItemCategory,CurrentItem> _current_item;
+  private bool               _ignore = false;
+  private Array<ToggleButton> _tools;
 
   //-------------------------------------------------------------
   // Constructor
@@ -48,11 +50,13 @@ public class CanvasToolbar : Box {
     _width_btns   = new Array<CheckButton>();
     _dash_btns    = new Array<CheckButton>();
     _current_item = new HashMap<CanvasItemCategory,CurrentItem>();
+    _tools        = new Array<ToggleButton>();
 
     // Create current items
     _current_item.set( CanvasItemCategory.ARROW, new CurrentItem.with_canvas_item( CanvasItemType.ARROW ) );
     _current_item.set( CanvasItemCategory.SHAPE, new CurrentItem.with_canvas_item( CanvasItemType.RECT_STROKE ) );
 
+    create_selector();
     create_shapes( CanvasItemCategory.ARROW, _( "Add Arrow" ), _( "More Arrows" ), _( "Custom Arrows" ) );
     create_shapes( CanvasItemCategory.SHAPE, _( "Add Shape" ), _( "More Shapes" ), _( "Custom Shapes" ) );
     create_sticker();
@@ -79,6 +83,46 @@ public class CanvasToolbar : Box {
   }
 
   //-------------------------------------------------------------
+  // Called whenever a toolbar tool is selected.
+  private void tool_selected( ToggleButton selected ) {
+    _ignore = true;
+    for( int i=0; i<_tools.length; i++ ) {
+      var tool = _tools.index( i );
+      if( tool != selected ) {
+        tool.active = false;
+      }
+    }
+    _ignore = false;
+  }
+
+  //-------------------------------------------------------------
+  // Creates the selection tool
+  private void create_selector() {
+
+    var granite_settings = Granite.Settings.get_default();
+    var dark_mode        = granite_settings.prefers_color_scheme == Granite.Settings.ColorScheme.DARK;
+
+    var button = new ToggleButton() {
+      halign       = Align.START,
+      icon_name    = dark_mode ? "selection-dark-symbolic" : "selection-symbolic",
+      tooltip_text = _( "Selection Tool" )
+    };
+    button.toggled.connect(() => {
+      if( !_ignore ) {
+        tool_selected( button );
+      }
+    });
+    _canvas.win.theme_changed.connect((dark) => {
+      button.icon_name = dark ? "selection-dark-symbolic" : "selection-symbolic";
+    });
+
+    _tools.append_val( button );
+
+    append( button );
+
+  }
+
+  //-------------------------------------------------------------
   // Creates the shape toolbar item
   private void create_shapes( CanvasItemCategory category, string tooltip, string mb_tooltip, string custom_label ) {
 
@@ -98,32 +142,38 @@ public class CanvasToolbar : Box {
       max_children_per_line = 4
     };
 
-    var mb = new Button.with_label( "\u23f7" ) {
-      has_frame    = false,
-      tooltip_text = mb_tooltip,
-      margin_start = 0,
-      margin_end   = margin
-    };
-
     var popover = new Popover() {
       child = box
     };
-    popover.set_parent( mb );
 
-    mb.clicked.connect(() => {
-      popover.popup();
-    });
-
-    var btn = new Button() {
+    var btn = new ToggleButton() {
       has_frame    = false,
       margin_start = margin,
       margin_end   = 0,
       tooltip_text = tooltip,
       child        = _current_item.get( category ).get_image( _canvas.win )
     };
+
+    popover.set_parent( btn );
+
+    btn.toggled.connect(() => {
+      if( !_ignore ) {
+        if( btn.active ) {
+          tool_selected( btn );
+        } else {
+          _ignore = true;
+          popover.popup();
+          btn.active = true;
+          _ignore = false;
+        }
+      }
+    });
+
+    /*
     btn.clicked.connect(() => {
       _current_item.get( category ).add_item( _canvas.items );
     });
+    */
 
     for( int i=0; i<CanvasItemType.NUM; i++ ) {
       var shape_type = (CanvasItemType)i;
@@ -161,11 +211,9 @@ public class CanvasToolbar : Box {
       }
     });
 
-    var shape_box = new Box( Orientation.HORIZONTAL, 0 );
-    shape_box.append( btn );
-    shape_box.append( mb );
+    _tools.append_val( btn );
 
-    append( shape_box );
+    append( btn );
 
     // If the system dark mode changes, hide the popover
     _canvas.win.theme_changed.connect((dark_mode) => {

@@ -13,6 +13,8 @@
         <file alias="stickers.xml" compressed="true">images/icons/flat-color-icons/categories.xml</file>
         <file alias="README.md">custom_sticker_readme.md</file>
 
+        <file alias="selection-symbolic.svg">images/icons/scalable/selection-symbolic.svg</file>
+        <file alias="selection-dark-symbolic.svg">images/icons/scalable/selection-dark-symbolic.svg</file>
         <file alias="rect-fill-symbolic.svg">images/icons/scalable/rect-fill-symbolic.svg</file>
         <file alias="rect-fill-dark-symbolic.svg">images/icons/scalable/rect-fill-dark-symbolic.svg</file>
         <file alias="rect-stroke-symbolic.svg">images/icons/scalable/rect-stroke-symbolic.svg</file>
