@@ -230,8 +230,8 @@ public class CanvasItems {
     return( rect );
   }
 
-  private CanvasRect position_item() {
-    var rect = new CanvasRect.from_coords( _last_x, _last_y, 1, 1 );
+  private CanvasRect position_item( int width = 1, int height = 1 ) {
+    var rect = new CanvasRect.from_coords( _last_x, _last_y, width, height );
     return( rect );
   }
 
@@ -314,7 +314,7 @@ public class CanvasItems {
   private CanvasItem create_magnifier( bool loading = false ) {
     var item = new CanvasItemMagnifier( _canvas, 2.0, props );
     if( !loading ) {
-      item.bbox = position_item();
+      item.bbox = position_item( 2, 2 );
     }
     return( item );
   }
@@ -331,7 +331,7 @@ public class CanvasItems {
   private CanvasItem create_sequence( bool loading = false ) {
     var item = new CanvasItemSequence( _canvas, props );
     if( !loading ) {
-      item.bbox = position_item();
+      item.bbox = new CanvasRect.from_coords( (_last_x - 25), (_last_y - 25), 50, 50 );
     }
     return( item );
   }
@@ -354,10 +354,10 @@ public class CanvasItems {
 
   public void add_item( CanvasItem item, int position, bool undo, bool draw = true ) {
     clear_selection();
-    item.mode = CanvasItemMode.SELECTED;
+    _selector_index = item.resize_selector();
+    item.mode = (_selector_index != -1) ? CanvasItemMode.SELECTED : CanvasItemMode.NONE;
     _items.insert( item, position );
     _active = item;
-    _selector_index = item.resize_selector();
     _canvas.grab_focus();
     if( undo ) {
       _canvas.undo_buffer.add_item( new UndoItemAdd( item, (int)(_items.length() - 1) ) );
@@ -994,7 +994,7 @@ public class CanvasItems {
         if( item.is_within( x, y ) ) {
           if( control_set ) {
             _canvas.set_cursor_from_name( "copy" );
-          } else {
+          } else if( current_tool == CanvasTool.SELECTOR ) {
             _canvas.set_cursor_from_name( "grab" );
           }
           return( false );
@@ -1020,7 +1020,7 @@ public class CanvasItems {
     if( _selector_index != -1 ) {
       _canvas.undo_buffer.add_item( _active.get_undo_item_for_selector( _selector_index ) );
       _selector_index = -1;
-      _active.mode    = CanvasItemMode.SELECTED;
+      _active.mode    = (current_tool == CanvasTool.SELECTOR) ? CanvasItemMode.SELECTED : CanvasItemMode.NONE;
       _active         = null;
       retval = true;
 
