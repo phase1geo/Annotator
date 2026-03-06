@@ -70,6 +70,11 @@ public class Editor : Box {
       halign = Align.CENTER,
       hexpand = true
     };
+
+    toolbar.selected.connect((tool) => {
+      canvas.items.current_tool = tool;
+    });
+
     canvas.image.crop_started.connect(() => {
       _sw.vscrollbar_policy = PolicyType.EXTERNAL;
       _sw.hscrollbar_policy = PolicyType.EXTERNAL;

@@ -187,6 +187,7 @@ public class CanvasItems {
   public CustomItems          custom_items { get; private set; }
   public bool                 control_set  { get; private set; default = false; }
   public bool                 shift_set    { get; private set; default = false; }
+  public CanvasTool           current_tool { get; set; default = CanvasTool.SELECTOR; }
 
   public signal void text_item_edit_changed( CanvasItemText item );
   public signal void selection_changed( CanvasItemProperties props );
@@ -229,10 +230,15 @@ public class CanvasItems {
     return( rect );
   }
 
+  private CanvasRect position_item() {
+    var rect = new CanvasRect.from_coords( _last_x, _last_y, 1, 1 );
+    return( rect );
+  }
+
   private CanvasItem create_rectangle( bool fill, bool loading = false ) {
     var item = new CanvasItemRect( _canvas, fill, props );
     if( !loading ) {
-      item.bbox = center_box( 200, 50 );
+      item.bbox = position_item();
     }
     return( item );
   }
@@ -240,7 +246,7 @@ public class CanvasItems {
   private CanvasItem create_oval( bool fill, bool loading = false ) {
     var item = new CanvasItemOval( _canvas, fill, props );
     if( !loading ) {
-      item.bbox = center_box( 200, 50 );
+      item.bbox = position_item();
     }
     return( item );
   }
@@ -248,7 +254,7 @@ public class CanvasItems {
   private CanvasItem create_star( bool fill, bool loading = false ) {
     var item = new CanvasItemStar( _canvas, fill, 5, 25, props );
     if( !loading ) {
-      item.bbox = center_box( 100, 100 );
+      item.bbox = position_item();
     }
     return( item );
   }
@@ -256,7 +262,7 @@ public class CanvasItems {
   private CanvasItem create_bubble( CanvasBubbleType type, bool loading = false ) {
     var item = new CanvasItemBubble( _canvas, type, props );
     if( !loading ) {
-      item.bbox = center_box( 200, 100 );
+      item.bbox = position_item();
     }
     return( item );
   }
@@ -264,7 +270,7 @@ public class CanvasItems {
   private CanvasItem create_line( bool loading = false ) {
     var item = new CanvasItemLine( _canvas, props );
     if( !loading ) {
-      item.bbox = center_box( 200, 1 );
+      item.bbox = position_item();
     }
     return( item );
   }
@@ -272,7 +278,7 @@ public class CanvasItems {
   private CanvasItem create_arrow( bool loading = false ) {
     var item = new CanvasItemArrow( _canvas, props );
     if( !loading ) {
-      item.bbox = center_box( 200, 1 );
+      item.bbox = position_item();
     }
     return( item );
   }
@@ -287,10 +293,12 @@ public class CanvasItems {
       }
     });
     if( !loading ) {
-      item.bbox = center_box( 200, 1 );
+      item.bbox = position_item();
+      /*
       item.mode = CanvasItemMode.SELECTED;
       _active = item;
       set_edit_mode( true );
+      */
     }
     return( item );
   }
@@ -298,7 +306,7 @@ public class CanvasItems {
   private CanvasItem create_blur( bool loading = false ) {
     var item = new CanvasItemBlur( _canvas, props );
     if( !loading ) {
-      item.bbox = center_box( 200, 50 );
+      item.bbox = position_item();
     }
     return( item );
   }
@@ -306,7 +314,7 @@ public class CanvasItems {
   private CanvasItem create_magnifier( bool loading = false ) {
     var item = new CanvasItemMagnifier( _canvas, 2.0, props );
     if( !loading ) {
-      item.bbox = center_box( 200, 200 );
+      item.bbox = position_item();
     }
     return( item );
   }
@@ -323,7 +331,7 @@ public class CanvasItems {
   private CanvasItem create_sequence( bool loading = false ) {
     var item = new CanvasItemSequence( _canvas, props );
     if( !loading ) {
-      item.bbox = center_box( 50, 50 );
+      item.bbox = position_item();
     }
     return( item );
   }
@@ -331,7 +339,7 @@ public class CanvasItems {
   private CanvasItem create_sticker( string? name, bool loading = false ) {
     var item = new CanvasItemImage( _canvas, name, false, props );
     if( (name != null) && !loading ) {
-      item.bbox = center_box( 50, 50 );
+      item.bbox = position_item();
     }
     return( item );
   }
@@ -339,7 +347,7 @@ public class CanvasItems {
   private CanvasItem create_image( string? path, bool loading = false ) {
     var item = new CanvasItemImage( _canvas, path, true, props );
     if( (path != null) && !loading ) {
-      item.bbox = center_box( item.bbox.width, item.bbox.height );
+      item.bbox = position_item();  // center_box( item.bbox.width, item.bbox.height );
     }
     return( item );
   }
@@ -348,6 +356,8 @@ public class CanvasItems {
     clear_selection();
     item.mode = CanvasItemMode.SELECTED;
     _items.insert( item, position );
+    _active = item;
+    _selector_index = item.resize_selector();
     _canvas.grab_focus();
     if( undo ) {
       _canvas.undo_buffer.add_item( new UndoItemAdd( item, (int)(_items.length() - 1) ) );
@@ -845,69 +855,76 @@ public class CanvasItems {
       return( false );
     }
 
-    // Reverse the list so that we grab the top-most item
-    _items.reverse();
+    if( current_tool == CanvasTool.SELECTOR ) { 
 
-    // Handle a click within a selector
-    foreach( CanvasItem item in _items ) {
-      _selector_index = item.is_within_selector( x, y );
-      if( _selector_index != -1 ) {
-        _active = item;
-        _active.mode = CanvasItemMode.RESIZING;
-        _items.reverse();
-        return( false );
-      }
-    }
+      // Reverse the list so that we grab the top-most item
+      _items.reverse();
 
-    // Handle a click within an item
-    foreach( CanvasItem item in _items ) {
-      if( item.is_within( x, y ) ) {
-        _active = item;
-        if( _active.mode == CanvasItemMode.NONE ) {
-          clear_selection();
+      // Handle a click within a selector
+      foreach( CanvasItem item in _items ) {
+        _selector_index = item.is_within_selector( x, y );
+        if( _selector_index != -1 ) {
+          _active = item;
+          _active.mode = CanvasItemMode.RESIZING;
+          _items.reverse();
+          return( false );
         }
-        if( in_edit_mode() ) {
-          var text = get_active_text();
-          switch( press_count ) {
-            case 1 :  text.set_cursor_at_char( x, y, false );  break;
-            case 2 :  text.set_cursor_at_word( x, y, false );  break;
-            case 3 :  text.set_cursor_all( false );            break;
-          }
-        } else if( control_set && (press_count == 1) ) {  // Make a duplicate of the clicked on item
-          _active = item.duplicate();
-          _active.mode = CanvasItemMode.SELECTED;
-          _canvas.set_cursor_from_name( "grabbing" );
-          add_item( _active, -1, true, false );
-          selection_changed( item.props );
-        } else {
-          switch( press_count ) {
-            case 1 :
-              _active.mode = CanvasItemMode.SELECTED;
-              _canvas.set_cursor_from_name( "grabbing" );
-              selection_changed( item.props );
-              break;
-            case 2 :
-              if( _active.itype != CanvasItemType.TEXT ) return( false );
-              set_edit_mode( true );
-              break;
-          }
-        }
-        _items.reverse();
-        return( true );
       }
+
+      // Handle a click within an item
+      foreach( CanvasItem item in _items ) {
+        if( item.is_within( x, y ) ) {
+          _active = item;
+          if( _active.mode == CanvasItemMode.NONE ) {
+            clear_selection();
+          }
+          if( in_edit_mode() ) {
+            var text = get_active_text();
+            switch( press_count ) {
+              case 1 :  text.set_cursor_at_char( x, y, false );  break;
+              case 2 :  text.set_cursor_at_word( x, y, false );  break;
+              case 3 :  text.set_cursor_all( false );            break;
+            }
+          } else if( control_set && (press_count == 1) ) {  // Make a duplicate of the clicked on item
+            _active = item.duplicate();
+            _active.mode = CanvasItemMode.SELECTED;
+            _canvas.set_cursor_from_name( "grabbing" );
+            add_item( _active, -1, true, false );
+            selection_changed( item.props );
+          } else {
+            switch( press_count ) {
+              case 1 :
+                _active.mode = CanvasItemMode.SELECTED;
+                _canvas.set_cursor_from_name( "grabbing" );
+                selection_changed( item.props );
+                break;
+              case 2 :
+                if( _active.itype != CanvasItemType.TEXT ) return( false );
+                set_edit_mode( true );
+                break;
+            }
+          }
+          _items.reverse();
+          return( true );
+        }
+      }
+
+      // Return the list order
+      _items.reverse();
+
+      // If we didn't click on anything, clear the selection
+      clear_selection();
+
+      // Clear the active indicator
+      _active = null;
+
+    // If we are not selecting anything, we are adding an item
+    } else {
+      add_shape_item( current_tool.canvas_item_type() );
     }
-
-    // Return the list order
-    _items.reverse();
-
-    // If we didn't click on anything, clear the selection
-    clear_selection();
 
     // Clear the edit mode, if we are in it
     retval = set_edit_mode( false );
-
-    // Clear the active indicator
-    _active = null;
 
     return( retval );
 

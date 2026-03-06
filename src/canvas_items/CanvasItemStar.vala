@@ -52,6 +52,10 @@ public class CanvasItemStar : CanvasItem {
     points.append_val( new CanvasPoint( CanvasPointType.RESIZER0 ) );  // Lower right
   }
 
+  public override int resize_selector() {
+    return( 5 );
+  }
+
   //-------------------------------------------------------------
   // Copies the contents of the given item to ourselves
   public override void copy( CanvasItem item ) {

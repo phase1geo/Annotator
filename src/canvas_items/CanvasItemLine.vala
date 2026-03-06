@@ -74,6 +74,10 @@ public class CanvasItemLine : CanvasItem {
     points.append_val( new CanvasPoint() );  // Below End
   }
 
+  public override int resize_selector() {
+    return( 1 );
+  }
+
   //-------------------------------------------------------------
   // Copies the given arrow item properties to this one.
   public override void copy( CanvasItem item ) {

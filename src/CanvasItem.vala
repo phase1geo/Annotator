@@ -215,6 +215,13 @@ public class CanvasItem {
   }
 
   //-------------------------------------------------------------
+  // Returns the index of the selector that is used to resize
+  // this item on creation.
+  public virtual int resize_selector() {
+    return( -1 );
+  }
+
+  //-------------------------------------------------------------
   // Creates a duplicate of this canvas item and returns it to
   // the calling function.
   public virtual CanvasItem duplicate() {

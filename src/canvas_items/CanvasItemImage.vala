@@ -65,6 +65,10 @@ public class CanvasItemImage : CanvasItem {
     }
   }
 
+  public override int resize_selector() {
+    return( 0 );
+  }
+
   //-------------------------------------------------------------
   // Creates an image from the specified filename.
   private void resize_image( int width = 0 ) {

@@ -76,6 +76,10 @@ public class CanvasItemMagnifier : CanvasItem {
     points.append_val( new CanvasPoint( CanvasPointType.CONTROL ) );  // Focus point
   }
 
+  public override int resize_selector() {
+    return( 1 );
+  }
+
   //-------------------------------------------------------------
   // Copies the contents of the given item to ourselves
   public override void copy( CanvasItem item ) {

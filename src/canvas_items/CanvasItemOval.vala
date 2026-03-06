@@ -56,6 +56,10 @@ public class CanvasItemOval : CanvasItem {
     points.append_val( new CanvasPoint( CanvasPointType.RESIZER3 ) );  // left
   }
 
+  public override int resize_selector() {
+    return( 3 );
+  }
+
   //-------------------------------------------------------------
   // Returns a copy of this item
   public override CanvasItem duplicate() {

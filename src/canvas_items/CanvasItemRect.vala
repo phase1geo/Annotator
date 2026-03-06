@@ -57,6 +57,12 @@ public class CanvasItemRect : CanvasItem {
   }
 
   //-------------------------------------------------------------
+  // Returns the southeast selector.
+  public override int resize_selector() {
+    return( 3 );
+  }
+
+  //-------------------------------------------------------------
   // Returns a duplicate of this item
   public override CanvasItem duplicate() {
     var item = new CanvasItemRect( canvas, (itype == CanvasItemType.RECT_FILL), props );

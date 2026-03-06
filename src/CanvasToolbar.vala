@@ -170,7 +170,7 @@ public class CanvasToolbar : Box {
         });
         b.clicked.connect(() => {
           _current_item.get( category ).canvas_item( shape_type );
-          _current_item.get( category ).add_item( _canvas.items );
+          // _current_item.get( category ).add_item( _canvas.items );
           btn.child = _current_item.get( category ).get_image( _canvas.win );
           popover.popdown();
         });

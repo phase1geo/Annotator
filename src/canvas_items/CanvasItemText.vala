@@ -134,6 +134,10 @@ public class CanvasItemText : CanvasItem {
     _pango_layout.set_font_description( props.font );
   }
 
+  public override int resize_selector() {
+    return( 0 );
+  }
+
   //-------------------------------------------------------------
   // Copies an existing CanvasText to this CanvasText
   public override void copy( CanvasItem item ) {

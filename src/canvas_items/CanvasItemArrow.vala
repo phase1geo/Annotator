@@ -88,6 +88,12 @@ public class CanvasItemArrow : CanvasItem {
   }
 
   //-------------------------------------------------------------
+  // Return the tail pointer index
+  public override int resize_selector() {
+    return( (int)PType.TL );
+  }
+
+  //-------------------------------------------------------------
   // Copies the given arrow item properties to this one.
   public override void copy( CanvasItem item ) {
     base.copy( item );

@@ -63,6 +63,12 @@ public class CanvasItemBlur : CanvasItem {
   }
 
   //-------------------------------------------------------------
+  // Returns southeast resize selector
+  public override int resize_selector() {
+    return( 3 );
+  }
+
+  //-------------------------------------------------------------
   // Copies the information from the given item to ourselves
   public override void copy( CanvasItem item) {
     base.copy( item );

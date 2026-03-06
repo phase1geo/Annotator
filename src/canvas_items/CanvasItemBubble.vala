@@ -92,6 +92,10 @@ public class CanvasItemBubble : CanvasItem {
     points.append_val( new CanvasPoint( CanvasPointType.CONTROL ) );   // Talk point
   }
 
+  public override int resize_selector() {
+    return( 3 );
+  }
+
   public override void copy( CanvasItem item ) {
     base.copy( item );
     var bubble_item = (CanvasItemBubble)item;
