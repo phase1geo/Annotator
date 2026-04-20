@@ -70,7 +70,7 @@ public enum CanvasTool {
     switch( this ) {
       case SELECTOR  :  return( CanvasItemType.NONE );
       case ARROW     :  return( CanvasItemType.ARROW );
-      case SHAPE     :  return( CanvasItemType.RECT_FILL );  // TBD
+      case SHAPE     :  return( CanvasItemType.RECT );
       case STICKER   :  return( CanvasItemType.STICKER );
       case IMAGE     :  return( CanvasItemType.IMAGE );
       case SEQUENCE  :  return( CanvasItemType.SEQUENCE );

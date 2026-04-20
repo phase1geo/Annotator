@@ -31,6 +31,7 @@ public class CanvasToolbar : Box {
   private Array<CheckButton> _width_btns;
   private Array<CheckButton> _dash_btns;
   private ColorChooserWidget _color_chooser;
+  private ColorChooserWidget _stroke_color_chooser;
   private Switch             _asw;
   private Revealer           _areveal;
   private Scale              _ascale;
@@ -66,7 +67,7 @@ public class CanvasToolbar : Box {
 
     // Create current items
     _current_item.set( CanvasItemCategory.ARROW, new CurrentItem.with_canvas_item( CanvasItemType.ARROW ) );
-    _current_item.set( CanvasItemCategory.SHAPE, new CurrentItem.with_canvas_item( CanvasItemType.RECT_STROKE ) );
+    _current_item.set( CanvasItemCategory.SHAPE, new CurrentItem.with_canvas_item( CanvasItemType.RECT ) );
 
     create_selector();
     create_shapes( CanvasItemCategory.ARROW, _( "Add Arrow" ), _( "More Arrows" ), _( "Custom Arrows" ) );
@@ -524,6 +525,8 @@ public class CanvasToolbar : Box {
     _color_chooser.rgba = color;
   }
 
+  //-------------------------------------------------------------
+  // Creates the widget to allow an alpha value for a provided color.
   private void create_color_alpha( MenuButton mb, Box box ) {
 
     _ascale = new Scale.with_range( Orientation.HORIZONTAL, 0.0, 1.0, 0.1 ) {
@@ -611,9 +614,27 @@ public class CanvasToolbar : Box {
       margin_bottom = 10
     };
 
+    var color_title = new Label( Utils.make_title( _( "Border Color" ) ) ) {
+      halign = Align.START,
+      use_markup = true
+    };
+    box.append( color_title );
+
+    _stroke_color_chooser = new ColorChooserWidget() {
+      margin_start = 20,
+      rgba = _canvas.items.props.stroke_color
+    };
+    _stroke_color_chooser.notify.connect((p) => {
+      _canvas.items.props.stroke_color = _stroke_color_chooser.rgba;
+      mb.child = make_stroke_icon();
+    });
+    box.append( _stroke_color_chooser );
+
     // Add stroke width
     var width_title = new Label( Utils.make_title( _( "Border Width" ) ) ) {
       halign     = Align.START,
+      valign     = Align.START,
+      margin_top = 20,
       use_markup = true
     };
     box.append( width_title );
@@ -646,6 +667,7 @@ public class CanvasToolbar : Box {
     // Add dash patterns
     var dash_title = new Label( Utils.make_title( _( "Dash Pattern" ) ) ) {
       halign     = Align.START,
+      valign     = Align.START,
       margin_top = 20,
       use_markup = true
     };
@@ -858,7 +880,10 @@ public class CanvasToolbar : Box {
     ctx.stroke();
 
     var image = new Picture.for_paintable( snapshot.free_to_paintable( null ) ) {
-      can_shrink = false
+      halign      = Align.START,
+      hexpand     = true,
+      content_fit = ContentFit.SCALE_DOWN,
+      can_shrink  = false
     };
 
     return( image );
@@ -883,7 +908,10 @@ public class CanvasToolbar : Box {
     ctx.stroke();
 
     var image = new Picture.for_paintable( snapshot.free_to_paintable( null ) ) {
-      can_shrink = false
+      halign      = Align.START,
+      hexpand     = true,
+      content_fit = ContentFit.SCALE_DOWN,
+      can_shrink  = false
     };
 
     return( image );
@@ -904,7 +932,7 @@ public class CanvasToolbar : Box {
     var ctx      = snapshot.append_cairo( rect );
 
     // Draw the image
-    Utils.set_context_color( ctx, Utils.color_from_string( is_dark_mode() ? "white" : "black" ) );
+    Utils.set_context_color( ctx, _canvas.items.props.stroke_color );
     ctx.set_line_width( height );
     _canvas.items.props.dash.set_fg_pattern( ctx );
     ctx.move_to( 0, (height / 2) );

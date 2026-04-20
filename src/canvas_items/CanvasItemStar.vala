@@ -33,8 +33,8 @@ public class CanvasItemStar : CanvasItem {
 
   //-------------------------------------------------------------
   // Constructor
-  public CanvasItemStar( Canvas canvas, bool fill, int point_num, double inner_radius, CanvasItemProperties props ) {
-    base( (fill ? CanvasItemType.STAR_FILL : CanvasItemType.STAR_STROKE), canvas, props );
+  public CanvasItemStar( Canvas canvas, int point_num, double inner_radius, CanvasItemProperties props ) {
+    base( CanvasItemType.STAR, canvas, props );
     num_points    = point_num;
     _inner_radius = inner_radius;
     create_points();
@@ -68,7 +68,7 @@ public class CanvasItemStar : CanvasItem {
   //-------------------------------------------------------------
   // Returns a duplicate of this item
   public override CanvasItem duplicate() {
-    var item = new CanvasItemStar( canvas, (itype == CanvasItemType.STAR_FILL), num_points, _inner_radius, props );
+    var item = new CanvasItemStar( canvas, num_points, _inner_radius, props );
     item.copy( this );
     return( item );
   }
@@ -212,33 +212,14 @@ public class CanvasItemStar : CanvasItem {
 
     save_path( ctx, CanvasItemPathType.FILL );
 
-    if( itype == CanvasItemType.STAR_FILL ) {
-
-      if( props.outline ) {
-        ctx.fill_preserve();
-        set_color( ctx, color, outline, 0.5 );
-        ctx.set_line_width( 1 );
-        ctx.stroke();
-      } else {
-        ctx.fill();
-      }
-
-    } else {
-
-      var sw = props.stroke_width.width();
-
-      if( props.outline ) {
-        set_color( ctx, color, outline, 1.0 );
-        ctx.set_line_width( sw + 2 );
-        props.dash.set_bg_pattern( ctx );
-        ctx.stroke_preserve();
-      }
-
-      set_color( ctx, color, props.color, alpha );
-      ctx.set_line_width( sw );
-      props.dash.set_fg_pattern( ctx );
+    if( props.outline ) {
+      ctx.fill_preserve();
+      set_color( ctx, color, props.stroke_color, 1.0 );
+      ctx.set_line_width( props.stroke_width.width() + 2 );
+      props.dash.set_bg_pattern( ctx );
       ctx.stroke();
-
+    } else {
+      ctx.fill();
     }
 
   }

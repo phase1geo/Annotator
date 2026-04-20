@@ -32,7 +32,7 @@
       <description>Default font size to use for the editor.</description>
     </key>
     <key name="item-color" type="s">
-      <default>"#000000"</default>
+      <default>"#ffffff"</default>
       <summary>Last used item color</summary>
       <description>Last used item color displayed in toolbar.</description>
     </key>
@@ -45,6 +45,11 @@
       <default>"width1"</default>
       <summary>Last used stroke width</summary>
       <description>Last used stroke width displayed in toolbar.  Valid values are "width1", "width2", "width3", "width4".</description>
+    </key>
+    <key name="stroke-color" type="s">
+      <default>"#000000"</default>
+      <summary>Last used stroke color</summary>
+      <description>Last used stroke color displayed in toolbar.</description>
     </key>
     <key name="show-outline" type="b">
       <default>true</default>

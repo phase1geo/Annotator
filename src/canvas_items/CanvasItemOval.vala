@@ -29,8 +29,8 @@ public class CanvasItemOval : CanvasItem {
 
   //-------------------------------------------------------------
   // Constructor
-  public CanvasItemOval( Canvas canvas, bool fill, CanvasItemProperties props ) {
-    base( (fill ? CanvasItemType.OVAL_FILL : CanvasItemType.OVAL_STROKE), canvas, props );
+  public CanvasItemOval( Canvas canvas, CanvasItemProperties props ) {
+    base( CanvasItemType.OVAL, canvas, props );
     create_points();
     _sel_cursors = new Cursor[8];
     _sel_cursors[0] = new Cursor.from_name( "nw-resize", null );
@@ -63,7 +63,7 @@ public class CanvasItemOval : CanvasItem {
   //-------------------------------------------------------------
   // Returns a copy of this item
   public override CanvasItem duplicate() {
-    var item = new CanvasItemOval( canvas, (itype == CanvasItemType.OVAL_FILL), props );
+    var item = new CanvasItemOval( canvas, props );
     item.copy( this );
     return( item );
   }
@@ -129,7 +129,6 @@ public class CanvasItemOval : CanvasItem {
     var scale_width  = (bbox.width < bbox.height) ? (bbox.width / bbox.height) : 1.0;
     var scale_height = (bbox.width < bbox.height) ? 1.0 : (bbox.height / bbox.width);
     var radius       = (bbox.width < bbox.height) ? (bbox.height / 2.0) : (bbox.width / 2.0);
-    var outline      = Granite.contrasting_foreground_color( props.color );
     var alpha        = mode.alpha( props.alpha );
 
     set_color( ctx, color, props.color, alpha );
@@ -144,33 +143,14 @@ public class CanvasItemOval : CanvasItem {
 
     save_path( ctx, CanvasItemPathType.FILL );
 
-    if( itype == CanvasItemType.OVAL_FILL ) {
-
-      if( props.outline ) {
-        ctx.fill_preserve();
-        set_color( ctx, color, outline, 0.5 );
-        ctx.set_line_width( 1 );
-        ctx.stroke();
-      } else {
-        ctx.fill();
-      }
-
-    } else {
-
-      var sw = props.stroke_width.width();
-
-      if( props.outline ) {
-        set_color( ctx, color, outline, 0.5 );
-        ctx.set_line_width( sw + 2 );
-        props.dash.set_bg_pattern( ctx );
-        ctx.stroke_preserve();
-      }
-
-      set_color( ctx, color, props.color, alpha );
-      ctx.set_line_width( sw );
-      props.dash.set_fg_pattern( ctx );
+    if( props.outline ) {
+      ctx.fill_preserve();
+      set_color( ctx, color, props.stroke_color, 1.0 );
+      ctx.set_line_width( props.stroke_width.width() + 2 );
+      props.dash.set_bg_pattern( ctx );
       ctx.stroke();
-
+    } else {
+      ctx.fill();
     }
 
   }
