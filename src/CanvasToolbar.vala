@@ -320,19 +320,28 @@ public class CanvasToolbar : Box {
   }
 
   //-------------------------------------------------------------
-  // Starts a drawing operation with the pencil tool
+  // Toolbar button for the pencil tool.  The pencil is a sticky
+  // tool so the button reflects whether it is currently active.
   private void create_pencil() {
 
     var pencil = CanvasItemType.PENCIL;
 
-    var btn = new Button() {
+    var btn = new ToggleButton() {
       has_frame      = false,
       tooltip_markup = pencil.tooltip(),
       margin_start   = margin,
-      margin_end     = margin
+      margin_end     = margin,
+      icon_name      = pencil.icon_name( Granite.Settings.get_default().prefers_color_scheme == Granite.Settings.ColorScheme.DARK )
     };
-    btn.clicked.connect(() => {
-      _canvas.items.add_shape_item( CanvasItemType.PENCIL );
+    btn.toggled.connect(() => {
+      if( btn.active != _canvas.items.pencil_tool_active ) {
+        _canvas.items.add_shape_item( CanvasItemType.PENCIL );
+      }
+    });
+    _canvas.items.pencil_tool_active_changed.connect((active) => {
+      if( btn.active != active ) {
+        btn.active = active;
+      }
     });
     _canvas.win.theme_changed.connect((dark_mode) => {
       btn.icon_name = pencil.icon_name( dark_mode );

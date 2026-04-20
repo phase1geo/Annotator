@@ -187,9 +187,11 @@ public class CanvasItems {
   public CustomItems          custom_items { get; private set; }
   public bool                 control_set  { get; private set; default = false; }
   public bool                 shift_set    { get; private set; default = false; }
+  public bool                 pencil_tool_active { get; private set; default = false; }
 
   public signal void text_item_edit_changed( CanvasItemText item );
   public signal void selection_changed( CanvasItemProperties props );
+  public signal void pencil_tool_active_changed( bool active );
 
   //-------------------------------------------------------------
   // Constructor
@@ -358,8 +360,24 @@ public class CanvasItems {
   }
 
   //-------------------------------------------------------------
-  // Adds the given shape to the top of the item stack
+  // Adds the given shape to the top of the item stack.  PENCIL is
+  // a sticky tool: clicking its toolbar button toggles the tool on
+  // or off; the actual CanvasItemPencil is created on cursor press.
   public void add_shape_item( CanvasItemType type ) {
+    if( type == CanvasItemType.PENCIL ) {
+      pencil_tool_active = !pencil_tool_active;
+      if( pencil_tool_active ) {
+        _canvas.set_cursor_from_name( "crosshair" );
+      } else {
+        _canvas.set_cursor( null );
+      }
+      pencil_tool_active_changed( pencil_tool_active );
+      return;
+    }
+    if( pencil_tool_active ) {
+      pencil_tool_active = false;
+      pencil_tool_active_changed( false );
+    }
     CanvasItem? item = null;
     switch( type ) {
       case CanvasItemType.RECT_STROKE  :  item = create_rectangle( false );  break;
@@ -375,7 +393,6 @@ public class CanvasItems {
       case CanvasItemType.TEXT         :  item = create_text();  break;
       case CanvasItemType.BLUR         :  item = create_blur();  break;
       case CanvasItemType.MAGNIFIER    :  item = create_magnifier();  break;
-      case CanvasItemType.PENCIL       :  item = create_pencil();  break;
       case CanvasItemType.SEQUENCE     :  item = create_sequence();  break;
       default :  assert_not_reached();
     }
@@ -839,8 +856,12 @@ public class CanvasItems {
     // Keep track of the press count
     _press_count = press_count;
 
-    // If the active item is a pencil, indicate that we are drawing
-    if( (_active != null) && (_active.itype == CanvasItemType.PENCIL) ) {
+    // If the pencil tool is selected, create a fresh pencil item
+    // for this stroke and start drawing into it.
+    if( pencil_tool_active ) {
+      var pencil = new CanvasItemPencil( _canvas, props );
+      add_item( pencil, -1, true, false );
+      _active = pencil;
       _active.mode = CanvasItemMode.DRAWING;
       return( false );
     }
@@ -923,6 +944,18 @@ public class CanvasItems {
 
     _last_x = x;
     _last_y = y;
+
+    // While the pencil tool is selected, keep the crosshair cursor and
+    // skip hover/selector handling — the next press always starts a
+    // new pencil stroke.
+    if( pencil_tool_active ) {
+      if( in_draw_mode() ) {
+        _active.draw( x, y );
+        return( true );
+      }
+      _canvas.set_cursor_from_name( "crosshair" );
+      return( false );
+    }
 
     // Since we pressed on a selector, move the selector
     if( _selector_index != -1 ) {
