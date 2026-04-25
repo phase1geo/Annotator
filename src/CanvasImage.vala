@@ -138,9 +138,11 @@ public class CanvasImage {
       _canvas.undo_buffer.add_item( new UndoImageChange( undo_name, _buf, buf ) );
     }
 
+    var sf = _canvas.get_scale_factor();
+
     pixbuf = buf.copy();
     _buf   = buf.copy();
-    _canvas.set_size_request( _buf.width, _buf.height );
+    _canvas.set_size_request( (_buf.width / sf), (_buf.height / sf) );
     _angle = 0;
 
     // Create the image information
@@ -867,11 +869,13 @@ public class CanvasImage {
   //-------------------------------------------------------------
   // Draws the image.
   public void draw( Context ctx ) {
-    var w = info.width;
-    var h = info.height;
+    var w  = info.width;
+    var h  = info.height;
+    var sf = 1.0 / _canvas.get_scale_factor();
     ctx.translate( (w * 0.5), (h * 0.5) );
     ctx.rotate( _angle * (Math.PI / 180.0) );
     ctx.translate( (w * -0.5), (h * -0.5) );
+    ctx.scale( sf, sf );
     draw_image( ctx );
     ctx.translate( (w * 0.5), (h * 0.5) );
     ctx.rotate( (-1 * _angle) * (Math.PI / 180.0) );

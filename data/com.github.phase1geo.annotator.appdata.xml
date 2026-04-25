@@ -118,6 +118,24 @@
     <value key="x-appcenter-stripe">pk_live_51Ccoj4BJm4hDdHaF1YKGdyGLCLtShzElKsr4GM9hJDJAoZArcWrNHsjL9b8SBs01GQBYpakj0l1tYenVJOqke93300TULHWdph</value>
   </custom>
   <releases>
+    <release version="2.0.3" date="2026-04-24">
+      <description>
+        <p>Changes</p>
+        <p xml:lang="ru">Изменения</p>
+        <p xml:lang="de">Änderungen</p>
+        <ul>
+          <li>Updated Italian translation (thanks to Albano Battistella).</li>
+        </ul>
+        <p>Bug Fixes</p>
+        <p xml:lang="ru">Исправления ошибок</p>
+        <p xml:lang="de">Fehlerkorrekturen</p>
+        <ul>
+          <li>Fixed issue with Annotator window not hiding during a screenshot (thanks to Achille Leduc for fixing).</li>
+          <li>Fixed issue with screenshotting on various systems (thanks to Achille Leduc for fixing).</li>
+          <li>Fixed display issues with HiDPI and scaled displays.</li>
+        </ul>
+      </description>
+    </release>
     <release version="2.0.2" date="2026-02-15">
       <description>
         <p>New</p>

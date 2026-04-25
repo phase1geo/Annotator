@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.annotator\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-15 21:45-0600\n"
+"POT-Creation-Date: 2026-04-23 21:17-0500\n"
 "PO-Revision-Date: 2021-10-08 09:11+0200\n"
 "Last-Translator: Quentin PAGÈS\n"
 "Language-Team: \n"
@@ -73,16 +73,16 @@ msgstr "Dobrir imatge del quichapapièrs"
 msgid "Uses image data from standard input"
 msgstr ""
 
-#: src/CanvasImage.vala:131 src/CanvasImage.vala:156
+#: src/CanvasImage.vala:131 src/CanvasImage.vala:158
 msgid "change image"
 msgstr "cambiar d’imatge"
 
-#: src/CanvasImage.vala:465
+#: src/CanvasImage.vala:467
 #, fuzzy
 msgid "Color copied to clipboard"
 msgstr "Copiar al quichapapièrs"
 
-#: src/CanvasImage.vala:520
+#: src/CanvasImage.vala:522
 msgid "image crop"
 msgstr "requadrar imatge"
 
@@ -530,7 +530,7 @@ msgstr "Exportar l'imatge"
 msgid "Zoom to Fit Window"
 msgstr "Agrandir per garnir la fenèstra"
 
-#: src/MainWindow.vala:329 src/MainWindow.vala:931
+#: src/MainWindow.vala:329 src/MainWindow.vala:965
 #, c-format
 msgid "Zoom (%d%%)"
 msgstr "Zoom (%d%%)"
