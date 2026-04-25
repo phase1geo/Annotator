@@ -36,7 +36,7 @@ public class Annotator : Gtk.Application {
 
   public Annotator () {
 
-    Object( application_id: "com.github.phase1geo.annotator", flags: ApplicationFlags.HANDLES_OPEN );
+    Object( application_id: "io.github.phase1geo.annotator", flags: ApplicationFlags.HANDLES_OPEN );
 
     Intl.setlocale( LocaleCategory.ALL, "" );
     Intl.bindtextdomain( GETTEXT_PACKAGE, LOCALEDIR );
@@ -53,11 +53,14 @@ public class Annotator : Gtk.Application {
   private void start_application() {
 
     // Initialize the settings
-    settings = new GLib.Settings( "com.github.phase1geo.annotator" );
+    settings = new GLib.Settings( "io.github.phase1geo.annotator" );
+
+    // Update the settings, if necessary
+    SettingsUpdater.update( settings );
 
     // Add the application-specific icons
     weak IconTheme default_theme = IconTheme.get_for_display( Display.get_default() );
-    default_theme.add_resource_path( "/com/github/phase1geo/annotator/images" );
+    default_theme.add_resource_path( "/io/github/phase1geo/annotator/images" );
 
     // Create the main window
     appwin = new MainWindow( this );

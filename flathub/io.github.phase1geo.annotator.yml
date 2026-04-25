@@ -1,10 +1,10 @@
-app-id: com.github.phase1geo.annotator
+app-id: io.github.phase1geo.annotator
 runtime: org.gnome.Platform
 runtime-version: '49'
 sdk: org.gnome.Sdk
 base: io.elementary.BaseApp
 base-version: 'circe-25.08'
-command: com.github.phase1geo.annotator
+command: io.github.phase1geo.annotator
 finish-args:
   - '--share=ipc'
   - '--socket=fallback-x11'

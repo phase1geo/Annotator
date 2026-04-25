@@ -1,4 +1,4 @@
-project('com.github.phase1geo.annotator', ['vala', 'c'],
+project('io.github.phase1geo.annotator', ['vala', 'c'],
     version : '2.0.3',
     license: 'GPL-2.0-or-later',
 )
@@ -62,7 +62,7 @@ dependencies = [
     math_dep
 ]
 
-e = executable('com.github.phase1geo.annotator',
+e = executable('io.github.phase1geo.annotator',
     sources,
     config_file,
     gresource,

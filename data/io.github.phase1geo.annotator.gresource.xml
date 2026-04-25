@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <gresources>
-    <gresource prefix="/com/github/phase1geo/annotator">
-        <file alias="annotator-logo.svg" compressed="true">images/com.github.phase1geo.annotator.svg</file>
+    <gresource prefix="/io/github/phase1geo/annotator">
+        <file alias="annotator-logo.svg" compressed="true">images/io.github.phase1geo.annotator.svg</file>
     </gresource>
-    <gresource prefix="/com/github/phase1geo/annotator/css">
+    <gresource prefix="/io/github/phase1geo/annotator/css">
         <file alias="style.css" compressed="true">css/style.css</file>
     </gresource>
-    <gresource prefix="/com/github/phase1geo/annotator/shortcuts">
-        <file alias="shortcuts.ui" compressed="true">com.github.phase1geo.annotator.shortcuts.ui</file>
+    <gresource prefix="/io/github/phase1geo/annotator/shortcuts">
+        <file alias="shortcuts.ui" compressed="true">io.github.phase1geo.annotator.shortcuts.ui</file>
     </gresource>
-    <gresource prefix="/com/github/phase1geo/annotator/images">
+    <gresource prefix="/io/github/phase1geo/annotator/images">
         <file alias="stickers.xml" compressed="true">images/icons/flat-color-icons/categories.xml</file>
         <file alias="README.md">custom_sticker_readme.md</file>
 

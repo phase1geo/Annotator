@@ -30,7 +30,7 @@ public class About {
   // Constructor
   public About( MainWindow win ) {
 
-    var image = new Image.from_resource( "/com/github/phase1geo/annotator/annotator-logo.svg" );
+    var image = new Image.from_resource( "/io/github/phase1geo/annotator/annotator-logo.svg" );
 
     _about = new AboutDialog() {
       authors            = { "Trevor Williams" },
@@ -39,7 +39,7 @@ public class About {
       copyright          = _( "Copyright" ) + " © 2023-2026 Trevor Williams",
       version            = Annotator.version,
       license_type       = License.GPL_3_0,
-      website            = "https://appcenter.elementary.io/com.github.phase1geo.annotator/",
+      website            = "https://appcenter.elementary.io/io.github.phase1geo.annotator/",
       website_label      = _( "Annotator in AppCenter" ),
       system_information = get_system_info(),
       logo               = image.get_paintable()

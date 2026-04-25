@@ -26,7 +26,7 @@ function test {
     initialize 0
 
     export DISPLAY=:0
-    ./com.github.phase1geo.annotator --run-tests
+    ./io.github.phase1geo.annotator --run-tests
     result=$?
 
     export DISPLAY=":0.0"
@@ -46,10 +46,10 @@ case $1 in
     ;;
 "generate-i18n")
     grep -rc _\( * | grep ^src | grep -v :0 | cut -d : -f 1 | sort -o po/POTFILES
-    echo "data/com.github.phase1geo.annotator.shortcuts.ui" >> po/POTFILES
+    echo "data/io.github.phase1geo.annotator.shortcuts.ui" >> po/POTFILES
     initialize 0
-    ninja com.github.phase1geo.annotator-pot
-    ninja com.github.phase1geo.annotator-update-po
+    ninja io.github.phase1geo.annotator-pot
+    ninja io.github.phase1geo.annotator-update-po
     ninja extra-pot
     ninja extra-update-po
     cp data/* ../data
@@ -84,41 +84,41 @@ case $1 in
     ;;
 "run")
     initialize 0
-    ./com.github.phase1geo.annotator "${@:2}"
+    ./io.github.phase1geo.annotator "${@:2}"
     ;;
 "run-rtl")
     initialize 0
-    LANG=he_IL.utf8 ./com.github.phase1geo.annotator "${@:2}"
+    LANG=he_IL.utf8 ./io.github.phase1geo.annotator "${@:2}"
     ;;
 "run-emmet")
     initialize 1
-    ./com.github.phase1geo.annotator "${@:2}"
+    ./io.github.phase1geo.annotator "${@:2}"
     ;;
 "run-flatpak")
-    flatpak run com.github.phase1geo.annotator "${@:2}"
+    flatpak run io.github.phase1geo.annotator "${@:2}"
     ;;
 "debug")
     initialize 0
-    G_DEBUG=fatal-criticals gdb --args ./com.github.phase1geo.annotator "${@:2}"
+    G_DEBUG=fatal-criticals gdb --args ./io.github.phase1geo.annotator "${@:2}"
     ;;
 "test")
     test
     ;;
 "test-run")
     test
-    ./com.github.phase1geo.annotator "${@:2}"
+    ./io.github.phase1geo.annotator "${@:2}"
     ;;
 "uninstall")
     initialize 0
     sudo ninja uninstall
     ;;
 "elementary")
-    flatpak-builder --user --install --force-clean ../build-annotator-elementary elementary/com.github.phase1geo.annotator.yml
-    flatpak install --user --reinstall --assumeyes "$(pwd)/.flatpak-builder/cache" com.github.phase1geo.annotator.Debug
+    flatpak-builder --user --install --force-clean ../build-annotator-elementary elementary/io.github.phase1geo.annotator.yml
+    flatpak install --user --reinstall --assumeyes "$(pwd)/.flatpak-builder/cache" io.github.phase1geo.annotator.Debug
     ;;
 "flathub")
-    flatpak-builder --user --install --force-clean ../build-annotator-flathub flathub/com.github.phase1geo.annotator.yml
-    flatpak install --user --reinstall --assumeyes "$(pwd)/.flatpak-builder/cache" com.github.phase1geo.annotator.Debug
+    flatpak-builder --user --install --force-clean ../build-annotator-flathub flathub/io.github.phase1geo.annotator.yml
+    flatpak install --user --reinstall --assumeyes "$(pwd)/.flatpak-builder/cache" io.github.phase1geo.annotator.Debug
     ;;
 *)
     echo "Usage:"

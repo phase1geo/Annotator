@@ -90,7 +90,7 @@ public class MainWindow : Gtk.ApplicationWindow {
 
     // Add the application CSS
     var provider = new Gtk.CssProvider ();
-    provider.load_from_resource( "/com/github/phase1geo/annotator/css/style.css" );
+    provider.load_from_resource( "/io/github/phase1geo/annotator/css/style.css" );
     StyleContext.add_provider_for_display( get_display(), provider, STYLE_PROVIDER_PRIORITY_APPLICATION );
 
     var box = new Box( Orientation.HORIZONTAL, 0 );
@@ -895,7 +895,7 @@ public class MainWindow : Gtk.ApplicationWindow {
   // Displays the keyboard shortcuts cheatsheet
   private void do_shortcuts() {
 
-    var builder = new Builder.from_resource( "/com/github/phase1geo/annotator/shortcuts/shortcuts.ui" );
+    var builder = new Builder.from_resource( "/io/github/phase1geo/annotator/shortcuts/shortcuts.ui" );
     var win     = builder.get_object( "shortcuts" ) as ShortcutsWindow;
 
     win.transient_for = this;
@@ -974,7 +974,7 @@ public class MainWindow : Gtk.ApplicationWindow {
       var notification = new Notification( title );
       notification.set_body( msg );
       notification.set_priority( priority );
-      app.send_notification( "com.github.phase1geo.annotator", notification );
+      app.send_notification( "io.github.phase1geo.annotator", notification );
     }
   }
 

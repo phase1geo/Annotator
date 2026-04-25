@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Copyright 2020 Trevor Williams <phase1geo@gmail.com> -->
 <component type="desktop-application">
-  <id>com.github.phase1geo.annotator</id>
+  <id>io.github.phase1geo.annotator</id>
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>GPL-3.0+</project_license>
   <name>Annotator</name>
   <summary>Communicate with images better</summary>
-  <developer id="com.github.phase1geo">
+  <developer id="io.github.phase1geo">
     <name>Trevor Williams</name>
   </developer>
   <update_contact>phase1geo@gmail.com</update_contact>
-  <launchable type="desktop-id">com.github.phase1geo.annotator.desktop</launchable>
+  <launchable type="desktop-id">io.github.phase1geo.annotator.desktop</launchable>
   <provides>
-    <binary>com.github.phase1geo.annotator</binary>
+    <binary>io.github.phase1geo.annotator</binary>
   </provides>
   <screenshots>
     <screenshot>

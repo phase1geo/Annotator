@@ -27,6 +27,7 @@ sources += files(
     'MainWindow.vala',
     'Resizer.vala',
     'ScreenshotBackend.vala',
+    'SettingsUpdater.vala',
     'StickerSet.vala',
     'UndoBuffer.vala',
     'UndoItem.vala',

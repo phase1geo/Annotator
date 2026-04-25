@@ -78,7 +78,7 @@ You will need the following dependencies to build Annotator:
 
 To install Annotator from source, run `./app install`.
 
-To run Annotator, run `com.github.phase1geo.annotator`.
+To run Annotator, run `io.github.phase1geo.annotator`.
 
 ### Ubuntu (PPA)
 
@@ -87,7 +87,7 @@ You can use the [PPA](https://launchpad.net/~ubuntuhandbook1/+archive/ubuntu/ann
 ```
 sudo add-apt-repository ppa:ubuntuhandbook1/annotator
 sudo apt update
-sudo apt install com.github.phase1geo.annotator
+sudo apt install io.github.phase1geo.annotator
 ```
 
 ### Arch Linux
