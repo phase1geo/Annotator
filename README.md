@@ -87,7 +87,7 @@ You can use the [PPA](https://launchpad.net/~ubuntuhandbook1/+archive/ubuntu/ann
 ```
 sudo add-apt-repository ppa:ubuntuhandbook1/annotator
 sudo apt update
-sudo apt install io.github.phase1geo.annotator
+sudo apt install com.github.phase1geo.annotator
 ```
 
 ### Arch Linux
