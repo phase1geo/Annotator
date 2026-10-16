@@ -40,7 +40,10 @@ public class UndoTextBuffer : UndoBuffer {
   // true; otherwise, return false.
   private bool merge_with_last( UndoTextItem item ) {
     if( (_undo_buffer.length > 0) && (_redo_buffer.length == 0) && mergeable ) {
-      return( (_undo_buffer.index( _undo_buffer.length - 1 ) as UndoTextItem).merge( ct, item ) );
+      var text_item = (UndoTextItem)_undo_buffer.index( _undo_buffer.length - 1 );
+      if( text_item != null ) {
+        return( text_item.merge( ct, item ) );
+      }
     }
     mergeable = true;
     return( false );
@@ -105,12 +108,15 @@ public class UndoTextBuffer : UndoBuffer {
   // Performs the next undo action in the buffer
   public override void undo() {
     if( undoable() ) {
-      UndoItem item = _undo_buffer.index( _undo_buffer.length - 1 );
-      (item as UndoTextItem).undo_text( _canvas, ct );
-      _undo_buffer.remove_index( _undo_buffer.length - 1 );
-      _redo_buffer.append_val( item );
-      mergeable = false;
-      buffer_changed( this );
+      var item      = _undo_buffer.index( _undo_buffer.length - 1 );
+      var text_item = (UndoTextItem)item;
+      if( text_item != null ) {
+        text_item.undo_text( _canvas, ct );
+        _undo_buffer.remove_index( _undo_buffer.length - 1 );
+        _redo_buffer.append_val( item );
+        mergeable = false;
+        buffer_changed( this );
+      }
     }
   }
 
@@ -118,12 +124,15 @@ public class UndoTextBuffer : UndoBuffer {
   // Performs the next redo action in the buffer
   public override void redo() {
     if( redoable() ) {
-      UndoItem item = _redo_buffer.index( _redo_buffer.length - 1 );
-      (item as UndoTextItem).redo_text( _canvas, ct );
-      _redo_buffer.remove_index( _redo_buffer.length - 1 );
-      _undo_buffer.append_val( item );
-      mergeable = false;
-      buffer_changed( this );
+      var item      = _redo_buffer.index( _redo_buffer.length - 1 );
+      var text_item = (UndoTextItem)item;
+      if( text_item != null ) {
+        text_item.redo_text( _canvas, ct );
+        _redo_buffer.remove_index( _redo_buffer.length - 1 );
+        _undo_buffer.append_val( item );
+        mergeable = false;
+        buffer_changed( this );
+      }
     }
   }
 }

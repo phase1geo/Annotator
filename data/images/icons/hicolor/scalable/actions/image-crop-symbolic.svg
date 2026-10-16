@@ -35,11 +35,11 @@
      color="#bebebe"
      transform="matrix(8,0,0,8,-6040,-776)"
      id="g177"
-     style="fill:#000000">
+     style="fill:currentColor">
     <path
        d="m 758,97 v 2 h 2 v -2 z m -3,3 v 2 h 11 v 11 h 2 v -13 h -2 z m 3,3 v 7 h 7 v -2 h -5 v -5 z m 11,5 v 2 h 2 v -2 z"
-       fill="#666666"
+       fill="currentColor"
        id="path175"
-       style="fill:#000000" />
+       style="fill:currentColor" />
   </g>
 </svg>

@@ -11,11 +11,11 @@
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    width="128"
    height="128"
-   viewBox="0 0 33.866666 33.866668"
+   viewBox="0 0 33.866666 33.866666"
    version="1.1"
    id="svg8"
    inkscape:version="0.92.3 (2405546, 2018-03-11)"
-   sodipodi:docname="sticker-symbolic.svg">
+   sodipodi:docname="star-fill-symbolic.svg">
   <defs
      id="defs2" />
   <sodipodi:namedview
@@ -25,9 +25,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="3.959798"
-     inkscape:cx="124.98577"
-     inkscape:cy="59.282107"
+     inkscape:zoom="2.8284271"
+     inkscape:cx="59.646447"
+     inkscape:cy="-2.2737368e-13"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -53,17 +53,23 @@
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(0,-263.13332)"
-     style="display:inline">
+     transform="translate(0,-263.13334)">
     <path
-       style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:30;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
-       d="M 28.085938,-0.03710937 C 12.526042,-0.03710937 0,12.488933 0,28.048828 v 72.117192 c 0,15.55989 12.526042,28.08593 28.085938,28.08593 h 71.865234 c 15.559898,0 28.085938,-12.52604 28.085938,-28.08593 V 64.382812 L 64.523438,127.89648 V 92.193359 c 0,-15.559896 12.526042,-28.085937 28.085937,-28.085937 H 128.03711 V 28.048828 c 0,-15.559895 -12.52604,-28.08593737 -28.085938,-28.08593737 z"
-       transform="matrix(0.26458333,0,0,0.26458333,0,263.13332)"
-       id="rect815"
-       inkscape:connector-curvature="0" />
+       sodipodi:type="star"
+       style="fill:currentColor;fill-opacity:1;stroke:none;stroke-width:2.27769375;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:0.39215686"
+       id="path840"
+       sodipodi:sides="5"
+       sodipodi:cx="17.683323"
+       sodipodi:cy="282.12595"
+       sodipodi:r1="15.304455"
+       sodipodi:r2="6.4210143"
+       sodipodi:arg1="-1.5707963"
+       sodipodi:arg2="-0.9424778"
+       inkscape:flatsided="false"
+       inkscape:rounded="0"
+       inkscape:randomized="0"
+       d="m 17.683323,266.82149 3.774177,10.10975 10.781225,0.46537 -8.448655,6.71354 2.888985,10.39736 -8.995732,-5.96055 -8.9957333,5.96055 2.8889853,-10.39736 -8.4486534,-6.71354 10.7812234,-0.46537 z"
+       inkscape:transform-center-y="-1.6875551"
+       transform="matrix(1.1412587,0,0,1.1547066,-3.3407373,-43.704365)" />
   </g>
-  <g
-     inkscape:groupmode="layer"
-     id="layer2"
-     inkscape:label="corner" />
 </svg>

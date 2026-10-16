@@ -186,6 +186,7 @@ public class Export {
   // Returns true if the given filename is targeted for this
   // export type
   public bool filename_matches( string fname, out string basename ) {
+    basename = "";
     foreach( string extension in extensions ) {
       if( fname.has_suffix( extension ) ) {
         basename = fname.slice( 0, (fname.length - extension.length) );

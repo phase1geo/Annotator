@@ -40,11 +40,11 @@ public class ExportClipboard : Object {
     var context = new Context( surface );
     _canvas.draw_all( context );
 
-    // Get the pixbuf
-    var pixbuf = pixbuf_get_from_surface( surface, 0, 0, surface.get_width(), surface.get_height() );
+    // Generate texture from surface
+    var texture = Utils.surface_to_texture( surface );
 
     // Copy the image to the clipboard
-    AnnotatorClipboard.copy_image( pixbuf );
+    AnnotatorClipboard.copy_image( texture );
 
   }
 

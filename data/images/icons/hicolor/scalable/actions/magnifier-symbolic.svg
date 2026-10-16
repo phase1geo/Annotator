@@ -61,22 +61,22 @@
          inkscape:connector-curvature="0"
          id="path817"
          d="M 107.70962,224.03543 A 51.449383,50.781212 0 0 1 56.260235,274.81664 51.449383,50.781212 0 0 1 4.8108521,224.03543 51.449383,50.781212 0 0 1 56.260235,173.25422 51.449383,50.781212 0 0 1 107.70962,224.03543 Z"
-         style="fill:none;stroke:#ffffff;stroke-width:7.9375;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+         style="fill:none;stroke:currentColor;stroke-width:7.9375;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
       <path
          inkscape:connector-curvature="0"
          id="path819"
          d="m 125.50894,294.2284 c -74.885633,-71.48447 0,0 0,0 z"
-         style="fill:none;stroke:#ffffff;stroke-width:7.18435526;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+         style="fill:none;stroke:currentColor;stroke-width:7.18435526;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
       <path
          inkscape:connector-curvature="0"
          id="path846"
          d="m 56.260234,189.2904 v 69.49007"
-         style="fill:none;stroke:#ffffff;stroke-width:7.9375;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+         style="fill:none;stroke:currentColor;stroke-width:7.9375;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
       <path
          inkscape:connector-curvature="0"
          id="path846-8"
          d="m 21.515199,224.03543 h 69.49007"
-         style="fill:none;stroke:#ffffff;stroke-width:7.9375;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+         style="fill:none;stroke:currentColor;stroke-width:7.9375;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
     </g>
   </g>
 </svg>

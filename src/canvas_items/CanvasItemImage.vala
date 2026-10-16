@@ -56,7 +56,7 @@ public class CanvasItemImage : CanvasItem {
       if( file ) {
         _buf = new Pixbuf.from_file_at_size( _name, width, -1 );
       } else {
-        _buf = canvas.win.sticker_set.make_pixbuf( _name, width );
+        _buf = StickerSet.make_pixbuf( _name, width );
       }
       bbox.width  = _buf.width;
       bbox.height = _buf.height;

@@ -129,12 +129,12 @@ public class FormatBar : Gtk.Popover {
       header_menu.append( label, "formatbar.action_header(%d)".printf( i ) );
     }
 
-    _hilite = new ColorPicker( Utils.color_from_string( _canvas.items.hilite_color ), ColorPickerType.HCOLOR );
+    _hilite = new ColorPicker( canvas.win, Utils.color_from_string( _canvas.items.hilite_color ), ColorPickerType.HCOLOR );
     _hilite.set_toggle_tooltip( _( "Apply Highlight Color" ) );
     _hilite.set_select_tooltip( _( "Change Highlight Color" ) );
     _hilite.color_changed.connect( handle_hilite );
 
-    _color = new ColorPicker( Utils.color_from_string( _canvas.items.font_color ), ColorPickerType.FCOLOR );
+    _color = new ColorPicker( canvas.win, Utils.color_from_string( _canvas.items.font_color ), ColorPickerType.FCOLOR );
     _color.set_toggle_tooltip( _( "Apply Font Color" ) );
     _color.set_select_tooltip( _( "Change Font Color" ) );
     _color.color_changed.connect( handle_color );

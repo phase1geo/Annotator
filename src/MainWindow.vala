@@ -25,7 +25,6 @@ using Gee;
 public class MainWindow : Gtk.ApplicationWindow {
 
   private Granite.Placeholder _welcome;
-  private FontButton          _font;
   private Button              _open_btn;
   private Button              _screenshot_btn;
   private Button              _undo_btn;
@@ -34,7 +33,6 @@ public class MainWindow : Gtk.ApplicationWindow {
   private MenuButton          _export_btn;
   private MenuButton          _zoom_btn;
   private ZoomWidget          _zoom;
-  private Box                 _box;
   private Editor              _editor;
   private Stack               _stack;
   private SList<FileFilter>   _image_filters;
@@ -43,7 +41,6 @@ public class MainWindow : Gtk.ApplicationWindow {
   private const GLib.ActionEntry[] action_entries = {
     { "action_open",              do_open },
     { "action_screenshot",           action_screenshot },
-    { "action_screenshot_nonportal", action_screenshot_nonportal, "i" },
     { "action_quit",              do_quit },
     { "action_undo",              do_undo },
     { "action_redo",              do_redo },
@@ -139,7 +136,7 @@ public class MainWindow : Gtk.ApplicationWindow {
 
   //-------------------------------------------------------------
   // Returns the name of the icon to use for a headerbar icon
-  private string get_icon_name( string icon_name ) {
+  private string get_header_icon_name( string icon_name ) {
     return( "%s%s".printf( icon_name, (on_elementary ? "" : "-symbolic") ) );
   }
 
@@ -195,28 +192,28 @@ public class MainWindow : Gtk.ApplicationWindow {
     };
     set_titlebar( header );
 
-    _open_btn = new Button.from_icon_name( get_icon_name( "document-open" ) ) {
+    _open_btn = new Button.from_icon_name( get_header_icon_name( "document-open" ) ) {
       tooltip_markup = Utils.tooltip_with_accel( _( "Open Image" ), "<Control>o" )
     };
     _open_btn.clicked.connect( do_open );
     header.pack_start( _open_btn );
 
-    _screenshot_btn = new Button.from_icon_name( get_icon_name( "insert-image" ) ) {
+    _screenshot_btn = new Button.from_icon_name( get_header_icon_name( "insert-image" ) ) {
       tooltip_markup = Utils.tooltip_with_accel( _( "Take Screenshot" ), "<Control>t" )
     };
     _screenshot_btn.clicked.connect(() => {
-      do_screenshot( _screenshot_btn );
+      do_screenshot();
     });
     header.pack_start( _screenshot_btn );
 
-    _undo_btn = new Button.from_icon_name( get_icon_name( "edit-undo" ) ) {
+    _undo_btn = new Button.from_icon_name( get_header_icon_name( "edit-undo" ) ) {
       tooltip_markup = Utils.tooltip_with_accel( _( "Undo" ), "<Control>z" ),
       sensitive = false
     };
     _undo_btn.clicked.connect( do_undo );
     header.pack_start( _undo_btn );
 
-    _redo_btn = new Button.from_icon_name( get_icon_name( "edit-redo" ) ) {
+    _redo_btn = new Button.from_icon_name( get_header_icon_name( "edit-redo" ) ) {
       tooltip_markup = Utils.tooltip_with_accel( _( "Redo" ), "<Control><Shift>z" ),
       sensitive = false
     };
@@ -248,7 +245,7 @@ public class MainWindow : Gtk.ApplicationWindow {
 
     var pref_btn = new MenuButton() {
       has_frame    = !on_elementary,
-      child        = new Image.from_icon_name( get_icon_name( "open-menu" ) ),
+      child        = new Image.from_icon_name( get_header_icon_name( "open-menu" ) ),
       tooltip_text = _( "Properties" ),
       menu_model   = menu
     };
@@ -302,7 +299,7 @@ public class MainWindow : Gtk.ApplicationWindow {
   // Creates the zoom menu.
   private MenuButton create_zoom() {
 
-    _zoom = new ZoomWidget( (int)(_editor.canvas.zoom_min * 100), (int)(_editor.canvas.zoom_max * 100), (int)(_editor.canvas.zoom_step * 100) ) {
+    _zoom = new ZoomWidget( (int)(Canvas.zoom_min * 100), (int)(Canvas.zoom_max * 100), (int)(Canvas.zoom_step * 100) ) {
       margin_start  = 10,
       margin_end    = 10,
       margin_top    = 10,
@@ -325,7 +322,7 @@ public class MainWindow : Gtk.ApplicationWindow {
 
     // Add the button
     var zoom_btn = new MenuButton() {
-      icon_name    = get_icon_name( "zoom-fit-best" ),
+      icon_name    = get_header_icon_name( "zoom-fit-best" ),
       tooltip_text = _( "Zoom (%d%%)" ).printf( 100 ),
       sensitive    = false,
       popover      = zoom_popover
@@ -375,7 +372,7 @@ public class MainWindow : Gtk.ApplicationWindow {
 
     var screenshot = _welcome.append_button( new ThemedIcon( "insert-image" ), _( "Take A Screenshot" ), _( "Open an image from a screenshot" ) );
     screenshot.clicked.connect(() => {
-      do_screenshot( screenshot );
+      do_screenshot();
     });
 
     // Initialize the clipboard
@@ -403,46 +400,6 @@ public class MainWindow : Gtk.ApplicationWindow {
     box.append( _stack );
 
     _stack.visible_child_name = "welcome";
-
-  }
-
-  //-------------------------------------------------------------
-  // Create font selection box
-  private Box create_font_selection() {
-
-    var box = new Box( Orientation.HORIZONTAL, 10 );
-    var lbl = new Label( _( "Font:" ) ) {
-      halign = Align.START
-    };
-
-    _font = new FontButton() {
-      halign  = Align.END,
-      hexpand = true
-    };
-    _font.set_filter_func( (family, face) => {
-      var fd     = face.describe();
-      var weight = fd.get_weight();
-      var style  = fd.get_style();
-      return( (weight == Pango.Weight.NORMAL) && (style == Pango.Style.NORMAL) );
-    });
-    _font.font_set.connect(() => {
-      var name = _font.get_font_family().get_name();
-      var size = _font.get_font_size() / Pango.SCALE;
-      // TBD - _editor.change_name_font( name, size );
-      Annotator.settings.set_string( "default-font-family", name );
-      Annotator.settings.set_int( "default-font-size", size );
-    });
-
-    // Set the font button defaults
-    var fd = _font.get_font_desc();
-    fd.set_family( Annotator.settings.get_string( "default-font-family" ) );
-    fd.set_size( Annotator.settings.get_int( "default-font-size" ) * Pango.SCALE );
-    _font.set_font_desc( fd );
-
-    box.append( lbl );
-    box.append( _font );
-
-    return( box );
 
   }
 
@@ -488,27 +445,31 @@ public class MainWindow : Gtk.ApplicationWindow {
 
     _welcome.sensitive = false;
 
-    // Get the file to open from the user
-    var dialog = new FileChooserNative( _( "Open Image File" ), this, FileChooserAction.OPEN, _( "Open" ), _( "Cancel" ) );
-    Utils.set_chooser_folder( dialog );
-
     // Create file filters for each supported format
+    var filter_list = new GLib.ListStore( typeof( FileFilter ) );
     foreach( FileFilter filter in _image_filters ) {
-      dialog.add_filter( filter );
+      filter_list.append( filter );
     }
 
-    dialog.response.connect((id) => {
-      if( id == ResponseType.ACCEPT ) {
-        var filename = dialog.get_file().get_path();
+    // Get the file to open from the user
+    var dialog = new FileDialog() {
+      modal = true,
+      title = _( "Open Image File" ),
+      filters = filter_list
+    };
+
+    Utils.set_chooser_folder( dialog );
+
+    dialog.open.begin( this, null, (obj, res) => {
+      try {
+        var file = dialog.open.end( res );
+        var filename = file.get_path();
         open_file( filename );
         Utils.store_chooser_folder( filename );
-      } else {
+      } catch( Error e ) {
         _welcome.sensitive = true;
       }
-      dialog.destroy();
     });
-
-    dialog.show();
 
   }
 
@@ -590,133 +551,13 @@ public class MainWindow : Gtk.ApplicationWindow {
   }
 
   //-------------------------------------------------------------
-  // Main procedure that initiates a screenshot.  If the backend
-  // indicates that it can handle taking the screenshot, use the
-  // backend to perform the screenshot; otherwise, use the portal.
-  public void do_screenshot( Widget? parent ) {
-    do_screenshot_portal();
-  }
-
-  //-------------------------------------------------------------
-  // Returns the capture mode as determined by the user
-  private void show_screenshot_popover( Widget parent ) {
-
-    var shot_menu = new GLib.Menu();
-
-    for( int i=0; i<CaptureType.NUM; i++ ) {
-      var mode = (CaptureType)i;
-      shot_menu.append( mode.label(), "win.action_screenshot_nonportal(%d)".printf( i ) );
-    }
-
-    var opt_menu = new GLib.Menu();
-
-    var delay_item = new GLib.MenuItem( null, null );
-    delay_item.set_attribute( "custom", "s", "delay" );
-    opt_menu.append_item( delay_item );
-
-    var delay = new Label( _( "Delay (in seconds)" ) + ":" ) {
-      halign  = Align.START,
-      hexpand = true
-    };
-    var delay_sb = new SpinButton.with_range( 0, 6, 1 ) {
-      halign = Align.END,
-      valign = Align.CENTER
-    };
-    delay_sb.value = Annotator.settings.get_int( "screenshot-delay" );
-    delay_sb.value_changed.connect(() => {
-      Annotator.settings.set_int( "screenshot-delay", (int)delay_sb.value );
-    });
-
-    var dbox = new Box( Orientation.HORIZONTAL, 10 ) {
-      margin_start = 10,
-      margin_end   = 10
-    };
-    dbox.append( delay );
-    dbox.append( delay_sb );
-
-    var include_item = new GLib.MenuItem( null, null );
-    include_item.set_attribute( "custom", "s", "include" );
-    opt_menu.append_item( include_item );
-
-    var include = new Label( _( "Include Annotator window" ) + ":" ) {
-      halign  = Align.START,
-      hexpand = true
-    };
-    var include_sw = new Switch() {
-      halign = Align.END,
-      valign = Align.CENTER,
-      active = Annotator.settings.get_boolean( "screenshot-include-win" )
-    };
-    include_sw.notify["active"].connect((value) => {
-      Annotator.settings.set_boolean( "screenshot-include-win", include_sw.active );
-    });
-
-    var ibox = new Box( Orientation.HORIZONTAL, 10 ) {
-      margin_top   = 10,
-      margin_start = 10,
-      margin_end   = 10
-    };
-    ibox.append( include );
-    ibox.append( include_sw );
-
-    var menu = new GLib.Menu();
-    menu.append_section( null, shot_menu );
-    menu.append_section( null, opt_menu );
-
-    var popover = new PopoverMenu.from_model( menu ) {
-      position = PositionType.BOTTOM
-    };
-    popover.set_parent( parent );
-    popover.add_child( dbox, "delay" );
-    popover.add_child( ibox, "include" );
-    popover.popup();
-
+  // Main procedure that initiates a screenshot.
+  public void do_screenshot() {
+    do_screenshot_portal.begin();
   }
 
   private void action_screenshot() {
-    do_screenshot( _screenshot_btn );
-  }
-
-  private void action_screenshot_nonportal( SimpleAction action, Variant? variant ) {
-    if( variant != null ) {
-      var mode = (CaptureType)variant.get_int32();
-      do_screenshot_nonportal( mode );
-    }
-  }
-
-  public void do_screenshot_nonportal( CaptureType capture_mode ) {
-
-    // If we aren't capturing anything, end now
-    if( capture_mode == CaptureType.NONE ) return;
-
-    var backend = new ScreenshotBackend();
-    var delay   = Annotator.settings.get_int( "screenshot-delay" );
-    var include = Annotator.settings.get_boolean( "screenshot-include-win" );
-
-    // Hide the application
-    if( !include ) {
-      hide();
-    }
-
-    backend.capture.begin (capture_mode, delay, false, false /* redact */, (obj, res) => {
-      Gdk.Pixbuf? pixbuf = null;
-      try {
-        pixbuf = backend.capture.end (res);
-      } catch (GLib.IOError.CANCELLED e) {
-        // TBD
-      } catch (Error e) {
-        // TBD
-      }
-      if (pixbuf != null) {
-        _editor.paste_image( pixbuf, false );
-        _zoom_btn.set_sensitive( true );
-        _export_btn.set_sensitive( true );
-      }
-      if( !include ) {
-        show();
-      }
-    });
-
+    do_screenshot();
   }
 
   private async void screenshot_wait_ms( uint ms ) {

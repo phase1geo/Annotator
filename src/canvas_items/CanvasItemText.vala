@@ -40,7 +40,6 @@ public class CanvasItemText : CanvasItem {
   private int            _selanchor    = 0;
   private double         _max_width    = 400;
   private double         _orig_width   = 400;
-  private double         _width        = 0;
   private double         _height       = 0;
   private bool           _debug        = false;
   private int            _font_size    = 16;
@@ -989,13 +988,11 @@ public class CanvasItemText : CanvasItem {
       });
       menu.complete_section();
 
-      var sel_menu = new GLib.Menu();
       menu.add_menu_item( this, _( "Select All" ), "<Control>a", true, (item) => {
         set_cursor_all( false );
       });
       menu.complete_section();
 
-      var emoji_menu = new GLib.Menu();
       menu.add_menu_item( this, _( "Insert Emoji" ), "<Control>slash", true, (item) => {
         canvas.insert_emoji();
       });
@@ -1010,7 +1007,6 @@ public class CanvasItemText : CanvasItem {
   public override void draw_item( Cairo.Context ctx, CanvasItemColor color ) {
 
     var layout = _pango_layout;
-    var fd     = _pango_layout.get_font_description();
     var alpha  = mode.alpha( props.alpha );
 
     Pango.Rectangle ink_rect, log_rect;

@@ -1,16 +1,38 @@
+/*
+* Copyright (c) 2020-2026 (https://github.com/phase1geo/Annotator)
+*
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public
+* License as published by the Free Software Foundation; either
+* version 2 of the License, or (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+* General Public License for more details.
+*
+* You should have received a copy of the GNU General Public
+* License along with this program; if not, write to the
+* Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+* Boston, MA 02110-1301 USA
+*
+* Authored by: Trevor Williams <phase1geo@gmail.com>
+*/
+
 using Gtk;
 using Cairo;
 
 public class CustomItem {
 
-  private static const int icon_size = 24;
+  private const int icon_size = 24;
 
   private Image? _light_image = null;
   private Image? _dark_image  = null;
 
   public CanvasItem? item { get; private set; default = null; }
 
-  /* Default constructor */
+  //-------------------------------------------------------------
+  // Default constructor
   public CustomItem() {
     item         = null;
     _light_image = null;
@@ -42,7 +64,7 @@ public class CustomItem {
   private void create_image( bool light ) {
     if( item != null ) {
       var snapshot = new Snapshot();
-      var rect     = Graphene.Rect.alloc();
+      var rect     = Graphene.Rect();
       rect.init( 0, 0, (float)icon_size, (float)icon_size );
       var ctx      = snapshot.append_cairo( rect );
       var it       = item.duplicate();
@@ -67,14 +89,16 @@ public class CustomItem {
     }
   }
 
-  /* Saves this item as XML format */
+  //-------------------------------------------------------------
+  // Saves this item as XML format
   public Xml.Node* save() {
     Xml.Node* node = new Xml.Node( null, "custom-item" );
-    node->add_child( item.save( 0, null ) );
+    node->add_child( item.save( 0, "" ) );
     return( node );
   }
 
-  /* Loads this item from XML format */
+  //-------------------------------------------------------------
+  // Loads this item from XML format
   public void load( Xml.Node* node, CanvasItems canvas_items ) {
     for( Xml.Node* it=node->children; it!=null; it=it->next ) {
       if( (it->type == Xml.ElementType.ELEMENT_NODE) && (it->name == "item") ) {

@@ -26,7 +26,6 @@ using Cairo;
 public class CanvasItemStar : CanvasItem {
 
   private double _inner_radius = 15;
-  private double _inner_angle  = 0;
   private Cursor _sel_cursor;
 
   public int num_points { get; set; default = 5; }

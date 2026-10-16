@@ -85,6 +85,7 @@ public class CanvasImage {
 
   public signal void crop_started();
   public signal void crop_ended();
+  public signal void crop_changed( CanvasRect rect );
   public signal void image_changed();
   public signal void color_picked( RGBA color );
 
@@ -210,7 +211,7 @@ public class CanvasImage {
     height_scale = info.pixbuf_rect.height / pixbuf.height;
 
     // Resize the canvas
-    _canvas.resize( old_info, new_info );
+    _canvas.resize_canvas( old_info, new_info );
 
   }
 
@@ -350,7 +351,7 @@ public class CanvasImage {
 
     var new_info = new CanvasImageInfo.with_rotation( _buf.width, _buf.height, _angle );
 
-    _canvas.resize( info, new_info );
+    _canvas.resize_canvas( info, new_info );
 
     info.copy( new_info );
 
@@ -401,6 +402,7 @@ public class CanvasImage {
           ((box.x + box.width)  <= (info.width  / width_scale)) &&
           ((box.y + box.height) <= (info.height / height_scale)) ) {
         crop_rect.copy( box );
+        crop_changed( crop_rect );
         return( true );
       }
 
@@ -434,6 +436,7 @@ public class CanvasImage {
           ((box.x + box.width)  <= (info.width  / width_scale)) &&
           ((box.y + box.height) <= (info.height / height_scale)) ) {
         crop_rect.copy( box );
+        crop_changed( crop_rect );
         return( true );
       }
 
@@ -498,10 +501,9 @@ public class CanvasImage {
   //-------------------------------------------------------------
   // Start the cropping function.
   public void start_crop() {
-    int width, height;
     cropping = true;
-    // crop_rect.copy_coords( 0, 0, (width / width_scale), (height / height_scale) );
     crop_rect.copy_coords( 0, 0, info.width, info.height );
+    crop_changed( crop_rect );
     crop_started();
   }
 
@@ -765,6 +767,7 @@ public class CanvasImage {
 
   //-------------------------------------------------------------
   // Draws the rotation selector.
+  /*
   private void draw_rotate_selector( Context ctx ) {
 
     var yellow = Utils.color_from_string( "yellow" );
@@ -782,6 +785,7 @@ public class CanvasImage {
     ctx.stroke();
 
   }
+  */
 
   //-------------------------------------------------------------
   // Returns the color value at the given pixel location within the

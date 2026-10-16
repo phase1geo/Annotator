@@ -32,16 +32,21 @@ public class Annotator : Gtk.Application {
   public  static bool          use_clipboard     = false;
   public  static bool          take_screenshot   = false;
   public  static bool          std_input         = false;
-  public  static string        version           = "2.0.3";
 
   public Annotator () {
 
-    Object( application_id: "io.github.phase1geo.annotator", flags: ApplicationFlags.HANDLES_OPEN );
+    Object(
+      application_id: "io.github.phase1geo.annotator",
+      flags: ApplicationFlags.HANDLES_OPEN,
+      version: "2.1.0"
+    );
 
     Intl.setlocale( LocaleCategory.ALL, "" );
     Intl.bindtextdomain( GETTEXT_PACKAGE, LOCALEDIR );
     Intl.bind_textdomain_codeset( GETTEXT_PACKAGE, "UTF-8" );
     Intl.textdomain( GETTEXT_PACKAGE );
+
+    Environment.set_application_name( _( "Annotator" ) );
 
     startup.connect( start_application );
     open.connect( open_files );
@@ -60,7 +65,8 @@ public class Annotator : Gtk.Application {
 
     // Add the application-specific icons
     weak IconTheme default_theme = IconTheme.get_for_display( Display.get_default() );
-    default_theme.add_resource_path( "/io/github/phase1geo/annotator/images" );
+    // default_theme.add_resource_path( "/io/github/phase1geo/annotator/images" );
+    default_theme.add_resource_path( "/io/github/phase1geo/annotator/images/images/icons/hicolor" );
 
     // Create the main window
     appwin = new MainWindow( this );
@@ -77,7 +83,7 @@ public class Annotator : Gtk.Application {
         Process.exit( 1 );
       }
     } else if( take_screenshot ) {
-      appwin.do_screenshot( null );
+      appwin.do_screenshot();
     }
 
   }

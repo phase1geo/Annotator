@@ -37,7 +37,7 @@ public class About {
       program_name       = "Annotator",
       comments           = _( "Image annotation application" ),
       copyright          = _( "Copyright" ) + " © 2023-2026 Trevor Williams",
-      version            = Annotator.version,
+      version            = win.application.version,
       license_type       = License.GPL_3_0,
       website            = "https://appcenter.elementary.io/io.github.phase1geo.annotator/",
       website_label      = _( "Annotator in AppCenter" ),

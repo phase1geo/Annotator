@@ -125,7 +125,6 @@ public class CanvasItem {
   private Cairo.Path?          _path      = null;
   private CanvasItemPathType   _path_type = CanvasItemPathType.FILL;
   private Cursor               _sel_cursor;
-  private int                  _menu_item_index = 0;
 
   protected Array<CanvasPoint> points { get; set; default = new Array<CanvasPoint>(); }
   protected Canvas             canvas { get; private set; }

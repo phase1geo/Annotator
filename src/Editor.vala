@@ -63,7 +63,7 @@ public class Editor : Box {
       child = canvas
     };
     ((Viewport)_sw.child).scroll_to_focus = false;
-    _sw.get_style_context().add_class( Granite.STYLE_CLASS_CHECKERBOARD );
+    _sw.add_css_class( Granite.STYLE_CLASS_CHECKERBOARD );
 
     // Create the toolbar
     var toolbar = new CanvasToolbar( canvas ) {
@@ -76,13 +76,18 @@ public class Editor : Box {
     });
 
     canvas.image.crop_started.connect(() => {
+      crop_status.visible = true;
       _sw.vscrollbar_policy = PolicyType.EXTERNAL;
       _sw.hscrollbar_policy = PolicyType.EXTERNAL;
     });
     canvas.image.crop_ended.connect(() => {
+      crop_status.visible = false;
       toolbar.crop_ended();
       _sw.vscrollbar_policy = PolicyType.AUTOMATIC;
       _sw.hscrollbar_policy = PolicyType.AUTOMATIC;
+    });
+    canvas.image.crop_changed.connect((rect) => {
+      crop_status.label = "%d x %d px".printf( (int)rect.width, (int)rect.height );
     });
     canvas.image.color_picked.connect((color) => {
       toolbar.set_color( color );
@@ -93,7 +98,7 @@ public class Editor : Box {
       hexpand = true
     };
 
-    var box = new Box( Orientation.HORIZONTAL, 0 ) {
+    var box = new Box( Orientation.HORIZONTAL, 5 ) {
       halign        = Align.FILL,
       hexpand       = true,
       margin_start  = 10,
@@ -102,6 +107,7 @@ public class Editor : Box {
       margin_bottom = 10
     };
     box.append( toolbar );
+    box.append( crop_status );
 
     // Pack the box
     append( box );
@@ -145,8 +151,8 @@ public class Editor : Box {
   // Returns the width and height to size the current image so
   // that it fits in the window.
   public void get_win_size( out int width, out int height ) {
-    width  = _sw.get_allocated_width();
-    height = _sw.get_allocated_height();
+    width  = _sw.get_width();
+    height = _sw.get_height();
   }
 
   //-------------------------------------------------------------
@@ -184,8 +190,8 @@ public class Editor : Box {
   public CanvasRect get_displayed_rect() {
     var x = (int)_sw.hadjustment.value;
     var y = (int)_sw.vadjustment.value;
-    var w = (canvas.image.info.width  < _sw.get_allocated_width())  ? canvas.image.info.width  : _sw.get_allocated_width();
-    var h = (canvas.image.info.height < _sw.get_allocated_height()) ? canvas.image.info.height : _sw.get_allocated_height();
+    var w = (canvas.image.info.width  < _sw.get_width())  ? canvas.image.info.width  : _sw.get_width();
+    var h = (canvas.image.info.height < _sw.get_height()) ? canvas.image.info.height : _sw.get_height();
     return( new CanvasRect.from_coords( x, y, w, h ) );
   }
 

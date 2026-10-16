@@ -50,8 +50,9 @@ public enum FormatTag {
       case HEADER     :  return( "header" );
       case COLOR      :  return( "color" );
       case HILITE     :  return( "hilite" );
+      case SELECT     :  return( "select" );
+      default         :  assert_not_reached();
     }
-    return( "bold" );
   }
 
   public static FormatTag from_string( string str ) {
@@ -66,8 +67,9 @@ public enum FormatTag {
       case "header"      :  return( HEADER );
       case "color"       :  return( COLOR );
       case "hilite"      :  return( HILITE );
+      case "select"      :  return( SELECT );
+      default            :  return( LENGTH );
     }
-    return( LENGTH );
   }
 
 }
@@ -575,10 +577,12 @@ public class FormattedText {
       attrs.append_val( attr_foreground_new( (uint16)(color.red * 65535), (uint16)(color.green * 65535), (uint16)(color.blue * 65535) ) );
       attrs.append_val( attr_underline_new( Underline.SINGLE ) );
     }
+    /*
     public void update_color( RGBA color ) {
       attrs.remove_range( 0, 2 );
       set_color( color );
     }
+    */
     public override TextTag text_tag( string? extra ) {
       var ttag = new TextTag( "url" );
       ttag.foreground      = "#0000ff";
@@ -598,10 +602,12 @@ public class FormattedText {
       attrs.append_val( attr_foreground_new( (uint16)(color.red * 65535), (uint16)(color.green * 65535), (uint16)(color.blue * 65535) ) );
       _color = color.copy();
     }
+    /*
     public void update_color( RGBA color ) {
       attrs.remove_range( 0, 1 );
       set_color( color );
     }
+    */
     public override TextTag text_tag( string? extra ) {
       var ttag = new TextTag( "tag" );
       ttag.foreground     = Utils.color_to_string( _color );
@@ -619,10 +625,12 @@ public class FormattedText {
       attrs.append_val( attr_foreground_new( (uint16)(color.red * 65535), (uint16)(color.green * 65535), (uint16)(color.blue * 65535) ) );
       _color = color.copy();
     }
+    /*
     public void update_color( RGBA color ) {
       attrs.remove_range( 0, 1 );
       set_color( color );
     }
+    */
     public override TextTag text_tag( string? extra ) {
       var ttag = new TextTag( "syntax" );
       ttag.foreground     = Utils.color_to_string( _color );
@@ -639,10 +647,12 @@ public class FormattedText {
       attrs.append_val( attr_foreground_new( (uint16)(f.red * 65535), (uint16)(f.green * 65535), (uint16)(f.blue * 65535) ) );
       attrs.append_val( attr_background_new( (uint16)(b.red * 65535), (uint16)(b.green * 65535), (uint16)(b.blue * 65535) ) );
     }
+    /*
     public void update_color( RGBA f, RGBA b ) {
       attrs.remove_range( 0, 2 );
       set_color( f, b );
     }
+    */
   }
 
   private class SelectInfo : TagAttr {
@@ -653,10 +663,12 @@ public class FormattedText {
       attrs.append_val( attr_foreground_new( (uint16)(f.red * 65535), (uint16)(f.green * 65535), (uint16)(f.blue * 65535) ) );
       attrs.append_val( attr_background_new( (uint16)(b.red * 65535), (uint16)(b.green * 65535), (uint16)(b.blue * 65535) ) );
     }
+    /*
     public void update_color( RGBA f, RGBA b ) {
       attrs.remove_range( 0, 2 );
       set_color( f, b );
     }
+    */
   }
 
   private static TagAttr[]  _attr_tags = null;

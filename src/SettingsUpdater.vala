@@ -29,11 +29,13 @@ public class SettingsUpdater {
 
   //-------------------------------------------------------------
   // Returns the GLib.Settings for the old version of the settings
-  private static GLib.Settings get_old_settings( GLib.Settings new_settings ) {
+  private static GLib.Settings? get_old_settings( GLib.Settings new_settings ) {
     var schema_parts = new_settings.schema_id.split( "." );
     schema_parts[0] = "com";
     var old_schema_id = string.joinv( ".", schema_parts );
-    stdout.printf( "old_schema_id: %s\n", old_schema_id );
+    if( SettingsSchemaSource.get_default().lookup( old_schema_id, true ) == null ) {
+      return( null );
+    }
     var old_settings  = new GLib.Settings( old_schema_id );
     return( old_settings );
   }
@@ -45,11 +47,12 @@ public class SettingsUpdater {
     var schema_key = new_settings.settings_schema.get_key( key );
     var value_type = schema_key.get_value_type();
     switch( value_type.dup_string() ) {
-      case "b" :  new_settings.set_boolean( key, old_settings.get_boolean( key ) );  break;
-      case "s" :  new_settings.set_string(  key, old_settings.get_string( key ) );   break;
-      case "i" :  new_settings.set_int(     key, old_settings.get_int( key ) );      break;
-      case "d" :  new_settings.set_double(  key, old_settings.get_double( key ) );   break;
-      default  :  
+      case "b"     :  new_settings.set_boolean( key, old_settings.get_boolean( key ) );  break;
+      case "s"     :  new_settings.set_string(  key, old_settings.get_string( key ) );   break;
+      case "i"     :  new_settings.set_int(     key, old_settings.get_int( key ) );      break;
+      case "d"     :  new_settings.set_double(  key, old_settings.get_double( key ) );   break;
+      case "a{sv}" :  new_settings.set_value(   key, old_settings.get_value( key ) );    break;
+      default      :  
         stdout.printf( "key: %s, value_type: %s (%d, %d)\n", key, value_type.dup_string(), (int)value_type, (int)VariantType.INT32 );
         assert_not_reached();
     }
@@ -59,13 +62,14 @@ public class SettingsUpdater {
   // Performs the settings copy from the old version.
   private static void update_settings( GLib.Settings new_settings ) {
     var old_settings = get_old_settings( new_settings ); 
-    foreach (var key in new_settings.settings_schema.list_keys()) {
-      stdout.printf( "Checking key: %s\n", key );
-      if( old_settings.settings_schema.has_key( key ) ) {
-        copy_setting( key, new_settings, old_settings );
+    if( old_settings != null ) {
+      foreach (var key in new_settings.settings_schema.list_keys()) {
+        if( old_settings.settings_schema.has_key( key ) ) {
+          copy_setting( key, new_settings, old_settings );
+        }
       }
     }
-    // new_settings.set_boolean( "internal-updated", true );
+    new_settings.set_boolean( "internal-updated", true );
   }
 
   //-------------------------------------------------------------

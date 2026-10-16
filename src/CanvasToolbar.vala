@@ -123,9 +123,6 @@ public class CanvasToolbar : Box {
   // Creates the shape toolbar item
   private void create_shapes( CanvasItemCategory category, string tooltip, string mb_tooltip, string custom_label ) {
 
-    var granite_settings = Granite.Settings.get_default();
-    var dark_mode        = granite_settings.prefers_color_scheme == Granite.Settings.ColorScheme.DARK;
-
     var box = new Box( Orientation.VERTICAL, 5 ) {
       margin_start  = 5,
       margin_end    = 5,
@@ -158,7 +155,7 @@ public class CanvasToolbar : Box {
       var shape_type = (CanvasItemType)i;
       if( shape_type.category() == category ) {
         var b = new Button() {
-          icon_name     = shape_type.icon_name( dark_mode ),
+          icon_name     = shape_type.icon_name(),
           has_frame     = false,
           margin_start  = 5,
           margin_end    = 5,
@@ -166,9 +163,6 @@ public class CanvasToolbar : Box {
           margin_bottom = 5,
           tooltip_markup = shape_type.tooltip(),
         };
-        _canvas.win.theme_changed.connect((dark) => {
-          b.icon_name = shape_type.icon_name( dark );
-        });
         b.clicked.connect(() => {
           _current_item.get( category ).canvas_item( shape_type );
           // _current_item.get( category ).add_item( _canvas.items );
@@ -283,7 +277,7 @@ public class CanvasToolbar : Box {
   // flow box
   private void create_sticker_image( FlowBox box, StickerInfo info, Popover popover ) {
 
-    var buf     = _canvas.win.sticker_set.make_pixbuf( info.resource );
+    var buf     = StickerSet.make_pixbuf( info.resource );
     var texture = Gdk.Texture.for_pixbuf( buf );
     var picture = new Picture.for_paintable( texture ) {
       can_shrink = false
@@ -412,6 +406,7 @@ public class CanvasToolbar : Box {
   private void create_crop() {
 
     _crop_btn = new ToggleButton() {
+      icon_name    = "image-crop-symbolic",
       has_frame    = false,
       tooltip_text = _( "Crop Image" ),
       margin_start = margin,
@@ -466,7 +461,7 @@ public class CanvasToolbar : Box {
   // Creates the color picker
   private void create_dropper() {
 
-    var btn = new Button() {
+    var btn = new Button.from_icon_name( "eyedropper-symbolic" ) {
       has_frame    = false,
       tooltip_text = _( "Pick Color To Clipboard" ),
       margin_start = margin,
@@ -474,9 +469,6 @@ public class CanvasToolbar : Box {
     };
     btn.clicked.connect(() => {
       _canvas.image.pick_color( true );
-    });
-    _canvas.win.theme_changed.connect((dark_mode) => {
-      btn.icon_name = dark_mode ? "eyedropper-dark-symbolic" : "eyedropper-symbolic";
     });
 
     append( btn );
@@ -487,35 +479,22 @@ public class CanvasToolbar : Box {
   // Creates the color dropdown
   private void create_color() {
 
-    var mb = new MenuButton() {
-      has_frame    = false,
+    var dialog = new ColorDialog() {
+      modal      = true,
+      title      = _( "Selection Shape Color" ),
+      with_alpha = true
+    };
+
+    _color_chooser = new ColorDialogButton( dialog ) {
       tooltip_text = _( "Shape Color" ),
-      popover      = new Popover(),
-      child        = make_color_icon()
-    };
-    mb.get_style_context().add_class( "color_chooser" );
-
-    var box = new Box( Orientation.VERTICAL, 0 ) {
-      margin_start  = 10,
-      margin_end    = 10,
-      margin_top    = 10,
-      margin_bottom = 10
+      rgba         = _canvas.items.props.color
     };
 
-    _color_chooser = new ColorChooserWidget() {
-      rgba = _canvas.items.props.color
-    };
-    _color_chooser.notify.connect((p) => {
-      _canvas.items.props.color = _color_chooser.rgba;
-      mb.child = make_color_icon();
+    _color_chooser.notify["rgba"].connect(() => {
+      _canvas.items.props.color = _color_chooser.get_rgba();
     });
-    box.append( _color_chooser );
 
-    create_color_alpha( mb, box );
-
-    mb.popover.child = box;
-
-    append( mb );
+    append( _color_chooser );
 
   }
 
@@ -607,6 +586,10 @@ public class CanvasToolbar : Box {
       child        = make_stroke_icon()
     };
 
+    _canvas.win.theme_changed.connect((dark) => {
+      mb.child = make_stroke_icon();
+    });
+
     var box = new Box( Orientation.VERTICAL, 5 ) {
       margin_start  = 10,
       margin_end    = 10,
@@ -657,7 +640,12 @@ public class CanvasToolbar : Box {
       if( width_group == null ) {
         width_group = btn;
       }
-      var icn = make_width_icon( 100, sw.width() );
+      var icn = new Picture.for_paintable( make_width_icon( 100, sw.width() ) ) {
+        can_shrink = false
+      };
+      _canvas.win.theme_changed.connect((dark) => {
+        icn.paintable = make_width_icon( 100, sw.width() );
+      });
       var rbox = new Box( Orientation.HORIZONTAL, 5 );
       rbox.append( btn );
       rbox.append( icn );
@@ -691,7 +679,12 @@ public class CanvasToolbar : Box {
       if( dash_group == null ) {
         dash_group = btn;
       }
-      var icn = make_dash_icon( 100, dash );
+      var icn = new Picture.for_paintable( make_dash_icon( 100, dash ) ) {
+        can_shrink = false
+      };
+      _canvas.win.theme_changed.connect((dark) => {
+        icn.paintable = make_dash_icon( 100, dash );
+      });
       var rbox = new Box( Orientation.HORIZONTAL, 5 );
       rbox.append( btn );
       rbox.append( icn );
@@ -728,40 +721,29 @@ public class CanvasToolbar : Box {
   // Adds the font menubutton
   private void create_fonts() {
 
-    var mb = new MenuButton() {
-      icon_name    = "font-annotator-symbolic",
-      tooltip_text = _( "Font Properties" ),
-      has_frame    = false,
-      popover      = new Popover()
-    };
-    mb.get_style_context().add_class( "color_chooser" );
-
-    _canvas.win.theme_changed.connect((dark_mode) => {
-      mb.icon_name = dark_mode ? "font-annotator-dark-symbolic" : "font-annotator-symbolic";
-    });
-
-    _font_chooser = new FontChooserWidget() {
+    var btn = new Button.from_icon_name( "font-symbolic" ) {
+      tooltip_text  = _( "Font Properties" ),
+      has_frame     = false,
       margin_start  = 10,
       margin_end    = 10,
       margin_top    = 10,
-      margin_bottom = 10,
-      font_desc     = _canvas.items.props.font
+      margin_bottom = 10
     };
-    _font_chooser.set_filter_func( (family, face) => {
-      var fd     = face.describe();
-      var weight = fd.get_weight();
-      var style  = fd.get_style();
-      return( (weight == Pango.Weight.NORMAL) && (style == Pango.Style.NORMAL) );
-    });
-    _font_chooser.notify.connect((p) => {
-      if( p.name == "font" ) {
-        _canvas.items.props.font = Pango.FontDescription.from_string( _font_chooser.get_font() );
-      }
+
+    var font_chooser = new FontDialog() {
+      title = _( "Change Font" )
+    };
+
+    btn.clicked.connect(() => {
+      font_chooser.choose_font.begin( _canvas.win, _canvas.items.props.font, null, (obj, res) => {
+        try {
+          var fd = font_chooser.choose_font.end( res );
+          _canvas.items.props.font = fd;
+        } catch( Error e ) {}
+      });
     });
 
-    mb.popover.child = _font_chooser;
-
-    append( mb );
+    append( btn );
 
   }
 
@@ -815,12 +797,14 @@ public class CanvasToolbar : Box {
 
     drag.drag_end.connect((d, delete_data) => {
       if( !delete_data ) {
-        var val      = Value( typeof(GLib.File) );
-        var provider = d.get_content();
-        if( provider.get_value( ref val ) ) {
-          var file = (GLib.File)val;
-          FileUtils.remove( file.get_path() );
-        }
+        try {
+          var val      = Value( typeof(GLib.File) );
+          var provider = d.get_content();
+          if( provider.get_value( ref val ) ) {
+            var file = (GLib.File)val;
+            FileUtils.remove( file.get_path() );
+          }
+        } catch( Error e ) {}
       }
     });
 
@@ -828,10 +812,11 @@ public class CanvasToolbar : Box {
 
   }
 
+  /*
   private Image make_color_icon() {
 
     var snapshot = new Snapshot();
-    var rect     = Graphene.Rect.alloc();
+    var rect     = Graphene.Rect();
     rect.init( 0, 0, (float)30, (float)24 );
     var ctx      = snapshot.append_cairo( rect );
 
@@ -849,6 +834,7 @@ public class CanvasToolbar : Box {
     return( image );
 
   }
+  */
 
   //-------------------------------------------------------------
   // Returns true if the current mode is dark mode
@@ -863,12 +849,14 @@ public class CanvasToolbar : Box {
 
   }
 
-  private Picture make_width_icon( int width, int stroke_width ) {
+  //-------------------------------------------------------------
+  // Creates the width icon
+  private Gdk.Paintable make_width_icon( int width, int stroke_width ) {
 
     var height = stroke_width;
 
     var snapshot = new Snapshot();
-    var rect     = Graphene.Rect.alloc();
+    var rect     = Graphene.Rect();
     rect.init( 0, 0, (float)width, (float)height );
     var ctx      = snapshot.append_cairo( rect );
 
@@ -886,16 +874,16 @@ public class CanvasToolbar : Box {
       can_shrink  = false
     };
 
-    return( image );
-
   }
 
-  private Picture make_dash_icon( int width, CanvasItemDashPattern dash ) {
+  //-------------------------------------------------------------
+  // Creates the dash icon
+  private Gdk.Paintable make_dash_icon( int width, CanvasItemDashPattern dash ) {
 
     var height = 5;
 
     var snapshot = new Snapshot();
-    var rect     = Graphene.Rect.alloc();
+    var rect     = Graphene.Rect();
     rect.init( 0, 0, (float)width, (float)height );
     var ctx      = snapshot.append_cairo( rect );
 
@@ -914,8 +902,6 @@ public class CanvasToolbar : Box {
       can_shrink  = false
     };
 
-    return( image );
-
   }
 
   //-------------------------------------------------------------
@@ -927,7 +913,7 @@ public class CanvasToolbar : Box {
     var height  = _canvas.items.props.stroke_width.width();
 
     var snapshot = new Snapshot();
-    var rect     = Graphene.Rect.alloc();
+    var rect     = Graphene.Rect();
     rect.init( 0, 0, (float)50, (float)height );
     var ctx      = snapshot.append_cairo( rect );
 
@@ -979,14 +965,6 @@ public class CanvasToolbar : Box {
 
     // Set the color
     _color_chooser.rgba = p.color;
-
-    // Handle the alpha value
-    _ascale.set_value( p.alpha );
-    _areveal.reveal_child = (p.alpha < 1.0);
-    _asw.set_active( p.alpha < 1.0 );
-
-    // Set the font
-    _font_chooser.font_desc = p.font;
 
   }
 

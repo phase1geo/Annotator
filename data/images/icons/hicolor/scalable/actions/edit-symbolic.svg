@@ -34,11 +34,11 @@
   <g
      transform="matrix(9.1379618,0,0,9.138288,-4879.5985,91.38288)"
      id="g4"
-     style="fill:#ffffff">
+     style="fill:currentColor">
     <path
        d="m 545.213,-10 a 0.83,0.83 0 0 0 -0.59,0.246 l -0.906,0.912 3.125,3.125 0.91,-0.906 c 0.33,-0.33 0.33,-0.85 0,-1.18 l -1.95,-1.95 A 0.83,0.83 0 0 0 545.213,-10 Z m -2.555,2.22 -8.666,8.668 v 3.119 h 3.121 l 8.665,-8.664 z M 535,1 h 1 v 1 h 1 v 1 h -2 z"
-       fill="#666"
+       fill="currentColor"
        id="path2"
-       style="fill:#ffffff" />
+       style="fill:currentColor" />
   </g>
 </svg>

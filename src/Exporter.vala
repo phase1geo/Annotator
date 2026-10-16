@@ -169,37 +169,32 @@ public class Exporter : Box {
     var name   = _stack.visible_child_name;
     var export = win.editor.canvas.image.exports.get_by_name( name );
 
-    var dialog = new FileChooserDialog( _( "Export As %s" ).printf( export.label ), win, FileChooserAction.SAVE,
-      _( "Cancel" ), ResponseType.CANCEL, _( "Export" ), ResponseType.ACCEPT );
-    Utils.set_chooser_folder( dialog );
-
     // Set the filter
     FileFilter filter = new FileFilter();
     filter.set_filter_name( export.label );
     foreach( string extension in export.extensions ) {
       filter.add_pattern( "*" + extension );
     }
-    dialog.set_filter( filter );
 
-    dialog.response.connect((id) => {
-      if( id == ResponseType.ACCEPT ) {
+    var dialog = new FileDialog() {
+      title = _( "Export As %s" ).printf( export.label ),
+      modal = true,
+      default_filter = filter
+    };
 
-        // Close the dialog and parent window
-        dialog.close();
+    Utils.set_chooser_folder( dialog );
 
-        // Perform the export
-        var fname = export.repair_filename( dialog.get_file().get_path() );
+    dialog.save.begin( win, null, (obj, res) => {
+      try {
+        var file  = dialog.save.end( res );
+        var fname = export.repair_filename( file.get_path() );
         win.editor.canvas.image.export_image( name, fname );
         Utils.store_chooser_folder( fname );
 
         // Generate notification to indicate that the export completed
         win.notification( _( "Export Completed" ), fname );
-
-      }
-      dialog.destroy();
+      } catch( Error e ) {}
     });
-
-    dialog.show();
 
   }
 

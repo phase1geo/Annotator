@@ -29,7 +29,7 @@
       <path
          id="path822"
          d="M 0.0,0.0 L 5.0,-5.0 L -12.5,0.0 L 5.0,5.0 L 0.0,0.0 z "
-         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;stroke-opacity:1;fill:#000000;fill-opacity:1"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;stroke-opacity:1;fill:currentColor;fill-opacity:1"
          transform="scale(0.8) rotate(180) translate(12.5,0)" />
     </marker>
     <marker
@@ -43,7 +43,7 @@
       <path
          id="path819"
          d="M 0.0,0.0 L 5.0,-5.0 L -12.5,0.0 L 5.0,5.0 L 0.0,0.0 z "
-         style="fill-rule:evenodd;stroke:#ffffff;stroke-width:1pt;stroke-opacity:1;fill:#ffffff;fill-opacity:1"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;stroke-opacity:1;fillcurrentColor;fill-opacity:1"
          transform="scale(0.8) translate(12.5,0)" />
     </marker>
   </defs>
@@ -89,33 +89,33 @@
       <g
          id="g1150">
         <path
-           style="color:#ffffff;fill:#ffffff;fill-rule:evenodd;stroke-width:1.3418pt;-inkscape-stroke:none"
+           style="color:#000000;fill:currentColor;fill-rule:evenodd;stroke-width:1.3418pt;-inkscape-stroke:none"
            d="m 19.422996,277.75526 0.0084,9.48795 11.841143,-21.35834 -21.3374544,11.87874 z"
            id="path1142" />
         <path
-           style="color:#ffffff;fill:#ffffff;fill-rule:evenodd;-inkscape-stroke:none"
+           style="color:#000000;fill:currentColor;fill-rule:evenodd;-inkscape-stroke:none"
            d="m 33.572266,263.58008 -27.087891,15.08203 12.044922,-0.0117 0.0098,12.04492 z m -4.59961,4.60742 -8.65039,15.60156 -0.0059,-6.92969 -0.894531,0.002 -6.035156,0.006 z"
            id="path1146" />
       </g>
       <g
          id="g1162">
         <path
-           style="color:#ffffff;fill:#ffffff;fill-rule:evenodd;stroke-width:1.3418pt;-inkscape-stroke:none"
+           style="color:#000000;fill:currentColor;fill-rule:evenodd;stroke-width:1.3418pt;-inkscape-stroke:none"
            d="m 19.422996,277.75526 0.0084,9.48795 11.841143,-21.35834 -21.3374544,11.87874 z"
            id="path1154" />
         <path
-           style="color:#ffffff;fill:#ffffff;fill-rule:evenodd;-inkscape-stroke:none"
+           style="color:#000000;fill:currentColor;fill-rule:evenodd;-inkscape-stroke:none"
            d="m 33.572266,263.58008 -27.087891,15.08203 12.044922,-0.0117 0.0098,12.04492 z m -4.59961,4.60742 -8.65039,15.60156 -0.0059,-6.92969 -0.894531,0.002 -6.035156,0.006 z"
            id="path1158" />
       </g>
     </g>
     <path
        id="path2653"
-       style="fill:#485a6c;stroke:#323232;stroke-width:4.35024;stroke-opacity:0.392157"
+       style="fill:currentColor;stroke:#323232;stroke-width:4.35024;stroke-opacity:0.392157"
        transform="matrix(0.26458333,0,0,0.26458333,0,263.13332)"
        d="M 1,0 H 0 L 0.30901699,0.95105652 0,0 -0.80901699,0.58778525 0,0 -0.80901699,-0.58778525 0,0 0.30901699,-0.95105652 0,0 Z" />
     <path
-       style="fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:0.252517px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       style="fill:currentColor;fill-opacity:1;stroke:#000000;stroke-width:0.252517px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
        d="m 1.078296,296.03262 19.807611,-25.23548 5.713733,5.14754 z"
        id="path2675"
        inkscape:connector-curvature="0"

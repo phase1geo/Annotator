@@ -103,11 +103,10 @@ public class CanvasItemMagnifier : CanvasItem {
   // Updates the selection boxes whenever the bounding box changes
   protected override void bbox_changed() {
 
-    var radius        = bbox.width / 2;
-    var RAD_distance  = ((2 * Math.PI) / 8);
-    var RAD_half_PI   = Math.PI / 2;
-    var new_outer_RAD = RAD_distance * 3;
-    var angle         = (((_zoom_factor - min_zoom) / (max_zoom - min_zoom)) - 1) * RAD_half_PI;
+    var radius       = bbox.width / 2;
+    var RAD_distance = ((2 * Math.PI) / 8);
+    var RAD_half_PI  = Math.PI / 2;
+    var angle        = (((_zoom_factor - min_zoom) / (max_zoom - min_zoom)) - 1) * RAD_half_PI;
 
     var x0 = bbox.mid_x() + Math.cos( angle ) * radius;
     var y0 = bbox.mid_y() + Math.sin( angle ) * radius;

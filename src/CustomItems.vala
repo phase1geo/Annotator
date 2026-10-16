@@ -1,3 +1,24 @@
+/*
+* Copyright (c) 2020-2026 (https://github.com/phase1geo/Annotator)
+*
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public
+* License as published by the Free Software Foundation; either
+* version 2 of the License, or (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+* General Public License for more details.
+*
+* You should have received a copy of the GNU General Public
+* License along with this program; if not, write to the
+* Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+* Boston, MA 02110-1301 USA
+*
+* Authored by: Trevor Williams <phase1geo@gmail.com>
+*/
+
 using Gtk;
 
 public class CustomItems : Object {
@@ -9,20 +30,21 @@ public class CustomItems : Object {
   public signal void edit_end_custom( CanvasItemCategory category );
   public signal void item_removed();
 
-  /* Default constructor */
+  //-------------------------------------------------------------
+  // Default constructor
   public CustomItems() {
     _items = new List<CustomItem>();
   }
 
-  /* Adds the given custom item to the stored list */
-  public void add( CustomItem item ) {
+  //-------------------------------------------------------------
+  // Adds the given custom item to the stored list
+  public void add( MainWindow win, CustomItem item ) {
     _items.append( item );
-    save();
+    save( win );
   }
 
-  /*
-   Creates the custom menu UI and adds it to the end of the given box.
-  */
+  //-------------------------------------------------------------
+  // Creates the custom menu UI and adds it to the end of the given box.
   public void create_menu( MainWindow win, CanvasItemCategory category, Popover popover, Box box, string label_str, int columns = 4 ) {
 
     var rev_box = new Box( Orientation.VERTICAL, 5 );
@@ -83,24 +105,24 @@ public class CustomItems : Object {
       }
     });
 
-    /* Add the revealer to the box */
+    // Add the revealer to the box
     box.append( rev_box );
 
   }
 
-  /*
-   Populates the given menu to display all custom items in the given category.  Returns true if
-   at least one custom item was found for the given category; otherwise, returns false to indicate
-   that the popover should not be popped up..
-  */
+  //-------------------------------------------------------------
+  // Populates the given menu to display all custom items in the
+  // given category.  Returns true if at least one custom item was
+  // found for the given category; otherwise, returns false to
+  // indicate that the popover should not be popped up..
   public void populate_menu( MainWindow win, CanvasItemCategory category, FlowBox fb ) {
 
-    /* Clear the flowbox */
+    // Clear the flowbox
     while( fb.get_first_child() != null ) {
       fb.remove( fb.get_first_child() );
     }
 
-    /* Add the items into the flowbox */
+    // Add the items into the flowbox
     _items.foreach((item) => {
       if( item.item.itype.category() == category ) {
 
@@ -130,7 +152,7 @@ public class CustomItems : Object {
 
         del.clicked.connect(() => {
           _items.remove( item );
-          save();
+          save( win );
           disconnect( start_id );
           disconnect( end_id );
           fb.remove( box.parent );
@@ -145,25 +167,29 @@ public class CustomItems : Object {
 
   }
 
+  /*
   private void add_item_to_canvas( CanvasItems canvas_items, CustomItem item ) {
     var it = item.item.duplicate();
     it.bbox = canvas_items.center_box( it.bbox.width, it.bbox.height );
     canvas_items.add_item( it, -1, true );
   }
+  */
 
-  /* Returns the local filename containing the custom items */
+  //-------------------------------------------------------------
+  // Returns the local filename containing the custom items
   private string filename() {
     var dir = GLib.Path.build_filename( Environment.get_user_data_dir(), "annotator" );
     Utils.create_dir( dir );
     return( GLib.Path.build_filename( dir, "customs.xml" ) );
   }
 
-  /* Saves all of the custom items */
-  public void save() {
+  //-------------------------------------------------------------
+  // Saves all of the custom items
+  public void save( MainWindow win ) {
 
     Xml.Doc*  doc  = new Xml.Doc( "1.0" );
     Xml.Node* root = new Xml.Node( null, "custom-items" );
-    root->set_prop( "version", Annotator.version );
+    root->set_prop( "version", win.application.version );
 
     _items.foreach((item) => {
       root->add_child( item.save() );
@@ -176,12 +202,13 @@ public class CustomItems : Object {
 
   }
 
-  /* Loads the custom file */
+  //-------------------------------------------------------------
+  // Loads the custom file
   public void load( CanvasItems canvas_items ) {
 
     var fname = filename();
 
-    /* If the filename does not exist, skip the load */
+    // If the filename does not exist, skip the load
     if( !FileUtils.test( fname, FileTest.EXISTS ) ) {
       return;
     }

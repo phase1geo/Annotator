@@ -49,7 +49,7 @@ public class Exports {
 
   private void add( Export export ) {
     export.settings_changed.connect(() => {
-      save();
+      save( export.canvas );
     });
     _exports.append_val( export );
   }
@@ -91,14 +91,14 @@ public class Exports {
 
   //-------------------------------------------------------------
   // Saves the settings to the save file
-  public void save() {
+  public void save( Canvas canvas ) {
     var sfile = settings_file( true );
     if( sfile == null ) {
       return;
     }
     Xml.Doc*  doc  = new Xml.Doc( "1.0" );
     Xml.Node* root = new Xml.Node( null, "exports" );
-    root->set_prop( "version", Annotator.version );
+    root->set_prop( "version", canvas.win.application.version );
     doc->set_root_element( root );
     for( int i=0; i<_exports.length; i++ ) {
       root->add_child( _exports.index( i ).save() );

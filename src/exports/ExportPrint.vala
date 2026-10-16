@@ -62,6 +62,8 @@ public class ExportPrint : Object {
         case PrintOperationResult.IN_PROGRESS :
           // TBD 
           break;
+        default :
+          break;
       }
     } catch( GLib.Error e ) {
       // TBD

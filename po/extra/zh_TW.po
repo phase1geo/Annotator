@@ -1,0 +1,519 @@
+# Traditional Chinese (Taiwan) translation for Annotator.
+# Copyright (C) 2026 THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the extra package.
+# Peter Dave Hello <hsu@peterdavehello.org>, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: extra\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-04-23 21:17-0500\n"
+"PO-Revision-Date: 2026-05-31 09:44+0800\n"
+"Last-Translator: Peter Dave Hello <hsu@peterdavehello.org>\n"
+"Language-Team: \n"
+"Language: zh_TW\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: data/com.github.phase1geo.annotator.desktop.in:3
+#: data/com.github.phase1geo.annotator.desktop.in:4
+#: data/com.github.phase1geo.annotator.appdata.xml.in:7
+msgid "Annotator"
+msgstr "Annotator"
+
+#: data/com.github.phase1geo.annotator.desktop.in:5
+#: data/com.github.phase1geo.annotator.appdata.xml.in:8
+msgid "Communicate with images better"
+msgstr "讓圖片溝通更有效率"
+
+#: data/com.github.phase1geo.annotator.desktop.in:14
+msgid "annotator;image;annotate;"
+msgstr "annotator;圖片;標註;註記;"
+
+#: data/com.github.phase1geo.annotator.desktop.in:18
+msgid "Edit Clipboard Image"
+msgstr "編輯剪貼簿圖片"
+
+#: data/com.github.phase1geo.annotator.desktop.in:22
+msgid "Take Screenshot"
+msgstr "擷取螢幕截圖"
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:10
+msgid "Trevor Williams"
+msgstr "Trevor Williams"
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:20
+msgid "Welcome Screen"
+msgstr "歡迎畫面"
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:24
+msgid "Annotation Editor"
+msgstr "標註編輯器"
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:28
+msgid ""
+"Communicate with images. Better. Open image files or take screenshots, add "
+"various types of image annotations, and export the annotated image in a "
+"number of image formats."
+msgstr ""
+"讓圖片溝通更有效率。開啟圖片檔案或擷取螢幕截圖，新增各種類型的圖片標註，"
+"並將標註後的圖片匯出為多種圖片格式。"
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:33
+msgid "Load image from the file system, clipboard or a screenshot."
+msgstr "從檔案系統、剪貼簿或螢幕截圖載入圖片。"
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:34
+msgid ""
+"Add shapes, stickers, images, text, drawings, and other callouts to "
+"highlight image details."
+msgstr ""
+"新增形狀、貼圖、圖片、文字、繪圖及其他標記來凸顯圖片細節。"
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:35
+msgid "Save custom shapes for easy reuse."
+msgstr "儲存自訂形狀以便重複使用。"
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:36
+msgid "Add magnifiers to enhance image details."
+msgstr "新增放大鏡以增強圖片細節。"
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:37
+msgid "Blur out portions of the image to obfuscate data."
+msgstr "模糊部分圖片以遮蔽資料。"
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:38
+msgid "Crop, resize and add image borders."
+msgstr "裁切、調整大小和新增圖片邊框。"
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:39
+msgid "Control colors, line thickness and font details."
+msgstr "控制色彩、線條粗細和字型細節。"
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:40
+msgid "Built-in color picker to copy image pixel color to clipboard."
+msgstr "內建顏色挑選器，可將圖片畫素色彩複製到剪貼簿。"
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:41
+msgid "Zoom support."
+msgstr "縮放功能。"
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:42
+msgid "Unlimited undo/redo of any change."
+msgstr "無限次復原/重做任何變更。"
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:43
+msgid "Export to JPEG, PNG, TIFF, BMP, PDF, SVG and WebP image formats."
+msgstr "匯出為 JPEG、PNG、TIFF、BMP、PDF、SVG 和 WebP 圖片格式。"
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:44
+msgid "Support for copying annotated image to clipboard."
+msgstr "可將標註後的圖片複製到剪貼簿。"
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:45
+msgid "Support for dragging out a PNG image to another app or location."
+msgstr "可將 PNG 圖片拖曳到其他應用程式或位置。"
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:46
+msgid "Printer support."
+msgstr "列印功能。"
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:61
+#: data/com.github.phase1geo.annotator.appdata.xml.in:94
+#: data/com.github.phase1geo.annotator.appdata.xml.in:124
+#: data/com.github.phase1geo.annotator.appdata.xml.in:153
+#: data/com.github.phase1geo.annotator.appdata.xml.in:172
+#: data/com.github.phase1geo.annotator.appdata.xml.in:202
+msgid "Changes"
+msgstr "變更"
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:63
+msgid "Updated Italian translation (thanks to Albano Battistella)."
+msgstr "更新義大利文翻譯（感謝 Albano Battistella）。"
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:65
+#: data/com.github.phase1geo.annotator.appdata.xml.in:80
+#: data/com.github.phase1geo.annotator.appdata.xml.in:102
+#: data/com.github.phase1geo.annotator.appdata.xml.in:130
+#: data/com.github.phase1geo.annotator.appdata.xml.in:158
+#: data/com.github.phase1geo.annotator.appdata.xml.in:183
+#: data/com.github.phase1geo.annotator.appdata.xml.in:213
+msgid "Bug Fixes"
+msgstr "問題修正"
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:67
+msgid ""
+"Fixed issue with Annotator window not hiding during a screenshot (thanks to "
+"Achille Leduc for fixing)."
+msgstr ""
+"修正擷取螢幕截圖時 Annotator 視窗未隱藏的問題（感謝 Achille Leduc 修正）。"
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:68
+msgid ""
+"Fixed issue with screenshotting on various systems (thanks to Achille Leduc "
+"for fixing)."
+msgstr ""
+"修正在各系統上擷取螢幕截圖的問題（感謝 Achille Leduc 修正）。"
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:69
+msgid "Fixed display issues with HiDPI and scaled displays."
+msgstr "修正 HiDPI 和縮放顯示器的顯示問題。"
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:75
+#: data/com.github.phase1geo.annotator.appdata.xml.in:88
+#: data/com.github.phase1geo.annotator.appdata.xml.in:114
+#: data/com.github.phase1geo.annotator.appdata.xml.in:149
+#: data/com.github.phase1geo.annotator.appdata.xml.in:166
+#: data/com.github.phase1geo.annotator.appdata.xml.in:193
+msgid "New"
+msgstr "新功能"
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:77
+msgid ""
+"Added ability to zoom in and out using Control-Scrollwheel (thanks to Loric "
+"Brevet)"
+msgstr ""
+"新增使用 Control + 滾輪放大和縮小的功能（感謝 Loric Brevet）"
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:78
+msgid ""
+"Added ability to pan canvas with middle click and drag (thanks to Loric "
+"Brevet)"
+msgstr ""
+"新增使用滑鼠中鍵拖曳來平移畫布的功能（感謝 Loric Brevet）"
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:82
+msgid "Fixed drawing issues with RTL languages and the text tool"
+msgstr "修正 RTL 語言與文字工具的繪製問題"
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:90
+msgid "Added ability to export to an editable Annotator file."
+msgstr "新增匯出為可編輯 Annotator 檔案的功能。"
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:91
+msgid "Added support for WebP export."
+msgstr "新增 WebP 匯出功能。"
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:92
+msgid "Added about window."
+msgstr "新增關於視窗。"
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:96
+msgid "Updated screenshot to use D-Bus capture mechanism."
+msgstr "更新螢幕截圖以使用 D-Bus 擷取機制。"
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:97
+msgid "Removed references to gtk3 in build files."
+msgstr "移除建置檔案中對 gtk3 的參照。"
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:98
+msgid "Improved export menu UI."
+msgstr "改善匯出選單介面。"
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:99
+msgid "Updated issues with GitHub continuous improvement action."
+msgstr "更新 GitHub 持續整合動作的問題。"
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:100
+msgid "Removed Debian packaging files."
+msgstr "移除 Debian 打包檔案。"
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:104
+msgid "Fixed default export values."
+msgstr "修正預設匯出值。"
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:105
+msgid "Fixed display issue for Flatpak."
+msgstr "修正 Flatpak 的顯示問題。"
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:106
+msgid "Fixed text copy/paste button functionality from format bar."
+msgstr "修正格式列中文字複製/貼上按鈕的功能。"
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:107
+msgid ""
+"Fixed cursor display when Control key is pressed when in text edit mode."
+msgstr ""
+"修正文字編輯模式下按住 Control 鍵時游標顯示的問題。"
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:108
+msgid "Fixed issues with application desktop actions."
+msgstr "修正應用程式桌面動作的問題。"
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:116
+msgid "Added option for transparent PNG export (thanks for Peter Willemsen)."
+msgstr "新增透明 PNG 匯出選項（感謝 Peter Willemsen）。"
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:117
+msgid "Added support for adding custom stickers."
+msgstr "新增自訂貼圖功能。"
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:118
+msgid "Added support for inserting images."
+msgstr "新增插入圖片功能。"
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:119
+msgid ""
+"Added support for color picker (copy value to clipboard or change current "
+"annotation object color)."
+msgstr ""
+"新增顏色挑選器功能（可將色彩值複製到剪貼簿或變更目前標註物件的顏色）。"
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:120
+msgid "Added support for inserting speech and thought bubble shapes."
+msgstr "新增插入對話泡泡和思考泡泡形狀的功能。"
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:121
+msgid "Added ability to annotate image by drag/drop on welcome screen."
+msgstr "新增在歡迎畫面拖放圖片進行標註的功能。"
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:122
+msgid ""
+"Added ability to drag a copy of the annotated image via a new \"PNG\" icon "
+"in the toolbar."
+msgstr ""
+"新增透過工具列中的「PNG」圖示拖曳標註圖片副本的功能。"
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:126
+msgid "Converted codebase from GTK3 to GTK4."
+msgstr "將程式碼基礎從 GTK3 轉換為 GTK4。"
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:127
+msgid "Updated Flatpak platform from 7.2 to 8."
+msgstr "將 Flatpak 平台從 7.2 更新至 8。"
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:128
+msgid "Improving look of toolbar dropdowns."
+msgstr "改善工具列下拉選單外觀。"
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:132
+msgid ""
+"Fixed issue where boolean export values were not properly saving (thanks to "
+"Peter Willemsen)."
+msgstr ""
+"修正布林匯出值無法正確儲存的問題（感謝 Peter Willemsen）。"
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:133
+msgid ""
+"Fixed issue with duplicating canvas items by holding Control while dragging "
+"an item."
+msgstr ""
+"修正按住 Control 鍵拖曳物件以複製畫布物件的問題。"
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:134
+msgid ""
+"Fixed issues with missing icons on non-elementary distributions (thanks to "
+"Kevin Ernst)."
+msgstr ""
+"修正非 elementary 發行版上圖示遺失的問題（感謝 Kevin Ernst）。"
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:135
+msgid "Fixed issue with certain icons not displaying properly in dark mode."
+msgstr "修正部分圖示在深色模式下無法正確顯示的問題。"
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:136
+msgid "Fixed issue with icons being installed in the wrong place."
+msgstr "修正圖示安裝到錯誤位置的問題。"
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:137
+msgid "Fixed issue with dismissing popover when the export button is clicked."
+msgstr "修正按下匯出按鈕時彈出框未關閉的問題。"
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:138
+msgid "Fixed issue with the --use-clipboard command-line option."
+msgstr "修正 --use-clipboard 命令列選項的問題。"
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:139
+msgid ""
+"Fixed application crash issue in some cases when annotate items are deleted."
+msgstr ""
+"修正刪除標註物件時在某些情況下應用程式當機的問題。"
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:140
+msgid "Fixed issues with using the screenshot capture functionality."
+msgstr "修正使用螢幕截圖擷取功能的問題。"
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:141
+msgid "Fixed issue with canvas scrolling in various cases."
+msgstr "修正各種情況下畫布捲動的問題。"
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:142
+msgid "Fixed display issues with icons in dark modes."
+msgstr "修正深色模式下圖示的顯示問題。"
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:143
+msgid "Fixed issue with the font icon not appearing correctly on some systems."
+msgstr "修正字型圖示在部分系統上無法正確顯示的問題。"
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:151
+msgid "Added Russian translation (thanks to @lenemter)."
+msgstr "新增俄文翻譯（感謝 @lenemter）。"
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:155
+msgid "Updated Italian translations (thanks to @albanobattistella)."
+msgstr "更新義大利文翻譯（感謝 @albanobattistella）。"
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:156
+#: data/com.github.phase1geo.annotator.appdata.xml.in:174
+msgid "Updated Dutch translation (thanks to Heimen Stoffels)."
+msgstr "更新荷蘭文翻譯（感謝 Heimen Stoffels）。"
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:160
+msgid ""
+"Fixed translation string issues related to Zoom and Screenshot (thanks to "
+"@lenemter)."
+msgstr ""
+"修正與縮放和螢幕截圖相關的翻譯字串問題（感謝 @lenemter）。"
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:168
+msgid ""
+"Adding support for taking screenshots from within the application (screen, "
+"window and area)."
+msgstr ""
+"新增從應用程式內擷取螢幕截圖的功能（全螢幕、視窗和區域）。"
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:169
+msgid "Adding command-line options for taking screenshots."
+msgstr "新增擷取螢幕截圖的命令列選項。"
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:170
+msgid "Adding support for creating and saving custom arrows and shapes."
+msgstr "新增建立和儲存自訂箭頭與形狀的功能。"
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:175
+#: data/com.github.phase1geo.annotator.appdata.xml.in:204
+msgid "Updated Italian translation (thanks to @albanobattistella)."
+msgstr "更新義大利文翻譯（感謝 @albanobattistella）。"
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:176
+msgid "Updated Flatpak SDK from version 6 to 6.1."
+msgstr "將 Flatpak SDK 從版本 6 更新至 6.1。"
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:177
+msgid "Modified .gitignore to ignore .swp files from anywhere in the codebase."
+msgstr "修改 .gitignore 以忽略程式碼庫中任何位置的 .swp 檔案。"
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:178
+msgid "Changed shape dropdown to display four shapes per row instead of two."
+msgstr "將形狀下拉選單改為每列顯示四個形狀而非兩個。"
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:179
+msgid "Enhanced export UI and adding export options for PNG and JPEG types."
+msgstr "增強匯出介面並新增 PNG 和 JPEG 類型的匯出選項。"
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:180
+msgid ""
+"Changed JPEG export to use both .jpeg and .jpg file extensions (defaults to ."
+"jpg now)."
+msgstr ""
+"將 JPEG 匯出改為同時使用 .jpeg 和 .jpg 副檔名（現預設為 .jpg）。"
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:181
+msgid "Improved arrow icon in toolbar."
+msgstr "改善工具列中的箭頭圖示。"
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:185
+msgid "Improved ability to click on shapes that only have borders."
+msgstr "改善點選僅有邊框形狀的操作體驗。"
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:186
+msgid "Fixed issues with copying the contents of one shape into another."
+msgstr "修正在形狀之間複製內容的問題。"
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:187
+msgid ""
+"Fixed issue with displaying star and line icons in shapes toolbar for dark "
+"mode."
+msgstr ""
+"修正深色模式下形狀工具列中星形和線條圖示的顯示問題。"
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:195
+msgid ""
+"Added keyboard shortcuts for creating annotation items, printing and "
+"displaying contextual menus."
+msgstr ""
+"新增建立標註物件、列印及顯示右鍵選單的鍵盤快速鍵。"
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:196
+msgid "Added keyboard shortcut cheatsheet."
+msgstr "新增鍵盤快速鍵速查表。"
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:197
+msgid "Added keyboard shortcut support for non-English keyboards."
+msgstr "新增非英文鍵盤的快速鍵支援。"
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:198
+msgid "Added Brazilian Portuguese translation (thanks to Fúlvio Alves)."
+msgstr "新增巴西葡萄牙文翻譯（感謝 Fúlvio Alves）。"
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:199
+msgid "Added Slovak translation (thanks to @MartinIIOT)"
+msgstr "新增斯洛伐克文翻譯（感謝 @MartinIIOT）"
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:200
+msgid ""
+"Added support for hitting the escape key to deselect all items on the canvas."
+msgstr ""
+"新增按下 Escape 鍵取消選取畫布上所有物件的功能。"
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:205
+msgid "Updated German translation (thanks to Hannes Fritz)."
+msgstr "更新德文翻譯（感謝 Hannes Fritz）。"
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:206
+msgid "Updated zoom UI to make it more consistent with other elementary apps."
+msgstr "更新縮放介面以與其他 elementary 應用程式更一致。"
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:207
+msgid "Improved accuracy of the list of translatable files."
+msgstr "改善可翻譯檔案清單的正確性。"
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:208
+msgid "Moved arrow annotation to its own button in the toolbar."
+msgstr "將箭頭標註移至工具列中的獨立按鈕。"
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:209
+msgid ""
+"Removed Accounts permissions from Flatpak manifest as it is no longer needed."
+msgstr ""
+"從 Flatpak manifest 中移除已不再需要的帳號權限。"
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:210
+msgid "Removed text grab selector when editing text."
+msgstr "移除編輯文字時的文字抓取選擇器。"
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:211
+msgid ""
+"Changed behavior of Return key when text is edited to keep the text item "
+"selected."
+msgstr ""
+"變更編輯文字時 Return 鍵的行為，使文字物件保持選取狀態。"
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:215
+msgid "Fixed icons8_cup sticker issue (thanks to Jan Tojnar)."
+msgstr "修正 icons8_cup 貼圖問題（感謝 Jan Tojnar）。"
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:216
+msgid ""
+"Fixed issue where the toolbar state did not update to match the currently "
+"selected item."
+msgstr ""
+"修正工具列狀態未隨目前選取物件更新的問題。"
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:217
+msgid ""
+"Fixed issue where dragging a blur rectangle outside of the image caused "
+"application crash."
+msgstr ""
+"修正將模糊矩形拖曳到圖片外部導致應用程式當掉的問題。"
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:218
+msgid ""
+"Fixed issue where a text widget could be deleted but remain on the canvas."
+msgstr ""
+"修正文字元件被刪除後仍殘留在畫布上的問題。"
+
+#: data/com.github.phase1geo.annotator.appdata.xml.in:224
+msgid "Initial release."
+msgstr "首次釋出。"

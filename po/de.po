@@ -1,26 +1,25 @@
 # GERMAN TRANSLATION FOR ANNOTATOR.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the com.github.phase1geo.annotator package.
-# Benjamin Weis <benjamin.weis@gmx.com>, 2024.
+# Benjamin Weis <benjamin.weis@gmx.com>, 2024-2026.
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.annotator\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-23 21:17-0500\n"
-"PO-Revision-Date: 2024-04-30 22:01+0200\n"
+"PO-Revision-Date: 2026-10-04 16:59+0200\n"
 "Last-Translator: Benjamin Weis <benjamin.weis@gmx.com>\n"
 "Language-Team: \n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 3.4.2\n"
+"X-Generator: Poedit 3.9\n"
 
 #: src/About.vala:38
 msgid "Image annotation application"
-msgstr ""
+msgstr "Anwendung zur Bildbeschriftung"
 
 #: src/About.vala:39 src/StickerSet.vala:210
 msgid "Copyright"
@@ -28,12 +27,12 @@ msgstr "Urheberrecht"
 
 #: src/About.vala:43
 msgid "Annotator in AppCenter"
-msgstr ""
+msgstr "Annotator im AppCenter"
 
 #: src/About.vala:60
 #, c-format
 msgid "Flatpak Runtime: %s"
-msgstr ""
+msgstr "Flatpak-Laufzeitumgebung: %s"
 
 #: src/Application.vala:68
 msgid ""
@@ -45,12 +44,11 @@ msgstr ""
 
 #: src/Application.vala:73
 msgid "Image paste error"
-msgstr ""
+msgstr "Fehler beim Einfügen eines Bildes"
 
 #: src/Application.vala:73
-#, fuzzy
 msgid "Image does not exist on the clipboard"
-msgstr "Bild aus der Zwischenablage öffnen"
+msgstr "Bild ist nicht in der Zwischenablage vorhanden"
 
 #: src/Application.vala:87
 msgid "Opening file"
@@ -140,7 +138,7 @@ msgstr "Emoji einfügen"
 
 #: src/CanvasItems.vala:124
 msgid "Rectangle Outline"
-msgstr "Rechteckiger Umriss"
+msgstr "Rechteckumriss"
 
 #: src/CanvasItems.vala:125
 msgid "Rectangle"
@@ -148,7 +146,7 @@ msgstr "Rechteck"
 
 #: src/CanvasItems.vala:126
 msgid "Oval Outline"
-msgstr "Oval Outline"
+msgstr "Ovaler Umriss"
 
 #: src/CanvasItems.vala:127
 msgid "Oval"
@@ -156,7 +154,7 @@ msgstr "Oval"
 
 #: src/CanvasItems.vala:128
 msgid "Star Outline"
-msgstr "Sternförmiger Umriss"
+msgstr "Sternumriss"
 
 #: src/CanvasItems.vala:129
 msgid "Star"
@@ -313,7 +311,7 @@ msgstr "Schriftart-Eigenschaften"
 
 #: src/CanvasToolbar.vala:747
 msgid "Drag PNG Image"
-msgstr ""
+msgstr "PNG-Bild ziehen"
 
 #: src/Canvas.vala:209
 msgid "Annotate new image?"
@@ -364,9 +362,8 @@ msgid "Annotator"
 msgstr "Annotator"
 
 #: src/exports/ExportEditable.vala:256
-#, fuzzy
 msgid "Image Compression"
-msgstr "Komprimierung"
+msgstr "Bildkomprimierung"
 
 #: src/exports/ExportImage.vala:73
 msgid "Quality"
@@ -394,7 +391,7 @@ msgstr "SVG"
 
 #: src/exports/ExportWebP.vala:29
 msgid "WebP"
-msgstr ""
+msgstr "WebP"
 
 #: src/Exports.vala:36
 msgid "JPEG"
@@ -469,7 +466,6 @@ msgid "Open Image"
 msgstr "Bild öffnen"
 
 #: src/MainWindow.vala:205
-#, fuzzy
 msgid "Take Screenshot"
 msgstr "Bildschirmfoto aufnehmen"
 
@@ -483,12 +479,11 @@ msgstr "Wiederherstellen"
 
 #: src/MainWindow.vala:240
 msgid "Shortcuts Cheatsheet…"
-msgstr ""
+msgstr "Übersicht über Tastenkombinationen …"
 
 #: src/MainWindow.vala:243
-#, fuzzy
 msgid "About Annotator"
-msgstr "Annotator"
+msgstr "Über Annotator"
 
 #: src/MainWindow.vala:252
 msgid "Properties"
@@ -528,9 +523,8 @@ msgid "Open Image From File"
 msgstr "Bild aus Datei öffnen"
 
 #: src/MainWindow.vala:370
-#, fuzzy
 msgid "Open a PNG, JPEG, TIFF, BMP or Annotator file"
-msgstr "Eine PNG-, JPEG-, TIFF- oder BMP-Datei öffnen"
+msgstr "Eine PNG--, JPEG-, TIFF-, BMP- oder Annotator-Datei öffnen"
 
 #: src/MainWindow.vala:373
 msgid "Paste Image From Clipboard"
@@ -553,21 +547,20 @@ msgid "Font:"
 msgstr "Schriftart:"
 
 #: src/MainWindow.vala:477
-#, fuzzy
 msgid "All Loadable Formats"
-msgstr "Alle Bildformate  (*)"
+msgstr "Alle ladbaren Formate"
 
 #: src/MainWindow.vala:492
 msgid "Open Image File"
-msgstr "Alle Bildformate"
+msgstr "Bilddatei öffnen"
 
 #: src/MainWindow.vala:617
 msgid "Delay (in seconds)"
-msgstr ""
+msgstr "Verzögerung (in Sekunden)"
 
 #: src/MainWindow.vala:641
 msgid "Include Annotator window"
-msgstr ""
+msgstr "Annotator-Fenster mit einbeziehen"
 
 #: src/Resizer.vala:192
 msgid "Resize"
@@ -620,17 +613,15 @@ msgstr "%d x %d Pixel"
 
 #: src/ScreenshotBackend.vala:20
 msgid "Entire Screen"
-msgstr ""
+msgstr "Vollbild"
 
 #: src/ScreenshotBackend.vala:21
-#, fuzzy
 msgid "Current Window"
-msgstr "Aktuelles Element"
+msgstr "Aktuelles Fenster"
 
 #: src/ScreenshotBackend.vala:22
-#, fuzzy
 msgid "Selectable Area"
-msgstr "Alles auswählen"
+msgstr "Auswählbarer Bereich"
 
 #: src/StickerSet.vala:25 src/StickerSet.vala:68
 msgid "Photo and Video"
@@ -1358,7 +1349,7 @@ msgstr "Sich einmischen"
 
 #: src/StickerSet.vala:214
 msgid "Multiple inputs"
-msgstr ""
+msgstr "Mehrere Eingaben"
 
 #: src/StickerSet.vala:215
 msgid "Collect"
@@ -1402,7 +1393,7 @@ msgstr "Fabrik"
 
 #: src/StickerSet.vala:227
 msgid "Factory breakdown"
-msgstr ""
+msgstr "Fabrikausfall"
 
 #: src/StickerSet.vala:228
 msgid "Crystal oscillator"
@@ -2003,7 +1994,7 @@ msgstr "Letzte Änderung rückgängig machen"
 
 #: data/com.github.phase1geo.annotator.shortcuts.ui:55
 msgid "Redo Last Undo"
-msgstr "Wiederherstellen der letzten rückgängig gemachten Aktion"
+msgstr "Letzte Rückgängig-Aktion wiederherstellen"
 
 #: data/com.github.phase1geo.annotator.shortcuts.ui:64
 msgid "Zooming"
@@ -2018,14 +2009,12 @@ msgid "Zoom To Window"
 msgstr "Auf Fenstergröße zoomen"
 
 #: data/com.github.phase1geo.annotator.shortcuts.ui:96
-#, fuzzy
 msgid "Mouse Zoom In/Out"
-msgstr "Herauszoomen"
+msgstr "Mit der Maus vergrößern/verkleinern"
 
 #: data/com.github.phase1geo.annotator.shortcuts.ui:97
-#, fuzzy
 msgid "[Control + Scroll]"
-msgstr "[Steuerung + Ziehen]"
+msgstr "[Steuerung + Scrollen]"
 
 #: data/com.github.phase1geo.annotator.shortcuts.ui:105
 msgid "Miscellaneous"
@@ -2044,82 +2033,68 @@ msgid "Quit Application"
 msgstr "Applikation beenden"
 
 #: data/com.github.phase1geo.annotator.shortcuts.ui:130
-#, fuzzy
 msgid "Pan"
-msgstr "Planer"
+msgstr "Pfanne"
 
 #: data/com.github.phase1geo.annotator.shortcuts.ui:131
 msgid "[Middle-button + Drag]"
-msgstr ""
+msgstr "[Mittlere Maustaste + Ziehen]"
 
 #: data/com.github.phase1geo.annotator.shortcuts.ui:142
 msgid "Annotation Commands"
 msgstr "Annotationsbefehle"
 
 #: data/com.github.phase1geo.annotator.shortcuts.ui:157
-#, fuzzy
 msgid "Outlined Rectangle"
-msgstr "Neues umrissenes Rechteck"
+msgstr "Umrissenes Rechteck"
 
 #: data/com.github.phase1geo.annotator.shortcuts.ui:164
-#, fuzzy
 msgid "Solid Rectangle"
-msgstr "Neues Volltonrechteck"
+msgstr "Volltonrechteck"
 
 #: data/com.github.phase1geo.annotator.shortcuts.ui:171
-#, fuzzy
 msgid "Outlined Oval"
-msgstr "Neu umrissenes Oval"
+msgstr "Umrissenes Oval"
 
 #: data/com.github.phase1geo.annotator.shortcuts.ui:178
-#, fuzzy
 msgid "Solid Oval"
-msgstr "Neues Volltonoval"
+msgstr "Volltonoval"
 
 #: data/com.github.phase1geo.annotator.shortcuts.ui:185
-#, fuzzy
 msgid "Outlined Star"
-msgstr "Neuer umrissener Stern"
+msgstr "Umrissener Stern"
 
 #: data/com.github.phase1geo.annotator.shortcuts.ui:192
-#, fuzzy
 msgid "Solid Star"
-msgstr "Neuer Volltonstern"
+msgstr "Volltonstern"
 
 #: data/com.github.phase1geo.annotator.shortcuts.ui:199
-#, fuzzy
 msgid "Talking Bubble"
 msgstr "Sprechblase"
 
 #: data/com.github.phase1geo.annotator.shortcuts.ui:206
-#, fuzzy
 msgid "Thought Bubble"
 msgstr "Denkblase"
 
 #: data/com.github.phase1geo.annotator.shortcuts.ui:220
-#, fuzzy
 msgid "Text Box"
-msgstr "Neue Textbox"
+msgstr "Textbox"
 
 #: data/com.github.phase1geo.annotator.shortcuts.ui:229
-#, fuzzy
 msgid "Add Other"
-msgstr "Form hinzufügen"
+msgstr "Andere hinzufügen"
 
 #: data/com.github.phase1geo.annotator.shortcuts.ui:233
-#, fuzzy
 msgid "Blur Box"
-msgstr "Neue Weichzeichnungsbox"
+msgstr "Weichzeichnungsbox"
 
 #: data/com.github.phase1geo.annotator.shortcuts.ui:247
-#, fuzzy
 msgid "Pencil Stroke"
-msgstr "Neuer Bleistiftstrich"
+msgstr "Bleistiftstrich"
 
 #: data/com.github.phase1geo.annotator.shortcuts.ui:254
-#, fuzzy
 msgid "Sequence Marker"
-msgstr "Neuer Sequenzmarker"
+msgstr "Sequenzmarker"
 
 #: data/com.github.phase1geo.annotator.shortcuts.ui:263
 msgid "Current Item"

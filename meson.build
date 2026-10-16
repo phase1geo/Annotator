@@ -1,5 +1,5 @@
 project('io.github.phase1geo.annotator', ['vala', 'c'],
-    version : '2.0.3',
+    version : '2.1.0',
     license: 'GPL-2.0-or-later',
 )
 
@@ -41,8 +41,8 @@ cc = meson.get_compiler('c')
 math_dep = cc.find_library('m', required: false)
 
 add_project_arguments([
-        '--vapidir=' + join_paths(meson.current_source_dir(), 'vapi'),
-        '--disable-warnings'
+        '--vapidir=' + join_paths(meson.current_source_dir(), 'vapi')
+        # '--disable-warnings'
     ],
     language: 'vala',
 )

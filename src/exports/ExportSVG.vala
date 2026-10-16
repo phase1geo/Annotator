@@ -38,8 +38,6 @@ public class ExportSVG : Export {
     var fname = repair_filename( filename );
 
     // Get the rectangle holding the entire document
-    var x = 0;
-    var y = 0;
     var w = source.width;
     var h = source.height;
 

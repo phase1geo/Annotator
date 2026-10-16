@@ -29,45 +29,46 @@ public class Canvas : DrawingArea {
   public const double zoom_min  = 0.25;
   public const double zoom_step = 0.25;
 
-  private ImageSurface?      _surface = null;
-  private EventControllerKey _key_controller;
+  private ImageSurface?         _surface = null;
+  private EventControllerKey    _key_controller;
   private EventControllerMotion _motion_controller;
-  private IMMulticontext     _im_context;
-  private double             _last_x = 0;
-  private double             _last_y = 0;
-  private double             _pan_last_root_x = 0;
-  private double             _pan_last_root_y = 0;
+  private IMMulticontext        _im_context;
+  private double                _last_x = 0;
+  private double                _last_y = 0;
+  private double                _pan_last_root_x = 0;
+  private double                _pan_last_root_y = 0;
 
-  public MainWindow     win          { get; private set; }
-  public Editor         editor       { get; private set; }
-  public double         sfactor      { get; set; default = 1.0; }
-  public CanvasImage    image        { get; private set; }
-  public CanvasItems    items        { get; private set; }
-  public UndoBuffer     undo_buffer  { get; private set; }
-  public UndoTextBuffer undo_text    { get; private set; }
-  public double         zoom_factor  { get; set; default = 1.0; }
+  public MainWindow     win         { get; private set; }
+  public Editor         editor      { get; private set; }
+  public double         sfactor     { get; set; default = 1.0; }
+  public CanvasImage    image       { get; private set; }
+  public CanvasItems    items       { get; private set; }
+  public UndoBuffer     undo_buffer { get; private set; }
+  public UndoTextBuffer undo_text   { get; private set; }
+  public double         zoom_factor { get; set; default = 1.0; }
 
   public signal void image_loaded();
   public signal void zoom_changed( double zoom_factor );
 
-  /* Constructor */
+  //-------------------------------------------------------------
+  // Constructor
   public Canvas( MainWindow win, Editor editor ) {
 
     this.win    = win;
     this.editor = editor;
 
-    /* Create the canvas image */
+    // Create the canvas image
     image = new CanvasImage( this );
 
-    /* Create the canvas items */
+    // Create the canvas items
     items = new CanvasItems( this );
     items.text_item_edit_changed.connect( edit_mode_changed );
 
-    /* Create the undo buffers */
+    // Create the undo buffers
     undo_buffer = new UndoBuffer( this );
     undo_text   = new UndoTextBuffer( this );
 
-    /* Make sure the drawing area can receive keyboard focus */
+    // Make sure the drawing area can receive keyboard focus
     can_focus = true;
     focusable = true;
     set_draw_func( on_draw );
@@ -115,7 +116,7 @@ public class Canvas : DrawingArea {
 
     focus_controller.leave.connect( on_focus_leave );
 
-    /* Make sure that we us the IMMulticontext input method when editing text only */
+    // Make sure that we us the IMMulticontext input method when editing text only
     _im_context = new IMMulticontext();
     _im_context.set_client_widget( this );
     _im_context.set_use_preedit( false );
@@ -125,16 +126,20 @@ public class Canvas : DrawingArea {
 
   }
 
-  /* Returns true if the surface image has been set */
+  //-------------------------------------------------------------
+  // Returns true if the surface image has been set
   public bool is_surface_set() {
     return( _surface != null );
   }
 
-  /* Sets the cursor from the given name */
+  //-------------------------------------------------------------
+  // Sets the cursor from the given name
+  /*
   public void set_cursor_from_name( string name ) {
     var cursor = new Cursor.from_name( name, null );
     set_cursor( cursor );
   }
+  */
 
   //-------------------------------------------------------------
   // Opens a new image and displays it in the drawing area.
@@ -155,7 +160,8 @@ public class Canvas : DrawingArea {
 
   }
 
-  /* Undoes the last change */
+  //-------------------------------------------------------------
+  // Undoes the last change
   public void do_undo() {
     if( items.in_edit_mode() && undo_text.undoable() ) {
       undo_text.undo();
@@ -165,7 +171,8 @@ public class Canvas : DrawingArea {
     grab_focus();
   }
 
-  /* Redoes the last change */
+  //-------------------------------------------------------------
+  // Redoes the last change
   public void do_redo() {
     if( items.in_edit_mode() ) {
       undo_text.redo();
@@ -175,7 +182,8 @@ public class Canvas : DrawingArea {
     grab_focus();
   }
 
-  /* Copies the selected item to the clipboard */
+  //-------------------------------------------------------------
+  // Copies the selected item to the clipboard
   public void do_copy() {
     var item = items.get_selected_item();
     if( (item != null) || items.in_edit_mode() ) {
@@ -183,7 +191,8 @@ public class Canvas : DrawingArea {
     }
   }
 
-  /* Cuts the selected item to the clipboard */
+  //-------------------------------------------------------------
+  // Cuts the selected item to the clipboard
   public void do_cut() {
     var item = items.get_selected_item();
     if( (item != null) || items.in_edit_mode() ) {
@@ -192,7 +201,8 @@ public class Canvas : DrawingArea {
     }
   }
 
-  /* Performs actual paste operation */
+  //-------------------------------------------------------------
+  // Performs actual paste operation
   private void do_paste( Pixbuf buf ) {
     image.set_image( buf );
     CanvasItemSequence.reset();
@@ -201,24 +211,28 @@ public class Canvas : DrawingArea {
     grab_focus();
   }
 
-  /* Returns true if the image paste operation should be cancelled */
+  //-------------------------------------------------------------
+  // Returns true if the image paste operation should be cancelled
   private void confirm_paste( Pixbuf buf ) {
 
     if( items.items_exist() ) {
 
-      var dialog = new MessageDialog( win, DialogFlags.MODAL, MessageType.WARNING, ButtonsType.YES_NO, _( "Annotate new image?" ) ) {
-        secondary_text = _( "Pasting a new image to annotate will destroy the current annotation." )
+      var dialog = new AlertDialog( _( "Annotate new image?" ) ) {
+        modal          = true,
+        buttons        = { "Yes", "No" },
+        default_button = 1,
+        cancel_button  = 1,
+        detail         = _( "Pasting a new image to annotate will destroy the current annotation." )
       };
-      dialog.set_default_response( ResponseType.CANCEL );
 
-      dialog.response.connect((id) => {
-        if( id == ResponseType.YES ) {
-          do_paste( buf );
-        }
-        dialog.destroy();
+      dialog.choose.begin( win, null, (obj, res) => {
+        try {
+          var choice = dialog.choose.end( res );
+          if( choice == 0 ) {
+            do_paste( buf );
+          }
+        } catch( Error e ) {}
       });
-
-      dialog.show();
 
     } else {
 
@@ -228,7 +242,8 @@ public class Canvas : DrawingArea {
 
   }
 
-  /* Pastes an image from the given pixbuf to the canvas */
+  //-------------------------------------------------------------
+  // Pastes an image from the given pixbuf to the canvas
   public void paste_image( Pixbuf buf, bool confirm ) {
     if( !confirm ) {
       do_paste( buf );
@@ -237,7 +252,9 @@ public class Canvas : DrawingArea {
     }
   }
 
-  /* Pastes a text from the given string to the canvas (only valid when editing a text item */
+  //-------------------------------------------------------------
+  // Pastes a text from the given string to the canvas (only valid
+  // when editing a text item).
   public void paste_text( string txt ) {
     if( items.in_edit_mode() ) {
       var item = items.get_active_text();
@@ -247,7 +264,9 @@ public class Canvas : DrawingArea {
     }
   }
 
-  /* Called whenever the user changes the edit mode of an active text item */
+  //-------------------------------------------------------------
+  // Called whenever the user changes the edit mode of an active
+  // text item
   private void edit_mode_changed( CanvasItemText item ) {
     if( item.edit ) {
       _key_controller.set_im_context( _im_context );
@@ -264,13 +283,16 @@ public class Canvas : DrawingArea {
     }
   }
 
-  /* Updates the input method cursor location */
+  //-------------------------------------------------------------
+  // Updates the input method cursor location
   private void update_im_cursor( CanvasItemText item ) {
     Gdk.Rectangle rect = {(int)item.bbox.x, (int)item.bbox.y, 0, (int)item.bbox.height};
     _im_context.set_cursor_location( rect );
   }
 
-  /* Called by the input method manager when the user has a string to commit */
+  //-------------------------------------------------------------
+  // Called by the input method manager when the user has a string
+  // to commit
   private void handle_im_commit( string str ) {
     if( items.in_edit_mode() ) {
       var item = items.get_active_text();
@@ -279,20 +301,22 @@ public class Canvas : DrawingArea {
     }
   }
 
-  /* Called in IMContext callback of the same name */
+  //-------------------------------------------------------------
+  // Called in IMContext callback of the same name
   private bool handle_im_retrieve_surrounding() {
     if( items.in_edit_mode() ) {
       int cursor, selstart, selend;
       var item = items.get_active_text();
       var text = item.text.text;
       item.get_cursor_info( out cursor, out selstart, out selend );
-      _im_context.set_surrounding( text, text.length, text.index_of_nth_char( cursor ) );
+      _im_context.set_surrounding_with_selection( text, text.length, text.index_of_nth_char( cursor ), text.index_of_nth_char( selstart ) );
       return( true );
     }
     return( false );
   }
 
-  /* Called in IMContext callback of the same name */
+  //-------------------------------------------------------------
+  // Called in IMContext callback of the same name
   private bool handle_im_delete_surrounding( int offset, int nchars ) {
     if( items.in_edit_mode() ) {
       int cursor, selstart, selend;
@@ -306,17 +330,20 @@ public class Canvas : DrawingArea {
     return( false );
   }
 
-  /* Returns the scaled x-value */
+  //-------------------------------------------------------------
+  // Returns the scaled x-value
   private double scale_x( double value ) {
     return( value / (image.width_scale * zoom_factor) );
   }
 
-  /* Returns the scaled y-value */
+  //-------------------------------------------------------------
+  // Returns the scaled y-value
   private double scale_y( double value ) {
     return( value / (image.height_scale * zoom_factor) );
   }
 
-  /* Handles the emoji insertion process for the given text item */
+  //-------------------------------------------------------------
+  // Handles the emoji insertion process for the given text item
   public void insert_emoji() {
     if( items.in_edit_mode() ) {
       int x, ytop, ybot;
@@ -336,29 +363,31 @@ public class Canvas : DrawingArea {
     }
   }
 
-  /* Called whenever the canvas loses focus */
+  //-------------------------------------------------------------
+  // Called whenever the canvas loses focus
   private void on_focus_leave() {
 
     image.focus_leave();
 
   }
 
-  /* Handles keypress events */
+  //-------------------------------------------------------------
+  // Handles keypress events
   private bool on_keypress( uint keyval, uint keycode, ModifierType state ) {
 
     var c = (unichar)keyval;
 
-    /* If the character is printable, pass the value through the input method filter */
+    // If the character is printable, pass the value through the input method filter
     if( items.in_edit_mode() && c.isprint() && false ) {
       _im_context.filter_keypress( _key_controller.get_current_event() );
 
-    /* If we are cropping the image, pass key presses to the image */
+    // If we are cropping the image, pass key presses to the image
     } else if( image.cropping || image.picking ) {
       if( image.key_pressed( keyval, keycode, state ) ) {
         queue_draw();
       }
 
-    /* Otherwise, allow the canvas item handler to deal with it immediately */
+    // Otherwise, allow the canvas item handler to deal with it immediately
     } else if( items.key_pressed( keyval, keycode, state ) ) {
       _im_context.reset();
       queue_draw();
@@ -368,7 +397,8 @@ public class Canvas : DrawingArea {
 
   }
 
-  /* Handles keyrelease events */
+  //-------------------------------------------------------------
+  // Handles keyrelease events
   private void on_keyrelease( uint keyval, uint keycode, ModifierType state ) {
 
     if( image.cropping || image.picking ) {
@@ -380,20 +410,22 @@ public class Canvas : DrawingArea {
 
   }
 
-  /* Displays the contextual menu (if any) for the currently selected item */
+  //-------------------------------------------------------------
+  // Displays the contextual menu (if any) for the currently
+  // selected item
   public void show_contextual_menu() {
     if( !image.cropping ) {
       items.show_contextual_menu( _last_x, _last_y );
     }
   }
 
-  /* Handles a primary mouse button press event */
+  //-------------------------------------------------------------
+  // Handles a primary mouse button press event
   private void on_primary_press( int n_press, double ex, double ey ) {
 
     var x = scale_x( ex );
     var y = scale_y( ey );
 
-    var retval = grab_focus();
     if( image.cropping ) {
       if( image.cursor_pressed( ex, ey, n_press ) ) {
         queue_draw();
@@ -404,12 +436,14 @@ public class Canvas : DrawingArea {
 
   }
 
-  /* Handles a secondary mouse button press event */
+  //-------------------------------------------------------------
+  // Handles a secondary mouse button press event
   private void on_secondary_press( int n_press, double ex, double ey ) {
     show_contextual_menu();
   }
 
-  /* Handles a mouse cursor motion event */
+  //-------------------------------------------------------------
+  // Handles a mouse cursor motion event
   private void on_motion( double ex, double ey ) {
     var state = _motion_controller.get_current_event_state();
     if( (state & ModifierType.BUTTON2_MASK) != 0 ) {
@@ -448,17 +482,18 @@ public class Canvas : DrawingArea {
                                 out double root_x, out double root_y ) {
     var ev = controller.get_current_event();
     var device = controller.get_current_event_device();
+    root_x = fallback_x;
+    root_y = fallback_y;
     if( (ev != null) && (device != null) ) {
       var surface = ev.get_surface();
       if( (surface != null) && surface.get_device_position( device, out root_x, out root_y, null ) ) {
         return;
       }
     }
-    root_x = fallback_x;
-    root_y = fallback_y;
   }
 
-  /* Handles a mouse cursor button release event */
+  //-------------------------------------------------------------
+  // Handles a mouse cursor button release event
   private void on_primary_release( int n_press, double ex, double ey ) {
 
     var x = scale_x( ex );
@@ -474,11 +509,12 @@ public class Canvas : DrawingArea {
 
   }
 
-  /****************************************************************************/
+  //-------------------------------------------------------------
   //  ZOOM CONTROLS
-  /****************************************************************************/
+  //-------------------------------------------------------------
 
-  /* Sets the zoom level to a specific value */
+  //-------------------------------------------------------------
+  // Sets the zoom level to a specific value
   public void zoom_set( double value ) {
     zoom_factor = value;
     queue_draw();
@@ -486,22 +522,26 @@ public class Canvas : DrawingArea {
     zoom_changed( zoom_factor );
   }
 
-  /* Zooms the canvas in by the zoom_step */
+  //-------------------------------------------------------------
+  // Zooms the canvas in by the zoom_step
   public void zoom_in() {
     zoom_set( ((zoom_factor + zoom_step) > zoom_max) ? zoom_max : (zoom_factor + zoom_step) );
   }
 
-  /* Zooms the canvas out by the zoom_step */
+  //-------------------------------------------------------------
+  // Zooms the canvas out by the zoom_step
   public void zoom_out() {
     zoom_set( ((zoom_factor - zoom_step) < zoom_min) ? zoom_min : (zoom_factor - zoom_step) );
   }
 
-  /* Zooms the image to the actual size */
+  //-------------------------------------------------------------
+  // Zooms the image to the actual size
   public void zoom_actual() {
     zoom_set( 1.0 );
   }
 
-  /* Zooms the image to fit into the window */
+  //-------------------------------------------------------------
+  // Zooms the image to fit into the window
   public void zoom_fit() {
 
     int win_width, win_height;
@@ -520,32 +560,34 @@ public class Canvas : DrawingArea {
     set_size_request( (int)(image.info.width * zoom_factor), (int)(image.info.height * zoom_factor) );
   }
 
-  /* Performs canvas resizing, if the user modified the margin, we will need to move the items around */
-  public void resize( CanvasImageInfo old_info, CanvasImageInfo new_info ) {
+  //-------------------------------------------------------------
+  // Performs canvas resizing, if the user modified the margin,
+  // we will need to move the items around
+  public void resize_canvas( CanvasImageInfo old_info, CanvasImageInfo new_info ) {
 
-    /* Calculate the scaling factors */
+    // Calculate the scaling factors
     var old_xscale = 1 / (old_info.pixbuf_rect.width  / image.pixbuf.width);
     var old_yscale = 1 / (old_info.pixbuf_rect.height / image.pixbuf.height);
     var new_xscale = 1 / (new_info.pixbuf_rect.width  / image.pixbuf.width);
     var new_yscale = 1 / (new_info.pixbuf_rect.height / image.pixbuf.height);
 
-    /* Move all of the canvas Items according to the difference in margin */
+    // Move all of the canvas Items according to the difference in margin
     var diffx = (new_info.left_margin() * new_xscale) - (old_info.left_margin() * old_xscale);
     var diffy = (new_info.top_margin()  * new_yscale) - (old_info.top_margin()  * old_yscale);
 
-    /* Adjust all of the elements if the image moved horizontally or vertically */
+    // Adjust all of the elements if the image moved horizontally or vertically
     if( (diffx != 0) || (diffy != 0) ) {
       items.adjust_items( diffx, diffy, false );
     }
 
-    /* Resize the canvas itself */
+    // Resize the canvas itself
     set_size_request( new_info.width, new_info.height );
 
   }
 
-  /****************************************************************************/
+  //-------------------------------------------------------------
   //  SAVE/LOAD
-  /****************************************************************************/
+  //-------------------------------------------------------------
 
   //-------------------------------------------------------------
   // Saves this canvas and all canvas items in XML format.
@@ -579,18 +621,20 @@ public class Canvas : DrawingArea {
 
   }
 
-  /****************************************************************************/
+  //-------------------------------------------------------------
   //  DRAWING FUNCTIONS
-  /****************************************************************************/
+  //-------------------------------------------------------------
 
-  /* Draws all of the items in the canvas with the given zoom factor */
+  //-------------------------------------------------------------
+  // Draws all of the items in the canvas with the given zoom factor
   public void draw_all( Context ctx ) {
     image.draw( ctx );
     items.draw( ctx );
     image.draw_pick_mode( ctx );
   }
 
-  /* Draws all of the items in the canvas */
+  //-------------------------------------------------------------
+  // Draws all of the items in the canvas
   private void on_draw( DrawingArea da, Context ctx, int width, int height ) {
     ctx.scale( zoom_factor, zoom_factor );
     draw_all( ctx );

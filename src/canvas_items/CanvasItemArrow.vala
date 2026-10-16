@@ -184,7 +184,6 @@ public class CanvasItemArrow : CanvasItem {
 
     var point = points.index( selector_index );
     var width = 0.0, height = 0.0;
-    var peak  = _peak_a == a;
 
     // Calculate _valley_c (length from head)
     switch( _dir ) {

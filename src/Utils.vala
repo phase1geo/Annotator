@@ -209,16 +209,19 @@ public class Utils {
     return( Regex.match_simple( url_re(), str ) );
   }
 
-  public static void set_chooser_folder( FileChooser chooser ) {
+  //-------------------------------------------------------------
+  // Sets the initial folder for the given FileDialog to the directory
+  // saved in last-directory in settings.
+  public static void set_chooser_folder( FileDialog dialog ) {
     var dir_path = Annotator.settings.get_string( "last-directory" );
     if( dir_path != "" ) {
-      try {
-        var dir = File.new_for_path( dir_path );
-        chooser.set_current_folder( dir );
-      } catch( Error e ) {}
+      var dir = File.new_for_path( dir_path );
+      dialog.initial_folder = dir;
     }
   }
 
+  //-------------------------------------------------------------
+  // Remembers the last folder used to open/save a file.
   public static void store_chooser_folder( string file ) {
     var dir = GLib.Path.get_dirname( file );
     Annotator.settings.set_string( "last-directory", dir );
@@ -263,6 +266,24 @@ public class Utils {
     } catch( Error e ) {
       return( null );
     }
+
+  }
+
+  //-------------------------------------------------------------
+  // Creates a texture from a surface.
+  public static Gdk.Texture surface_to_texture( ImageSurface surface ) {
+
+    int width   = surface.get_width ();
+    int height  = surface.get_height ();
+    int stride  = surface.get_stride ();
+
+    unowned uint8[] data = surface.get_data ();
+    data.length = height * stride;
+
+    var bytes   = new GLib.Bytes( data );
+    var texture = new Gdk.MemoryTexture( width, height, Gdk.MemoryFormat.B8G8R8A8_PREMULTIPLIED, bytes, stride );
+
+    return( texture );
 
   }
 

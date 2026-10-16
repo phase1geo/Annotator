@@ -57,11 +57,11 @@
     <g
        id="path815">
       <path
-         style="color:#000000;fill:#000000;stroke-width:13.2292;-inkscape-stroke:none"
+         style="color:#000000;fill:currentColor;stroke-width:13.2292;-inkscape-stroke:none"
          d="M 5.2916666,290.95238 123.22024,175.29167 Z"
          id="path1721" />
       <path
-         style="color:#000000;fill:#000000;-inkscape-stroke:none"
+         style="color:#000000;fill:currentColor;-inkscape-stroke:none"
          d="M 118.58789,170.56836 0.66015625,286.23047 9.9238281,295.67383 127.85156,180.01367 Z"
          id="path1723" />
     </g>

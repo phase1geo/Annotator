@@ -68,14 +68,13 @@ public class CurrentItem {
     }
   }
 
+  //-------------------------------------------------------------
+  // Returns the image to display for this item.
   public Image? get_image( MainWindow win ) {
     if( _canvas != CanvasItemType.NONE ) {
-      var image = new Image();
-      var dark_mode = Gtk.Settings.get_default().gtk_application_prefer_dark_theme;
-      image.icon_name = _canvas.icon_name( dark_mode );
-      win.theme_changed.connect((dark_mode) => {
-        image.icon_name = _canvas.icon_name( dark_mode );
-      });
+      var image = new Image() {
+        icon_name = _canvas.icon_name()
+      };
       return( image );
     } else if( _custom != null ) {
       return( _custom.get_image( win ) );

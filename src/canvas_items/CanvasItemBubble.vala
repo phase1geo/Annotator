@@ -456,6 +456,8 @@ public class CanvasItemBubble : CanvasItem {
 
   }
 
+  /*
+   NOTUSED
   private double get_talking_x( double y ) {
 
     var mid = ((points.index( 10 ).x - points.index( 9 ).x) / 2) + points.index( 9 ).x;
@@ -468,6 +470,7 @@ public class CanvasItemBubble : CanvasItem {
     return( (mid > points.index( 8 ).x) ? (mid - b2) : (mid + b2) );
 
   }
+  */
 
   //-------------------------------------------------------------
   // Draws a cloud (thought) bubble.
@@ -476,10 +479,10 @@ public class CanvasItemBubble : CanvasItem {
     var deg = Math.PI / 180.0;
 
     // Draw cloud
-    var num_horizontal = (int)(bbox.width  / _radius);
-    var hrad           = ((bbox.width  / num_horizontal) / 2);
-    var num_vertical   = (int)((bbox.height - (hrad * 2)) / _radius);
-    var vrad           = (((bbox.height - (hrad * 2)) / num_vertical) / 2);
+    // var num_horizontal = (int)(bbox.width  / _radius);
+    // var hrad           = ((bbox.width  / num_horizontal) / 2);
+    // var num_vertical   = (int)((bbox.height - (hrad * 2)) / _radius);
+    // var vrad           = (((bbox.height - (hrad * 2)) / num_vertical) / 2);
     var x              = bbox.x + 60;
     var y              = bbox.y2() - 60;
     var scale_x        = (bbox.width / 320);

@@ -95,21 +95,24 @@ public enum CanvasItemType {
     }
   }
 
-  public string icon_name( bool dark ) {
+  public string icon_name() {
     switch( this ) {
-      case RECT      :  return( dark ? "rect-stroke-dark-symbolic"   : "rect-stroke-symbolic" );
-      case OVAL      :  return( dark ? "circle-stroke-dark-symbolic" : "circle-stroke-symbolic" );
-      case STAR      :  return( dark ? "star-stroke-dark-symbolic"   : "star-stroke-symbolic" );
-      case TALK      :  return( dark ? "bubble-talk-dark-symbolic"   : "bubble-talk-symbolic" );
-      case THINK     :  return( dark ? "bubble-think-dark-symbolic"  : "bubble-think-symbolic" );
-      case LINE      :  return( dark ? "line-dark-symbolic"          : "line-symbolic" );
-      case ARROW     :  return( dark ? "arrow-dark-symbolic"         : "arrow-symbolic" );
-      case BLUR      :  return( dark ? "blur-dark-symbolic"          : "blur-symbolic" );
-      case MAGNIFIER :  return( dark ? "magnifier-dark-symbolic"     : "magnifier-symbolic" );
-      case PENCIL    :  return( dark ? "edit-dark-symbolic"          : "edit-symbolic" );
-      case SEQUENCE  :  return( dark ? "sequence-dark-symbolic"      : "sequence-symbolic" );
-      case STICKER   :  return( dark ? "sticker-dark-symbolic"       : "sticker-symbolic" );
-      default        :  return( "" );
+      case RECT_STROKE :  return( "rect-stroke-symbolic" );
+      case RECT_FILL   :  return( "rect-fill-symbolic" );
+      case OVAL_STROKE :  return( "circle-stroke-symbolic" );
+      case OVAL_FILL   :  return( "circle-fill-symbolic" );
+      case STAR_STROKE :  return( "star-stroke-symbolic" );
+      case STAR_FILL   :  return( "star-fill-symbolic" );
+      case TALK        :  return( "bubble-talk-symbolic" );
+      case THINK       :  return( "bubble-think-symbolic" );
+      case LINE        :  return( "line-symbolic" );
+      case ARROW       :  return( "arrow-symbolic" );
+      case BLUR        :  return( "blur-symbolic" );
+      case MAGNIFIER   :  return( "magnifier-symbolic" );
+      case PENCIL      :  return( "edit-symbolic" );
+      case SEQUENCE    :  return( "sequence-symbolic" );
+      case STICKER     :  return( "sticker-symbolic" );
+      default          :  return( "" );
     }
   }
 
@@ -382,28 +385,33 @@ public class CanvasItems {
     add_item( item, -1, true );
   }
 
+  //-------------------------------------------------------------
+  // Adds an image that the user can select from using a standard
+  // file open dialog.
   public void add_image() {
 
-    // Get the file to open from the user
-    var dialog = new FileChooserNative( _( "Open Insertion Image" ), _canvas.win, FileChooserAction.OPEN, _( "Open" ), _( "Cancel" ) );
-    Utils.set_chooser_folder( dialog );
-
     // Create file filters for each supported format
+    var filters = new GLib.ListStore( typeof( FileFilter ) );
     foreach( FileFilter filter in _canvas.win.image_filters ) {
-      dialog.add_filter( filter );
+      filters.append( filter );
     }
 
-    dialog.response.connect((id) => {
-      if( id == ResponseType.ACCEPT ) {
-        var filename = dialog.get_file().get_path();
-        var item = create_image( filename );
+    // Get the file to open from the user
+    var dialog = new FileDialog() {
+      title   = _( "Open Insertion Image" ),
+      filters = filters
+    };
+    Utils.set_chooser_folder( dialog );
+
+    dialog.open.begin( _canvas.win, null, (obj, res) => {
+      try {
+        var file     = dialog.open.end( res );
+        var filename = file.get_path();
+        var item     = create_image( filename );
         add_item( item, -1, true );
         Utils.store_chooser_folder( filename );
-      }
-      dialog.destroy();
+      } catch( Error e ) {}
     });
-
-    dialog.show();
 
   }
 
@@ -551,9 +559,11 @@ public class CanvasItems {
 
   //-------------------------------------------------------------
   // Returns true if the alt key is enabled in the given state
+  /*
   private bool alt_state( ModifierType state ) {
     return( (bool)(state & ModifierType.ALT_MASK) );
   }
+  */
 
   //-------------------------------------------------------------
   // Returns the active text item, if it is set; otherwise,
@@ -645,6 +655,7 @@ public class CanvasItems {
     else if( !shift && Utils.has_key( kvs, Key.p ) ) { add_shape_item( CanvasItemType.PENCIL );       return( true ); }
     else if( !shift && Utils.has_key( kvs, Key.q ) ) { add_shape_item( CanvasItemType.SEQUENCE );     return( true ); }
     else if( !shift && Utils.has_key( kvs, Key.i ) ) { add_image();                                   return( true ); }
+    else if( !shift && Utils.has_key( kvs, Key.v ) ) { do_paste(); }
     else if( !shift && Utils.has_key( kvs, Key.Shift_L ) ) { return( handle_shift() ); }
     else if( !shift && Utils.has_key( kvs, Key.Control_L ) ) { return( handle_control() ); }
 
@@ -1151,7 +1162,7 @@ public class CanvasItems {
 
   //-------------------------------------------------------------
   // Pastes the given item from the clipboard (if one exists)
-  private void do_paste( CanvasItem item ) {
+  private void do_paste() {
     AnnotatorClipboard.paste( _canvas.editor );
   }
 
@@ -1216,7 +1227,7 @@ public class CanvasItems {
   // Saves the given item as a custom item
   private void do_save_custom( CanvasItem item ) {
     var save_item = new CustomItem.with_item( item.duplicate() );
-    custom_items.add( save_item );
+    custom_items.add( _canvas.win, save_item );
   }
 
   //-------------------------------------------------------------
@@ -1227,7 +1238,7 @@ public class CanvasItems {
     Xml.Node* root = new Xml.Node( null, "items" );
     doc->set_root_element( root );
     for( int i=0; i<items.length; i++ ) {
-      root->add_child( items.index( i ).save( i, null ) );
+      root->add_child( items.index( i ).save( i, "" ) );
     }
     doc->dump_memory( out serialized );
     delete doc;

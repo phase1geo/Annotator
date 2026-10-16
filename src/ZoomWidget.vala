@@ -86,7 +86,7 @@ public class ZoomWidget : Gtk.Box {
 
     homogeneous = true;
 
-    get_style_context().add_class( Granite.STYLE_CLASS_LINKED );
+    add_css_class( Granite.STYLE_CLASS_LINKED );
 
     _zoom_out = new Button.from_icon_name( "zoom-out-symbolic" ) {
       has_frame = true,
