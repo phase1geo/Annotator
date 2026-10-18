@@ -1,9 +1,9 @@
 app-id: io.github.phase1geo.annotator
 runtime: org.gnome.Platform
-runtime-version: '49'
+runtime-version: '51'
 sdk: org.gnome.Sdk
 base: io.elementary.BaseApp
-base-version: 'circe-25.08'
+base-version: 'tanit-26.08'
 command: io.github.phase1geo.annotator
 finish-args:
   - '--share=ipc'
