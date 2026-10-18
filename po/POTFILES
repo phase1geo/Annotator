@@ -47,4 +47,4 @@ src/undo_actions/UndoTextTagAdd.vala
 src/undo_actions/UndoTextTagRemove.vala
 src/UndoBuffer.vala
 src/ZoomWidget.vala
-data/com.github.phase1geo.annotator.shortcuts.ui
+data/io.github.phase1geo.annotator.shortcuts.ui

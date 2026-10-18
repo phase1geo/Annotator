@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.annotator\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-23 21:17-0500\n"
+"POT-Creation-Date: 2026-10-17 19:24-0500\n"
 "PO-Revision-Date: 2023-05-08 00:13+0900\n"
 "Last-Translator: lenemter <lenemter@gmail.com>\n"
 "Language-Team: none\n"
@@ -34,7 +34,12 @@ msgstr ""
 msgid "Flatpak Runtime: %s"
 msgstr ""
 
-#: src/Application.vala:68
+#: src/Application.vala:49 src/exports/ExportEditable.vala:31
+#: src/MainWindow.vala:191 src/MainWindow.vala:427
+msgid "Annotator"
+msgstr "Annotator"
+
+#: src/Application.vala:77
 msgid ""
 "\n"
 "ERROR:  Unable to read image from standard input\n"
@@ -42,45 +47,45 @@ msgstr ""
 "\n"
 "ОШИБКА:  Невозможно прочитать изображение из стандартного ввода\n"
 
-#: src/Application.vala:73
+#: src/Application.vala:82
 msgid "Image paste error"
 msgstr ""
 
-#: src/Application.vala:73
+#: src/Application.vala:82
 #, fuzzy
 msgid "Image does not exist on the clipboard"
 msgstr "Открыть изображение из буфера обмена"
 
-#: src/Application.vala:87
+#: src/Application.vala:96
 msgid "Opening file"
 msgstr "Открываем файл"
 
-#: src/Application.vala:105
+#: src/Application.vala:114
 msgid "Display version number."
 msgstr "Вывести номер версии."
 
-#: src/Application.vala:106
+#: src/Application.vala:115
 msgid "Annotate clipboard image."
 msgstr "Открыть изображение из буфер обмена."
 
-#: src/Application.vala:107
+#: src/Application.vala:116
 msgid "Take and annotate a screenshot."
 msgstr "Сделать снимок экрана и открыть его."
 
-#: src/Application.vala:108
+#: src/Application.vala:117
 msgid "Uses image data from standard input"
 msgstr "Использует данные изображения из стандартного ввода"
 
-#: src/CanvasImage.vala:131 src/CanvasImage.vala:158
+#: src/CanvasImage.vala:132 src/CanvasImage.vala:159
 msgid "change image"
 msgstr "изменение изображения"
 
-#: src/CanvasImage.vala:467
+#: src/CanvasImage.vala:470
 #, fuzzy
 msgid "Color copied to clipboard"
 msgstr "Скопировать в буфер обмена"
 
-#: src/CanvasImage.vala:522
+#: src/CanvasImage.vala:524
 msgid "image crop"
 msgstr "обрезку изображения"
 
@@ -88,19 +93,19 @@ msgstr "обрезку изображения"
 msgid "Blur Amount:"
 msgstr "Сила размытия"
 
-#: src/canvas_items/CanvasItemMagnifier.vala:189
+#: src/canvas_items/CanvasItemMagnifier.vala:188
 msgid "Drag to control amount of zoom"
 msgstr "Перемещайте, чтобы изменять приближение"
 
-#: src/canvas_items/CanvasItemMagnifier.vala:190
+#: src/canvas_items/CanvasItemMagnifier.vala:189
 msgid "Drag to change area to magnify"
 msgstr "Перемещайте, чтобы изменять область приближения"
 
-#: src/canvas_items/CanvasItemMagnifier.vala:217
+#: src/canvas_items/CanvasItemMagnifier.vala:216
 msgid "Magnification:"
 msgstr "Приближение:"
 
-#: src/canvas_items/CanvasItemMagnifier.vala:230
+#: src/canvas_items/CanvasItemMagnifier.vala:229
 msgid "Reset Focal Point"
 msgstr "Сбросить точку фокуса"
 
@@ -108,33 +113,33 @@ msgstr "Сбросить точку фокуса"
 msgid "Sequence Number:"
 msgstr "Число последовательности:"
 
-#: src/canvas_items/CanvasItemStar.vala:154
+#: src/canvas_items/CanvasItemStar.vala:153
 msgid "Points:"
 msgstr "Точки:"
 
-#: src/canvas_items/CanvasItemText.vala:113 src/CanvasItems.vala:134
+#: src/canvas_items/CanvasItemText.vala:112 src/CanvasItems.vala:134
 msgid "Text"
 msgstr "Текст"
 
-#: src/canvas_items/CanvasItemText.vala:976 src/CanvasItems.vala:1096
+#: src/canvas_items/CanvasItemText.vala:975 src/CanvasItems.vala:1104
 #: src/FormatBar.vala:60
 msgid "Copy"
 msgstr "Копировать"
 
-#: src/canvas_items/CanvasItemText.vala:979 src/CanvasItems.vala:1097
+#: src/canvas_items/CanvasItemText.vala:978 src/CanvasItems.vala:1105
 #: src/FormatBar.vala:66
 msgid "Cut"
 msgstr "Вырезать"
 
-#: src/canvas_items/CanvasItemText.vala:983
+#: src/canvas_items/CanvasItemText.vala:982
 msgid "Paste"
 msgstr "Вставить"
 
-#: src/canvas_items/CanvasItemText.vala:989
+#: src/canvas_items/CanvasItemText.vala:987
 msgid "Select All"
 msgstr "Выбрать всё"
 
-#: src/canvas_items/CanvasItemText.vala:995
+#: src/canvas_items/CanvasItemText.vala:992
 msgid "Insert Emoji"
 msgstr "Встать эмодзи"
 
@@ -170,13 +175,11 @@ msgstr ""
 msgid "Think Bubble"
 msgstr ""
 
-#: src/CanvasItems.vala:132
-#: data/com.github.phase1geo.annotator.shortcuts.ui:213
+#: src/CanvasItems.vala:132 data/io.github.phase1geo.annotator.shortcuts.ui:213
 msgid "Line"
 msgstr "Линия"
 
-#: src/CanvasItems.vala:133
-#: data/com.github.phase1geo.annotator.shortcuts.ui:150
+#: src/CanvasItems.vala:133 data/io.github.phase1geo.annotator.shortcuts.ui:150
 msgid "Arrow"
 msgstr "Стрелка"
 
@@ -184,8 +187,7 @@ msgstr "Стрелка"
 msgid "Blur"
 msgstr "Размытие"
 
-#: src/CanvasItems.vala:136
-#: data/com.github.phase1geo.annotator.shortcuts.ui:240
+#: src/CanvasItems.vala:136 data/io.github.phase1geo.annotator.shortcuts.ui:240
 msgid "Magnifier"
 msgstr "Лупа"
 
@@ -206,131 +208,124 @@ msgstr "Стикер"
 msgid "Image"
 msgstr "Обрезать изображение"
 
-#: src/CanvasItems.vala:393
+#: src/CanvasItems.vala:403
 #, fuzzy
 msgid "Open Insertion Image"
 msgstr "Открыть изображение"
 
-#: src/CanvasItems.vala:393 src/MainWindow.vala:492
-msgid "Open"
-msgstr "Открыть"
-
-#: src/CanvasItems.vala:393 src/Exporter.vala:173 src/MainWindow.vala:492
-#: src/Resizer.vala:191 src/StickerSet.vala:75
-msgid "Cancel"
-msgstr "Отменить"
-
-#: src/CanvasItems.vala:1022
+#: src/CanvasItems.vala:1030
 msgid "move items"
 msgstr "перемещение объекта"
 
-#: src/CanvasItems.vala:1100
+#: src/CanvasItems.vala:1108
 msgid "Delete"
 msgstr "Удалить"
 
-#: src/CanvasItems.vala:1103
+#: src/CanvasItems.vala:1111
 msgid "Send to Front"
 msgstr "Переместить вперёд"
 
-#: src/CanvasItems.vala:1104
+#: src/CanvasItems.vala:1112
 msgid "Send to Back"
 msgstr "Переместить назад"
 
-#: src/CanvasItems.vala:1108
+#: src/CanvasItems.vala:1116
 msgid "Save As Custom"
 msgstr "Сохранить как пользовательскую фигуру"
 
-#: src/CanvasItem.vala:315
+#: src/CanvasItem.vala:314
 msgid "resize item"
 msgstr "изменение размера объекта"
 
-#: src/CanvasToolbar.vala:56
+#: src/CanvasToolbar.vala:51
 msgid "Add Arrow"
 msgstr "Добавить стрелку"
 
-#: src/CanvasToolbar.vala:56
+#: src/CanvasToolbar.vala:51
 msgid "More Arrows"
 msgstr "Больше стрелок"
 
-#: src/CanvasToolbar.vala:56
+#: src/CanvasToolbar.vala:51
 msgid "Custom Arrows"
 msgstr "Пользовательские стрелки"
 
-#: src/CanvasToolbar.vala:57
-#: data/com.github.phase1geo.annotator.shortcuts.ui:146
+#: src/CanvasToolbar.vala:52
+#: data/io.github.phase1geo.annotator.shortcuts.ui:146
 msgid "Add Shape"
 msgstr "Добавить фигуру"
 
-#: src/CanvasToolbar.vala:57
+#: src/CanvasToolbar.vala:52
 msgid "More Shapes"
 msgstr "Больше фигур"
 
-#: src/CanvasToolbar.vala:57
+#: src/CanvasToolbar.vala:52
 msgid "Custom Shapes"
 msgstr "Пользовательские фигуры"
 
-#: src/CanvasToolbar.vala:414
+#: src/CanvasToolbar.vala:392
 msgid "Crop Image"
 msgstr "Обрезать изображение"
 
-#: src/CanvasToolbar.vala:443 src/Resizer.vala:186
+#: src/CanvasToolbar.vala:419 src/Resizer.vala:186
 msgid "Resize Image"
 msgstr "Изменить размер изображения"
 
-#: src/CanvasToolbar.vala:464
+#: src/CanvasToolbar.vala:440
 #, fuzzy
 msgid "Pick Color To Clipboard"
 msgstr "Скопировать в буфер обмена"
 
-#: src/CanvasToolbar.vala:485
+#: src/CanvasToolbar.vala:458
+#, fuzzy
+msgid "Selection Shape Color"
+msgstr "Цвет фигуры"
+
+#: src/CanvasToolbar.vala:463
 msgid "Shape Color"
 msgstr "Цвет фигуры"
 
-#: src/CanvasToolbar.vala:556
-msgid "Add Transparency"
-msgstr "Добавить прозрачность"
-
-#: src/CanvasToolbar.vala:563
-msgid "Pick Color From Image"
-msgstr ""
-
-#: src/CanvasToolbar.vala:598
+#: src/CanvasToolbar.vala:489
 msgid "Shape Border"
 msgstr "Граница фигуры"
 
-#: src/CanvasToolbar.vala:611
+#: src/CanvasToolbar.vala:506
 msgid "Border Width"
 msgstr "Ширина границы"
 
-#: src/CanvasToolbar.vala:643
+#: src/CanvasToolbar.vala:543
 msgid "Dash Pattern"
 msgstr "Шаблон"
 
-#: src/CanvasToolbar.vala:676
+#: src/CanvasToolbar.vala:581
 msgid "Show Outline"
 msgstr "Показывать обводку"
 
-#: src/CanvasToolbar.vala:707
+#: src/CanvasToolbar.vala:611
 msgid "Font Properties"
 msgstr "Свойства шрифта"
 
-#: src/CanvasToolbar.vala:747
+#: src/CanvasToolbar.vala:620
+#, fuzzy
+msgid "Change Font"
+msgstr "Изменить цвет текста"
+
+#: src/CanvasToolbar.vala:641
 msgid "Drag PNG Image"
 msgstr ""
 
-#: src/Canvas.vala:209
+#: src/Canvas.vala:220
 msgid "Annotate new image?"
 msgstr "Открыть новое изображение?"
 
-#: src/Canvas.vala:210
+#: src/Canvas.vala:225
 msgid "Pasting a new image to annotate will destroy the current annotation."
 msgstr "Вставка новое изображения откроет его и уничтожит текущие изменения."
 
-#: src/CustomItems.vala:34 src/CustomItems.vala:55 src/CustomItems.vala:68
+#: src/CustomItems.vala:56 src/CustomItems.vala:77 src/CustomItems.vala:90
 msgid "Edit"
 msgstr "Редактировать"
 
-#: src/CustomItems.vala:63
+#: src/CustomItems.vala:85
 msgid "Done"
 msgstr "Готово"
 
@@ -346,23 +341,14 @@ msgstr "Экспортировать с текущими параметрами"
 msgid "Export Options"
 msgstr "Параметры экспорта"
 
-#: src/Exporter.vala:172
+#: src/Exporter.vala:180
 #, c-format
 msgid "Export As %s"
 msgstr "Экспортировать как %s"
 
-#: src/Exporter.vala:173 src/StickerSet.vala:352
-msgid "Export"
-msgstr "Экспорт"
-
-#: src/Exporter.vala:196
+#: src/Exporter.vala:195
 msgid "Export Completed"
 msgstr "Экспорт завершён"
-
-#: src/exports/ExportEditable.vala:31 src/MainWindow.vala:194
-#: src/MainWindow.vala:470
-msgid "Annotator"
-msgstr "Annotator"
 
 #: src/exports/ExportEditable.vala:256
 #, fuzzy
@@ -466,157 +452,149 @@ msgstr "Изменить цвет текста"
 msgid "Clear all formatting"
 msgstr "Очистить форматирование"
 
-#: src/MainWindow.vala:199
+#: src/MainWindow.vala:196
 msgid "Open Image"
 msgstr "Открыть изображение"
 
-#: src/MainWindow.vala:205
+#: src/MainWindow.vala:202
 #, fuzzy
 msgid "Take Screenshot"
 msgstr "Сделать снимок экрана"
 
-#: src/MainWindow.vala:213 src/StickerSet.vala:307 src/UndoBuffer.vala:91
+#: src/MainWindow.vala:210 src/StickerSet.vala:307 src/UndoBuffer.vala:91
 msgid "Undo"
 msgstr "Отменить"
 
-#: src/MainWindow.vala:220 src/StickerSet.vala:308 src/UndoBuffer.vala:98
+#: src/MainWindow.vala:217 src/StickerSet.vala:308 src/UndoBuffer.vala:98
 msgid "Redo"
 msgstr "Повторить"
 
-#: src/MainWindow.vala:240
+#: src/MainWindow.vala:237
 #, fuzzy
 msgid "Shortcuts Cheatsheet…"
 msgstr "Шпаргалка сочетаний клавиш"
 
-#: src/MainWindow.vala:243
+#: src/MainWindow.vala:240
 #, fuzzy
 msgid "About Annotator"
 msgstr "Annotator"
 
-#: src/MainWindow.vala:252
+#: src/MainWindow.vala:249
 msgid "Properties"
 msgstr "Параметры"
 
-#: src/MainWindow.vala:273
+#: src/MainWindow.vala:270
 msgid "Copy To Clipboard"
 msgstr "Скопировать в буфер обмена"
 
-#: src/MainWindow.vala:274
+#: src/MainWindow.vala:271
 msgid "Print…"
 msgstr "Печать…"
 
-#: src/MainWindow.vala:293
+#: src/MainWindow.vala:290
 msgid "Export Image"
 msgstr "Экспортировать изображение"
 
-#: src/MainWindow.vala:321
+#: src/MainWindow.vala:318
 msgid "Zoom to Fit Window"
 msgstr "Масштабировать по размеру окна"
 
-#: src/MainWindow.vala:329 src/MainWindow.vala:965
+#: src/MainWindow.vala:326 src/MainWindow.vala:806
 #, c-format
 msgid "Zoom (%d%%)"
 msgstr "Масштаб (%d%%)"
 
-#: src/MainWindow.vala:341
+#: src/MainWindow.vala:338
 msgid "Welcome to Annotator"
 msgstr "Добро пожаловать в Annotator"
 
-#: src/MainWindow.vala:343
+#: src/MainWindow.vala:340
 msgid "Let's get started annotating an image"
 msgstr "Давайте начнём комментировать изображения"
 
-#: src/MainWindow.vala:370
+#: src/MainWindow.vala:367
 msgid "Open Image From File"
 msgstr "Открыть изображение из файла"
 
-#: src/MainWindow.vala:370
+#: src/MainWindow.vala:367
 #, fuzzy
 msgid "Open a PNG, JPEG, TIFF, BMP or Annotator file"
 msgstr "Открыть PNG, JPEG, TIFF или BMP файл"
 
-#: src/MainWindow.vala:373
+#: src/MainWindow.vala:370
 msgid "Paste Image From Clipboard"
 msgstr "Вставить изображение из буфера обмена"
 
-#: src/MainWindow.vala:373
+#: src/MainWindow.vala:370
 msgid "Open an image from the clipboard"
 msgstr "Открыть изображение из буфера обмена"
 
-#: src/MainWindow.vala:376
+#: src/MainWindow.vala:373
 msgid "Take A Screenshot"
 msgstr "Сделать снимок экрана"
 
-#: src/MainWindow.vala:376
+#: src/MainWindow.vala:373
 msgid "Open an image from a screenshot"
 msgstr "Открыть изображение из буфера обмена"
 
-#: src/MainWindow.vala:414
-msgid "Font:"
-msgstr "Шрифт:"
-
-#: src/MainWindow.vala:477
+#: src/MainWindow.vala:434
 #, fuzzy
 msgid "All Loadable Formats"
 msgstr "Все форматы изображений (*)"
 
-#: src/MainWindow.vala:492
+#: src/MainWindow.vala:457
 msgid "Open Image File"
 msgstr "Открыть файл изображения"
 
-#: src/MainWindow.vala:617
-msgid "Delay (in seconds)"
-msgstr "Задержка (в секундах)"
-
-#: src/MainWindow.vala:641
-msgid "Include Annotator window"
-msgstr "Показывать окно Annotator"
+#: src/Resizer.vala:191 src/StickerSet.vala:75
+msgid "Cancel"
+msgstr "Отменить"
 
 #: src/Resizer.vala:192
 msgid "Resize"
 msgstr "Изменить размер"
 
-#: src/Resizer.vala:296
+#: src/Resizer.vala:297
 msgid "Width:"
 msgstr "Ширина:"
 
-#: src/Resizer.vala:318
+#: src/Resizer.vala:319
 msgid "Height:"
 msgstr "Высота:"
 
-#: src/Resizer.vala:343
+#: src/Resizer.vala:344
 msgid "Scale proportionally"
 msgstr "Масштабировать пропорционально"
 
-#: src/Resizer.vala:385
+#: src/Resizer.vala:386
 msgid "Image Size"
 msgstr "Размер изображения"
 
-#: src/Resizer.vala:428
+#: src/Resizer.vala:431
 msgid "Top"
 msgstr "Верхний"
 
-#: src/Resizer.vala:428 src/StickerSet.vala:291
+#: src/Resizer.vala:431 src/StickerSet.vala:291
 msgid "Right"
 msgstr "Правый"
 
-#: src/Resizer.vala:428
+#: src/Resizer.vala:431
 msgid "Bottom"
 msgstr "Нижний"
 
-#: src/Resizer.vala:428 src/StickerSet.vala:290
+#: src/Resizer.vala:431 src/StickerSet.vala:290
 msgid "Left"
 msgstr "Левый"
 
-#: src/Resizer.vala:439
+#: src/Resizer.vala:442
 msgid "Margins"
 msgstr "Отступы"
 
-#: src/Resizer.vala:481
+#: src/Resizer.vala:484
 msgid "Preview"
 msgstr "Предварительный просмотр"
 
-#: src/Resizer.vala:509
+#: src/Resizer.vala:512
 #, c-format
 msgid "%d x %d pixels"
 msgstr "%d на %d пикселей"
@@ -861,7 +839,7 @@ msgstr ""
 msgid "Opened folder"
 msgstr "Открываем файл"
 
-#: src/StickerSet.vala:84 data/com.github.phase1geo.annotator.shortcuts.ui:16
+#: src/StickerSet.vala:84 data/io.github.phase1geo.annotator.shortcuts.ui:16
 msgid "File"
 msgstr "Файл"
 
@@ -882,7 +860,7 @@ msgstr "Размер изображения"
 msgid "Video file"
 msgstr ""
 
-#: src/StickerSet.vala:89 data/com.github.phase1geo.annotator.shortcuts.ui:35
+#: src/StickerSet.vala:89 data/io.github.phase1geo.annotator.shortcuts.ui:35
 msgid "Print"
 msgstr "Печать"
 
@@ -894,7 +872,7 @@ msgstr ""
 msgid "Share"
 msgstr ""
 
-#: src/StickerSet.vala:92 data/com.github.phase1geo.annotator.shortcuts.ui:331
+#: src/StickerSet.vala:92 data/io.github.phase1geo.annotator.shortcuts.ui:331
 msgid "Cursor"
 msgstr "Курсор"
 
@@ -1895,6 +1873,10 @@ msgstr ""
 msgid "Negative dynamic"
 msgstr ""
 
+#: src/StickerSet.vala:352
+msgid "Export"
+msgstr "Экспорт"
+
 #: src/StickerSet.vala:353
 #, fuzzy
 msgid "Import"
@@ -2001,7 +1983,7 @@ msgstr "Отменить "
 msgid "Redo "
 msgstr "Повторить "
 
-#: src/ZoomWidget.vala:93 data/com.github.phase1geo.annotator.shortcuts.ui:75
+#: src/ZoomWidget.vala:93 data/io.github.phase1geo.annotator.shortcuts.ui:75
 msgid "Zoom Out"
 msgstr "Отдалить"
 
@@ -2009,286 +1991,301 @@ msgstr "Отдалить"
 msgid "Zoom Actual"
 msgstr "Сбросить масштаб"
 
-#: src/ZoomWidget.vala:105 data/com.github.phase1geo.annotator.shortcuts.ui:68
+#: src/ZoomWidget.vala:105 data/io.github.phase1geo.annotator.shortcuts.ui:68
 msgid "Zoom In"
 msgstr "Приблизить"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:6
+#: data/io.github.phase1geo.annotator.shortcuts.ui:6
 msgid "Annotator Shortcuts"
 msgstr "Сочетания клавиш Annotator"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:12
+#: data/io.github.phase1geo.annotator.shortcuts.ui:12
 msgid "General"
 msgstr "Общие"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:21
+#: data/io.github.phase1geo.annotator.shortcuts.ui:21
 msgid "New From File System"
 msgstr "Новый файл из файловой системы"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:28
+#: data/io.github.phase1geo.annotator.shortcuts.ui:28
 msgid "New From Clipboard"
 msgstr "Новый файл из буфера обмена"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:44
+#: data/io.github.phase1geo.annotator.shortcuts.ui:44
 msgid "Undo/Redo"
 msgstr "Отменить/Повторить"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:48
+#: data/io.github.phase1geo.annotator.shortcuts.ui:48
 msgid "Undo Last Change"
 msgstr "Отменить последнее изменение"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:55
+#: data/io.github.phase1geo.annotator.shortcuts.ui:55
 msgid "Redo Last Undo"
 msgstr "Отменить последнюю отмену"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:64
+#: data/io.github.phase1geo.annotator.shortcuts.ui:64
 msgid "Zooming"
 msgstr "Масштабирование"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:82
+#: data/io.github.phase1geo.annotator.shortcuts.ui:82
 msgid "Zoom To Actual Size"
 msgstr "Увеличить до фактического размера"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:89
+#: data/io.github.phase1geo.annotator.shortcuts.ui:89
 msgid "Zoom To Window"
 msgstr "Масштабировать по размеру окна"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:96
+#: data/io.github.phase1geo.annotator.shortcuts.ui:96
 #, fuzzy
 msgid "Mouse Zoom In/Out"
 msgstr "Отдалить"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:97
+#: data/io.github.phase1geo.annotator.shortcuts.ui:97
 #, fuzzy
 msgid "[Control + Scroll]"
 msgstr "[Control + Перемещение]"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:105
+#: data/io.github.phase1geo.annotator.shortcuts.ui:105
 msgid "Miscellaneous"
 msgstr "Прочее"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:109
+#: data/io.github.phase1geo.annotator.shortcuts.ui:109
 msgid "Show Contextual Menu"
 msgstr "Показать контекстное меню"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:116
+#: data/io.github.phase1geo.annotator.shortcuts.ui:116
 msgid "Show Keyboard Shortcuts"
 msgstr "Показать сочетания клавиш"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:123
+#: data/io.github.phase1geo.annotator.shortcuts.ui:123
 msgid "Quit Application"
 msgstr "Выйти из приложения"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:130
+#: data/io.github.phase1geo.annotator.shortcuts.ui:130
 msgid "Pan"
 msgstr ""
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:131
+#: data/io.github.phase1geo.annotator.shortcuts.ui:131
 msgid "[Middle-button + Drag]"
 msgstr ""
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:142
+#: data/io.github.phase1geo.annotator.shortcuts.ui:142
 msgid "Annotation Commands"
 msgstr "Возможности Annotation"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:157
+#: data/io.github.phase1geo.annotator.shortcuts.ui:157
 #, fuzzy
 msgid "Outlined Rectangle"
 msgstr "Новый обведённый прямоугольник"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:164
+#: data/io.github.phase1geo.annotator.shortcuts.ui:164
 #, fuzzy
 msgid "Solid Rectangle"
 msgstr "Новый закрашенный прямоугольник"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:171
+#: data/io.github.phase1geo.annotator.shortcuts.ui:171
 #, fuzzy
 msgid "Outlined Oval"
 msgstr "Новый обведённый овал"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:178
+#: data/io.github.phase1geo.annotator.shortcuts.ui:178
 #, fuzzy
 msgid "Solid Oval"
 msgstr "Новый закрашенный овал"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:185
+#: data/io.github.phase1geo.annotator.shortcuts.ui:185
 #, fuzzy
 msgid "Outlined Star"
 msgstr "Новая обведённая звезда"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:192
+#: data/io.github.phase1geo.annotator.shortcuts.ui:192
 #, fuzzy
 msgid "Solid Star"
 msgstr "Новая закрашенная звезда"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:199
+#: data/io.github.phase1geo.annotator.shortcuts.ui:199
 msgid "Talking Bubble"
 msgstr ""
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:206
+#: data/io.github.phase1geo.annotator.shortcuts.ui:206
 msgid "Thought Bubble"
 msgstr ""
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:220
+#: data/io.github.phase1geo.annotator.shortcuts.ui:220
 #, fuzzy
 msgid "Text Box"
 msgstr "Новое текстовое поле"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:229
+#: data/io.github.phase1geo.annotator.shortcuts.ui:229
 #, fuzzy
 msgid "Add Other"
 msgstr "Добавить фигуру"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:233
+#: data/io.github.phase1geo.annotator.shortcuts.ui:233
 #, fuzzy
 msgid "Blur Box"
 msgstr "Новая область размытия"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:247
+#: data/io.github.phase1geo.annotator.shortcuts.ui:247
 #, fuzzy
 msgid "Pencil Stroke"
 msgstr "Новый карандашный штрих"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:254
+#: data/io.github.phase1geo.annotator.shortcuts.ui:254
 #, fuzzy
 msgid "Sequence Marker"
 msgstr "Новый маркер последовательности"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:263
+#: data/io.github.phase1geo.annotator.shortcuts.ui:263
 msgid "Current Item"
 msgstr "Текущий объект"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:267
+#: data/io.github.phase1geo.annotator.shortcuts.ui:267
 msgid "Delete Selected Item"
 msgstr "Удалить выделенный объект"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:274
+#: data/io.github.phase1geo.annotator.shortcuts.ui:274
 msgid "Copy Selected Item and Move"
 msgstr "Скопировать выделение и переместить"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:275
+#: data/io.github.phase1geo.annotator.shortcuts.ui:275
 msgid "[Control + Drag]"
 msgstr "[Control + Перемещение]"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:286
+#: data/io.github.phase1geo.annotator.shortcuts.ui:286
 msgid "Text Commands"
 msgstr "Текстовые команды"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:290
+#: data/io.github.phase1geo.annotator.shortcuts.ui:290
 msgid "Editing"
 msgstr "Редактирование"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:294
+#: data/io.github.phase1geo.annotator.shortcuts.ui:294
 msgid "Delete Previous Character"
 msgstr "Удалить предыдущий символ"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:301
+#: data/io.github.phase1geo.annotator.shortcuts.ui:301
 msgid "Delete Next Character"
 msgstr "Удалить следующий символ"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:308
+#: data/io.github.phase1geo.annotator.shortcuts.ui:308
 msgid "Exit Text Edit Mode And Select Item"
 msgstr "Выйдите из режима редактирования текста и выбрать объект"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:315
+#: data/io.github.phase1geo.annotator.shortcuts.ui:315
 msgid "Insert Newline Character"
 msgstr "Вставить символ новой строки"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:322
+#: data/io.github.phase1geo.annotator.shortcuts.ui:322
 msgid "Show Emoji Picker"
 msgstr "Показать выбор эмодзи"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:335
+#: data/io.github.phase1geo.annotator.shortcuts.ui:335
 msgid "Move Cursor Left One Word"
 msgstr "Переместить курсор влево на одно слово"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:342
+#: data/io.github.phase1geo.annotator.shortcuts.ui:342
 msgid "Move Cursor Right One Word"
 msgstr "Переместить курсор вправо на одно слово"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:349
+#: data/io.github.phase1geo.annotator.shortcuts.ui:349
 msgid "Move Cursor Left One Character"
 msgstr "Переместить курсор влево на один символ"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:356
+#: data/io.github.phase1geo.annotator.shortcuts.ui:356
 msgid "Move Cursor Right One Character"
 msgstr "Переместить курсор вправо на один символ"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:363
+#: data/io.github.phase1geo.annotator.shortcuts.ui:363
 msgid "Move Cursor To Text Start"
 msgstr "Переместить курсор в начало"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:370
+#: data/io.github.phase1geo.annotator.shortcuts.ui:370
 msgid "Move Cursor To Text End"
 msgstr "Переместить курсор в конец"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:377
+#: data/io.github.phase1geo.annotator.shortcuts.ui:377
 msgid "Move Cursor To Current Line Start"
 msgstr "Переместить курсор в начало текущей строки"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:384
+#: data/io.github.phase1geo.annotator.shortcuts.ui:384
 msgid "Move Cursor To Current Line End"
 msgstr "Переместить курсор в конец текущей строки"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:391
+#: data/io.github.phase1geo.annotator.shortcuts.ui:391
 msgid "Move Cursor Up One Line"
 msgstr "Переместить курсор вверх на одну строку"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:398
+#: data/io.github.phase1geo.annotator.shortcuts.ui:398
 msgid "Move Cursor Down One Line"
 msgstr "Переместить курсор вниз на одну строку"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:407
+#: data/io.github.phase1geo.annotator.shortcuts.ui:407
 msgid "Selection"
 msgstr "Выделение"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:411
+#: data/io.github.phase1geo.annotator.shortcuts.ui:411
 msgid "Select All Text"
 msgstr "Выбрать весь текст"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:418
+#: data/io.github.phase1geo.annotator.shortcuts.ui:418
 msgid "Deselect All Text"
 msgstr "Отменить выбор всего текста"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:425
+#: data/io.github.phase1geo.annotator.shortcuts.ui:425
 msgid "Add Left Word To Selection"
 msgstr "Добавить левое слово к выделению"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:432
+#: data/io.github.phase1geo.annotator.shortcuts.ui:432
 msgid "Add Right Word To Selection"
 msgstr "Добавить правое слово к выделению"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:439
+#: data/io.github.phase1geo.annotator.shortcuts.ui:439
 msgid "Add Left Character To Selection"
 msgstr "Добавить левый символ к выделению"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:446
+#: data/io.github.phase1geo.annotator.shortcuts.ui:446
 msgid "Add Right Character To Selection"
 msgstr "Добавить правый символ к выделению"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:453
+#: data/io.github.phase1geo.annotator.shortcuts.ui:453
 msgid "Add Text From Start To Selection"
 msgstr "Добавить текст с начала к выделению"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:460
+#: data/io.github.phase1geo.annotator.shortcuts.ui:460
 msgid "Add Text From End To Selection"
 msgstr "Добавить текст с конца к выделению"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:467
+#: data/io.github.phase1geo.annotator.shortcuts.ui:467
 msgid "Add Text From Current Line Start To Selection"
 msgstr "Добавить текст с начала текущей строки к выделению"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:474
+#: data/io.github.phase1geo.annotator.shortcuts.ui:474
 msgid "Add Text From Current Line End To Selection"
 msgstr "Добавить текст с конца текущей строки к выделению"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:481
+#: data/io.github.phase1geo.annotator.shortcuts.ui:481
 msgid "Add Text Above Cursor To Selection"
 msgstr "Добавить текст над курсором к выделению"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:488
+#: data/io.github.phase1geo.annotator.shortcuts.ui:488
 msgid "Add Text Below Cursor To Selection"
 msgstr "Добавить текст под курсором к выделению"
+
+#~ msgid "Open"
+#~ msgstr "Открыть"
+
+#~ msgid "Add Transparency"
+#~ msgstr "Добавить прозрачность"
+
+#~ msgid "Font:"
+#~ msgstr "Шрифт:"
+
+#~ msgid "Delay (in seconds)"
+#~ msgstr "Задержка (в секундах)"
+
+#~ msgid "Include Annotator window"
+#~ msgstr "Показывать окно Annotator"
 
 #~ msgid "Creation"
 #~ msgstr "Создание"

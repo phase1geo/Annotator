@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.annotator\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-23 21:17-0500\n"
+"POT-Creation-Date: 2026-10-17 19:24-0500\n"
 "PO-Revision-Date: 2021-09-30 18:25+0200\n"
 "Last-Translator: Heimen Stoffels <vistausss@fastmail.com>\n"
 "Language-Team: \n"
@@ -36,7 +36,12 @@ msgstr ""
 msgid "Flatpak Runtime: %s"
 msgstr ""
 
-#: src/Application.vala:68
+#: src/Application.vala:49 src/exports/ExportEditable.vala:31
+#: src/MainWindow.vala:191 src/MainWindow.vala:427
+msgid "Annotator"
+msgstr "Aantekeningen"
+
+#: src/Application.vala:77
 msgid ""
 "\n"
 "ERROR:  Unable to read image from standard input\n"
@@ -44,45 +49,45 @@ msgstr ""
 "\n"
 "FOUTMELDING:  de afbeelding kan niet worden ingelezen\n"
 
-#: src/Application.vala:73
+#: src/Application.vala:82
 msgid "Image paste error"
 msgstr ""
 
-#: src/Application.vala:73
+#: src/Application.vala:82
 #, fuzzy
 msgid "Image does not exist on the clipboard"
 msgstr "Open een afbeelding van het klembord"
 
-#: src/Application.vala:87
+#: src/Application.vala:96
 msgid "Opening file"
 msgstr "Bestand openen"
 
-#: src/Application.vala:105
+#: src/Application.vala:114
 msgid "Display version number."
 msgstr "Toon het versienummer."
 
-#: src/Application.vala:106
+#: src/Application.vala:115
 msgid "Annotate clipboard image."
 msgstr "Voorzie een klembordafbeelding van een aantekening."
 
-#: src/Application.vala:107
+#: src/Application.vala:116
 msgid "Take and annotate a screenshot."
 msgstr "Maak een schermfoto en aantekening."
 
-#: src/Application.vala:108
+#: src/Application.vala:117
 msgid "Uses image data from standard input"
 msgstr "Gebruikt afbeeldingsgegevens uit de standaardinvoer"
 
-#: src/CanvasImage.vala:131 src/CanvasImage.vala:158
+#: src/CanvasImage.vala:132 src/CanvasImage.vala:159
 msgid "change image"
 msgstr "Afbeelding wijzigen"
 
-#: src/CanvasImage.vala:467
+#: src/CanvasImage.vala:470
 #, fuzzy
 msgid "Color copied to clipboard"
 msgstr "Kopiëren naar klembord"
 
-#: src/CanvasImage.vala:522
+#: src/CanvasImage.vala:524
 msgid "image crop"
 msgstr "Afbeelding bijsnijden"
 
@@ -90,19 +95,19 @@ msgstr "Afbeelding bijsnijden"
 msgid "Blur Amount:"
 msgstr "Hoeveelheid vervaging:"
 
-#: src/canvas_items/CanvasItemMagnifier.vala:189
+#: src/canvas_items/CanvasItemMagnifier.vala:188
 msgid "Drag to control amount of zoom"
 msgstr "Versleep om het zoomniveau aan te passen"
 
-#: src/canvas_items/CanvasItemMagnifier.vala:190
+#: src/canvas_items/CanvasItemMagnifier.vala:189
 msgid "Drag to change area to magnify"
 msgstr "Versleep om een ander gebied te vergroten"
 
-#: src/canvas_items/CanvasItemMagnifier.vala:217
+#: src/canvas_items/CanvasItemMagnifier.vala:216
 msgid "Magnification:"
 msgstr "Vergroting:"
 
-#: src/canvas_items/CanvasItemMagnifier.vala:230
+#: src/canvas_items/CanvasItemMagnifier.vala:229
 msgid "Reset Focal Point"
 msgstr "Focuspunt herstellen"
 
@@ -110,33 +115,33 @@ msgstr "Focuspunt herstellen"
 msgid "Sequence Number:"
 msgstr "Reeksnummer:"
 
-#: src/canvas_items/CanvasItemStar.vala:154
+#: src/canvas_items/CanvasItemStar.vala:153
 msgid "Points:"
 msgstr "Punten:"
 
-#: src/canvas_items/CanvasItemText.vala:113 src/CanvasItems.vala:134
+#: src/canvas_items/CanvasItemText.vala:112 src/CanvasItems.vala:134
 msgid "Text"
 msgstr "Tekst"
 
-#: src/canvas_items/CanvasItemText.vala:976 src/CanvasItems.vala:1096
+#: src/canvas_items/CanvasItemText.vala:975 src/CanvasItems.vala:1104
 #: src/FormatBar.vala:60
 msgid "Copy"
 msgstr "Kopiëren"
 
-#: src/canvas_items/CanvasItemText.vala:979 src/CanvasItems.vala:1097
+#: src/canvas_items/CanvasItemText.vala:978 src/CanvasItems.vala:1105
 #: src/FormatBar.vala:66
 msgid "Cut"
 msgstr "Knippen"
 
-#: src/canvas_items/CanvasItemText.vala:983
+#: src/canvas_items/CanvasItemText.vala:982
 msgid "Paste"
 msgstr "Plakken"
 
-#: src/canvas_items/CanvasItemText.vala:989
+#: src/canvas_items/CanvasItemText.vala:987
 msgid "Select All"
 msgstr "Alles selecteren"
 
-#: src/canvas_items/CanvasItemText.vala:995
+#: src/canvas_items/CanvasItemText.vala:992
 msgid "Insert Emoji"
 msgstr "Emoji invoegen"
 
@@ -172,13 +177,11 @@ msgstr ""
 msgid "Think Bubble"
 msgstr ""
 
-#: src/CanvasItems.vala:132
-#: data/com.github.phase1geo.annotator.shortcuts.ui:213
+#: src/CanvasItems.vala:132 data/io.github.phase1geo.annotator.shortcuts.ui:213
 msgid "Line"
 msgstr "Lijn"
 
-#: src/CanvasItems.vala:133
-#: data/com.github.phase1geo.annotator.shortcuts.ui:150
+#: src/CanvasItems.vala:133 data/io.github.phase1geo.annotator.shortcuts.ui:150
 msgid "Arrow"
 msgstr "Pijl"
 
@@ -186,8 +189,7 @@ msgstr "Pijl"
 msgid "Blur"
 msgstr "Vervagen"
 
-#: src/CanvasItems.vala:136
-#: data/com.github.phase1geo.annotator.shortcuts.ui:240
+#: src/CanvasItems.vala:136 data/io.github.phase1geo.annotator.shortcuts.ui:240
 msgid "Magnifier"
 msgstr "Vergrootglas"
 
@@ -208,133 +210,126 @@ msgstr "Sticker"
 msgid "Image"
 msgstr "Afbeelding bijsnijden"
 
-#: src/CanvasItems.vala:393
+#: src/CanvasItems.vala:403
 #, fuzzy
 msgid "Open Insertion Image"
 msgstr "Afbeelding openen"
 
-#: src/CanvasItems.vala:393 src/MainWindow.vala:492
-msgid "Open"
-msgstr "Openen"
-
-#: src/CanvasItems.vala:393 src/Exporter.vala:173 src/MainWindow.vala:492
-#: src/Resizer.vala:191 src/StickerSet.vala:75
-msgid "Cancel"
-msgstr "Annuleren"
-
-#: src/CanvasItems.vala:1022
+#: src/CanvasItems.vala:1030
 msgid "move items"
 msgstr "Items verplaatsen"
 
-#: src/CanvasItems.vala:1100
+#: src/CanvasItems.vala:1108
 msgid "Delete"
 msgstr "Verwijderen"
 
-#: src/CanvasItems.vala:1103
+#: src/CanvasItems.vala:1111
 msgid "Send to Front"
 msgstr "Tonen op voorgrond"
 
-#: src/CanvasItems.vala:1104
+#: src/CanvasItems.vala:1112
 msgid "Send to Back"
 msgstr "Tonen op achtergrond"
 
-#: src/CanvasItems.vala:1108
+#: src/CanvasItems.vala:1116
 msgid "Save As Custom"
 msgstr "Opslaan als aangepast"
 
-#: src/CanvasItem.vala:315
+#: src/CanvasItem.vala:314
 msgid "resize item"
 msgstr "Grootte aanpassen"
 
-#: src/CanvasToolbar.vala:56
+#: src/CanvasToolbar.vala:51
 msgid "Add Arrow"
 msgstr "Pijl toevoegen"
 
-#: src/CanvasToolbar.vala:56
+#: src/CanvasToolbar.vala:51
 msgid "More Arrows"
 msgstr "Meer pijlen"
 
-#: src/CanvasToolbar.vala:56
+#: src/CanvasToolbar.vala:51
 msgid "Custom Arrows"
 msgstr "Aangepaste pijlen"
 
-#: src/CanvasToolbar.vala:57
-#: data/com.github.phase1geo.annotator.shortcuts.ui:146
+#: src/CanvasToolbar.vala:52
+#: data/io.github.phase1geo.annotator.shortcuts.ui:146
 msgid "Add Shape"
 msgstr "Vorm toevoegen"
 
-#: src/CanvasToolbar.vala:57
+#: src/CanvasToolbar.vala:52
 msgid "More Shapes"
 msgstr "Meer vormen"
 
-#: src/CanvasToolbar.vala:57
+#: src/CanvasToolbar.vala:52
 msgid "Custom Shapes"
 msgstr "Aangepaste vormen"
 
-#: src/CanvasToolbar.vala:414
+#: src/CanvasToolbar.vala:392
 msgid "Crop Image"
 msgstr "Afbeelding bijsnijden"
 
-#: src/CanvasToolbar.vala:443 src/Resizer.vala:186
+#: src/CanvasToolbar.vala:419 src/Resizer.vala:186
 msgid "Resize Image"
 msgstr "Afbeeldingsgrootte aanpassen"
 
-#: src/CanvasToolbar.vala:464
+#: src/CanvasToolbar.vala:440
 #, fuzzy
 msgid "Pick Color To Clipboard"
 msgstr "Kopiëren naar klembord"
 
-#: src/CanvasToolbar.vala:485
+#: src/CanvasToolbar.vala:458
+#, fuzzy
+msgid "Selection Shape Color"
+msgstr "Vormkleur"
+
+#: src/CanvasToolbar.vala:463
 msgid "Shape Color"
 msgstr "Vormkleur"
 
-#: src/CanvasToolbar.vala:556
-msgid "Add Transparency"
-msgstr "Doorzichtigheid toevoegen"
-
-#: src/CanvasToolbar.vala:563
-msgid "Pick Color From Image"
-msgstr ""
-
-#: src/CanvasToolbar.vala:598
+#: src/CanvasToolbar.vala:489
 msgid "Shape Border"
 msgstr "Vormkader"
 
-#: src/CanvasToolbar.vala:611
+#: src/CanvasToolbar.vala:506
 msgid "Border Width"
 msgstr "Kaderbreedte"
 
-#: src/CanvasToolbar.vala:643
+#: src/CanvasToolbar.vala:543
 msgid "Dash Pattern"
 msgstr "Streepjespatroon"
 
-#: src/CanvasToolbar.vala:676
+#: src/CanvasToolbar.vala:581
 msgid "Show Outline"
 msgstr "Contour tonen"
 
-#: src/CanvasToolbar.vala:707
+#: src/CanvasToolbar.vala:611
 msgid "Font Properties"
 msgstr "Lettertype-eigenschappen"
 
-#: src/CanvasToolbar.vala:747
+#: src/CanvasToolbar.vala:620
+#, fuzzy
+msgid "Change Font"
+msgstr "Lettertypekleur aanpassen"
+
+#: src/CanvasToolbar.vala:641
 msgid "Drag PNG Image"
 msgstr ""
 
-#: src/Canvas.vala:209
+#: src/Canvas.vala:220
 msgid "Annotate new image?"
 msgstr "Afbeelding van aantekening voorzien?"
 
-#: src/Canvas.vala:210
+#: src/Canvas.vala:225
 msgid "Pasting a new image to annotate will destroy the current annotation."
 msgstr ""
 "Let op: door het plakken van een afbeelding wordt de huidige aantekening "
 "gewist."
 
-#: src/CustomItems.vala:34 src/CustomItems.vala:55 src/CustomItems.vala:68
+#: src/CustomItems.vala:56 src/CustomItems.vala:77 src/CustomItems.vala:90
 msgid "Edit"
 msgstr "Bewerken"
 
-#: src/CustomItems.vala:63
+#: src/CustomItems.vala:85
 msgid "Done"
 msgstr "Voltooid"
 
@@ -350,23 +345,14 @@ msgstr "Exporteren met huidige voorkeuren"
 msgid "Export Options"
 msgstr "Exportopties"
 
-#: src/Exporter.vala:172
+#: src/Exporter.vala:180
 #, c-format
 msgid "Export As %s"
 msgstr "Exporteren naar %s"
 
-#: src/Exporter.vala:173 src/StickerSet.vala:352
-msgid "Export"
-msgstr "Exporteren"
-
-#: src/Exporter.vala:196
+#: src/Exporter.vala:195
 msgid "Export Completed"
 msgstr "Het exporteren is voltooid"
-
-#: src/exports/ExportEditable.vala:31 src/MainWindow.vala:194
-#: src/MainWindow.vala:470
-msgid "Annotator"
-msgstr "Aantekeningen"
 
 #: src/exports/ExportEditable.vala:256
 #, fuzzy
@@ -470,157 +456,149 @@ msgstr "Lettertypekleur aanpassen"
 msgid "Clear all formatting"
 msgstr "Alle opmaak wissen"
 
-#: src/MainWindow.vala:199
+#: src/MainWindow.vala:196
 msgid "Open Image"
 msgstr "Afbeelding openen"
 
-#: src/MainWindow.vala:205
+#: src/MainWindow.vala:202
 #, fuzzy
 msgid "Take Screenshot"
 msgstr "Schermfoto maken"
 
-#: src/MainWindow.vala:213 src/StickerSet.vala:307 src/UndoBuffer.vala:91
+#: src/MainWindow.vala:210 src/StickerSet.vala:307 src/UndoBuffer.vala:91
 msgid "Undo"
 msgstr "Ongedaan maken"
 
-#: src/MainWindow.vala:220 src/StickerSet.vala:308 src/UndoBuffer.vala:98
+#: src/MainWindow.vala:217 src/StickerSet.vala:308 src/UndoBuffer.vala:98
 msgid "Redo"
 msgstr "Opnieuw uitvoeren"
 
-#: src/MainWindow.vala:240
+#: src/MainWindow.vala:237
 #, fuzzy
 msgid "Shortcuts Cheatsheet…"
 msgstr "Sneltoetsoverzicht"
 
-#: src/MainWindow.vala:243
+#: src/MainWindow.vala:240
 #, fuzzy
 msgid "About Annotator"
 msgstr "Aantekeningen"
 
-#: src/MainWindow.vala:252
+#: src/MainWindow.vala:249
 msgid "Properties"
 msgstr "Eigenschappen"
 
-#: src/MainWindow.vala:273
+#: src/MainWindow.vala:270
 msgid "Copy To Clipboard"
 msgstr "Kopiëren naar klembord"
 
-#: src/MainWindow.vala:274
+#: src/MainWindow.vala:271
 msgid "Print…"
 msgstr "Afdrukken…"
 
-#: src/MainWindow.vala:293
+#: src/MainWindow.vala:290
 msgid "Export Image"
 msgstr "Afbeelding exporteren"
 
-#: src/MainWindow.vala:321
+#: src/MainWindow.vala:318
 msgid "Zoom to Fit Window"
 msgstr "Passend zoomen"
 
-#: src/MainWindow.vala:329 src/MainWindow.vala:965
+#: src/MainWindow.vala:326 src/MainWindow.vala:806
 #, c-format
 msgid "Zoom (%d%%)"
 msgstr "Zoomen (%d%%)"
 
-#: src/MainWindow.vala:341
+#: src/MainWindow.vala:338
 msgid "Welcome to Annotator"
 msgstr "Welkom bij Aantekeningen"
 
-#: src/MainWindow.vala:343
+#: src/MainWindow.vala:340
 msgid "Let's get started annotating an image"
 msgstr "Tijd om aan de slag te gaan"
 
-#: src/MainWindow.vala:370
+#: src/MainWindow.vala:367
 msgid "Open Image From File"
 msgstr "Afbeelding laden uit bestand"
 
-#: src/MainWindow.vala:370
+#: src/MainWindow.vala:367
 #, fuzzy
 msgid "Open a PNG, JPEG, TIFF, BMP or Annotator file"
 msgstr "Open een png-, jpeg-, tiff- of bmp-bestand"
 
-#: src/MainWindow.vala:373
+#: src/MainWindow.vala:370
 msgid "Paste Image From Clipboard"
 msgstr "Afbeelding laden van klembord"
 
-#: src/MainWindow.vala:373
+#: src/MainWindow.vala:370
 msgid "Open an image from the clipboard"
 msgstr "Open een afbeelding van het klembord"
 
-#: src/MainWindow.vala:376
+#: src/MainWindow.vala:373
 msgid "Take A Screenshot"
 msgstr "Schermfoto maken"
 
-#: src/MainWindow.vala:376
+#: src/MainWindow.vala:373
 msgid "Open an image from a screenshot"
 msgstr "Open een schermfoto"
 
-#: src/MainWindow.vala:414
-msgid "Font:"
-msgstr "Lettertype:"
-
-#: src/MainWindow.vala:477
+#: src/MainWindow.vala:434
 #, fuzzy
 msgid "All Loadable Formats"
 msgstr "Alle afbeeldingen  (*)"
 
-#: src/MainWindow.vala:492
+#: src/MainWindow.vala:457
 msgid "Open Image File"
 msgstr "Afbeeldingsbestand openen"
 
-#: src/MainWindow.vala:617
-msgid "Delay (in seconds)"
-msgstr "Wachttijd (in seconden)"
-
-#: src/MainWindow.vala:641
-msgid "Include Annotator window"
-msgstr "Aantekeningenvenster tonen"
+#: src/Resizer.vala:191 src/StickerSet.vala:75
+msgid "Cancel"
+msgstr "Annuleren"
 
 #: src/Resizer.vala:192
 msgid "Resize"
 msgstr "Grootte aanpassen"
 
-#: src/Resizer.vala:296
+#: src/Resizer.vala:297
 msgid "Width:"
 msgstr "Breedte:"
 
-#: src/Resizer.vala:318
+#: src/Resizer.vala:319
 msgid "Height:"
 msgstr "Hoogte:"
 
-#: src/Resizer.vala:343
+#: src/Resizer.vala:344
 msgid "Scale proportionally"
 msgstr "Proportioneel schalen"
 
-#: src/Resizer.vala:385
+#: src/Resizer.vala:386
 msgid "Image Size"
 msgstr "Afbeeldingsgrootte"
 
-#: src/Resizer.vala:428
+#: src/Resizer.vala:431
 msgid "Top"
 msgstr "Boven"
 
-#: src/Resizer.vala:428 src/StickerSet.vala:291
+#: src/Resizer.vala:431 src/StickerSet.vala:291
 msgid "Right"
 msgstr "Rechts"
 
-#: src/Resizer.vala:428
+#: src/Resizer.vala:431
 msgid "Bottom"
 msgstr "Onder"
 
-#: src/Resizer.vala:428 src/StickerSet.vala:290
+#: src/Resizer.vala:431 src/StickerSet.vala:290
 msgid "Left"
 msgstr "Links"
 
-#: src/Resizer.vala:439
+#: src/Resizer.vala:442
 msgid "Margins"
 msgstr "Marges"
 
-#: src/Resizer.vala:481
+#: src/Resizer.vala:484
 msgid "Preview"
 msgstr "Voorvertoning"
 
-#: src/Resizer.vala:509
+#: src/Resizer.vala:512
 #, c-format
 msgid "%d x %d pixels"
 msgstr "%d x %d pixels"
@@ -867,7 +845,7 @@ msgstr ""
 msgid "Opened folder"
 msgstr "Bestand openen"
 
-#: src/StickerSet.vala:84 data/com.github.phase1geo.annotator.shortcuts.ui:16
+#: src/StickerSet.vala:84 data/io.github.phase1geo.annotator.shortcuts.ui:16
 msgid "File"
 msgstr "Bestand"
 
@@ -888,7 +866,7 @@ msgstr "Afbeeldingsgrootte"
 msgid "Video file"
 msgstr ""
 
-#: src/StickerSet.vala:89 data/com.github.phase1geo.annotator.shortcuts.ui:35
+#: src/StickerSet.vala:89 data/io.github.phase1geo.annotator.shortcuts.ui:35
 msgid "Print"
 msgstr "Afdrukken"
 
@@ -900,7 +878,7 @@ msgstr ""
 msgid "Share"
 msgstr ""
 
-#: src/StickerSet.vala:92 data/com.github.phase1geo.annotator.shortcuts.ui:331
+#: src/StickerSet.vala:92 data/io.github.phase1geo.annotator.shortcuts.ui:331
 msgid "Cursor"
 msgstr "Cursor"
 
@@ -1901,6 +1879,10 @@ msgstr ""
 msgid "Negative dynamic"
 msgstr ""
 
+#: src/StickerSet.vala:352
+msgid "Export"
+msgstr "Exporteren"
+
 #: src/StickerSet.vala:353
 #, fuzzy
 msgid "Import"
@@ -2007,7 +1989,7 @@ msgstr "Ongedaan maken "
 msgid "Redo "
 msgstr "Opnieuw uitvoeren "
 
-#: src/ZoomWidget.vala:93 data/com.github.phase1geo.annotator.shortcuts.ui:75
+#: src/ZoomWidget.vala:93 data/io.github.phase1geo.annotator.shortcuts.ui:75
 msgid "Zoom Out"
 msgstr "Uitzoomen"
 
@@ -2015,286 +1997,301 @@ msgstr "Uitzoomen"
 msgid "Zoom Actual"
 msgstr "Ware grootte"
 
-#: src/ZoomWidget.vala:105 data/com.github.phase1geo.annotator.shortcuts.ui:68
+#: src/ZoomWidget.vala:105 data/io.github.phase1geo.annotator.shortcuts.ui:68
 msgid "Zoom In"
 msgstr "Inzoomen"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:6
+#: data/io.github.phase1geo.annotator.shortcuts.ui:6
 msgid "Annotator Shortcuts"
 msgstr "Aantekeningssneltoetsen"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:12
+#: data/io.github.phase1geo.annotator.shortcuts.ui:12
 msgid "General"
 msgstr "Algemeen"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:21
+#: data/io.github.phase1geo.annotator.shortcuts.ui:21
 msgid "New From File System"
 msgstr "Nieuw bestand van systeem"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:28
+#: data/io.github.phase1geo.annotator.shortcuts.ui:28
 msgid "New From Clipboard"
 msgstr "Nieuw bestand van klembord"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:44
+#: data/io.github.phase1geo.annotator.shortcuts.ui:44
 msgid "Undo/Redo"
 msgstr "Ongedaan maken/Opnieuw uitvoeren"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:48
+#: data/io.github.phase1geo.annotator.shortcuts.ui:48
 msgid "Undo Last Change"
 msgstr "Recentste aanpassing ongedaan maken"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:55
+#: data/io.github.phase1geo.annotator.shortcuts.ui:55
 msgid "Redo Last Undo"
 msgstr "Recentste aanpassing opnieuw uitvoeren"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:64
+#: data/io.github.phase1geo.annotator.shortcuts.ui:64
 msgid "Zooming"
 msgstr "Zoomen"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:82
+#: data/io.github.phase1geo.annotator.shortcuts.ui:82
 msgid "Zoom To Actual Size"
 msgstr "Zoomen naar ware grootte"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:89
+#: data/io.github.phase1geo.annotator.shortcuts.ui:89
 msgid "Zoom To Window"
 msgstr "Passend zoomen"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:96
+#: data/io.github.phase1geo.annotator.shortcuts.ui:96
 #, fuzzy
 msgid "Mouse Zoom In/Out"
 msgstr "Uitzoomen"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:97
+#: data/io.github.phase1geo.annotator.shortcuts.ui:97
 #, fuzzy
 msgid "[Control + Scroll]"
 msgstr "[Control + verslepen]"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:105
+#: data/io.github.phase1geo.annotator.shortcuts.ui:105
 msgid "Miscellaneous"
 msgstr "Overig"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:109
+#: data/io.github.phase1geo.annotator.shortcuts.ui:109
 msgid "Show Contextual Menu"
 msgstr "Rechtermuisknopmenu tonen"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:116
+#: data/io.github.phase1geo.annotator.shortcuts.ui:116
 msgid "Show Keyboard Shortcuts"
 msgstr "Sneltoetsen tonen"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:123
+#: data/io.github.phase1geo.annotator.shortcuts.ui:123
 msgid "Quit Application"
 msgstr "Toepassing afsluiten"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:130
+#: data/io.github.phase1geo.annotator.shortcuts.ui:130
 msgid "Pan"
 msgstr ""
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:131
+#: data/io.github.phase1geo.annotator.shortcuts.ui:131
 msgid "[Middle-button + Drag]"
 msgstr ""
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:142
+#: data/io.github.phase1geo.annotator.shortcuts.ui:142
 msgid "Annotation Commands"
 msgstr "Aantekeningsopdrachten"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:157
+#: data/io.github.phase1geo.annotator.shortcuts.ui:157
 #, fuzzy
 msgid "Outlined Rectangle"
 msgstr "Nieuwe rechthoek met contour"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:164
+#: data/io.github.phase1geo.annotator.shortcuts.ui:164
 #, fuzzy
 msgid "Solid Rectangle"
 msgstr "Nieuwe rechthoek"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:171
+#: data/io.github.phase1geo.annotator.shortcuts.ui:171
 #, fuzzy
 msgid "Outlined Oval"
 msgstr "Nieuw ovaal met contour"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:178
+#: data/io.github.phase1geo.annotator.shortcuts.ui:178
 #, fuzzy
 msgid "Solid Oval"
 msgstr "Nieuw ovaal"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:185
+#: data/io.github.phase1geo.annotator.shortcuts.ui:185
 #, fuzzy
 msgid "Outlined Star"
 msgstr "Nieuwe ster met contour"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:192
+#: data/io.github.phase1geo.annotator.shortcuts.ui:192
 #, fuzzy
 msgid "Solid Star"
 msgstr "Nieuwe ster"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:199
+#: data/io.github.phase1geo.annotator.shortcuts.ui:199
 msgid "Talking Bubble"
 msgstr ""
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:206
+#: data/io.github.phase1geo.annotator.shortcuts.ui:206
 msgid "Thought Bubble"
 msgstr ""
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:220
+#: data/io.github.phase1geo.annotator.shortcuts.ui:220
 #, fuzzy
 msgid "Text Box"
 msgstr "Nieuw tekstvak"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:229
+#: data/io.github.phase1geo.annotator.shortcuts.ui:229
 #, fuzzy
 msgid "Add Other"
 msgstr "Vorm toevoegen"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:233
+#: data/io.github.phase1geo.annotator.shortcuts.ui:233
 #, fuzzy
 msgid "Blur Box"
 msgstr "Nieuw vervaagd vak"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:247
+#: data/io.github.phase1geo.annotator.shortcuts.ui:247
 #, fuzzy
 msgid "Pencil Stroke"
 msgstr "Nieuwe potloodstreep"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:254
+#: data/io.github.phase1geo.annotator.shortcuts.ui:254
 #, fuzzy
 msgid "Sequence Marker"
 msgstr "Nieuwe reeksmarkering"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:263
+#: data/io.github.phase1geo.annotator.shortcuts.ui:263
 msgid "Current Item"
 msgstr "Huidig item"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:267
+#: data/io.github.phase1geo.annotator.shortcuts.ui:267
 msgid "Delete Selected Item"
 msgstr "Geselecteerd item verwijderen"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:274
+#: data/io.github.phase1geo.annotator.shortcuts.ui:274
 msgid "Copy Selected Item and Move"
 msgstr "Geselecteerd item kopiëren en verplaatsen"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:275
+#: data/io.github.phase1geo.annotator.shortcuts.ui:275
 msgid "[Control + Drag]"
 msgstr "[Control + verslepen]"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:286
+#: data/io.github.phase1geo.annotator.shortcuts.ui:286
 msgid "Text Commands"
 msgstr "Tekstopdrachten"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:290
+#: data/io.github.phase1geo.annotator.shortcuts.ui:290
 msgid "Editing"
 msgstr "Bewerken"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:294
+#: data/io.github.phase1geo.annotator.shortcuts.ui:294
 msgid "Delete Previous Character"
 msgstr "Vorig teken verwijderen"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:301
+#: data/io.github.phase1geo.annotator.shortcuts.ui:301
 msgid "Delete Next Character"
 msgstr "Volgend teken verwijderen"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:308
+#: data/io.github.phase1geo.annotator.shortcuts.ui:308
 msgid "Exit Text Edit Mode And Select Item"
 msgstr "Tekstbewerking afsluiten en item selecteren"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:315
+#: data/io.github.phase1geo.annotator.shortcuts.ui:315
 msgid "Insert Newline Character"
 msgstr "Regeleinde invoegen"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:322
+#: data/io.github.phase1geo.annotator.shortcuts.ui:322
 msgid "Show Emoji Picker"
 msgstr "Emojikiezer tonen"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:335
+#: data/io.github.phase1geo.annotator.shortcuts.ui:335
 msgid "Move Cursor Left One Word"
 msgstr "Cursor één woord naar links verplaatsen"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:342
+#: data/io.github.phase1geo.annotator.shortcuts.ui:342
 msgid "Move Cursor Right One Word"
 msgstr "Cursor één woord naar rechts verplaatsen"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:349
+#: data/io.github.phase1geo.annotator.shortcuts.ui:349
 msgid "Move Cursor Left One Character"
 msgstr "Cursor één teken naar links verplaatsen"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:356
+#: data/io.github.phase1geo.annotator.shortcuts.ui:356
 msgid "Move Cursor Right One Character"
 msgstr "Cursor één teken naar rechts verplaatsen"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:363
+#: data/io.github.phase1geo.annotator.shortcuts.ui:363
 msgid "Move Cursor To Text Start"
 msgstr "Cursor naar begin verplaatsen"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:370
+#: data/io.github.phase1geo.annotator.shortcuts.ui:370
 msgid "Move Cursor To Text End"
 msgstr "Cursor naar einde verplaatsen"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:377
+#: data/io.github.phase1geo.annotator.shortcuts.ui:377
 msgid "Move Cursor To Current Line Start"
 msgstr "Cursor naar begin van huidige regel verplaatsen"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:384
+#: data/io.github.phase1geo.annotator.shortcuts.ui:384
 msgid "Move Cursor To Current Line End"
 msgstr "Cursor naar einde van huidige regel verplaatsen"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:391
+#: data/io.github.phase1geo.annotator.shortcuts.ui:391
 msgid "Move Cursor Up One Line"
 msgstr "Cursor één regel omhoog verplaatsen"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:398
+#: data/io.github.phase1geo.annotator.shortcuts.ui:398
 msgid "Move Cursor Down One Line"
 msgstr "Cursor één regel omlaag verplaatsen"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:407
+#: data/io.github.phase1geo.annotator.shortcuts.ui:407
 msgid "Selection"
 msgstr "Selectie"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:411
+#: data/io.github.phase1geo.annotator.shortcuts.ui:411
 msgid "Select All Text"
 msgstr "Alle tekst selecteren"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:418
+#: data/io.github.phase1geo.annotator.shortcuts.ui:418
 msgid "Deselect All Text"
 msgstr "Niets selecteren"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:425
+#: data/io.github.phase1geo.annotator.shortcuts.ui:425
 msgid "Add Left Word To Selection"
 msgstr "Linkerwoord opnemen in selectie"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:432
+#: data/io.github.phase1geo.annotator.shortcuts.ui:432
 msgid "Add Right Word To Selection"
 msgstr "Rechterwoord opnemen in selectie"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:439
+#: data/io.github.phase1geo.annotator.shortcuts.ui:439
 msgid "Add Left Character To Selection"
 msgstr "Linkerteken opnemen in selectie"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:446
+#: data/io.github.phase1geo.annotator.shortcuts.ui:446
 msgid "Add Right Character To Selection"
 msgstr "Rechterteken opnemen in selectie"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:453
+#: data/io.github.phase1geo.annotator.shortcuts.ui:453
 msgid "Add Text From Start To Selection"
 msgstr "Tekst vanaf begin opnemen in selectie"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:460
+#: data/io.github.phase1geo.annotator.shortcuts.ui:460
 msgid "Add Text From End To Selection"
 msgstr "Tekst vanaf einde opnemen in selectie"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:467
+#: data/io.github.phase1geo.annotator.shortcuts.ui:467
 msgid "Add Text From Current Line Start To Selection"
 msgstr "Tekst vanaf begin van huidige regel opnemen in selectie"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:474
+#: data/io.github.phase1geo.annotator.shortcuts.ui:474
 msgid "Add Text From Current Line End To Selection"
 msgstr "Tekst vanaf einde van huidige regel opnemen in selectie"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:481
+#: data/io.github.phase1geo.annotator.shortcuts.ui:481
 msgid "Add Text Above Cursor To Selection"
 msgstr "Tekst boven cursor opnemen in selectie"
 
-#: data/com.github.phase1geo.annotator.shortcuts.ui:488
+#: data/io.github.phase1geo.annotator.shortcuts.ui:488
 msgid "Add Text Below Cursor To Selection"
 msgstr "Tekst onder cursor opnemen in selectie"
+
+#~ msgid "Open"
+#~ msgstr "Openen"
+
+#~ msgid "Add Transparency"
+#~ msgstr "Doorzichtigheid toevoegen"
+
+#~ msgid "Font:"
+#~ msgstr "Lettertype:"
+
+#~ msgid "Delay (in seconds)"
+#~ msgstr "Wachttijd (in seconden)"
+
+#~ msgid "Include Annotator window"
+#~ msgstr "Aantekeningenvenster tonen"
 
 #~ msgid "Creation"
 #~ msgstr "Maken"

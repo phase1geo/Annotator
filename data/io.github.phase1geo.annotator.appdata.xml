@@ -5,12 +5,14 @@
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>GPL-3.0+</project_license>
   <name>Annotator</name>
+  <name xml:lang="zh_TW">Annotator</name>
   <name xml:lang="pt_BR">Annotator</name>
   <name xml:lang="ru">Annotator</name>
   <name xml:lang="nl">Aantekeningen</name>
   <name xml:lang="it">Annotator</name>
   <name xml:lang="de">Annotator</name>
   <summary>Communicate with images better</summary>
+  <summary xml:lang="zh_TW">讓圖片溝通更有效率</summary>
   <summary xml:lang="pt_BR">Comunique-se melhor com imagens</summary>
   <summary xml:lang="ru">Общайтесь с изображениями лучше</summary>
   <summary xml:lang="nl">Communiceer met betere afbeeldingen</summary>
@@ -18,6 +20,7 @@
   <summary xml:lang="de">Besser mit Bildern kommunizieren</summary>
   <developer id="io.github.phase1geo">
     <name>Trevor Williams</name>
+    <name xml:lang="zh_TW">Trevor Williams</name>
     <name xml:lang="pt_BR">Trevor Williams</name>
     <name xml:lang="ru">Trevor Williams</name>
     <name xml:lang="nl">Trevor Williams</name>
@@ -33,10 +36,12 @@
     <screenshot>
       <image>https://raw.githubusercontent.com/phase1geo/Annotator/master/data/screenshots/screenshot-welcome.png</image>
       <caption>Welcome Screen</caption>
+      <caption xml:lang="zh_TW">歡迎畫面</caption>
     </screenshot>
     <screenshot type="default">
       <image>https://raw.githubusercontent.com/phase1geo/Annotator/master/data/screenshots/screenshot-editor.png</image>
       <caption>Annotation Editor</caption>
+      <caption xml:lang="zh_TW">標註編輯器</caption>
     </screenshot>
   </screenshots>
   <description>
@@ -44,63 +49,78 @@
       Communicate with images. Better.  Open image files or take screenshots, add various types
       of image annotations, and export the annotated image in a number of image formats.
     </p>
+    <p xml:lang="zh_TW">讓圖片溝通更有效率。開啟圖片檔案或擷取螢幕截圖，新增各種類型的圖片標註，並將標註後的圖片匯出為多種圖片格式。</p>
     <ul>
       <li>Load image from the file system, clipboard or a screenshot.</li>
+      <li xml:lang="zh_TW">從檔案系統、剪貼簿或螢幕截圖載入圖片。</li>
       <li xml:lang="ru">Загружайте изображения из файловой системы, буфера обмена или снимка экрана.</li>
       <li xml:lang="it">Carica l'immagine dal file system, dagli appunti o da uno screenshot.</li>
       <li xml:lang="de">Bild aus dem Dateisystem, der Zwischenablage oder einem Bildschirmfoto laden.</li>
       <li>Add shapes, stickers, images, text, drawings, and other callouts to highlight image details.</li>
+      <li xml:lang="zh_TW">新增形狀、貼圖、圖片、文字、繪圖及其他標記來凸顯圖片細節。</li>
       <li>Save custom shapes for easy reuse.</li>
+      <li xml:lang="zh_TW">儲存自訂形狀以便重複使用。</li>
       <li xml:lang="ru">Сохраняйте пользовательские фигуры для повторного использования.</li>
       <li xml:lang="it">Salva forme personalizzate per un facile riutilizzo.</li>
       <li xml:lang="de">Benutzerdefinierte Formen zur einfachen Wiederverwendung speichern.</li>
       <li>Add magnifiers to enhance image details.</li>
+      <li xml:lang="zh_TW">新增放大鏡以增強圖片細節。</li>
       <li xml:lang="pt_BR">Adicione uma lupa para melhorar os detalhes da imagem.</li>
       <li xml:lang="ru">Добавляйте лупы, чтобы улучшить детали изображения.</li>
       <li xml:lang="nl">Voeg vergrotingen toe om details te verduidelijken.</li>
       <li xml:lang="it">Aggiungi lenti di ingrandimento per migliorare i dettagli dell'immagine.</li>
       <li xml:lang="de">Lupen hinzufügen, um Bilddetails zu verbessern.</li>
       <li>Blur out portions of the image to obfuscate data.</li>
+      <li xml:lang="zh_TW">模糊部分圖片以遮蔽資料。</li>
       <li xml:lang="pt_BR">Desfoque partes da imagem para ofuscar os dados.</li>
       <li xml:lang="ru">Размывайте части изображения, чтобы скрыть данные.</li>
       <li xml:lang="nl">Vervaag privédelen van afbeeldingen.</li>
       <li xml:lang="it">Sfoca porzioni dell'immagine per offuscare i dati.</li>
       <li xml:lang="de">Teile des Bildes weichzeichnen, um Daten unkenntlich zu machen.</li>
       <li>Crop, resize and add image borders.</li>
+      <li xml:lang="zh_TW">裁切、調整大小和新增圖片邊框。</li>
       <li xml:lang="pt_BR">Corte, redimensione e adicione bordas de imagem.</li>
       <li xml:lang="ru">Обрезайте, меняйте размер и добавляйте границы изображения.</li>
       <li xml:lang="nl">Snijd afbeeldingen bij, verklein ze of voeg kaders toe.</li>
       <li xml:lang="it">Ritaglia, ridimensiona e aggiungi bordi dell'immagine.</li>
       <li xml:lang="de">Zuschneiden, Größe ändern und Bildränder hinzufügen.</li>
       <li>Control colors, line thickness and font details.</li>
+      <li xml:lang="zh_TW">控制色彩、線條粗細和字型細節。</li>
       <li xml:lang="pt_BR">Controle as cores, a espessura da linha e os detalhes da fonte.</li>
       <li xml:lang="ru">Управляйте цветами, толщиной линий и шрифтами.</li>
       <li xml:lang="nl">Bepaal kleuren, lijndikten en lettertypen.</li>
       <li xml:lang="it">Controlla i colori, lo spessore della linea e i dettagli dei caratteri.</li>
       <li xml:lang="de">Farben, Linienstärke und Schriftdetails einstellen.</li>
       <li>Built-in color picker to copy image pixel color to clipboard.</li>
+      <li xml:lang="zh_TW">內建顏色挑選器，可將圖片畫素色彩複製到剪貼簿。</li>
       <li xml:lang="de">Eingebauter Farbwähler zum Kopieren von Bildpixelfarben in die Zwischenablage.</li>
       <li>Zoom support.</li>
+      <li xml:lang="zh_TW">縮放功能。</li>
       <li xml:lang="pt_BR">Suporte para zoom.</li>
       <li xml:lang="ru">Поддержка приближения.</li>
       <li xml:lang="nl">Zoomondersteuning.</li>
       <li xml:lang="it">Supporto per lo zoom.</li>
       <li xml:lang="de">Zoom-Unterstützung.</li>
       <li>Unlimited undo/redo of any change.</li>
+      <li xml:lang="zh_TW">無限次復原/重做任何變更。</li>
       <li xml:lang="pt_BR">Desfazer/refazer ilimitado de qualquer alteração.</li>
       <li xml:lang="ru">Неограниченное количество отмен/повторов любых изменений.</li>
       <li xml:lang="nl">Ongelimiteerd ongedaan maken/opnieuw uitvoeren van aanpassingen.</li>
       <li xml:lang="it">Annulla/ripeti illimitati di qualsiasi modifica.</li>
       <li xml:lang="de">Unbegrenztes Rückgängigmachen/Wiederherstellen jeder Änderung.</li>
       <li>Export to JPEG, PNG, TIFF, BMP, PDF, SVG and WebP image formats.</li>
+      <li xml:lang="zh_TW">匯出為 JPEG、PNG、TIFF、BMP、PDF、SVG 和 WebP 圖片格式。</li>
       <li>Support for copying annotated image to clipboard.</li>
+      <li xml:lang="zh_TW">可將標註後的圖片複製到剪貼簿。</li>
       <li xml:lang="pt_BR">Suporte para copiar imagens anotadas para a área de transferência.</li>
       <li xml:lang="ru">Поддержка копирования отредактированного изображения в буфер обмена.</li>
       <li xml:lang="nl">Ondersteuning voor het kopiëren van afbeeldingen naar het klembord.</li>
       <li xml:lang="it">Supporto per la copia di immagini annotate negli appunti.</li>
       <li xml:lang="de">Unterstützung für das Kopieren von annotierten Bildern in die Zwischenablage.</li>
       <li>Support for dragging out a PNG image to another app or location.</li>
+      <li xml:lang="zh_TW">可將 PNG 圖片拖曳到其他應用程式或位置。</li>
       <li>Printer support.</li>
+      <li xml:lang="zh_TW">列印功能。</li>
       <li xml:lang="pt_BR">Suporte a impressoras.</li>
       <li xml:lang="ru">Поддержка принтеров.</li>
       <li xml:lang="nl">Afdrukondersteuning.</li>
@@ -118,142 +138,232 @@
     <value key="x-appcenter-stripe">pk_live_51Ccoj4BJm4hDdHaF1YKGdyGLCLtShzElKsr4GM9hJDJAoZArcWrNHsjL9b8SBs01GQBYpakj0l1tYenVJOqke93300TULHWdph</value>
   </custom>
   <releases>
+    <release version="2.1.0" date="2026-10-31">
+      <description>
+        <p>New</p>
+        <p xml:lang="zh_TW">新功能</p>
+        <p xml:lang="ru">Новое</p>
+        <p xml:lang="de">Neu</p>
+        <ul>
+          <li>Added traditional Chinese translation (thanks to Peter Dave Hello).</li>
+          <li>Added cropping dimensions to window when cropping mode is enabled.</li>
+        </ul>
+        <p>Changes</p>
+        <p xml:lang="zh_TW">變更</p>
+        <p xml:lang="ru">Изменения</p>
+        <p xml:lang="de">Änderungen</p>
+        <ul>
+          <li>Changed application ID from com.github.phase1geo.annotator to io.github.phase1geo.annotator.</li>
+          <li>Improved symbolic icons to be themeable.</li>
+          <li>Updated German translation (thanks to Benjamin Weis).</li>
+        </ul>
+        <p>Bug Fixes</p>
+        <p xml:lang="zh_TW">問題修正</p>
+        <p xml:lang="ru">Исправления ошибок</p>
+        <p xml:lang="de">Fehlerkorrekturen</p>
+        <ul>
+          <li>Cleaned up compile warnings.</li>
+          <li>Fixed issues with color picker.</li>
+          <li>Fixed application name within system.</li>
+          <li>Fixed potential application crash issue.</li>
+        </ul>
+      </description>
+    </release>
     <release version="2.0.3" date="2026-04-24">
       <description>
         <p>Changes</p>
+        <p xml:lang="zh_TW">變更</p>
         <p xml:lang="ru">Изменения</p>
         <p xml:lang="de">Änderungen</p>
         <ul>
           <li>Updated Italian translation (thanks to Albano Battistella).</li>
+          <li xml:lang="zh_TW">更新義大利文翻譯（感謝 Albano Battistella）。</li>
         </ul>
         <p>Bug Fixes</p>
+        <p xml:lang="zh_TW">問題修正</p>
         <p xml:lang="ru">Исправления ошибок</p>
         <p xml:lang="de">Fehlerkorrekturen</p>
         <ul>
           <li>Fixed issue with Annotator window not hiding during a screenshot (thanks to Achille Leduc for fixing).</li>
+          <li xml:lang="zh_TW">修正擷取螢幕截圖時 Annotator 視窗未隱藏的問題（感謝 Achille Leduc 修正）。</li>
           <li>Fixed issue with screenshotting on various systems (thanks to Achille Leduc for fixing).</li>
+          <li xml:lang="zh_TW">修正在各系統上擷取螢幕截圖的問題（感謝 Achille Leduc 修正）。</li>
           <li>Fixed display issues with HiDPI and scaled displays.</li>
+          <li xml:lang="zh_TW">修正 HiDPI 和縮放顯示器的顯示問題。</li>
         </ul>
       </description>
     </release>
     <release version="2.0.2" date="2026-02-15">
       <description>
         <p>New</p>
+        <p xml:lang="zh_TW">新功能</p>
         <p xml:lang="ru">Новое</p>
         <p xml:lang="de">Neu</p>
         <ul>
           <li>Added ability to zoom in and out using Control-Scrollwheel (thanks to Loric Brevet)</li>
+          <li xml:lang="zh_TW">新增使用 Control + 滾輪放大和縮小的功能（感謝 Loric Brevet）</li>
           <li>Added ability to pan canvas with middle click and drag (thanks to Loric Brevet)</li>
+          <li xml:lang="zh_TW">新增使用滑鼠中鍵拖曳來平移畫布的功能（感謝 Loric Brevet）</li>
         </ul>
         <p>Bug Fixes</p>
+        <p xml:lang="zh_TW">問題修正</p>
         <p xml:lang="ru">Исправления ошибок</p>
         <p xml:lang="de">Fehlerkorrekturen</p>
         <ul>
           <li>Fixed drawing issues with RTL languages and the text tool</li>
+          <li xml:lang="zh_TW">修正 RTL 語言與文字工具的繪製問題</li>
         </ul>
       </description>
     </release>
     <release version="2.0.1" date="2026-01-31">
       <description>
         <p>New</p>
+        <p xml:lang="zh_TW">新功能</p>
         <p xml:lang="ru">Новое</p>
         <p xml:lang="de">Neu</p>
         <ul>
           <li>Added ability to export to an editable Annotator file.</li>
+          <li xml:lang="zh_TW">新增匯出為可編輯 Annotator 檔案的功能。</li>
           <li>Added support for WebP export.</li>
+          <li xml:lang="zh_TW">新增 WebP 匯出功能。</li>
           <li>Added about window.</li>
+          <li xml:lang="zh_TW">新增關於視窗。</li>
         </ul>
         <p>Changes</p>
+        <p xml:lang="zh_TW">變更</p>
         <p xml:lang="ru">Изменения</p>
         <p xml:lang="de">Änderungen</p>
         <ul>
           <li>Updated screenshot to use D-Bus capture mechanism.</li>
+          <li xml:lang="zh_TW">更新螢幕截圖以使用 D-Bus 擷取機制。</li>
           <li>Removed references to gtk3 in build files.</li>
+          <li xml:lang="zh_TW">移除建置檔案中對 gtk3 的參照。</li>
           <li>Improved export menu UI.</li>
+          <li xml:lang="zh_TW">改善匯出選單介面。</li>
           <li>Updated issues with GitHub continuous improvement action.</li>
+          <li xml:lang="zh_TW">更新 GitHub 持續整合動作的問題。</li>
           <li>Removed Debian packaging files.</li>
+          <li xml:lang="zh_TW">移除 Debian 打包檔案。</li>
         </ul>
         <p>Bug Fixes</p>
+        <p xml:lang="zh_TW">問題修正</p>
         <p xml:lang="ru">Исправления ошибок</p>
         <p xml:lang="de">Fehlerkorrekturen</p>
         <ul>
           <li>Fixed default export values.</li>
+          <li xml:lang="zh_TW">修正預設匯出值。</li>
           <li>Fixed display issue for Flatpak.</li>
+          <li xml:lang="zh_TW">修正 Flatpak 的顯示問題。</li>
           <li>Fixed text copy/paste button functionality from format bar.</li>
+          <li xml:lang="zh_TW">修正格式列中文字複製/貼上按鈕的功能。</li>
           <li>Fixed cursor display when Control key is pressed when in text edit mode.</li>
+          <li xml:lang="zh_TW">修正文字編輯模式下按住 Control 鍵時游標顯示的問題。</li>
           <li>Fixed issues with application desktop actions.</li>
+          <li xml:lang="zh_TW">修正應用程式桌面動作的問題。</li>
         </ul>
       </description>
     </release>
     <release version="2.0.0" date="2024-10-30">
       <description>
         <p>New</p>
+        <p xml:lang="zh_TW">新功能</p>
         <p xml:lang="ru">Новое</p>
         <p xml:lang="de">Neu</p>
         <ul>
           <li>Added option for transparent PNG export (thanks for Peter Willemsen).</li>
+          <li xml:lang="zh_TW">新增透明 PNG 匯出選項（感謝 Peter Willemsen）。</li>
           <li>Added support for adding custom stickers.</li>
+          <li xml:lang="zh_TW">新增自訂貼圖功能。</li>
           <li>Added support for inserting images.</li>
+          <li xml:lang="zh_TW">新增插入圖片功能。</li>
           <li xml:lang="de">Unterstützung für das Einfügen von Bildern hinzugefügt.</li>
           <li>Added support for color picker (copy value to clipboard or change current annotation object color).</li>
+          <li xml:lang="zh_TW">新增顏色挑選器功能（可將色彩值複製到剪貼簿或變更目前標註物件的顏色）。</li>
           <li>Added support for inserting speech and thought bubble shapes.</li>
+          <li xml:lang="zh_TW">新增插入對話泡泡和思考泡泡形狀的功能。</li>
           <li xml:lang="de">Unterstützung für das Einfügen von Sprach- und Gedankenblasenformen hinzugefügt.</li>
           <li>Added ability to annotate image by drag/drop on welcome screen.</li>
+          <li xml:lang="zh_TW">新增在歡迎畫面拖放圖片進行標註的功能。</li>
           <li>Added ability to drag a copy of the annotated image via a new "PNG" icon in the toolbar.</li>
+          <li xml:lang="zh_TW">新增透過工具列中的「PNG」圖示拖曳標註圖片副本的功能。</li>
         </ul>
         <p>Changes</p>
+        <p xml:lang="zh_TW">變更</p>
         <p xml:lang="ru">Изменения</p>
         <p xml:lang="de">Änderungen</p>
         <ul>
           <li>Converted codebase from GTK3 to GTK4.</li>
+          <li xml:lang="zh_TW">將程式碼基礎從 GTK3 轉換為 GTK4。</li>
           <li>Updated Flatpak platform from 7.2 to 8.</li>
+          <li xml:lang="zh_TW">將 Flatpak 平台從 7.2 更新至 8。</li>
           <li>Improving look of toolbar dropdowns.</li>
+          <li xml:lang="zh_TW">改善工具列下拉選單外觀。</li>
         </ul>
         <p>Bug Fixes</p>
+        <p xml:lang="zh_TW">問題修正</p>
         <p xml:lang="ru">Исправления ошибок</p>
         <p xml:lang="de">Fehlerkorrekturen</p>
         <ul>
           <li>Fixed issue where boolean export values were not properly saving (thanks to Peter Willemsen).</li>
+          <li xml:lang="zh_TW">修正布林匯出值無法正確儲存的問題（感謝 Peter Willemsen）。</li>
           <li>Fixed issue with duplicating canvas items by holding Control while dragging an item.</li>
+          <li xml:lang="zh_TW">修正按住 Control 鍵拖曳物件以複製畫布物件的問題。</li>
           <li xml:lang="de">Problem bei der Duplizierung von Leinwandelementen durch Festhalten der Steuerungstaste beim Ziehen eines Elements behoben.</li>
           <li>Fixed issues with missing icons on non-elementary distributions (thanks to Kevin Ernst).</li>
+          <li xml:lang="zh_TW">修正非 elementary 發行版上圖示遺失的問題（感謝 Kevin Ernst）。</li>
           <li>Fixed issue with certain icons not displaying properly in dark mode.</li>
+          <li xml:lang="zh_TW">修正部分圖示在深色模式下無法正確顯示的問題。</li>
           <li xml:lang="de">Problem bei der Anzeige bestimmter Symbole im dunklen Modus behoben.</li>
           <li>Fixed issue with icons being installed in the wrong place.</li>
+          <li xml:lang="zh_TW">修正圖示安裝到錯誤位置的問題。</li>
           <li>Fixed issue with dismissing popover when the export button is clicked.</li>
+          <li xml:lang="zh_TW">修正按下匯出按鈕時彈出框未關閉的問題。</li>
           <li>Fixed issue with the --use-clipboard command-line option.</li>
+          <li xml:lang="zh_TW">修正 --use-clipboard 命令列選項的問題。</li>
           <li>Fixed application crash issue in some cases when annotate items are deleted.</li>
+          <li xml:lang="zh_TW">修正刪除標註物件時在某些情況下應用程式當機的問題。</li>
           <li>Fixed issues with using the screenshot capture functionality.</li>
+          <li xml:lang="zh_TW">修正使用螢幕截圖擷取功能的問題。</li>
           <li>Fixed issue with canvas scrolling in various cases.</li>
+          <li xml:lang="zh_TW">修正各種情況下畫布捲動的問題。</li>
           <li>Fixed display issues with icons in dark modes.</li>
+          <li xml:lang="zh_TW">修正深色模式下圖示的顯示問題。</li>
           <li>Fixed issue with the font icon not appearing correctly on some systems.</li>
+          <li xml:lang="zh_TW">修正字型圖示在部分系統上無法正確顯示的問題。</li>
         </ul>
       </description>
     </release>
     <release version="1.2.1" date="2023-05-20">
       <description>
         <p>New</p>
+        <p xml:lang="zh_TW">新功能</p>
         <p xml:lang="ru">Новое</p>
         <p xml:lang="de">Neu</p>
         <ul>
           <li>Added Russian translation (thanks to @lenemter).</li>
+          <li xml:lang="zh_TW">新增俄文翻譯（感謝 @lenemter）。</li>
           <li xml:lang="de">Russische Übersetzung hinzugefügt (Dank an @lenemter).</li>
         </ul>
         <p>Changes</p>
+        <p xml:lang="zh_TW">變更</p>
         <p xml:lang="ru">Изменения</p>
         <p xml:lang="de">Änderungen</p>
         <ul>
           <li>Updated Italian translations (thanks to @albanobattistella).</li>
+          <li xml:lang="zh_TW">更新義大利文翻譯（感謝 @albanobattistella）。</li>
           <li xml:lang="de">Italienische Übersetzungen aktualisiert (Dank an @albanobattistella).</li>
           <li>Updated Dutch translation (thanks to Heimen Stoffels).</li>
+          <li xml:lang="zh_TW">更新荷蘭文翻譯（感謝 Heimen Stoffels）。</li>
           <li xml:lang="ru">Обновлён голландский перевод (спасибо Heimen Stoffels).</li>
           <li xml:lang="de">Niederländische Übersetzung aktualisiert (Dank an Heimen Stoffels).</li>
         </ul>
         <p>Bug Fixes</p>
+        <p xml:lang="zh_TW">問題修正</p>
         <p xml:lang="ru">Исправления ошибок</p>
         <p xml:lang="de">Fehlerkorrekturen</p>
         <ul>
           <li>Fixed translation string issues related to Zoom and Screenshot (thanks to @lenemter).</li>
+          <li xml:lang="zh_TW">修正與縮放和螢幕截圖相關的翻譯字串問題（感謝 @lenemter）。</li>
           <li xml:lang="de">Probleme mit den Übersetzungszeichenketten im Zusammenhang mit Zoom und Bildschirmfoto behoben (Dank an @lenemter).</li>
         </ul>
       </description>
@@ -261,58 +371,75 @@
     <release version="1.2.0" date="2022-03-23">
       <description>
         <p>New</p>
+        <p xml:lang="zh_TW">新功能</p>
         <p xml:lang="ru">Новое</p>
         <p xml:lang="de">Neu</p>
         <ul>
           <li>Adding support for taking screenshots from within the application (screen, window and area).</li>
+          <li xml:lang="zh_TW">新增從應用程式內擷取螢幕截圖的功能（全螢幕、視窗和區域）。</li>
           <li xml:lang="de">Unterstützung für die Aufnahme von Bildschirmfotos aus der Anwendung (Bildschirm, Fenster und Bereich) heraus hinzugefügt.</li>
           <li>Adding command-line options for taking screenshots.</li>
+          <li xml:lang="zh_TW">新增擷取螢幕截圖的命令列選項。</li>
           <li xml:lang="ru">Добавлен параметр командной строки для создания скриншотов.</li>
           <li xml:lang="de">Befehlszeilenoptionen für die Erstellung von Bildschirmfotos hinzugefügt.</li>
           <li>Adding support for creating and saving custom arrows and shapes.</li>
+          <li xml:lang="zh_TW">新增建立和儲存自訂箭頭與形狀的功能。</li>
           <li xml:lang="ru">Добавлена поддержка создания и сохранения пользовательских стрелок и фигур.</li>
           <li xml:lang="de">Unterstützung für das Erstellen und Speichern von benutzerdefinierten Pfeilen und Formen hinzugefügt.</li>
         </ul>
         <p>Changes</p>
+        <p xml:lang="zh_TW">變更</p>
         <p xml:lang="ru">Изменения</p>
         <p xml:lang="de">Änderungen</p>
         <ul>
           <li>Updated Dutch translation (thanks to Heimen Stoffels).</li>
+          <li xml:lang="zh_TW">更新荷蘭文翻譯（感謝 Heimen Stoffels）。</li>
           <li xml:lang="ru">Обновлён голландский перевод (спасибо Heimen Stoffels).</li>
           <li xml:lang="de">Niederländische Übersetzung aktualisiert (Dank an Heimen Stoffels).</li>
           <li>Updated Italian translation (thanks to @albanobattistella).</li>
+          <li xml:lang="zh_TW">更新義大利文翻譯（感謝 @albanobattistella）。</li>
           <li xml:lang="ru">Обновлён итальянский перевод (спасибо @albanobattistella).</li>
           <li xml:lang="de">Italienische Übersetzung aktualisiert (Dank an @albanobattistella).</li>
           <li>Updated Flatpak SDK from version 6 to 6.1.</li>
+          <li xml:lang="zh_TW">將 Flatpak SDK 從版本 6 更新至 6.1。</li>
           <li xml:lang="ru">Обновлена версия Flatpak SDK с 6 до 6.1.</li>
           <li xml:lang="de">Flatpak SDK von Version 6 auf 6.1 aktualisiert.</li>
           <li>Modified .gitignore to ignore .swp files from anywhere in the codebase.</li>
+          <li xml:lang="zh_TW">修改 .gitignore 以忽略程式碼庫中任何位置的 .swp 檔案。</li>
           <li xml:lang="ru">В .gitignore были добавлены файлы .swp для удаления их из кода.</li>
           <li xml:lang="de">.gitignore wurde so geändert, dass .swp-Dateien in der gesamten Codebasis ignoriert werden.</li>
           <li>Changed shape dropdown to display four shapes per row instead of two.</li>
+          <li xml:lang="zh_TW">將形狀下拉選單改為每列顯示四個形狀而非兩個。</li>
           <li xml:lang="ru">Изменено раскрывающееся меню фигур, чтобы отображать четыре фигуры в строке вместо двух.</li>
           <li xml:lang="de">Das Dropdown-Menü für die Formen wurde so geändert, dass jetzt vier statt zwei Formen pro Zeile angezeigt werden.</li>
           <li>Enhanced export UI and adding export options for PNG and JPEG types.</li>
+          <li xml:lang="zh_TW">增強匯出介面並新增 PNG 和 JPEG 類型的匯出選項。</li>
           <li xml:lang="ru">Улучшен пользовательский интерфейс экспорта и добавлены параметры экспорта в PNG и JPEG.</li>
           <li xml:lang="de">Export-UI verbessert und Exportoptionen für die Typen PNG und JPEG hinzugefügt.</li>
           <li>Changed JPEG export to use both .jpeg and .jpg file extensions (defaults to .jpg now).</li>
+          <li xml:lang="zh_TW">將 JPEG 匯出改為同時使用 .jpeg 和 .jpg 副檔名（現預設為 .jpg）。</li>
           <li xml:lang="ru">Изменён экспорт JPEG для использования файлов с расширениями .jpeg и .jpg (теперь по умолчанию используется .jpg).</li>
           <li xml:lang="de">Der JPEG-Export wurde so geändert, dass sowohl die Dateierweiterung .jpeg als auch .jpg verwendet wird (Standardeinstellung ist jetzt .jpg).</li>
           <li>Improved arrow icon in toolbar.</li>
+          <li xml:lang="zh_TW">改善工具列中的箭頭圖示。</li>
           <li xml:lang="ru">Улучшен значок стрелки на панели инструментов.</li>
           <li xml:lang="de">Pfeilsymbol in der Symbolleiste verbessert.</li>
         </ul>
         <p>Bug Fixes</p>
+        <p xml:lang="zh_TW">問題修正</p>
         <p xml:lang="ru">Исправления ошибок</p>
         <p xml:lang="de">Fehlerkorrekturen</p>
         <ul>
           <li>Improved ability to click on shapes that only have borders.</li>
+          <li xml:lang="zh_TW">改善點選僅有邊框形狀的操作體驗。</li>
           <li xml:lang="ru">Улучшена возможность нажимать на фигуры, которые имеют только границы.</li>
           <li xml:lang="de">Möglichkeit, auf Formen zu klicken, die nur Ränder haben, verbessert.</li>
           <li>Fixed issues with copying the contents of one shape into another.</li>
+          <li xml:lang="zh_TW">修正在形狀之間複製內容的問題。</li>
           <li xml:lang="ru">Исправлены проблемы с копированием содержимого одной фигуры в другую.</li>
           <li xml:lang="de">Probleme beim Kopieren des Inhalts einer Form in eine andere Form behoben.</li>
           <li>Fixed issue with displaying star and line icons in shapes toolbar for dark mode.</li>
+          <li xml:lang="zh_TW">修正深色模式下形狀工具列中星形和線條圖示的顯示問題。</li>
           <li xml:lang="ru">Исправлена проблема с отображением значков звёздочек и линий на панели инструментов фигур в тёмном режиме.</li>
           <li xml:lang="de">Problem mit der Anzeige von Stern- und Liniensymbolen in der Symbolleiste für Formen im dunklen Modus behoben.</li>
         </ul>
@@ -321,70 +448,91 @@
     <release version="1.1.0" date="2022-01-14">
       <description>
         <p>New</p>
+        <p xml:lang="zh_TW">新功能</p>
         <p xml:lang="ru">Новое</p>
         <p xml:lang="de">Neu</p>
         <ul>
           <li>Added keyboard shortcuts for creating annotation items, printing and displaying contextual menus.</li>
+          <li xml:lang="zh_TW">新增建立標註物件、列印及顯示右鍵選單的鍵盤快速鍵。</li>
           <li xml:lang="ru">Добавлены сочетания клавиш для создания элементов аннотаций, печати и отображения контекстных меню.</li>
           <li xml:lang="de">Tastaturkürzel zum Erstellen von Annotationselementen, Drucken und Anzeigen von Kontextmenüs hinzugefügt.</li>
           <li>Added keyboard shortcut cheatsheet.</li>
+          <li xml:lang="zh_TW">新增鍵盤快速鍵速查表。</li>
           <li xml:lang="ru">Добавлена шпаргалка по сочетаниям клавиш.</li>
           <li>Added keyboard shortcut support for non-English keyboards.</li>
+          <li xml:lang="zh_TW">新增非英文鍵盤的快速鍵支援。</li>
           <li xml:lang="ru">Добавлена поддержка сочетаний клавиш для неанглийских клавиатур.</li>
           <li xml:lang="de">Unterstützung von Tastaturkürzeln für nicht-englische Tastaturen hinzugefügt.</li>
           <li>Added Brazilian Portuguese translation (thanks to Fúlvio Alves).</li>
+          <li xml:lang="zh_TW">新增巴西葡萄牙文翻譯（感謝 Fúlvio Alves）。</li>
           <li xml:lang="ru">Добавлен бразильский португальский перевод (спасибо Fúlvio Alves).</li>
           <li xml:lang="de">Übersetzung ins brasilianische Portugiesisch hinzugefügt (Dank an Fúlvio Alves).</li>
           <li>Added Slovak translation (thanks to @MartinIIOT)</li>
+          <li xml:lang="zh_TW">新增斯洛伐克文翻譯（感謝 @MartinIIOT）</li>
           <li xml:lang="ru">Добавлен словацкий перевод (спасибо @MartinIIOT)</li>
           <li xml:lang="de">Slowakische Übersetzung hinzugefügt (Dank an @MartinIIOT)</li>
           <li>Added support for hitting the escape key to deselect all items on the canvas.</li>
+          <li xml:lang="zh_TW">新增按下 Escape 鍵取消選取畫布上所有物件的功能。</li>
           <li xml:lang="ru">Добавлена поддержка нажатия клавиши выхода для отмены выбора всех элементов на холсте.</li>
           <li xml:lang="de">Unterstützung für das Drücken der Escape-Taste, um die Auswahl aller Elemente auf der Leinwand aufzuheben.</li>
         </ul>
         <p>Changes</p>
+        <p xml:lang="zh_TW">變更</p>
         <p xml:lang="ru">Изменения</p>
         <p xml:lang="de">Änderungen</p>
         <ul>
           <li>Updated Italian translation (thanks to @albanobattistella).</li>
+          <li xml:lang="zh_TW">更新義大利文翻譯（感謝 @albanobattistella）。</li>
           <li xml:lang="ru">Обновлён итальянский перевод (спасибо @albanobattistella).</li>
           <li xml:lang="de">Italienische Übersetzung aktualisiert (Dank an @albanobattistella).</li>
           <li>Updated German translation (thanks to Hannes Fritz).</li>
+          <li xml:lang="zh_TW">更新德文翻譯（感謝 Hannes Fritz）。</li>
           <li xml:lang="ru">Обновлён немецкий перевод (спасибо Hannes Fritz).</li>
           <li xml:lang="de">Deutsche Übersetzung aktualisiert (Dank an Hannes Fritz).</li>
           <li>Updated zoom UI to make it more consistent with other elementary apps.</li>
+          <li xml:lang="zh_TW">更新縮放介面以與其他 elementary 應用程式更一致。</li>
           <li xml:lang="ru">Обновлйн пользовательский интерфейс масштабирования, чтобы сделать его более совместимым с другими приложениями elementary.</li>
           <li xml:lang="de">Zoom-Benutzeroberfläche aktualisiert, um sie einheitlicher mit anderen Elementary-Apps zu machen.</li>
           <li>Improved accuracy of the list of translatable files.</li>
+          <li xml:lang="zh_TW">改善可翻譯檔案清單的正確性。</li>
           <li xml:lang="ru">Улучшена точность списка переводимых файлов.</li>
           <li xml:lang="de">Genauigkeit der Liste der übersetzbaren Dateien verbessert.</li>
           <li>Moved arrow annotation to its own button in the toolbar.</li>
+          <li xml:lang="zh_TW">將箭頭標註移至工具列中的獨立按鈕。</li>
           <li xml:lang="ru">Аннотация со стрелкой перемещена в собственную кнопку на панели инструментов.</li>
           <li xml:lang="de">Pfeilannotation wurde in eine eigene Schaltfläche in der Symbolleiste verschoben.</li>
           <li>Removed Accounts permissions from Flatpak manifest as it is no longer needed.</li>
+          <li xml:lang="zh_TW">從 Flatpak manifest 中移除已不再需要的帳號權限。</li>
           <li xml:lang="ru">Удалены разрешения учетных записей из манифеста Flatpak, так как они больше не нужны.</li>
           <li xml:lang="de">Berechtigungen für Konten wurden aus dem Flatpak-Manifest entfernt, da sie nicht mehr benötigt werden.</li>
           <li>Removed text grab selector when editing text.</li>
+          <li xml:lang="zh_TW">移除編輯文字時的文字抓取選擇器。</li>
           <li xml:lang="ru">Удалён селектор захвата текста при редактировании текста.</li>
           <li xml:lang="de">Selektor zum Greifen von Text beim Bearbeiten von Text entfernt.</li>
           <li>Changed behavior of Return key when text is edited to keep the text item selected.</li>
+          <li xml:lang="zh_TW">變更編輯文字時 Return 鍵的行為，使文字物件保持選取狀態。</li>
           <li xml:lang="ru">Изменено поведение клавиши Enter при редактировании текста, чтобы текстовый элемент оставался выделенным.</li>
           <li xml:lang="de">Verhalten der Return-Taste bei der Bearbeitung von Text geändert, damit das Textelement ausgewählt bleibt.</li>
         </ul>
         <p>Bug Fixes</p>
+        <p xml:lang="zh_TW">問題修正</p>
         <p xml:lang="ru">Исправления ошибок</p>
         <p xml:lang="de">Fehlerkorrekturen</p>
         <ul>
           <li>Fixed icons8_cup sticker issue (thanks to Jan Tojnar).</li>
+          <li xml:lang="zh_TW">修正 icons8_cup 貼圖問題（感謝 Jan Tojnar）。</li>
           <li xml:lang="ru">Исправлена ​​проблема со стикером icons8_cup (спасибо Jan Tojnar).</li>
           <li xml:lang="de">Problem mit icons8_cup-Stickern behoben (Dank an Jan Tojnar).</li>
           <li>Fixed issue where the toolbar state did not update to match the currently selected item.</li>
+          <li xml:lang="zh_TW">修正工具列狀態未隨目前選取物件更新的問題。</li>
           <li xml:lang="ru">Исправлена проблема, из-за которой состояние панели инструментов не обновлялось в соответствии с текущим выбранным элементом.</li>
           <li xml:lang="de">Problem, bei dem der Status der Symbolleiste nicht mit dem aktuell ausgewählten Element übereinstimmte, behoben.</li>
           <li>Fixed issue where dragging a blur rectangle outside of the image caused application crash.</li>
+          <li xml:lang="zh_TW">修正將模糊矩形拖曳到圖片外部導致應用程式當掉的問題。</li>
           <li xml:lang="ru">Исправлена проблема, из-за которой перетаскивание прямоугольника размытия за пределы изображения приводило к вылету приложения.</li>
           <li xml:lang="de">Problem, bei dem das Ziehen eines Weichzeichnungsrechtecks außerhalb des Bildes zum Absturz der Anwendung führte, behoben.</li>
           <li>Fixed issue where a text widget could be deleted but remain on the canvas.</li>
+          <li xml:lang="zh_TW">修正文字元件被刪除後仍殘留在畫布上的問題。</li>
           <li xml:lang="ru">Исправлена ошибка, из-за которой текстовый виджет мог быть удалён, но он оставался на холсте.</li>
           <li xml:lang="de">Problem behoben, bei dem ein Textwidget gelöscht werden konnte, aber auf der Leinwand verblieb.</li>
         </ul>
@@ -393,6 +541,7 @@
     <release version="1.0.0" date="2021-09-08">
       <description>
         <p>Initial release.</p>
+        <p xml:lang="zh_TW">首次釋出。</p>
         <p xml:lang="pt_BR">Lançamento inicial.</p>
         <p xml:lang="ru">Начальный выпуск.</p>
         <p xml:lang="nl">Eerste uitgave.</p>
