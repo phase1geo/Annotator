@@ -30,12 +30,11 @@ public class CanvasToolbar : Box {
   private ToggleButton       _crop_btn;
   private Array<CheckButton> _width_btns;
   private Array<CheckButton> _dash_btns;
-  private ColorChooserWidget _color_chooser;
-  private ColorChooserWidget _stroke_color_chooser;
+  private ColorDialogButton  _color_chooser;
+  private ColorDialogButton  _stroke_color_chooser;
   private Switch             _asw;
   private Revealer           _areveal;
   private Scale              _ascale;
-  private FontChooserWidget  _font_chooser;
   private int                _current_shape;
   private HashMap<CanvasItemCategory,CurrentItem> _current_item;
   private bool               _ignore = false;
@@ -43,6 +42,11 @@ public class CanvasToolbar : Box {
 
   public signal void selected( CanvasTool selected );
 
+  public Canvas canvas {
+    get {
+      return( _canvas );
+    }
+  }
   public CanvasTool current {
     get {
       return( _current );
@@ -204,10 +208,6 @@ public class CanvasToolbar : Box {
       tooltip_markup = sticker.tooltip(),
     };
 
-    _canvas.win.theme_changed.connect((dark_mode) => {
-      btn.icon_name = sticker.icon_name( dark_mode );
-    });
-
     var box = new Box( Orientation.VERTICAL, 0 );
     var sw = new ScrolledWindow() {
       hscrollbar_policy = PolicyType.NEVER,
@@ -323,10 +323,6 @@ public class CanvasToolbar : Box {
       tooltip_markup = sequence.tooltip()
     };
 
-    _canvas.win.theme_changed.connect((dark_mode) => {
-      btn.icon_name = sequence.icon_name( dark_mode );
-    });
-
     append( btn );
 
   }
@@ -340,10 +336,6 @@ public class CanvasToolbar : Box {
     var btn = new CanvasToolButton( this, CanvasTool.PENCIL ) {
       tooltip_markup = pencil.tooltip()
     };
-
-    _canvas.win.theme_changed.connect((dark_mode) => {
-      btn.icon_name = pencil.icon_name( dark_mode );
-    });
 
     append( btn );
 
@@ -375,10 +367,6 @@ public class CanvasToolbar : Box {
       margin_end     = margin
     };
 
-    _canvas.win.theme_changed.connect((dark_mode) => {
-      btn.icon_name = magnifier.icon_name( dark_mode );
-    });
-
     append( btn );
 
   }
@@ -392,10 +380,6 @@ public class CanvasToolbar : Box {
     var btn = new CanvasToolButton( this, CanvasTool.BLUR ) {
       tooltip_markup = blur.tooltip()
     };
-
-    _canvas.win.theme_changed.connect((dark_mode) => {
-      btn.icon_name = blur.icon_name( dark_mode );
-    });
 
     append( btn );
 
@@ -425,10 +409,6 @@ public class CanvasToolbar : Box {
         _canvas.queue_draw();
         _canvas.grab_focus();
       }
-    });
-
-    _canvas.win.theme_changed.connect((dark_mode) => {
-      _crop_btn.icon_name = dark_mode ? "image-crop-dark-symbolic" : "image-crop-symbolic";
     });
 
     append( _crop_btn );
@@ -603,13 +583,17 @@ public class CanvasToolbar : Box {
     };
     box.append( color_title );
 
-    _stroke_color_chooser = new ColorChooserWidget() {
+    var dialog = new ColorDialog() {
+      modal = true,
+      title = _( "Choose Color" ),
+      with_alpha = true
+    };
+    _stroke_color_chooser = new ColorDialogButton( dialog ) {
       margin_start = 20,
       rgba = _canvas.items.props.stroke_color
     };
-    _stroke_color_chooser.notify.connect((p) => {
-      _canvas.items.props.stroke_color = _stroke_color_chooser.rgba;
-      mb.child = make_stroke_icon();
+    _stroke_color_chooser.notify["rgba"].connect((p) => {
+      _canvas.items.props.stroke_color = _stroke_color_chooser.get_rgba();
     });
     box.append( _stroke_color_chooser );
 
@@ -812,7 +796,6 @@ public class CanvasToolbar : Box {
 
   }
 
-  /*
   private Image make_color_icon() {
 
     var snapshot = new Snapshot();
@@ -834,7 +817,6 @@ public class CanvasToolbar : Box {
     return( image );
 
   }
-  */
 
   //-------------------------------------------------------------
   // Returns true if the current mode is dark mode
@@ -867,12 +849,18 @@ public class CanvasToolbar : Box {
     ctx.line_to( width, (height / 2) );
     ctx.stroke();
 
+    return( snapshot.free_to_paintable( null ) );
+
+    /*
     var image = new Picture.for_paintable( snapshot.free_to_paintable( null ) ) {
       halign      = Align.START,
       hexpand     = true,
       content_fit = ContentFit.SCALE_DOWN,
       can_shrink  = false
     };
+
+    return( image );
+    */
 
   }
 
@@ -895,12 +883,18 @@ public class CanvasToolbar : Box {
     ctx.line_to( width, (height / 2) );
     ctx.stroke();
 
+    return( snapshot.free_to_paintable( null ) );
+
+    /*
     var image = new Picture.for_paintable( snapshot.free_to_paintable( null ) ) {
       halign      = Align.START,
       hexpand     = true,
       content_fit = ContentFit.SCALE_DOWN,
       can_shrink  = false
     };
+
+    return( image );
+    */
 
   }
 

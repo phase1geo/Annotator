@@ -71,14 +71,8 @@ public enum CanvasItemType {
 
   public static CanvasItemType parse( string value ) {
     switch( value ) {
-      case "rect-stroke" :  return( RECT );
-      case "rect-fill"   :  return( RECT );
       case "rect"        :  return( RECT );
-      case "oval-stroke" :  return( OVAL );
-      case "oval-fill"   :  return( OVAL );
       case "oval"        :  return( OVAL );
-      case "star-stroke" :  return( STAR );
-      case "star-fill"   :  return( STAR );
       case "star"        :  return( STAR );
       case "talk"        :  return( TALK );
       case "think"       :  return( THINK );
@@ -97,12 +91,9 @@ public enum CanvasItemType {
 
   public string icon_name() {
     switch( this ) {
-      case RECT_STROKE :  return( "rect-stroke-symbolic" );
-      case RECT_FILL   :  return( "rect-fill-symbolic" );
-      case OVAL_STROKE :  return( "circle-stroke-symbolic" );
-      case OVAL_FILL   :  return( "circle-fill-symbolic" );
-      case STAR_STROKE :  return( "star-stroke-symbolic" );
-      case STAR_FILL   :  return( "star-fill-symbolic" );
+      case RECT        :  return( "rect-stroke-symbolic" );
+      case OVAL        :  return( "circle-stroke-symbolic" );
+      case STAR        :  return( "star-stroke-symbolic" );
       case TALK        :  return( "bubble-talk-symbolic" );
       case THINK       :  return( "bubble-think-symbolic" );
       case LINE        :  return( "line-symbolic" );
@@ -1269,6 +1260,7 @@ public class CanvasItems {
           case CanvasItemType.SEQUENCE    :  item = create_sequence();       break;
           case CanvasItemType.STICKER     :  item = create_sticker( null );  break;
           case CanvasItemType.IMAGE       :  item = create_image( null );    break;
+          default                         :  assert_not_reached();
         }
         if( item != null ) {
           item.load( it );
@@ -1355,6 +1347,7 @@ public class CanvasItems {
       case CanvasItemType.SEQUENCE  :  item = create_sequence( true );          break;
       case CanvasItemType.STICKER   :  item = create_sticker( null, true );     break;
       case CanvasItemType.IMAGE     :  item = create_image( null );             break;
+      default                       :  assert_not_reached();
     }
     if( item != null ) {
       item.load( node );

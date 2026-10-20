@@ -36,6 +36,16 @@ public enum CanvasTool {
   NUM;
 
   //-------------------------------------------------------------
+  // Returns true if this tool needs to display color options.
+  public bool has_color() {
+    return( (this == ARROW) ||
+            (this == SHAPE) ||
+            (this == SEQUENCE) ||
+            (this == PENCIL)   ||
+            (this == TEXT) );
+  }
+
+  //-------------------------------------------------------------
   // Returns true if this tool needs to display border options.
   public bool has_border() {
     return( (this == ARROW)    ||
@@ -87,13 +97,16 @@ public enum CanvasTool {
 
 public class CanvasToolButton : ToggleButton {
 
-  private bool _ignore  = false;
+  private Canvas _canvas;
+  private bool   _ignore  = false;
 
   //-------------------------------------------------------------
   // Constructor
   public CanvasToolButton( CanvasToolbar toolbar, CanvasTool tool, Popover? popover = null ) {
 
     Object( has_frame: false, active: false );
+
+    _canvas = toolbar.canvas;
 
     if( popover != null ) {
       popover.set_parent( this );
@@ -143,6 +156,10 @@ public class CanvasToolButton : ToggleButton {
       margin_bottom = 5
     };
 
+    if( tool.has_color() ) {
+      box.append( create_color_option() );
+    }
+
     if( tool.has_border() ) {
       box.append( create_border_options() );
     }
@@ -164,6 +181,8 @@ public class CanvasToolButton : ToggleButton {
 
   }
 
+  //-------------------------------------------------------------
+  // Adds the border options to this tool menu.
   private Box create_border_options() {
 
     var box = new Box( Orientation.VERTICAL, 5 );
@@ -172,6 +191,8 @@ public class CanvasToolButton : ToggleButton {
 
   }
 
+  //-------------------------------------------------------------
+  // Adds the background color options to this tool menu.
   private Box create_background_options() {
 
     var box = new Box( Orientation.VERTICAL, 5 );
@@ -180,6 +201,8 @@ public class CanvasToolButton : ToggleButton {
 
   }
 
+  //-------------------------------------------------------------
+  // Adds the font options to this tool menu.
   private Box create_font_options() {
 
     var box = new Box( Orientation.VERTICAL, 5 );
@@ -194,12 +217,17 @@ public class CanvasToolButton : ToggleButton {
 
     var lbl = new Label( _( "Color" ) );
 
-    var color = new ColorChooserWidget() {
-      // rgba = _canvas.items.props.color
+    var dialog = new ColorDialog() {
+      modal = true,
+      title = _( "Choose Color" ),
+      with_alpha = true
     };
-    color.notify.connect((p) => {
-      // _canvas.items.props.color = _color_chooser.rgba;
-      // mb.child = make_color_icon();
+
+    var color = new ColorDialogButton( dialog ) {
+      rgba = _canvas.items.props.color
+    };
+    color.notify["rgba"].connect(() => {
+      _canvas.items.props.color = color.get_rgba();
     });
 
     var box = new Box( Orientation.HORIZONTAL, 5 );

@@ -63,7 +63,7 @@ public class Editor : Box {
       child = canvas
     };
     ((Viewport)_sw.child).scroll_to_focus = false;
-    _sw.add_css_class( Granite.STYLE_CLASS_CHECKERBOARD );
+    _sw.add_css_class( Granite.CssClass.CHECKERBOARD );
 
     // Create the toolbar
     var toolbar = new CanvasToolbar( canvas ) {
@@ -74,6 +74,12 @@ public class Editor : Box {
     toolbar.selected.connect((tool) => {
       canvas.items.current_tool = tool;
     });
+
+    var crop_status = new Label( "" ) {
+      halign = Align.END,
+      visible = false,
+      margin_end = 10
+    };
 
     canvas.image.crop_started.connect(() => {
       crop_status.visible = true;
