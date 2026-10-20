@@ -36,16 +36,6 @@ public enum CanvasTool {
   NUM;
 
   //-------------------------------------------------------------
-  // Returns true if this tool needs to display color options.
-  public bool has_color() {
-    return( (this == ARROW) ||
-            (this == SHAPE) ||
-            (this == SEQUENCE) ||
-            (this == PENCIL)   ||
-            (this == TEXT) );
-  }
-
-  //-------------------------------------------------------------
   // Returns true if this tool needs to display border options.
   public bool has_border() {
     return( (this == ARROW)    ||
@@ -64,6 +54,7 @@ public enum CanvasTool {
     return( (this == ARROW)    ||
             (this == SHAPE)    ||
             (this == SEQUENCE) ||
+            (this == PENCIL)   ||
             (this == TEXT) );
   }
 
@@ -112,19 +103,21 @@ public class CanvasToolButton : ToggleButton {
       popover.set_parent( this );
     }
 
-    toggled.connect(() => {
-      if( !_ignore ) {
-        if( active ) {
-          if( popover != null ) {
+    var left = new GestureClick() {
+      button = Gdk.BUTTON_PRIMARY
+    };
+    add_controller( left );
+    left.pressed.connect((n_press, x, y) => {
+      if( !_ignore && active ) {
+        if( popover != null ) {
+          if( popover.get_mapped() ) {
+            popover.popdown();
+          } else {
             popover.popup();
           }
-        } else {
-          if( popover != null ) {
-            popover.popdown();
-          }
         }
-        toolbar.selected( tool );
       }
+      toolbar.selected( tool );
     });
 
     toolbar.selected.connect((t) => {
@@ -143,6 +136,21 @@ public class CanvasToolButton : ToggleButton {
     // Create options popover
     var options = create_options( tool );
 
+    // Make sure that the options popover is displayed and hidden on right-click
+    var right = new GestureClick() {
+      button = Gdk.BUTTON_SECONDARY
+    };
+    add_controller( right );
+    right.pressed.connect((n_press, x, y) => {
+      Gdk.Rectangle rect = {(int)x, (int)y, 1, 1};
+      options.pointing_to = rect;
+      if( options.get_mapped() ) {
+        options.popdown();
+      } else {
+        options.popup();
+      }
+    });
+
   }
 
   //-------------------------------------------------------------
@@ -155,10 +163,6 @@ public class CanvasToolButton : ToggleButton {
       margin_top    = 5,
       margin_bottom = 5
     };
-
-    if( tool.has_color() ) {
-      box.append( create_color_option() );
-    }
 
     if( tool.has_border() ) {
       box.append( create_border_options() );
@@ -173,7 +177,8 @@ public class CanvasToolButton : ToggleButton {
     }
 
     var options = new Popover() {
-      child = box
+      child    = box,
+      position = PositionType.BOTTOM
     };
     options.set_parent( this );
 
@@ -195,26 +200,6 @@ public class CanvasToolButton : ToggleButton {
   // Adds the background color options to this tool menu.
   private Box create_background_options() {
 
-    var box = new Box( Orientation.VERTICAL, 5 );
-
-    return( box );
-
-  }
-
-  //-------------------------------------------------------------
-  // Adds the font options to this tool menu.
-  private Box create_font_options() {
-
-    var box = new Box( Orientation.VERTICAL, 5 );
-
-    return( box );
-
-  }
-
-  //-------------------------------------------------------------
-  // Creates and returns the options for color.
-  private Box create_color_option() {
-
     var lbl = new Label( _( "Color" ) );
 
     var dialog = new ColorDialog() {
@@ -231,6 +216,35 @@ public class CanvasToolButton : ToggleButton {
     });
 
     var box = new Box( Orientation.HORIZONTAL, 5 );
+    box.append( lbl );
+    box.append( color );
+
+    return( box );
+
+  }
+
+  //-------------------------------------------------------------
+  // Adds the font options to this tool menu.
+  private Box create_font_options() {
+
+    var lbl = new Label( _( "Font" ) );
+
+    var dialog = new FontDialog() {
+      modal = true,
+      title = _( "Select Font" )
+    };
+
+    var font = new FontDialogButton( dialog ) {
+      use_font = true
+    };
+
+    font.notify["font-desc"].connect(() => {
+      _canvas.items.props.font = font.font_desc;
+    });
+
+    var box = new Box( Orientation.VERTICAL, 5 );
+    box.append( lbl );
+    box.append( font );
 
     return( box );
 
