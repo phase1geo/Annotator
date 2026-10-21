@@ -26,19 +26,19 @@ public class CanvasToolbar : Box {
 
   private const int margin = 5;
 
-  private Canvas             _canvas;
-  private ToggleButton       _crop_btn;
-  private Array<CheckButton> _width_btns;
-  private Array<CheckButton> _dash_btns;
-  private ColorDialogButton  _color_chooser;
-  private ColorDialogButton  _stroke_color_chooser;
-  private Switch             _asw;
-  private Revealer           _areveal;
-  private Scale              _ascale;
-  private int                _current_shape;
+  private Canvas              _canvas;
+  private ToggleButton        _crop_btn;
+  private Array<CheckButton>  _width_btns;
+  private Array<CheckButton>  _dash_btns;
+  private ColorDialogButton   _color_chooser;
+  private ColorDialogButton   _stroke_color_chooser;
+  private Switch              _asw;
+  private Revealer            _areveal;
+  private Scale               _ascale;
+  private int                 _current_shape;
   private HashMap<CanvasItemCategory,CurrentItem> _current_item;
-  private bool               _ignore = false;
-  private CanvasTool         _current = CanvasTool.SELECTOR;
+  private bool                _ignore = false;
+  private CanvasTool          _current = CanvasTool.SELECTOR;
 
   public signal void selected( CanvasTool selected );
 

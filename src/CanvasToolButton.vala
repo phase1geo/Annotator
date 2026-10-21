@@ -66,6 +66,30 @@ public enum CanvasTool {
   }
 
   //-------------------------------------------------------------
+  // Returns true if this tool has properties.
+  public bool has_properties() {
+    return( has_border() || has_background() || has_font() );
+  }
+
+  //-------------------------------------------------------------
+  // Returns the label displayed at the top of the options popup.
+  public string options_title() {
+    switch( this ) {
+      case ARROW     :  return( _( "Arrow Properties" ) );
+      case SHAPE     :  return( _( "Shape Properties" ) );
+      case STICKER   :  return( _( "Sticker Properties" ) );
+      case IMAGE     :  return( _( "Image Properties" ) );
+      case SEQUENCE  :  return( _( "Sequence Properties" ) );
+      case PENCIL    :  return( _( "Pencil Properties" ) );
+      case TEXT      :  return( _( "Text Properties" ) );
+      case MAGNIFIER :  return( _( "Magnifier Properties" ) );
+      case BLUR      :  return( _( "Blur Properties" ) );
+      case CROP      :  return( _( "Crop Properties" ) );
+      default        :  assert_not_reached();
+    }
+  }
+
+  //-------------------------------------------------------------
   // Returns the CanvasItemType associated with this tool
   public CanvasItemType canvas_item_type() {
     switch( this ) {
@@ -88,8 +112,9 @@ public enum CanvasTool {
 
 public class CanvasToolButton : ToggleButton {
 
+  private static ToggleButton? _group = null;
+
   private Canvas _canvas;
-  private bool   _ignore  = false;
 
   //-------------------------------------------------------------
   // Constructor
@@ -99,16 +124,24 @@ public class CanvasToolButton : ToggleButton {
 
     _canvas = toolbar.canvas;
 
+    if( _group != null ) {
+      set_group( _group );
+    } else {
+      _group = (ToggleButton)this;
+    }
+
     if( popover != null ) {
       popover.set_parent( this );
     }
 
     var left = new GestureClick() {
-      button = Gdk.BUTTON_PRIMARY
+      button = Gdk.BUTTON_PRIMARY,
+      propagation_phase = PropagationPhase.CAPTURE 
     };
     add_controller( left );
     left.pressed.connect((n_press, x, y) => {
-      if( !_ignore && active ) {
+      stdout.printf( "active: %s\n", active.to_string() );
+      if( active ) {
         if( popover != null ) {
           if( popover.get_mapped() ) {
             popover.popdown();
@@ -117,39 +150,29 @@ public class CanvasToolButton : ToggleButton {
           }
         }
       }
-      toolbar.selected( tool );
     });
 
-    toolbar.selected.connect((t) => {
-      _ignore = true;
-      if( t == tool ) {
-        active = true;
-      } else {
-        active = false;
-        if( popover != null ) {
-          popover.popdown();
+    if( tool.has_properties() ) {
+
+      // Create options popover
+      var options = create_options( tool );
+
+      // Make sure that the options popover is displayed and hidden on right-click
+      var right = new GestureClick() {
+        button = Gdk.BUTTON_SECONDARY
+      };
+      add_controller( right );
+      right.pressed.connect((n_press, x, y) => {
+        Gdk.Rectangle rect = {(int)x, (int)y, 1, 1};
+        options.pointing_to = rect;
+        if( options.get_mapped() ) {
+          options.popdown();
+        } else {
+          options.popup();
         }
-      }
-      _ignore = false;
-    });
+      });
 
-    // Create options popover
-    var options = create_options( tool );
-
-    // Make sure that the options popover is displayed and hidden on right-click
-    var right = new GestureClick() {
-      button = Gdk.BUTTON_SECONDARY
-    };
-    add_controller( right );
-    right.pressed.connect((n_press, x, y) => {
-      Gdk.Rectangle rect = {(int)x, (int)y, 1, 1};
-      options.pointing_to = rect;
-      if( options.get_mapped() ) {
-        options.popdown();
-      } else {
-        options.popup();
-      }
-    });
+    }
 
   }
 
@@ -157,23 +180,36 @@ public class CanvasToolButton : ToggleButton {
   // Adds the options for this tool button.  We will 
   private Popover create_options( CanvasTool tool ) {
 
+    var lbl = new Label( Utils.make_title( _( "Annotation Properties" ) ) ) {
+      use_markup = true
+    };
+
+    var grid = new Grid() {
+      row_spacing    = 5,
+      column_spacing = 5
+    };
+
     var box = new Box( Orientation.VERTICAL, 5 ) {
       margin_start  = 5,
       margin_end    = 5,
       margin_top    = 5,
       margin_bottom = 5
     };
+    box.append( lbl );
+    box.append( grid );
+
+    var row = 0;
 
     if( tool.has_border() ) {
-      box.append( create_border_options() );
+      create_border_options( grid, row++ );
     }
 
     if( tool.has_background() ) {
-      box.append( create_background_options() );
+      create_background_options( grid, row++ );
     }
 
     if( tool.has_font() ) {
-      box.append( create_font_options() );
+      create_font_options( grid, row++ );
     }
 
     var options = new Popover() {
@@ -188,19 +224,19 @@ public class CanvasToolButton : ToggleButton {
 
   //-------------------------------------------------------------
   // Adds the border options to this tool menu.
-  private Box create_border_options() {
+  private void create_border_options( Grid grid, int row ) {
 
-    var box = new Box( Orientation.VERTICAL, 5 );
-
-    return( box );
+    // TBD
 
   }
 
   //-------------------------------------------------------------
   // Adds the background color options to this tool menu.
-  private Box create_background_options() {
+  private void create_background_options( Grid grid, int row ) {
 
-    var lbl = new Label( _( "Color" ) );
+    var lbl = new Label( _( "Background Color" ) ) {
+      xalign = (float)0
+    };
 
     var dialog = new ColorDialog() {
       modal = true,
@@ -215,20 +251,19 @@ public class CanvasToolButton : ToggleButton {
       _canvas.items.props.color = color.get_rgba();
     });
 
-    var box = new Box( Orientation.HORIZONTAL, 5 );
-    box.append( lbl );
-    box.append( color );
-
-    return( box );
+    grid.attach( lbl,   0, row );
+    grid.attach( color, 1, row );
 
   }
 
   //-------------------------------------------------------------
   // Adds the font options to this tool menu.
-  private Box create_font_options() {
+  private void create_font_options( Grid grid, int row ) {
 
-    var lbl = new Label( _( "Font" ) );
-
+    var lbl = new Label( _( "Font" ) ) {
+      xalign = (float)0
+    };
+    
     var dialog = new FontDialog() {
       modal = true,
       title = _( "Select Font" )
@@ -242,11 +277,8 @@ public class CanvasToolButton : ToggleButton {
       _canvas.items.props.font = font.font_desc;
     });
 
-    var box = new Box( Orientation.VERTICAL, 5 );
-    box.append( lbl );
-    box.append( font );
-
-    return( box );
+    grid.attach( lbl,  0, row );
+    grid.attach( font, 1, row );
 
   }
 
