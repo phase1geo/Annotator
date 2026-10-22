@@ -31,6 +31,7 @@
         <file preprocess="xml-stripblanks">images/icons/hicolor/scalable/actions/image-crop-symbolic.svg</file>
         <file preprocess="xml-stripblanks">images/icons/hicolor/scalable/actions/eyedropper-symbolic.svg</file>
         <file preprocess="xml-stripblanks">images/icons/hicolor/scalable/actions/font-symbolic.svg</file>
+        <file preprocess="xml-stripblanks">images/icons/hicolor/scalable/actions/selection-symbolic.svg</file>
 
         <file alias="sticker_data_encryption">images/icons/flat-color-icons/svg/data_encryption.svg</file>
         <file alias="sticker_factory_breakdown">images/icons/flat-color-icons/svg/factory_breakdown.svg</file>

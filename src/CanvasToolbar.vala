@@ -88,10 +88,12 @@ public class CanvasToolbar : Box {
     create_resize();
     create_dropper();
     create_separator();
+    /*
     create_color();
     create_stroke();
     create_fonts();
     create_separator();
+    */
     create_drag_label();
 
     // If the selection changes, update the toolbar
@@ -111,7 +113,7 @@ public class CanvasToolbar : Box {
 
     var button = new CanvasToolButton( this, CanvasTool.SELECTOR ) {
       halign       = Align.START,
-      icon_name    = dark_mode ? "selection-dark-symbolic" : "selection-symbolic",
+      icon_name    = "selection-symbolic",
       tooltip_text = _( "Selection Tool" )
     };
 
@@ -205,6 +207,7 @@ public class CanvasToolbar : Box {
     var popover = new Popover();
 
     var btn = new CanvasToolButton( this, CanvasTool.STICKER, popover ) {
+      icon_name = "sticker-symbolic",
       tooltip_markup = sticker.tooltip(),
     };
 
@@ -320,6 +323,7 @@ public class CanvasToolbar : Box {
     var sequence = CanvasItemType.SEQUENCE;
 
     var btn = new CanvasToolButton( this, CanvasTool.SEQUENCE ) {
+      icon_name = "sequence-symbolic",
       tooltip_markup = sequence.tooltip()
     };
 
@@ -334,6 +338,7 @@ public class CanvasToolbar : Box {
     var pencil = CanvasItemType.PENCIL;
 
     var btn = new CanvasToolButton( this, CanvasTool.PENCIL ) {
+      icon_name = "edit-symbolic",
       tooltip_markup = pencil.tooltip()
     };
 
@@ -362,6 +367,7 @@ public class CanvasToolbar : Box {
 
     var btn = new CanvasToolButton( this, CanvasTool.MAGNIFIER ) {
       has_frame      = false,
+      icon_name      = "magnifier-symbolic",
       tooltip_markup = magnifier.tooltip(),
       margin_start   = margin,
       margin_end     = margin
@@ -378,6 +384,7 @@ public class CanvasToolbar : Box {
     var blur = CanvasItemType.BLUR;
 
     var btn = new CanvasToolButton( this, CanvasTool.BLUR ) {
+      icon_name      = "blur-symbolic",
       tooltip_markup = blur.tooltip()
     };
 

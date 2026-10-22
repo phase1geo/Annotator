@@ -180,7 +180,7 @@ public class CanvasToolButton : ToggleButton {
   // Adds the options for this tool button.  We will 
   private Popover create_options( CanvasTool tool ) {
 
-    var lbl = new Label( Utils.make_title( _( "Annotation Properties" ) ) ) {
+    var lbl = new Label( Utils.make_title( tool.options_title() ) ) {
       use_markup = true
     };
 
@@ -201,15 +201,15 @@ public class CanvasToolButton : ToggleButton {
     var row = 0;
 
     if( tool.has_border() ) {
-      create_border_options( grid, row++ );
+      create_border_options( grid, ref row );
     }
 
     if( tool.has_background() ) {
-      create_background_options( grid, row++ );
+      create_background_options( grid, ref row );
     }
 
     if( tool.has_font() ) {
-      create_font_options( grid, row++ );
+      create_font_options( grid, ref row );
     }
 
     var options = new Popover() {
@@ -224,15 +224,175 @@ public class CanvasToolButton : ToggleButton {
 
   //-------------------------------------------------------------
   // Adds the border options to this tool menu.
-  private void create_border_options( Grid grid, int row ) {
+  private void create_border_options( Grid grid, ref int row ) {
 
-    // TBD
+    var color_sep = new Separator( Orientation.HORIZONTAL );
+    grid.attach( color_sep, 0, row, 2 );
+    row++;
+
+    var color_lbl = new Label( _( "Border Color" ) ) {
+      xalign = (float)0
+    };
+
+    var dialog = new ColorDialog() {
+      modal = true,
+      title = _( "Choose Color" ),
+      with_alpha = true
+    };
+
+    var color = new ColorDialogButton( dialog ) {
+      rgba = _canvas.items.props.color,
+      margin_top = 5
+    };
+    color.notify["rgba"].connect(() => {
+      _canvas.items.props.color = color.get_rgba();
+    });
+
+    grid.attach( color_lbl, 0, row );
+    grid.attach( color,     1, row );
+    row++;
+
+    var width_sep = new Separator( Orientation.HORIZONTAL );
+    grid.attach( width_sep, 0, row, 2 );
+    row++;
+
+    var width_lbl = new Label( _( "Border Width" ) ) {
+      xalign = (float)0
+    };
+    grid.attach( width_lbl, 0, row );
+
+    unowned CheckButton? width_group = null;
+    for( int i=0; i<CanvasItemStrokeWidth.NUM; i++ ) {
+      var sw = (CanvasItemStrokeWidth)i;
+      var width = new CheckButton() {
+        halign = Align.FILL,
+        active = (_canvas.items.props.stroke_width == sw),
+        child  = make_width_icon( 100, sw.width() )
+      };
+      width.set_group( width_group );
+      width.toggled.connect(() => {
+        if( width.get_active() ) {
+          _canvas.items.props.stroke_width = sw;
+        }
+      });
+      grid.attach( width, 1, row );
+      row++;
+      if( width_group == null ) {
+        width_group = width;
+      }
+    }
+
+    var dash_sep = new Separator( Orientation.HORIZONTAL );
+    grid.attach( dash_sep, 0, row, 2 );
+    row++;
+
+    var dash_lbl = new Label( _( "Border Dash" ) ) {
+      xalign = (float)0,
+    };
+    grid.attach( dash_lbl, 0, row );
+
+    unowned CheckButton? dash_group = null;
+    for( int i=0; i<CanvasItemDashPattern.NUM; i++ ) {
+      var dp = (CanvasItemDashPattern)i;
+      var dash = new CheckButton() {
+        halign = Align.FILL,
+        active = (_canvas.items.props.dash == dp),
+        child  = make_dash_icon( 100, dp )
+      };
+      dash.set_group( dash_group );
+      dash.toggled.connect(() => {
+        if( dash.get_active() ) {
+          _canvas.items.props.dash = dp;
+        }
+      });
+      grid.attach( dash, 1, row );
+      row++;
+      if( dash_group == null ) {
+        dash_group = dash;
+      }
+    }
+
+  }
+
+  //-------------------------------------------------------------
+  // Returns true if the current mode is dark mode
+  private bool is_dark_mode() {
+
+    var settings = Gtk.Settings.get_default();
+    if( settings != null ) {
+      return( settings.gtk_application_prefer_dark_theme );
+    }
+
+    return( false );
+
+  }
+
+  //-------------------------------------------------------------
+  // Creates the width icon
+  private Picture make_width_icon( int width, int stroke_width ) {
+
+    var height = stroke_width;
+
+    var snapshot = new Snapshot();
+    var rect     = Graphene.Rect();
+    rect.init( 0, 0, (float)width, (float)height );
+    var ctx      = snapshot.append_cairo( rect );
+
+    // Draw the stroke
+    Utils.set_context_color( ctx, Utils.color_from_string( is_dark_mode() ? "white" : "black" ) );
+    ctx.set_line_width( stroke_width );
+    ctx.move_to( 0, (height / 2) );
+    ctx.line_to( width, (height / 2) );
+    ctx.stroke();
+
+    var image = new Picture.for_paintable( snapshot.free_to_paintable( null ) ) {
+      halign      = Align.START,
+      hexpand     = true,
+      content_fit = ContentFit.SCALE_DOWN,
+      can_shrink  = false
+    };
+
+    return( image );
+
+  }
+
+  //-------------------------------------------------------------
+  // Creates the dash icon
+  private Picture make_dash_icon( int width, CanvasItemDashPattern dash ) {
+
+    var height = 5;
+
+    var snapshot = new Snapshot();
+    var rect     = Graphene.Rect();
+    rect.init( 0, 0, (float)width, (float)height );
+    var ctx      = snapshot.append_cairo( rect );
+
+    // Draw the image
+    Utils.set_context_color( ctx, Utils.color_from_string( is_dark_mode() ? "white" : "black" ) );
+    ctx.set_line_width( height );
+    dash.set_fg_pattern( ctx );
+    ctx.move_to( 0, (height / 2) );
+    ctx.line_to( width, (height / 2) );
+    ctx.stroke();
+
+    var image = new Picture.for_paintable( snapshot.free_to_paintable( null ) ) {
+      halign      = Align.START,
+      hexpand     = true,
+      content_fit = ContentFit.SCALE_DOWN,
+      can_shrink  = false
+    };
+
+    return( image );
 
   }
 
   //-------------------------------------------------------------
   // Adds the background color options to this tool menu.
-  private void create_background_options( Grid grid, int row ) {
+  private void create_background_options( Grid grid, ref int row ) {
+
+    var sep = new Separator( Orientation.HORIZONTAL );
+    grid.attach( sep, 0, row, 2 );
+    row++;
 
     var lbl = new Label( _( "Background Color" ) ) {
       xalign = (float)0
@@ -253,17 +413,22 @@ public class CanvasToolButton : ToggleButton {
 
     grid.attach( lbl,   0, row );
     grid.attach( color, 1, row );
+    row++;
 
   }
 
   //-------------------------------------------------------------
   // Adds the font options to this tool menu.
-  private void create_font_options( Grid grid, int row ) {
+  private void create_font_options( Grid grid, ref int row ) {
+
+    var sep = new Separator( Orientation.HORIZONTAL );
+    grid.attach( sep, 0, row, 2 );
+    row++;
 
     var lbl = new Label( _( "Font" ) ) {
       xalign = (float)0
     };
-    
+
     var dialog = new FontDialog() {
       modal = true,
       title = _( "Select Font" )
@@ -279,6 +444,7 @@ public class CanvasToolButton : ToggleButton {
 
     grid.attach( lbl,  0, row );
     grid.attach( font, 1, row );
+    row++;
 
   }
 
