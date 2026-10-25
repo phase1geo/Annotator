@@ -123,6 +123,7 @@ public class CanvasItemProperties {
 
   private bool                  _use_settings = false;
   private RGBA                  _color        = Utils.color_from_string( "white" );
+  private bool                  _fill         = false;
   private double                _alpha        = 1.0;
   private CanvasItemStrokeWidth _stroke_width = CanvasItemStrokeWidth.WIDTH1;
   private RGBA                  _stroke_color = Utils.color_from_string( "black" );
@@ -140,6 +141,20 @@ public class CanvasItemProperties {
         _color = value;
         if( _use_settings ) {
           Annotator.settings.set_string( "item-color", Utils.color_to_string( _color ) );
+        }
+        changed();
+      }
+    }
+  }
+  public bool fill {
+    get {
+      return( _fill );
+    }
+    set {
+      if( _fill != value ) {
+        _fill = value;
+        if( _use_settings ) {
+          Annotator.settings.set_boolean( "item-fill", _fill );
         }
         changed();
       }
@@ -252,6 +267,7 @@ public class CanvasItemProperties {
     _use_settings = use_settings;
     if( _use_settings ) {
       _color        = Utils.color_from_string( Annotator.settings.get_string( "item-color" ) );
+      _fill         = Annotator.settings.get_boolean( "item-fill" );
       _alpha        = Annotator.settings.get_double( "item-alpha" );
       _stroke_width = CanvasItemStrokeWidth.parse( Annotator.settings.get_string( "stroke-width" ) );
       _stroke_color = Utils.color_from_string( Annotator.settings.get_string( "stroke-color" ) );
@@ -269,6 +285,7 @@ public class CanvasItemProperties {
   public void copy( CanvasItemProperties props ) {
     _use_settings = props._use_settings;
     color         = props.color;
+    fill          = props.fill;
     alpha         = props.alpha;
     stroke_width  = props.stroke_width;
     stroke_color  = props.stroke_color;
@@ -284,6 +301,7 @@ public class CanvasItemProperties {
   public bool equals( CanvasItemProperties props ) {
     return(
       color.equal( props.color ) &&
+      (fill == props.fill) &&
       (alpha == props.alpha) &&
       (stroke_width == props.stroke_width) &&
       stroke_color.equal( props.stroke_color ) &&
@@ -298,17 +316,18 @@ public class CanvasItemProperties {
   // Outputs the contents of the class for debugging purposes in
   // string format
   public string to_string() {
-    return( "color: %s, alpha: %g, stroke: %d, stroke-color: %s, outline: %s, dash: %s, blur: %d, font: %s\n".printf(
-      Utils.color_to_string( color ), alpha, stroke_width,
+    return( "color: %s, fill: %s, alpha: %g, stroke: %d, stroke-color: %s, outline: %s, dash: %s, blur: %d, font: %s\n".printf(
+      Utils.color_to_string( color ), fill.to_string(), alpha, stroke_width,
       Utils.color_to_string( stroke_color ), outline.to_string(), dash.to_string(),
       blur_radius, font.to_string() ) );
   }
 
   //-------------------------------------------------------------
   // Saves the contents of this properties class as XML
-  public Xml.Node* save() {
-    Xml.Node* node = new Xml.Node( null, "properties" );
+  public Xml.Node* save( string name = "properties" ) {
+    Xml.Node* node = new Xml.Node( null, name );
     node->set_prop( "color",        Utils.color_to_string( color ) );
+    node->set_prop( "fill",         fill.to_string() );
     node->set_prop( "alpha",        alpha.to_string() );
     node->set_prop( "stroke-width", stroke_width.to_string() );
     node->set_prop( "stroke-color", Utils.color_to_string( stroke_color ) );
@@ -325,6 +344,10 @@ public class CanvasItemProperties {
     var c = node->get_prop( "color" );
     if( c != null ) {
       color.parse( c );
+    }
+    var fi = node->get_prop( "fill" );
+    if( fi != null ) {
+      fill = bool.parse( fi );
     }
     var a = node->get_prop( "alpha" );
     if( a != null ) {

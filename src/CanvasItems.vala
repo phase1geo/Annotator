@@ -140,6 +140,26 @@ public enum CanvasItemType {
       default    :  return( CanvasItemCategory.NONE );
     }
   }
+
+  public CanvasTool tool() {
+    switch( this ) {  
+      case RECT      :  return( CanvasTool.SHAPE );
+      case OVAL      :  return( CanvasTool.SHAPE );
+      case STAR      :  return( CanvasTool.SHAPE );
+      case TALK      :  return( CanvasTool.SHAPE );
+      case THINK     :  return( CanvasTool.SHAPE );
+      case LINE      :  return( CanvasTool.SHAPE );
+      case ARROW     :  return( CanvasTool.ARROW );
+      case TEXT      :  return( CanvasTool.TEXT );
+      case BLUR      :  return( CanvasTool.BLUR );
+      case MAGNIFIER :  return( CanvasTool.MAGNIFIER );
+      case PENCIL    :  return( CanvasTool.PENCIL );
+      case SEQUENCE  :  return( CanvasTool.SEQUENCE );
+      case STICKER   :  return( CanvasTool.STICKER );
+      case IMAGE     :  return( CanvasTool.IMAGE );
+      default        :  assert_not_reached();
+    }
+  }
 }
 
 public class CanvasItems {
@@ -172,7 +192,7 @@ public class CanvasItems {
   public CanvasTool           current_tool { get; set; default = CanvasTool.SELECTOR; }
 
   public signal void text_item_edit_changed( CanvasItemText item );
-  public signal void selection_changed( CanvasItemProperties props );
+  public signal void selection_changed( CanvasItem item );
 
   //-------------------------------------------------------------
   // Constructor
@@ -874,13 +894,13 @@ public class CanvasItems {
             _active.mode = CanvasItemMode.SELECTED;
             _canvas.set_cursor_from_name( "grabbing" );
             add_item( _active, -1, true, false );
-            selection_changed( item.props );
+            selection_changed( item );
           } else {
             switch( press_count ) {
               case 1 :
                 _active.mode = CanvasItemMode.SELECTED;
                 _canvas.set_cursor_from_name( "grabbing" );
-                selection_changed( item.props );
+                selection_changed( item );
                 break;
               case 2 :
                 if( _active.itype != CanvasItemType.TEXT ) return( false );
@@ -1015,7 +1035,7 @@ public class CanvasItems {
     // Indicate that we are done editing
     } else if( in_draw_mode() ) {
       _active.mode = CanvasItemMode.SELECTED;
-      selection_changed( _active.props );
+      selection_changed( _active );
       retval = true;
 
     // If we were move one or more items, make sure that they stay selected
@@ -1076,7 +1096,7 @@ public class CanvasItems {
     if( within != null ) {
       create_contextual_menu( within );
       within.mode = CanvasItemMode.SELECTED;
-      selection_changed( within.props );
+      selection_changed( within );
       _canvas.queue_draw();
     }
 

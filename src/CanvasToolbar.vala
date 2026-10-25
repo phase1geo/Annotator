@@ -39,6 +39,7 @@ public class CanvasToolbar : Box {
   private HashMap<CanvasItemCategory,CurrentItem> _current_item;
   private bool                _ignore = false;
   private CanvasTool          _current = CanvasTool.SELECTOR;
+  private ToolProperties      _props;
 
   public signal void selected( CanvasTool selected );
 
@@ -57,6 +58,11 @@ public class CanvasToolbar : Box {
       }
     }
   }
+  public ToolProperties props {
+    get {
+      return( _props );
+    }
+  }
 
   //-------------------------------------------------------------
   // Constructor
@@ -65,17 +71,18 @@ public class CanvasToolbar : Box {
     Object( orientation: Orientation.HORIZONTAL, spacing: 5 );
 
     _canvas       = canvas;
-    _width_btns   = new Array<CheckButton>();
-    _dash_btns    = new Array<CheckButton>();
     _current_item = new HashMap<CanvasItemCategory,CurrentItem>();
+
+    // Create properties
+    _props = new ToolProperties();
 
     // Create current items
     _current_item.set( CanvasItemCategory.ARROW, new CurrentItem.with_canvas_item( CanvasItemType.ARROW ) );
     _current_item.set( CanvasItemCategory.SHAPE, new CurrentItem.with_canvas_item( CanvasItemType.RECT ) );
 
     create_selector();
-    create_shapes( CanvasItemCategory.ARROW, _( "Add Arrow" ), _( "More Arrows" ), _( "Custom Arrows" ) );
-    create_shapes( CanvasItemCategory.SHAPE, _( "Add Shape" ), _( "More Shapes" ), _( "Custom Shapes" ) );
+    create_shapes( CanvasItemCategory.ARROW, _( "More Arrows" ), _( "Custom Arrows" ) );
+    create_shapes( CanvasItemCategory.SHAPE, _( "More Shapes" ), _( "Custom Shapes" ) );
     create_sticker();
     create_image();
     create_sequence();
@@ -88,16 +95,7 @@ public class CanvasToolbar : Box {
     create_resize();
     create_dropper();
     create_separator();
-    /*
-    create_color();
-    create_stroke();
-    create_fonts();
-    create_separator();
-    */
     create_drag_label();
-
-    // If the selection changes, update the toolbar
-    _canvas.items.selection_changed.connect( selection_changed );
 
     // Select the Selector tool by default
     selected( CanvasTool.SELECTOR );
@@ -117,9 +115,12 @@ public class CanvasToolbar : Box {
       tooltip_text = _( "Selection Tool" )
     };
 
-    _canvas.win.theme_changed.connect((dark) => {
-      button.icon_name = dark ? "selection-dark-symbolic" : "selection-symbolic";
+    // If the selection changes, update the toolbar
+    /* TBD
+    _canvas.items.selection_changed.connect((item) => {
+      button.set_props( item.itype, item.props );
     });
+    */
 
     append( button );
 
@@ -127,7 +128,7 @@ public class CanvasToolbar : Box {
 
   //-------------------------------------------------------------
   // Creates the shape toolbar item
-  private void create_shapes( CanvasItemCategory category, string tooltip, string mb_tooltip, string custom_label ) {
+  private void create_shapes( CanvasItemCategory category, string mb_tooltip, string custom_label ) {
 
     var box = new Box( Orientation.VERTICAL, 5 ) {
       margin_start  = 5,
@@ -147,8 +148,7 @@ public class CanvasToolbar : Box {
     };
 
     var btn = new CanvasToolButton( this, ((category == CanvasItemCategory.ARROW) ? CanvasTool.ARROW : CanvasTool.SHAPE), popover ) {
-      tooltip_text = tooltip,
-      child        = _current_item.get( category ).get_image( _canvas.win )
+      child = _current_item.get( category ).get_image( _canvas.win )
     };
 
     /*
@@ -203,12 +203,10 @@ public class CanvasToolbar : Box {
   // Creates the sticker toolbar item
   private void create_sticker() {
 
-    var sticker = CanvasItemType.STICKER;
     var popover = new Popover();
 
     var btn = new CanvasToolButton( this, CanvasTool.STICKER, popover ) {
       icon_name = "sticker-symbolic",
-      tooltip_markup = sticker.tooltip(),
     };
 
     var box = new Box( Orientation.VERTICAL, 0 );
@@ -305,11 +303,10 @@ public class CanvasToolbar : Box {
   private void create_image() {
 
     var btn = new CanvasToolButton( this, CanvasTool.IMAGE ) {
-      has_frame      = false,
-      icon_name      = "insert-image-symbolic",
-      tooltip_markup = CanvasItemType.IMAGE.tooltip(),
-      margin_start   = margin,
-      margin_end     = margin
+      has_frame    = false,
+      icon_name    = "insert-image-symbolic",
+      margin_start = margin,
+      margin_end   = margin
     };
 
     append( btn );
@@ -320,11 +317,8 @@ public class CanvasToolbar : Box {
   // Adds the sequence button
   private void create_sequence() {
 
-    var sequence = CanvasItemType.SEQUENCE;
-
     var btn = new CanvasToolButton( this, CanvasTool.SEQUENCE ) {
       icon_name = "sequence-symbolic",
-      tooltip_markup = sequence.tooltip()
     };
 
     append( btn );
@@ -335,11 +329,8 @@ public class CanvasToolbar : Box {
   // Starts a drawing operation with the pencil tool
   private void create_pencil() {
 
-    var pencil = CanvasItemType.PENCIL;
-
     var btn = new CanvasToolButton( this, CanvasTool.PENCIL ) {
       icon_name = "edit-symbolic",
-      tooltip_markup = pencil.tooltip()
     };
 
     append( btn );
@@ -351,8 +342,7 @@ public class CanvasToolbar : Box {
   private void create_text() {
 
     var btn = new CanvasToolButton( this, CanvasTool.TEXT ) {
-      icon_name      = "insert-text-symbolic",
-      tooltip_markup = CanvasItemType.TEXT.tooltip(),
+      icon_name = "insert-text-symbolic",
     };
 
     append( btn );
@@ -456,282 +446,6 @@ public class CanvasToolbar : Box {
     };
     btn.clicked.connect(() => {
       _canvas.image.pick_color( true );
-    });
-
-    append( btn );
-
-  }
-
-  //-------------------------------------------------------------
-  // Creates the color dropdown
-  private void create_color() {
-
-    var dialog = new ColorDialog() {
-      modal      = true,
-      title      = _( "Selection Shape Color" ),
-      with_alpha = true
-    };
-
-    _color_chooser = new ColorDialogButton( dialog ) {
-      tooltip_text = _( "Shape Color" ),
-      rgba         = _canvas.items.props.color
-    };
-
-    _color_chooser.notify["rgba"].connect(() => {
-      _canvas.items.props.color = _color_chooser.get_rgba();
-    });
-
-    append( _color_chooser );
-
-  }
-
-  //-------------------------------------------------------------
-  // Sets the current color
-  public void set_color( Gdk.RGBA color ) {
-    _color_chooser.rgba = color;
-  }
-
-  //-------------------------------------------------------------
-  // Creates the widget to allow an alpha value for a provided color.
-  private void create_color_alpha( MenuButton mb, Box box ) {
-
-    _ascale = new Scale.with_range( Orientation.HORIZONTAL, 0.0, 1.0, 0.1 ) {
-      margin_start = 20,
-      margin_end   = 20,
-      draw_value   = true
-    };
-    _ascale.set_value( _canvas.items.props.alpha );
-    _ascale.value_changed.connect(() => {
-      _canvas.items.props.alpha = _ascale.get_value();
-      mb.child = make_color_icon();
-    });
-    for( int i=0; i<=10; i++ ) {
-      _ascale.add_mark( (i / 10.0), PositionType.BOTTOM, null );
-    }
-
-    _areveal = new Revealer() {
-      reveal_child = (_canvas.items.props.alpha < 1.0),
-      child = _ascale
-    };
-
-    var btn_controller = new GestureClick();
-    _asw = new Switch() {
-      halign = Align.START,
-      active = (_canvas.items.props.alpha < 1.0)
-    };
-    _asw.add_controller( btn_controller );
-    btn_controller.released.connect((n_press, x, y) => {
-      _canvas.items.props.alpha = _areveal.reveal_child ? 1.0 : _ascale.get_value();
-      mb.child = make_color_icon();
-      _areveal.reveal_child = !_areveal.reveal_child;
-    });
-
-    var albl = new Label( Utils.make_title( _( "Add Transparency" ) ) ) {
-      halign     = Align.START,
-      use_markup = true,
-      margin_end = 10
-    };
-
-    var picker = new Button.from_icon_name( "eyedropper-symbolic" ) {
-      tooltip_text = _( "Pick Color From Image" ),
-      halign = Align.END,
-      hexpand = true
-    };
-    picker.clicked.connect(() => {
-      _canvas.image.pick_color( false );
-      mb.popover.popdown();
-    });
-
-    var albox = new Box( Orientation.HORIZONTAL, 10 ) {
-      halign = Align.FILL,
-      hexpand = true
-    };
-    albox.append( _asw );
-    albox.append( albl );
-    albox.append( picker );
-
-    var abox = new Box( Orientation.VERTICAL, 0 ) {
-      halign = Align.FILL,
-      hexpand = true,
-      margin_top = 20
-    };
-    abox.append( albox );
-    abox.append( _areveal );
-
-    box.append( abox );
-
-  }
-
-  //-------------------------------------------------------------
-  // Adds the stroke dropdown
-  private void create_stroke() {
-
-    var mb = new MenuButton() {
-      has_frame    = false,
-      tooltip_text = _( "Shape Border" ),
-      popover      = new Gtk.Popover(),
-      child        = make_stroke_icon()
-    };
-
-    _canvas.win.theme_changed.connect((dark) => {
-      mb.child = make_stroke_icon();
-    });
-
-    var box = new Box( Orientation.VERTICAL, 5 ) {
-      margin_start  = 10,
-      margin_end    = 10,
-      margin_top    = 10,
-      margin_bottom = 10
-    };
-
-    var color_title = new Label( Utils.make_title( _( "Border Color" ) ) ) {
-      halign = Align.START,
-      use_markup = true
-    };
-    box.append( color_title );
-
-    var dialog = new ColorDialog() {
-      modal = true,
-      title = _( "Choose Color" ),
-      with_alpha = true
-    };
-    _stroke_color_chooser = new ColorDialogButton( dialog ) {
-      margin_start = 20,
-      rgba = _canvas.items.props.stroke_color
-    };
-    _stroke_color_chooser.notify["rgba"].connect((p) => {
-      _canvas.items.props.stroke_color = _stroke_color_chooser.get_rgba();
-    });
-    box.append( _stroke_color_chooser );
-
-    // Add stroke width
-    var width_title = new Label( Utils.make_title( _( "Border Width" ) ) ) {
-      halign     = Align.START,
-      valign     = Align.START,
-      margin_top = 20,
-      use_markup = true
-    };
-    box.append( width_title );
-
-    unowned CheckButton? width_group = null;
-    for( int i=0; i<CanvasItemStrokeWidth.NUM; i++ ) {
-      var sw  = (CanvasItemStrokeWidth)i;
-      var btn = new CheckButton() {
-        margin_start = 20,
-        active       = (_canvas.items.props.stroke_width == sw)
-      };
-      btn.set_group( width_group );
-      btn.toggled.connect(() => {
-        if( btn.get_active() ) {
-          _canvas.items.props.stroke_width = sw;
-          mb.child = make_stroke_icon();
-        }
-      });
-      _width_btns.append_val( btn );
-      if( width_group == null ) {
-        width_group = btn;
-      }
-      var icn = new Picture.for_paintable( make_width_icon( 100, sw.width() ) ) {
-        can_shrink = false
-      };
-      _canvas.win.theme_changed.connect((dark) => {
-        icn.paintable = make_width_icon( 100, sw.width() );
-      });
-      var rbox = new Box( Orientation.HORIZONTAL, 5 );
-      rbox.append( btn );
-      rbox.append( icn );
-      box.append( rbox );
-    }
-
-    // Add dash patterns
-    var dash_title = new Label( Utils.make_title( _( "Dash Pattern" ) ) ) {
-      halign     = Align.START,
-      valign     = Align.START,
-      margin_top = 20,
-      use_markup = true
-    };
-    box.append( dash_title );
-
-    unowned CheckButton? dash_group = null;
-    for( int i=0; i<CanvasItemDashPattern.NUM; i++ ) {
-      var dash = (CanvasItemDashPattern)i;
-      var btn  = new CheckButton() {
-        margin_start = 20,
-        active       = (_canvas.items.props.dash == dash),
-      };
-      btn.set_group( dash_group );
-      btn.toggled.connect(() => {
-        if( btn.get_active() ) {
-          _canvas.items.props.dash = dash;
-          mb.child = make_stroke_icon();
-        }
-      });
-      _dash_btns.append_val( btn );
-      if( dash_group == null ) {
-        dash_group = btn;
-      }
-      var icn = new Picture.for_paintable( make_dash_icon( 100, dash ) ) {
-        can_shrink = false
-      };
-      _canvas.win.theme_changed.connect((dark) => {
-        icn.paintable = make_dash_icon( 100, dash );
-      });
-      var rbox = new Box( Orientation.HORIZONTAL, 5 );
-      rbox.append( btn );
-      rbox.append( icn );
-      box.append( rbox );
-    }
-
-    // Add outline
-    var outline_title = new Label( Utils.make_title( _( "Show Outline" ) ) ) {
-      halign     = Align.START,
-      use_markup = true
-    };
-    var outline_sw = new Switch() {
-      halign = Align.END,
-      active = _canvas.items.props.outline
-    };
-    outline_sw.notify["active"].connect(() => {
-      _canvas.items.props.outline = !_canvas.items.props.outline;
-    });
-    var outline_box = new Box( Orientation.HORIZONTAL, 10 ) {
-      homogeneous = false,
-      margin_top  = 20
-    };
-    outline_box.append( outline_title );
-    outline_box.append( outline_sw );
-    box.append( outline_box );
-
-    mb.popover.child = box;
-
-    append( mb );
-
-  }
-
-  //-------------------------------------------------------------
-  // Adds the font menubutton
-  private void create_fonts() {
-
-    var btn = new Button.from_icon_name( "font-symbolic" ) {
-      tooltip_text  = _( "Font Properties" ),
-      has_frame     = false,
-      margin_start  = 10,
-      margin_end    = 10,
-      margin_top    = 10,
-      margin_bottom = 10
-    };
-
-    var font_chooser = new FontDialog() {
-      title = _( "Change Font" )
-    };
-
-    btn.clicked.connect(() => {
-      font_chooser.choose_font.begin( _canvas.win, _canvas.items.props.font, null, (obj, res) => {
-        try {
-          var fd = font_chooser.choose_font.end( res );
-          _canvas.items.props.font = fd;
-        } catch( Error e ) {}
-      });
     });
 
     append( btn );
@@ -949,24 +663,6 @@ public class CanvasToolbar : Box {
   // Called when the canvas image crop ends
   public void crop_ended() {
     _crop_btn.active = false;
-  }
-
-  //-------------------------------------------------------------
-  // Called whenever the item selection changes
-  private void selection_changed( CanvasItemProperties props ) {
-
-    var p = new CanvasItemProperties();
-    p.copy( props );
-
-    // Updates the width group
-    _width_btns.index( (int)p.stroke_width ).set_active( true );
-
-    // Updates the dash group
-    _dash_btns.index( (int)p.dash ).set_active( true );
-
-    // Set the color
-    _color_chooser.rgba = p.color;
-
   }
 
   //-------------------------------------------------------------

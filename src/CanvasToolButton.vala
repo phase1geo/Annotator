@@ -36,6 +36,44 @@ public enum CanvasTool {
   NUM;
 
   //-------------------------------------------------------------
+  // Converts to a string.
+  public string to_string() {
+    switch( this ) {
+      case SELECTOR  :  return( "selector" );
+      case ARROW     :  return( "arrow" );
+      case SHAPE     :  return( "shape" );
+      case STICKER   :  return( "sticker" );
+      case IMAGE     :  return( "image" );
+      case SEQUENCE  :  return( "sequence" );
+      case PENCIL    :  return( "pencil" );
+      case TEXT      :  return( "text" );
+      case MAGNIFIER :  return( "magnifier" );
+      case BLUR      :  return( "blur" );
+      case CROP      :  return( "crop" );
+      default        :  assert_not_reached();
+    }
+  }
+
+  //-------------------------------------------------------------
+  // Parses a string for the matching canvas tool.
+  public static CanvasTool parse( string val ) {
+    switch( val ) {
+      case "selector"  :  return( SELECTOR );
+      case "arrow"     :  return( ARROW );
+      case "shape"     :  return( SHAPE );
+      case "sticker"   :  return( STICKER );
+      case "image"     :  return( IMAGE );
+      case "sequence"  :  return( SEQUENCE );
+      case "pencil"    :  return( PENCIL );
+      case "text"      :  return( TEXT );
+      case "magnifier" :  return( MAGNIFIER );
+      case "blur"      :  return( BLUR );
+      case "crop"      :  return( CROP );
+      default          :  return( NUM );
+    }
+  }
+
+  //-------------------------------------------------------------
   // Returns true if this tool needs to display border options.
   public bool has_border() {
     return( (this == ARROW)    ||
@@ -114,7 +152,8 @@ public class CanvasToolButton : ToggleButton {
 
   private static ToggleButton? _group = null;
 
-  private Canvas _canvas;
+  private Canvas                _canvas;
+  private CanvasItemProperties? _props = null;
 
   //-------------------------------------------------------------
   // Constructor
@@ -123,6 +162,11 @@ public class CanvasToolButton : ToggleButton {
     Object( has_frame: false, active: false );
 
     _canvas = toolbar.canvas;
+    _props  = toolbar.props.get_properties( tool );
+
+    var item_type = tool.canvas_item_type();
+
+    tooltip_markup = item_type.tooltip();
 
     if( _group != null ) {
       set_group( _group );
@@ -140,7 +184,6 @@ public class CanvasToolButton : ToggleButton {
     };
     add_controller( left );
     left.pressed.connect((n_press, x, y) => {
-      stdout.printf( "active: %s\n", active.to_string() );
       if( active ) {
         if( popover != null ) {
           if( popover.get_mapped() ) {
@@ -153,6 +196,9 @@ public class CanvasToolButton : ToggleButton {
     });
 
     if( tool.has_properties() ) {
+
+      // Set the tooltip
+      tooltip_markup += "\n\n%s".printf( _( "Right-click for tool options" ) );
 
       // Create options popover
       var options = create_options( tool );
@@ -227,7 +273,7 @@ public class CanvasToolButton : ToggleButton {
   private void create_border_options( Grid grid, ref int row ) {
 
     var color_sep = new Separator( Orientation.HORIZONTAL );
-    grid.attach( color_sep, 0, row, 2 );
+    grid.attach( color_sep, 0, row, 3 );
     row++;
 
     var color_lbl = new Label( _( "Border Color" ) ) {
@@ -241,19 +287,19 @@ public class CanvasToolButton : ToggleButton {
     };
 
     var color = new ColorDialogButton( dialog ) {
-      rgba = _canvas.items.props.color,
+      rgba = _props.color,
       margin_top = 5
     };
     color.notify["rgba"].connect(() => {
-      _canvas.items.props.color = color.get_rgba();
+      _props.stroke_color = color.get_rgba();
     });
 
     grid.attach( color_lbl, 0, row );
-    grid.attach( color,     1, row );
+    grid.attach( color,     1, row, 2 );
     row++;
 
     var width_sep = new Separator( Orientation.HORIZONTAL );
-    grid.attach( width_sep, 0, row, 2 );
+    grid.attach( width_sep, 0, row, 3 );
     row++;
 
     var width_lbl = new Label( _( "Border Width" ) ) {
@@ -266,16 +312,16 @@ public class CanvasToolButton : ToggleButton {
       var sw = (CanvasItemStrokeWidth)i;
       var width = new CheckButton() {
         halign = Align.FILL,
-        active = (_canvas.items.props.stroke_width == sw),
+        active = (_props.stroke_width == sw),
         child  = make_width_icon( 100, sw.width() )
       };
       width.set_group( width_group );
       width.toggled.connect(() => {
         if( width.get_active() ) {
-          _canvas.items.props.stroke_width = sw;
+          _props.stroke_width = sw;
         }
       });
-      grid.attach( width, 1, row );
+      grid.attach( width, 1, row, 2 );
       row++;
       if( width_group == null ) {
         width_group = width;
@@ -283,7 +329,7 @@ public class CanvasToolButton : ToggleButton {
     }
 
     var dash_sep = new Separator( Orientation.HORIZONTAL );
-    grid.attach( dash_sep, 0, row, 2 );
+    grid.attach( dash_sep, 0, row, 3 );
     row++;
 
     var dash_lbl = new Label( _( "Border Dash" ) ) {
@@ -296,16 +342,16 @@ public class CanvasToolButton : ToggleButton {
       var dp = (CanvasItemDashPattern)i;
       var dash = new CheckButton() {
         halign = Align.FILL,
-        active = (_canvas.items.props.dash == dp),
+        active = (_props.dash == dp),
         child  = make_dash_icon( 100, dp )
       };
       dash.set_group( dash_group );
       dash.toggled.connect(() => {
         if( dash.get_active() ) {
-          _canvas.items.props.dash = dp;
+          _props.dash = dp;
         }
       });
-      grid.attach( dash, 1, row );
+      grid.attach( dash, 1, row, 2 );
       row++;
       if( dash_group == null ) {
         dash_group = dash;
@@ -391,10 +437,22 @@ public class CanvasToolButton : ToggleButton {
   private void create_background_options( Grid grid, ref int row ) {
 
     var sep = new Separator( Orientation.HORIZONTAL );
-    grid.attach( sep, 0, row, 2 );
+    grid.attach( sep, 0, row, 3 );
     row++;
 
-    var lbl = new Label( _( "Background Color" ) ) {
+    var lbl = new Label( _( "Fill" ) ) {
+      xalign = (float)0
+    };
+
+    var fill = new Switch() {
+      active = _props.fill
+    };
+
+    grid.attach( lbl,  0, row );
+    grid.attach( fill, 1, row );
+    row++;
+
+    var fill_lbl = new Label( _( "Fill Color" ) ) {
       xalign = (float)0
     };
 
@@ -405,15 +463,20 @@ public class CanvasToolButton : ToggleButton {
     };
 
     var color = new ColorDialogButton( dialog ) {
-      rgba = _canvas.items.props.color
+      rgba = _props.color
     };
     color.notify["rgba"].connect(() => {
-      _canvas.items.props.color = color.get_rgba();
+      _props.color = color.get_rgba();
     });
 
-    grid.attach( lbl,   0, row );
-    grid.attach( color, 1, row );
+    grid.attach( fill_lbl, 0, row );
+    grid.attach( color,    1, row, 2 );
     row++;
+
+    fill.notify["active"].connect(() => {
+      _props.fill = fill.active;
+      color.sensitive = fill.active;
+    });
 
   }
 
@@ -422,7 +485,7 @@ public class CanvasToolButton : ToggleButton {
   private void create_font_options( Grid grid, ref int row ) {
 
     var sep = new Separator( Orientation.HORIZONTAL );
-    grid.attach( sep, 0, row, 2 );
+    grid.attach( sep, 0, row, 3 );
     row++;
 
     var lbl = new Label( _( "Font" ) ) {
@@ -439,11 +502,11 @@ public class CanvasToolButton : ToggleButton {
     };
 
     font.notify["font-desc"].connect(() => {
-      _canvas.items.props.font = font.font_desc;
+      _props.font = font.font_desc;
     });
 
     grid.attach( lbl,  0, row );
-    grid.attach( font, 1, row );
+    grid.attach( font, 1, row, 2 );
     row++;
 
   }

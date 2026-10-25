@@ -40,6 +40,11 @@
       <summary>Last used item color</summary>
       <description>Last used item color displayed in toolbar.</description>
     </key>
+    <key name="item-fill" type="b">
+      <default>false</default>
+      <summary>Last used item fill value</summary>
+      <description>Last used item fill value displayed in toolbar.</description>
+    </key>
     <key name="item-alpha" type="d">
       <default>1.0</default>
       <summary>Alpha value to use with item-color</summary>

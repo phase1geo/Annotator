@@ -96,7 +96,7 @@ public class Editor : Box {
       crop_status.label = "%d x %d px".printf( (int)rect.width, (int)rect.height );
     });
     canvas.image.color_picked.connect((color) => {
-      toolbar.set_color( color );
+      // TBD - toolbar.set_color( color );
     });
 
     var sep = new Separator( Orientation.HORIZONTAL ) {
