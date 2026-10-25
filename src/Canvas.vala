@@ -46,6 +46,7 @@ public class Canvas : DrawingArea {
   public UndoBuffer     undo_buffer { get; private set; }
   public UndoTextBuffer undo_text   { get; private set; }
   public double         zoom_factor { get; set; default = 1.0; }
+  public ToolProperties props       { get; private set; }
 
   public signal void image_loaded();
   public signal void zoom_changed( double zoom_factor );
@@ -67,6 +68,9 @@ public class Canvas : DrawingArea {
     // Create the undo buffers
     undo_buffer = new UndoBuffer( this );
     undo_text   = new UndoTextBuffer( this );
+
+    // Create properties
+    props = new ToolProperties( win );
 
     // Make sure the drawing area can receive keyboard focus
     can_focus = true;

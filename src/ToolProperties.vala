@@ -21,13 +21,15 @@
 
 public class ToolProperties {
 
+  private MainWindow                   _win;
   private Array<CanvasItemProperties?> _props;
   private bool                         _changed = false;
 
   //-------------------------------------------------------------
   // Constructor
-  public ToolProperties() {
+  public ToolProperties( MainWindow win ) {
 
+    _win   = win;
     _props = new Array<CanvasItemProperties?>();
 
     for( int i=0; i<CanvasTool.NUM; i++ ) {
@@ -51,6 +53,7 @@ public class ToolProperties {
   //-------------------------------------------------------------
   // Returns the item properties for the given canvas tool.
   public CanvasItemProperties? get_properties( CanvasTool tool ) {
+    var prop = _props.index( tool );
     return( _props.index( tool ) );
   }
 
@@ -67,18 +70,20 @@ public class ToolProperties {
 
   //-------------------------------------------------------------
   // Saves the settings to the save file
-  public void save( Canvas canvas ) {
+  public void save() {
     var sfile = properties_file( true );
     if( (sfile == null) || !_changed ) {
       return;
     }
     Xml.Doc*  doc  = new Xml.Doc( "1.0" );
     Xml.Node* root = new Xml.Node( null, "properties" );
-    root->set_prop( "version", canvas.win.application.version );
+    root->set_prop( "version", _win.application.version );
     doc->set_root_element( root );
     for( int i=0; i<_props.length; i++ ) {
-      var tool = (CanvasTool)i;
-      root->add_child( _props.index( i ).save( tool.to_string() ) );
+      if( _props.index( i ) != null ) {
+        var tool = (CanvasTool)i;
+        root->add_child( _props.index( i ).save( tool.to_string() ) );
+      }
     }
     doc->save_format_file( sfile, 1 );
     _changed = false;

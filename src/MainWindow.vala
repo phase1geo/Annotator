@@ -125,7 +125,7 @@ public class MainWindow : Gtk.ApplicationWindow {
     _editor.canvas.image.exports.load();
 
     close_request.connect(() => {
-      save_window_size();
+      save_window();
       return( false );
     });
 
@@ -676,9 +676,10 @@ public class MainWindow : Gtk.ApplicationWindow {
 
   //-------------------------------------------------------------
   // Save the window size to settings
-  private void save_window_size() {
+  private void save_window() {
     Annotator.settings.set_int( "window-w", get_width() );
     Annotator.settings.set_int( "window-h", get_height() );
+    editor.canvas.props.save();
   }
 
   //-------------------------------------------------------------
@@ -692,7 +693,7 @@ public class MainWindow : Gtk.ApplicationWindow {
   //-------------------------------------------------------------
   // Quits the application
   private void do_quit() {
-    save_window_size();
+    save_window();
     destroy();
   }
 

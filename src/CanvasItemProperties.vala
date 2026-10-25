@@ -343,7 +343,7 @@ public class CanvasItemProperties {
   public void load( Xml.Node* node ) {
     var c = node->get_prop( "color" );
     if( c != null ) {
-      color.parse( c );
+      _color.parse( c );
     }
     var fi = node->get_prop( "fill" );
     if( fi != null ) {
@@ -359,7 +359,7 @@ public class CanvasItemProperties {
     }
     var sc = node->get_prop( "stroke-color" );
     if( sc != null ) {
-      stroke_color.parse( sc );
+      _stroke_color.parse( sc );
     }
     var o = node->get_prop( "show-outline" );
     if( o != null ) {

@@ -162,7 +162,7 @@ public class CanvasToolButton : ToggleButton {
     Object( has_frame: false, active: false );
 
     _canvas = toolbar.canvas;
-    _props  = toolbar.props.get_properties( tool );
+    _props  = toolbar.canvas.props.get_properties( tool );
 
     var item_type = tool.canvas_item_type();
 
@@ -287,7 +287,7 @@ public class CanvasToolButton : ToggleButton {
     };
 
     var color = new ColorDialogButton( dialog ) {
-      rgba = _props.color,
+      rgba = _props.stroke_color,
       margin_top = 5
     };
     color.notify["rgba"].connect(() => {

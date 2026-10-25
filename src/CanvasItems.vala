@@ -238,7 +238,7 @@ public class CanvasItems {
   }
 
   private CanvasItem create_rectangle( bool loading = false ) {
-    var item = new CanvasItemRect( _canvas, props );
+    var item = new CanvasItemRect( _canvas, _canvas.props.get_properties( CanvasTool.SHAPE ) );
     if( !loading ) {
       item.bbox = position_item();
     }
@@ -246,7 +246,7 @@ public class CanvasItems {
   }
 
   private CanvasItem create_oval( bool loading = false ) {
-    var item = new CanvasItemOval( _canvas, props );
+    var item = new CanvasItemOval( _canvas, _canvas.props.get_properties( CanvasTool.SHAPE ) );
     if( !loading ) {
       item.bbox = position_item();
     }
@@ -254,7 +254,7 @@ public class CanvasItems {
   }
 
   private CanvasItem create_star( bool loading = false ) {
-    var item = new CanvasItemStar( _canvas, 5, 25, props );
+    var item = new CanvasItemStar( _canvas, 5, 25, _canvas.props.get_properties( CanvasTool.SHAPE ) );
     if( !loading ) {
       item.bbox = position_item();
     }
@@ -262,7 +262,7 @@ public class CanvasItems {
   }
 
   private CanvasItem create_bubble( CanvasBubbleType type, bool loading = false ) {
-    var item = new CanvasItemBubble( _canvas, type, props );
+    var item = new CanvasItemBubble( _canvas, type, _canvas.props.get_properties( CanvasTool.SHAPE ) );
     if( !loading ) {
       item.bbox = position_item();
     }
@@ -270,7 +270,7 @@ public class CanvasItems {
   }
 
   private CanvasItem create_line( bool loading = false ) {
-    var item = new CanvasItemLine( _canvas, props );
+    var item = new CanvasItemLine( _canvas, _canvas.props.get_properties( CanvasTool.SHAPE ) );
     if( !loading ) {
       item.bbox = position_item();
     }
@@ -278,7 +278,7 @@ public class CanvasItems {
   }
 
   private CanvasItem create_arrow( bool loading = false ) {
-    var item = new CanvasItemArrow( _canvas, props );
+    var item = new CanvasItemArrow( _canvas, _canvas.props.get_properties( CanvasTool.ARROW ) );
     if( !loading ) {
       item.bbox = position_item();
     }
@@ -286,7 +286,7 @@ public class CanvasItems {
   }
 
   private CanvasItem create_text( bool loading = false ) {
-    var item = new CanvasItemText( _canvas, props );
+    var item = new CanvasItemText( _canvas, _canvas.props.get_properties( CanvasTool.TEXT ) );
     item.select_mode.connect((value) => {
       if( value ) {
         show_format_bar();
@@ -306,7 +306,7 @@ public class CanvasItems {
   }
 
   private CanvasItem create_blur( bool loading = false ) {
-    var item = new CanvasItemBlur( _canvas, props );
+    var item = new CanvasItemBlur( _canvas, _canvas.props.get_properties( CanvasTool.BLUR ) );
     if( !loading ) {
       item.bbox = position_item();
     }
@@ -314,7 +314,7 @@ public class CanvasItems {
   }
 
   private CanvasItem create_magnifier( bool loading = false ) {
-    var item = new CanvasItemMagnifier( _canvas, 2.0, props );
+    var item = new CanvasItemMagnifier( _canvas, 2.0, _canvas.props.get_properties( CanvasTool.MAGNIFIER ) );
     if( !loading ) {
       item.bbox = position_item( 2, 2 );
     }
@@ -322,7 +322,7 @@ public class CanvasItems {
   }
 
   private CanvasItem create_pencil( bool loading = false ) {
-    var item = new CanvasItemPencil( _canvas, props );
+    var item = new CanvasItemPencil( _canvas, _canvas.props.get_properties( CanvasTool.PENCIL ) );
     if( !loading ) {
       _active = item;
       _canvas.set_cursor_from_name( "pencil" );
@@ -331,7 +331,7 @@ public class CanvasItems {
   }
 
   private CanvasItem create_sequence( bool loading = false ) {
-    var item = new CanvasItemSequence( _canvas, props );
+    var item = new CanvasItemSequence( _canvas, _canvas.props.get_properties( CanvasTool.SEQUENCE ) );
     if( !loading ) {
       item.bbox = new CanvasRect.from_coords( (_last_x - 25), (_last_y - 25), 50, 50 );
     }
@@ -339,7 +339,7 @@ public class CanvasItems {
   }
 
   private CanvasItem create_sticker( string? name, bool loading = false ) {
-    var item = new CanvasItemImage( _canvas, name, false, props );
+    var item = new CanvasItemImage( _canvas, name, false, _canvas.props.get_properties( CanvasTool.STICKER ) );
     if( (name != null) && !loading ) {
       item.bbox = position_item();
     }
@@ -347,7 +347,7 @@ public class CanvasItems {
   }
 
   private CanvasItem create_image( string? path, bool loading = false ) {
-    var item = new CanvasItemImage( _canvas, path, true, props );
+    var item = new CanvasItemImage( _canvas, path, true, _canvas.props.get_properties( CanvasTool.IMAGE ) );
     if( (path != null) && !loading ) {
       item.bbox = position_item();  // center_box( item.bbox.width, item.bbox.height );
     }

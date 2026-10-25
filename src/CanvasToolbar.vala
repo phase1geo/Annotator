@@ -28,18 +28,10 @@ public class CanvasToolbar : Box {
 
   private Canvas              _canvas;
   private ToggleButton        _crop_btn;
-  private Array<CheckButton>  _width_btns;
-  private Array<CheckButton>  _dash_btns;
-  private ColorDialogButton   _color_chooser;
-  private ColorDialogButton   _stroke_color_chooser;
-  private Switch              _asw;
-  private Revealer            _areveal;
-  private Scale               _ascale;
   private int                 _current_shape;
   private HashMap<CanvasItemCategory,CurrentItem> _current_item;
   private bool                _ignore = false;
   private CanvasTool          _current = CanvasTool.SELECTOR;
-  private ToolProperties      _props;
 
   public signal void selected( CanvasTool selected );
 
@@ -58,11 +50,6 @@ public class CanvasToolbar : Box {
       }
     }
   }
-  public ToolProperties props {
-    get {
-      return( _props );
-    }
-  }
 
   //-------------------------------------------------------------
   // Constructor
@@ -72,9 +59,6 @@ public class CanvasToolbar : Box {
 
     _canvas       = canvas;
     _current_item = new HashMap<CanvasItemCategory,CurrentItem>();
-
-    // Create properties
-    _props = new ToolProperties();
 
     // Create current items
     _current_item.set( CanvasItemCategory.ARROW, new CurrentItem.with_canvas_item( CanvasItemType.ARROW ) );
@@ -549,100 +533,6 @@ public class CanvasToolbar : Box {
     }
 
     return( false );
-
-  }
-
-  //-------------------------------------------------------------
-  // Creates the width icon
-  private Gdk.Paintable make_width_icon( int width, int stroke_width ) {
-
-    var height = stroke_width;
-
-    var snapshot = new Snapshot();
-    var rect     = Graphene.Rect();
-    rect.init( 0, 0, (float)width, (float)height );
-    var ctx      = snapshot.append_cairo( rect );
-
-    // Draw the stroke
-    Utils.set_context_color( ctx, Utils.color_from_string( is_dark_mode() ? "white" : "black" ) );
-    ctx.set_line_width( stroke_width );
-    ctx.move_to( 0, (height / 2) );
-    ctx.line_to( width, (height / 2) );
-    ctx.stroke();
-
-    return( snapshot.free_to_paintable( null ) );
-
-    /*
-    var image = new Picture.for_paintable( snapshot.free_to_paintable( null ) ) {
-      halign      = Align.START,
-      hexpand     = true,
-      content_fit = ContentFit.SCALE_DOWN,
-      can_shrink  = false
-    };
-
-    return( image );
-    */
-
-  }
-
-  //-------------------------------------------------------------
-  // Creates the dash icon
-  private Gdk.Paintable make_dash_icon( int width, CanvasItemDashPattern dash ) {
-
-    var height = 5;
-
-    var snapshot = new Snapshot();
-    var rect     = Graphene.Rect();
-    rect.init( 0, 0, (float)width, (float)height );
-    var ctx      = snapshot.append_cairo( rect );
-
-    // Draw the image
-    Utils.set_context_color( ctx, Utils.color_from_string( is_dark_mode() ? "white" : "black" ) );
-    ctx.set_line_width( height );
-    dash.set_fg_pattern( ctx );
-    ctx.move_to( 0, (height / 2) );
-    ctx.line_to( width, (height / 2) );
-    ctx.stroke();
-
-    return( snapshot.free_to_paintable( null ) );
-
-    /*
-    var image = new Picture.for_paintable( snapshot.free_to_paintable( null ) ) {
-      halign      = Align.START,
-      hexpand     = true,
-      content_fit = ContentFit.SCALE_DOWN,
-      can_shrink  = false
-    };
-
-    return( image );
-    */
-
-  }
-
-  //-------------------------------------------------------------
-  // Generates an image with a stroke matching the current canvas
-  // item.
-  private Image make_stroke_icon() {
-
-    var width   = 50;
-    var height  = _canvas.items.props.stroke_width.width();
-
-    var snapshot = new Snapshot();
-    var rect     = Graphene.Rect();
-    rect.init( 0, 0, (float)50, (float)height );
-    var ctx      = snapshot.append_cairo( rect );
-
-    // Draw the image
-    Utils.set_context_color( ctx, _canvas.items.props.stroke_color );
-    ctx.set_line_width( height );
-    _canvas.items.props.dash.set_fg_pattern( ctx );
-    ctx.move_to( 0, (height / 2) );
-    ctx.line_to( width, (height / 2) );
-    ctx.stroke();
-
-    var image = new Image.from_paintable( snapshot.free_to_paintable( null ) );
-
-    return( image );
 
   }
 
