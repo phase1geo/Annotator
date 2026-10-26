@@ -197,11 +197,9 @@ public class CanvasItemStar : CanvasItem {
   // Draw the star.
   public override void draw_item( Context ctx, CanvasItemColor color ) {
 
-    var outline = Granite.contrasting_foreground_color( props.color );
-    var alpha   = mode.alpha( props.alpha );
-    var point   = new CanvasPoint();
+    var alpha = mode.alpha( props.alpha );
+    var point = new CanvasPoint();
 
-    set_color( ctx, color, props.color, alpha );
     ctx.move_to( points.index( 0 ).x, points.index( 0 ).y );
     for( int i=1; i<(num_points * 2); i++ ) {
       calculate_point( i, point );
@@ -212,13 +210,33 @@ public class CanvasItemStar : CanvasItem {
     save_path( ctx, CanvasItemPathType.FILL );
 
     if( props.outline ) {
-      ctx.fill_preserve();
-      set_color( ctx, color, props.stroke_color, 1.0 );
-      ctx.set_line_width( props.stroke_width.width() + 2 );
+      var outline = Granite.contrasting_foreground_color( props.color );
+      set_color( ctx, color, outline, 0.5 );
+      if( props.fill ) {
+        ctx.set_line_width( 1 );
+        ctx.stroke_preserve();
+      }
+      if( props.stroke ) {
+        props.dash.set_bg_pattern( ctx );
+        ctx.set_line_width( props.stroke_width.width() + 2 );
+        ctx.stroke_preserve();
+      }
+    }
+
+    if( props.fill ) {
+      set_color( ctx, color, props.color, alpha );
+      if( props.stroke ) {
+        ctx.fill_preserve();
+      } else {
+        ctx.fill();
+      }
+    }
+
+    if( props.stroke ) {
+      set_color( ctx, color, props.stroke_color, alpha );
+      ctx.set_line_width( props.stroke_width.width() );
       props.dash.set_bg_pattern( ctx );
       ctx.stroke();
-    } else {
-      ctx.fill();
     }
 
   }

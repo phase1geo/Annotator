@@ -88,7 +88,7 @@ public enum CanvasTool {
 
   //-------------------------------------------------------------
   // Returns true if this tool needs to display background options.
-  public bool has_background() {
+  public bool has_fill() {
     return( (this == ARROW)    ||
             (this == SHAPE)    ||
             (this == SEQUENCE) ||
@@ -106,7 +106,7 @@ public enum CanvasTool {
   //-------------------------------------------------------------
   // Returns true if this tool has properties.
   public bool has_properties() {
-    return( has_border() || has_background() || has_font() );
+    return( has_border() || has_fill() || has_font() );
   }
 
   //-------------------------------------------------------------
@@ -246,12 +246,16 @@ public class CanvasToolButton : ToggleButton {
 
     var row = 0;
 
+    if( tool.has_fill() ) {
+      create_background_options( grid, ref row );
+    }
+
     if( tool.has_border() ) {
       create_border_options( grid, ref row );
     }
 
-    if( tool.has_background() ) {
-      create_background_options( grid, ref row );
+    if( tool.has_fill() || tool.has_border() ) {
+      create_outline_options( grid, ref row );
     }
 
     if( tool.has_font() ) {
@@ -274,6 +278,23 @@ public class CanvasToolButton : ToggleButton {
 
     var color_sep = new Separator( Orientation.HORIZONTAL );
     grid.attach( color_sep, 0, row, 3 );
+    row++;
+
+    var lbl = new Label( _( "Border" ) ) {
+      xalign = (float)0
+    };
+
+    var stroke = new Switch() {
+      active    = _props.stroke,
+      sensitive = _props.fill
+    };
+
+    _props.changed.connect(() => {
+      stroke.sensitive = _props.fill;
+    });
+
+    grid.attach( lbl,    0, row );
+    grid.attach( stroke, 1, row );
     row++;
 
     var color_lbl = new Label( _( "Border Color" ) ) {
@@ -326,6 +347,9 @@ public class CanvasToolButton : ToggleButton {
       if( width_group == null ) {
         width_group = width;
       }
+      stroke.notify["active"].connect(() => {
+        width.visible = stroke.active;
+      });
     }
 
     var dash_sep = new Separator( Orientation.HORIZONTAL );
@@ -356,7 +380,20 @@ public class CanvasToolButton : ToggleButton {
       if( dash_group == null ) {
         dash_group = dash;
       }
+      stroke.notify["active"].connect(() => {
+        dash.visible = stroke.active;
+      });
     }
+
+    stroke.notify["active"].connect(() => {
+      _props.stroke = stroke.active;
+      color_lbl.visible = stroke.active;
+      color.visible     = stroke.active;
+      width_sep.visible = stroke.active;
+      width_lbl.visible = stroke.active;
+      dash_sep.visible  = stroke.active;
+      dash_lbl.visible  = stroke.active;
+    });
 
   }
 
@@ -445,8 +482,13 @@ public class CanvasToolButton : ToggleButton {
     };
 
     var fill = new Switch() {
-      active = _props.fill
+      active    = _props.fill,
+      sensitive = _props.stroke
     };
+
+    _props.changed.connect(() => {
+      fill.sensitive = _props.stroke;
+    });
 
     grid.attach( lbl,  0, row );
     grid.attach( fill, 1, row );
@@ -474,9 +516,32 @@ public class CanvasToolButton : ToggleButton {
     row++;
 
     fill.notify["active"].connect(() => {
-      _props.fill = fill.active;
-      color.sensitive = fill.active;
+      _props.fill      = fill.active;
+      fill_lbl.visible = fill.active;
+      color.visible    = fill.active;
     });
+
+  }
+
+  //-------------------------------------------------------------
+  // Displays option to enable/disable shape outlining.
+  private void create_outline_options( Grid grid, ref int row ) {
+
+    var sep = new Separator( Orientation.HORIZONTAL );
+    grid.attach( sep, 0, row, 3 );
+    row++;
+
+    var lbl = new Label( _( "Outline" ) ) {
+      xalign = (float)0
+    };
+
+    var outline = new Switch() {
+      active = _props.outline
+    };
+
+    grid.attach( lbl,     0, row );
+    grid.attach( outline, 1, row );
+    row++;
 
   }
 

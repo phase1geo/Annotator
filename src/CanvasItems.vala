@@ -204,7 +204,7 @@ public class CanvasItems {
     _items = new List<CanvasItem>();
 
     // Create the overall properties structure
-    props = new CanvasItemProperties( true );
+    props = new CanvasItemProperties();
     props.changed.connect( update_selected_attributes );
 
     // Create the CustomItems object

@@ -128,23 +128,40 @@ public class CanvasItemRect : CanvasItem {
   // Draw the rectangle
   public override void draw_item( Context ctx, CanvasItemColor color ) {
 
-    var outline = Granite.contrasting_foreground_color( props.color );
-    var alpha   = mode.alpha( props.alpha );
+    var alpha = mode.alpha( props.alpha );
 
     ctx.rectangle( bbox.x, bbox.y, bbox.width, bbox.height );
 
     save_path( ctx, CanvasItemPathType.FILL );
 
-    set_color( ctx, color, props.color, alpha );
-
     if( props.outline ) {
-      ctx.fill_preserve();
-      set_color( ctx, color, props.stroke_color, 1.0 );
-      ctx.set_line_width( props.stroke_width.width() + 2 );
+      var outline = Granite.contrasting_foreground_color( props.color );
+      set_color( ctx, color, outline, 0.5 );
+      if( props.fill ) {
+        ctx.set_line_width( 1 );
+        ctx.stroke_preserve();
+      }
+      if( props.stroke ) {
+        props.dash.set_bg_pattern( ctx );
+        ctx.set_line_width( props.stroke_width.width() + 2 );
+        ctx.stroke_preserve();
+      }
+    }
+
+    if( props.fill ) {
+      set_color( ctx, color, props.color, alpha );
+      if( props.stroke ) {
+        ctx.fill_preserve();
+      } else {
+        ctx.fill();
+      }
+    }
+
+    if( props.stroke ) {
       props.dash.set_bg_pattern( ctx );
+      set_color( ctx, color, props.stroke_color, alpha );
+      ctx.set_line_width( props.stroke_width.width() );
       ctx.stroke();
-    } else {
-      ctx.fill();
     }
   
   }

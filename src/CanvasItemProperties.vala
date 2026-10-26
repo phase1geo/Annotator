@@ -121,10 +121,10 @@ public enum CanvasItemDashPattern {
 // Structure containing formatting properties used by canvas items
 public class CanvasItemProperties {
 
-  private bool                  _use_settings = false;
-  private RGBA                  _color        = Utils.color_from_string( "white" );
+  private RGBA                  _color        = Utils.color_from_string( "red" );
   private bool                  _fill         = false;
   private double                _alpha        = 1.0;
+  private bool                  _stroke       = true;
   private CanvasItemStrokeWidth _stroke_width = CanvasItemStrokeWidth.WIDTH1;
   private RGBA                  _stroke_color = Utils.color_from_string( "black" );
   private bool                  _outline      = true;
@@ -139,9 +139,6 @@ public class CanvasItemProperties {
     set {
       if( !_color.equal( value ) ) {
         _color = value;
-        if( _use_settings ) {
-          Annotator.settings.set_string( "item-color", Utils.color_to_string( _color ) );
-        }
         changed();
       }
     }
@@ -153,9 +150,6 @@ public class CanvasItemProperties {
     set {
       if( _fill != value ) {
         _fill = value;
-        if( _use_settings ) {
-          Annotator.settings.set_boolean( "item-fill", _fill );
-        }
         changed();
       }
     }
@@ -167,9 +161,17 @@ public class CanvasItemProperties {
     set {
       if( _alpha != value ) {
         _alpha = value;
-        if( _use_settings ) {
-          Annotator.settings.set_double( "item-alpha", _alpha );
-        }
+        changed();
+      }
+    }
+  }
+  public bool stroke {
+    get {
+      return( _stroke );
+    }
+    set {
+      if( _stroke != value ) {
+        _stroke = value;
         changed();
       }
     }
@@ -181,9 +183,6 @@ public class CanvasItemProperties {
     set {
       if( _stroke_width != value ) {
         _stroke_width = value;
-        if( _use_settings ) {
-          Annotator.settings.set_string( "stroke-width", _stroke_width.to_string() );
-        }
         changed();
       }
     }
@@ -195,9 +194,6 @@ public class CanvasItemProperties {
     set {
       if( !_stroke_color.equal( value ) ) {
         _stroke_color = value;
-        if( _use_settings ) {
-          Annotator.settings.set_string( "stroke-color", Utils.color_to_string( _stroke_color ) );
-        }
         changed();
       }
     }
@@ -209,9 +205,6 @@ public class CanvasItemProperties {
     set {
       if( _outline != value ) {
         _outline = value;
-        if( _use_settings ) {
-          Annotator.settings.set_boolean( "show-outline", _outline );
-        }
         changed();
       }
     }
@@ -223,9 +216,6 @@ public class CanvasItemProperties {
     set {
       if( _dash != value ) {
         _dash = value;
-        if( _use_settings ) {
-          Annotator.settings.set_string( "dash-pattern", dash.to_string() );
-        }
         changed();
       }
     }
@@ -237,9 +227,6 @@ public class CanvasItemProperties {
     set {
       if( _blur_radius != value ) {
         _blur_radius = value;
-        if( _use_settings ) {
-          Annotator.settings.set_int( "blur-radius", _blur_radius );
-        }
         changed();
       }
     }
@@ -251,9 +238,6 @@ public class CanvasItemProperties {
     set {
       if( !font.equal( value ) ) {
         _font = value.copy();
-        if( _use_settings ) {
-          Annotator.settings.set_string( "font", _font.to_string() );
-        }
         changed();
       }
     }
@@ -263,30 +247,17 @@ public class CanvasItemProperties {
 
   //-------------------------------------------------------------
   // Default constructor
-  public CanvasItemProperties( bool use_settings = false ) {
-    _use_settings = use_settings;
-    if( _use_settings ) {
-      _color        = Utils.color_from_string( Annotator.settings.get_string( "item-color" ) );
-      _fill         = Annotator.settings.get_boolean( "item-fill" );
-      _alpha        = Annotator.settings.get_double( "item-alpha" );
-      _stroke_width = CanvasItemStrokeWidth.parse( Annotator.settings.get_string( "stroke-width" ) );
-      _stroke_color = Utils.color_from_string( Annotator.settings.get_string( "stroke-color" ) );
-      _outline      = Annotator.settings.get_boolean( "show-outline" );
-      _dash         = CanvasItemDashPattern.parse( Annotator.settings.get_string( "dash-pattern" ) );
-      _blur_radius  = Annotator.settings.get_int( "blur-radius" );
-      _font         = FontDescription.from_string( Annotator.settings.get_string( "font" ) );
-    } else {
-      _font = new FontDescription();
-    }
+  public CanvasItemProperties() {
+    _font = new FontDescription();
   }
 
   //-------------------------------------------------------------
   // Copies the properties to this class
   public void copy( CanvasItemProperties props ) {
-    _use_settings = props._use_settings;
     color         = props.color;
     fill          = props.fill;
     alpha         = props.alpha;
+    stroke        = props.stroke;
     stroke_width  = props.stroke_width;
     stroke_color  = props.stroke_color;
     outline       = props.outline;
@@ -303,6 +274,7 @@ public class CanvasItemProperties {
       color.equal( props.color ) &&
       (fill == props.fill) &&
       (alpha == props.alpha) &&
+      (stroke == props.stroke) &&
       (stroke_width == props.stroke_width) &&
       stroke_color.equal( props.stroke_color ) &&
       (outline == props.outline) &&
@@ -316,9 +288,10 @@ public class CanvasItemProperties {
   // Outputs the contents of the class for debugging purposes in
   // string format
   public string to_string() {
-    return( "color: %s, fill: %s, alpha: %g, stroke: %d, stroke-color: %s, outline: %s, dash: %s, blur: %d, font: %s\n".printf(
-      Utils.color_to_string( color ), fill.to_string(), alpha, stroke_width,
-      Utils.color_to_string( stroke_color ), outline.to_string(), dash.to_string(),
+    return( "color: %s, fill: %s, alpha: %g, stroke: %s, stroke-width: %d, stroke-color: %s, dash: %s, outline: %s, blur: %d, font: %s\n".printf(
+      Utils.color_to_string( color ), fill.to_string(), alpha,
+      stroke.to_string(), stroke_width, Utils.color_to_string( stroke_color ),
+      dash.to_string(), outline.to_string(),
       blur_radius, font.to_string() ) );
   }
 
@@ -329,6 +302,7 @@ public class CanvasItemProperties {
     node->set_prop( "color",        Utils.color_to_string( color ) );
     node->set_prop( "fill",         fill.to_string() );
     node->set_prop( "alpha",        alpha.to_string() );
+    node->set_prop( "stroke",       stroke.to_string() );
     node->set_prop( "stroke-width", stroke_width.to_string() );
     node->set_prop( "stroke-color", Utils.color_to_string( stroke_color ) );
     node->set_prop( "show-outline", outline.to_string() );
@@ -345,13 +319,17 @@ public class CanvasItemProperties {
     if( c != null ) {
       _color.parse( c );
     }
-    var fi = node->get_prop( "fill" );
-    if( fi != null ) {
-      fill = bool.parse( fi );
+    var fe = node->get_prop( "fill" );
+    if( fe != null ) {
+      fill = bool.parse( fe );
     }
     var a = node->get_prop( "alpha" );
     if( a != null ) {
       alpha = double.parse( a );
+    }
+    var se = node->get_prop( "stroke" );
+    if( se != null ) {
+      stroke = bool.parse( se );
     }
     var sw = node->get_prop( "stroke-width" );
     if( sw != null ) {
