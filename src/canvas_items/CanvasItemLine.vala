@@ -190,34 +190,24 @@ public class CanvasItemLine : CanvasItem {
   // Draw the rectangle.
   public override void draw_item( Context ctx, CanvasItemColor color ) {
 
-    var alpha   = mode.alpha( props.alpha );
-    var outline = Granite.contrasting_foreground_color( props.color );
-    var sw      = props.stroke_width.width();
-
-    // Draw the outline
-    if( props.outline ) {
-      set_color( ctx, color, outline, (alpha / 2) );
-      ctx.set_line_width( sw + 2 );
-      props.dash.set_bg_pattern( ctx );
-    } else {
-      set_color( ctx, color, props.color, alpha );
-      ctx.set_line_width( sw );
-      props.dash.set_fg_pattern( ctx );
-    }
+    var alpha = mode.alpha( props.alpha );
 
     ctx.move_to( points.index( 0 ).x, points.index( 0 ).y );
     ctx.line_to( points.index( 1 ).x, points.index( 1 ).y );
     save_path( ctx, CanvasItemPathType.STROKE );
 
     if( props.outline ) {
+      var outline = Granite.contrasting_foreground_color( props.color );
+      set_color( ctx, color, outline, 0.5 );
+      props.dash.set_bg_pattern( ctx );
+      ctx.set_line_width( props.stroke_width.width() + 2 );
       ctx.stroke_preserve();
-      set_color( ctx, color, props.color, alpha );
-      ctx.set_line_width( sw );
-      props.dash.set_fg_pattern( ctx );
-      ctx.stroke();
-    } else {
-      ctx.stroke();
     }
+
+    set_color( ctx, color, props.stroke_color, alpha );
+    ctx.set_line_width( props.stroke_width.width() );
+    props.dash.set_fg_pattern( ctx );
+    ctx.stroke();
 
   }
 

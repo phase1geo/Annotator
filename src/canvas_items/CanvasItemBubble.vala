@@ -592,7 +592,7 @@ public class CanvasItemBubble : CanvasItem {
     if( props.stroke ) {
       set_color( ctx, color, props.color, alpha );
       ctx.set_line_width( props.stroke_width.width() );
-      props.dash.set_bg_pattern( ctx );
+      props.dash.set_fg_pattern( ctx );
       ctx.stroke();
     }
   

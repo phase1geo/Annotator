@@ -158,7 +158,7 @@ public class CanvasItemRect : CanvasItem {
     }
 
     if( props.stroke ) {
-      props.dash.set_bg_pattern( ctx );
+      props.dash.set_fg_pattern( ctx );
       set_color( ctx, color, props.stroke_color, alpha );
       ctx.set_line_width( props.stroke_width.width() );
       ctx.stroke();
