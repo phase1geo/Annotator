@@ -555,9 +555,8 @@ public class CanvasItemBubble : CanvasItem {
   // Draw the rectangle
   public override void draw_item( Context ctx, CanvasItemColor color ) {
 
-    var fill   = Granite.contrasting_foreground_color( props.color );
-    var alpha  = mode.alpha( props.alpha );
-    var sw     = props.stroke_width.width();
+    var fill  = Granite.contrasting_foreground_color( props.color );
+    var alpha = mode.alpha( props.alpha );
 
     // Draw rounded rectangle with triangle talk point
     switch( _type ) {
@@ -567,12 +566,35 @@ public class CanvasItemBubble : CanvasItem {
 
     save_path( ctx, CanvasItemPathType.FILL );
 
-    set_color( ctx, color, fill, alpha );
-    ctx.fill_preserve();
+    if( props.outline ) {
+      var outline = Granite.contrasting_foreground_color( props.color );
+      set_color( ctx, color, outline, 0.5 );
+      if( props.fill ) {
+        ctx.set_line_width( 1 );
+        ctx.stroke_preserve();
+      }
+      if( props.stroke ) {
+        props.dash.set_bg_pattern( ctx );
+        ctx.set_line_width( props.stroke_width.width() + 2 );
+        ctx.stroke_preserve();
+      }
+    }
 
-    set_color( ctx, color, props.color, 1.0 );
-    ctx.set_line_width( sw );
-    ctx.stroke();
+    if( props.fill ) {
+      set_color( ctx, color, fill, alpha );
+      if( props.stroke ) {
+        ctx.fill_preserve();
+      } else {
+        ctx.fill();
+      }
+    }
+
+    if( props.stroke ) {
+      set_color( ctx, color, props.color, alpha );
+      ctx.set_line_width( props.stroke_width.width() );
+      props.dash.set_bg_pattern( ctx );
+      ctx.stroke();
+    }
   
   }
 
