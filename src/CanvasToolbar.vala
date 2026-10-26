@@ -99,6 +99,12 @@ public class CanvasToolbar : Box {
       tooltip_text = _( "Selection Tool" )
     };
 
+    button.notify["active"].connect(() => {
+      if( button.active ) {
+        current = CanvasTool.SELECTOR;
+      }
+    });
+
     // If the selection changes, update the toolbar
     /* TBD
     _canvas.items.selection_changed.connect((item) => {
@@ -131,9 +137,16 @@ public class CanvasToolbar : Box {
       child = box
     };
 
-    var btn = new CanvasToolButton( this, ((category == CanvasItemCategory.ARROW) ? CanvasTool.ARROW : CanvasTool.SHAPE), popover ) {
+    var tool = (category == CanvasItemCategory.ARROW) ? CanvasTool.ARROW : CanvasTool.SHAPE;
+    var btn = new CanvasToolButton( this, tool, popover ) {
       child = _current_item.get( category ).get_image( _canvas.win )
     };
+
+    btn.notify["active"].connect(() => {
+      if( btn.active ) {
+        current = tool;
+      }
+    });
 
     /*
     btn.clicked.connect(() => {
@@ -192,6 +205,12 @@ public class CanvasToolbar : Box {
     var btn = new CanvasToolButton( this, CanvasTool.STICKER, popover ) {
       icon_name = "sticker-symbolic",
     };
+
+    btn.notify["active"].connect(() => {
+      if( btn.active ) {
+        current = CanvasTool.STICKER;
+      }
+    });
 
     var box = new Box( Orientation.VERTICAL, 0 );
     var sw = new ScrolledWindow() {
@@ -273,10 +292,13 @@ public class CanvasToolbar : Box {
       tooltip_text = info.tooltip,
       child        = picture
     };
+
+    /*
     btn.clicked.connect((e) => {
       _canvas.items.add_sticker( info.resource );
       popover.popdown();
     });
+    */
 
     box.append( btn );
 
@@ -293,6 +315,12 @@ public class CanvasToolbar : Box {
       margin_end   = margin
     };
 
+    btn.notify["active"].connect(() => {
+      if( btn.active ) {
+        current = CanvasTool.IMAGE;
+      }
+    });
+
     append( btn );
 
   }
@@ -304,6 +332,12 @@ public class CanvasToolbar : Box {
     var btn = new CanvasToolButton( this, CanvasTool.SEQUENCE ) {
       icon_name = "sequence-symbolic",
     };
+
+    btn.notify["active"].connect(() => {
+      if( btn.active ) {
+        current = CanvasTool.SEQUENCE;
+      }
+    });
 
     append( btn );
 
@@ -317,6 +351,12 @@ public class CanvasToolbar : Box {
       icon_name = "edit-symbolic",
     };
 
+    btn.notify["active"].connect(() => {
+      if( btn.active ) {
+        current = CanvasTool.PENCIL;
+      }
+    });
+
     append( btn );
 
   }
@@ -328,6 +368,12 @@ public class CanvasToolbar : Box {
     var btn = new CanvasToolButton( this, CanvasTool.TEXT ) {
       icon_name = "insert-text-symbolic",
     };
+
+    btn.notify["active"].connect(() => {
+      if( btn.active ) {
+        current = CanvasTool.TEXT;
+      }
+    });
 
     append( btn );
 
@@ -347,6 +393,12 @@ public class CanvasToolbar : Box {
       margin_end     = margin
     };
 
+    btn.notify["active"].connect(() => {
+      if( btn.active ) {
+        current = CanvasTool.MAGNIFIER;
+      }
+    });
+
     append( btn );
 
   }
@@ -361,6 +413,12 @@ public class CanvasToolbar : Box {
       icon_name      = "blur-symbolic",
       tooltip_markup = blur.tooltip()
     };
+
+    btn.notify["active"].connect(() => {
+      if( btn.active ) {
+        current = CanvasTool.BLUR;
+      }
+    });
 
     append( btn );
 

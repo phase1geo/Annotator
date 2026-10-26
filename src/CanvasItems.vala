@@ -381,6 +381,8 @@ public class CanvasItems {
       case CanvasItemType.THINK     :  item = create_bubble( CanvasBubbleType.THINK );  break;
       case CanvasItemType.LINE      :  item = create_line();  break;
       case CanvasItemType.ARROW     :  item = create_arrow();  break;
+      case CanvasItemType.STICKER   :  item = create_sticker( null );  break;
+      case CanvasItemType.IMAGE     :  item = create_image( null );  break;
       case CanvasItemType.TEXT      :  item = create_text();  break;
       case CanvasItemType.BLUR      :  item = create_blur();  break;
       case CanvasItemType.MAGNIFIER :  item = create_magnifier();  break;
@@ -388,11 +390,6 @@ public class CanvasItems {
       case CanvasItemType.SEQUENCE  :  item = create_sequence();  break;
       default :  assert_not_reached();
     }
-    add_item( item, -1, true );
-  }
-
-  public void add_sticker( string name ) {
-    var item = create_sticker( name );
     add_item( item, -1, true );
   }
 
@@ -858,6 +855,8 @@ public class CanvasItems {
       _active.mode = CanvasItemMode.DRAWING;
       return( false );
     }
+
+    stdout.printf( "current_tool: %s\n", current_tool.to_string() );
 
     if( current_tool == CanvasTool.SELECTOR ) { 
 
