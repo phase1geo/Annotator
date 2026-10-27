@@ -523,6 +523,7 @@ public class CanvasImage {
     var buf = new Pixbuf.subpixbuf( _buf, (int)crop_rect.x, (int)crop_rect.y, (int)crop_rect.width, (int)crop_rect.height );
     change_image( buf, _( "image crop" ) );
     _canvas.items.adjust_items( (0 - crop_rect.x), (0 - crop_rect.y), false );
+    _canvas.editor.use_selection_tool();
     _canvas.queue_draw();
     crop_ended();
     return( true );

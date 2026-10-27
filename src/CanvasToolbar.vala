@@ -46,6 +46,9 @@ public class CanvasToolbar : Box {
     }
     set {
       if( _current != value ) {
+        if( _current == CanvasTool.CROP ) {
+          _canvas.image.cancel_crop();
+        }
         _current = value;
         selected( value );
       }
@@ -100,6 +103,12 @@ public class CanvasToolbar : Box {
     button.notify["active"].connect(() => {
       if( button.active ) {
         current = CanvasTool.SELECTOR;
+      }
+    });
+
+    selected.connect((tool) => {
+      if( (tool == CanvasTool.SELECTOR) && !button.active ) {
+        button.active = true;
       }
     });
 
@@ -426,23 +435,19 @@ public class CanvasToolbar : Box {
   // Create the crop button
   private void create_crop() {
 
-    _crop_btn = new ToggleButton() {
+    var margin = 20;
+
+    _crop_btn = new CanvasToolButton( this, CanvasTool.CROP ) {
       icon_name    = "image-crop-symbolic",
-      has_frame    = false,
       tooltip_text = _( "Crop Image" ),
       margin_start = margin,
       margin_end   = margin
     };
 
-    _crop_btn.toggled.connect(() => {
-      if( !_ignore ) {
-        if( !_crop_btn.active ) {
-          _canvas.image.cancel_crop();
-        } else {
-          _canvas.items.clear_selection();
-          _canvas.image.start_crop();
-        }
+    _crop_btn.notify["active"].connect(() => {
+      if( _crop_btn.active ) {
         _canvas.items.clear_selection();
+        _canvas.image.start_crop();
         _canvas.queue_draw();
         _canvas.grab_focus();
       }

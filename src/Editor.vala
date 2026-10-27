@@ -35,6 +35,7 @@ public class Editor : Box {
   }
 
   public signal void image_loaded();
+  public signal void use_selection_tool();
 
   //-------------------------------------------------------------
   // Constructor
@@ -70,6 +71,10 @@ public class Editor : Box {
       halign = Align.CENTER,
       hexpand = true
     };
+
+    use_selection_tool.connect(() => {
+      toolbar.current = CanvasTool.SELECTOR;
+    });
 
     toolbar.selected.connect((tool) => {
       canvas.items.current_tool = tool;
