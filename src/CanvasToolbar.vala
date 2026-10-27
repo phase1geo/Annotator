@@ -28,10 +28,10 @@ public class CanvasToolbar : Box {
 
   private Canvas              _canvas;
   private ToggleButton        _crop_btn;
-  private int                 _current_shape;
   private HashMap<CanvasItemCategory,CurrentItem> _current_item;
   private bool                _ignore = false;
   private CanvasTool          _current = CanvasTool.SELECTOR;
+  private int                 _current_shape;
 
   public signal void selected( CanvasTool selected );
 
@@ -90,9 +90,6 @@ public class CanvasToolbar : Box {
   //-------------------------------------------------------------
   // Creates the selection tool
   private void create_selector() {
-
-    var granite_settings = Granite.Settings.get_default();
-    var dark_mode        = granite_settings.prefers_color_scheme == Granite.Settings.ColorScheme.DARK;
 
     var button = new CanvasToolButton( this, CanvasTool.SELECTOR ) {
       halign       = Align.START,
@@ -203,7 +200,7 @@ public class CanvasToolbar : Box {
 
     var popover = new Popover();
 
-    var btn = new CanvasToolButton( this, CanvasTool.STICKER, popover ) {
+    var btn = new CanvasToolButton( this, CanvasTool.STICKER ) {
       icon_name = "sticker-symbolic",
     };
 
@@ -557,41 +554,6 @@ public class CanvasToolbar : Box {
     });
 
     append( drag_label );
-
-  }
-
-  private Image make_color_icon() {
-
-    var snapshot = new Snapshot();
-    var rect     = Graphene.Rect();
-    rect.init( 0, 0, (float)30, (float)24 );
-    var ctx      = snapshot.append_cairo( rect );
-
-    // Draw the image
-    var stroke = Granite.contrasting_foreground_color( _canvas.items.props.color );
-    Utils.set_context_color_with_alpha( ctx, _canvas.items.props.color, _canvas.items.props.alpha );
-    ctx.rectangle( 0, 0, 30, 24 );
-    ctx.fill_preserve();
-
-    Utils.set_context_color_with_alpha( ctx, stroke, 0.5 );
-    ctx.stroke();
-
-    var image = new Image.from_paintable( snapshot.free_to_paintable( null ) );
-
-    return( image );
-
-  }
-
-  //-------------------------------------------------------------
-  // Returns true if the current mode is dark mode
-  private bool is_dark_mode() {
-
-    var settings = Gtk.Settings.get_default();
-    if( settings != null ) {
-      return( settings.gtk_application_prefer_dark_theme );
-    }
-
-    return( false );
 
   }
 

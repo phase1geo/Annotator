@@ -429,6 +429,15 @@ public class CanvasItems {
   }
 
   //-------------------------------------------------------------
+  // Adds a sticker selected from a dialog window.
+  public void add_sticker( CanvasItemImage item ) {
+
+    var dialog = new StickerWindow( _canvas.win, item );
+    dialog.present();
+
+  }
+
+  //-------------------------------------------------------------
   // Removes all of the canvas items
   public void clear() {
     while( _items.first() != null ) {
@@ -1028,7 +1037,7 @@ public class CanvasItems {
       if( current_tool == CanvasTool.IMAGE ) {
         add_image( (CanvasItemImage)_active );
       } else if( current_tool == CanvasTool.STICKER ) {
-        // FOOBAR
+        add_sticker( (CanvasItemImage)_active );
       }
       _selector_index = -1;
       _active.mode    = (current_tool == CanvasTool.SELECTOR) ? CanvasItemMode.SELECTED : CanvasItemMode.NONE;

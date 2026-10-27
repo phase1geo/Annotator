@@ -283,12 +283,22 @@ public class CanvasToolButton : ToggleButton {
   }
 
   //-------------------------------------------------------------
+  // Adds a separator to the grid.
+  private Separator create_separator( Grid grid, ref int row ) {
+
+    var sep = new Separator( Orientation.HORIZONTAL );
+    grid.attach( sep, 0, row, 3 );
+    row++;
+
+    return( sep );
+
+  }
+
+  //-------------------------------------------------------------
   // Adds the border options to this tool menu.
   private void create_border_options( Grid grid, ref int row ) {
 
-    var color_sep = new Separator( Orientation.HORIZONTAL );
-    grid.attach( color_sep, 0, row, 3 );
-    row++;
+    create_separator( grid, ref row );
 
     var lbl = new Label( _( "Border" ) ) {
       xalign = (float)0
@@ -329,9 +339,8 @@ public class CanvasToolButton : ToggleButton {
     grid.attach( color,     1, row, 2 );
     row++;
 
-    var width_sep = new Separator( Orientation.HORIZONTAL );
-    grid.attach( width_sep, 0, row, 3 );
-    row++;
+    var width_sep = create_separator( grid, ref row );
+    width_sep.visible = _props.stroke;
 
     var width_lbl = new Label( _( "Border Width" ) ) {
       xalign = (float)0
@@ -362,9 +371,8 @@ public class CanvasToolButton : ToggleButton {
       });
     }
 
-    var dash_sep = new Separator( Orientation.HORIZONTAL );
-    grid.attach( dash_sep, 0, row, 3 );
-    row++;
+    var dash_sep = create_separator( grid, ref row );
+    dash_sep.visible = _props.stroke;
 
     var dash_lbl = new Label( _( "Border Dash" ) ) {
       xalign = (float)0,
@@ -483,9 +491,7 @@ public class CanvasToolButton : ToggleButton {
   // Adds the background color options to this tool menu.
   private void create_background_options( Grid grid, ref int row ) {
 
-    var sep = new Separator( Orientation.HORIZONTAL );
-    grid.attach( sep, 0, row, 3 );
-    row++;
+    create_separator( grid, ref row );
 
     var lbl = new Label( _( "Fill" ) ) {
       xalign = (float)0
@@ -533,11 +539,11 @@ public class CanvasToolButton : ToggleButton {
 
   }
 
+  //-------------------------------------------------------------
+  // Displays options to adjust alpha value of image/sticker.
   private void create_alpha_options( Grid grid, ref int row ) {
 
-    var sep = new Separator( Orientation.HORIZONTAL );
-    grid.attach( sep, 0, row, 3 );
-    row++;
+    create_separator( grid, ref row );
 
     var lbl = new Label( _( "Alpha" ) ) {
       xalign = (float)0
@@ -563,9 +569,7 @@ public class CanvasToolButton : ToggleButton {
   // Displays option to enable/disable shape outlining.
   private void create_outline_options( Grid grid, ref int row ) {
 
-    var sep = new Separator( Orientation.HORIZONTAL );
-    grid.attach( sep, 0, row, 3 );
-    row++;
+    create_separator( grid, ref row );
 
     var lbl = new Label( _( "Outline" ) ) {
       xalign = (float)0
@@ -585,9 +589,7 @@ public class CanvasToolButton : ToggleButton {
   // Adds the font options to this tool menu.
   private void create_font_options( Grid grid, ref int row ) {
 
-    var sep = new Separator( Orientation.HORIZONTAL );
-    grid.attach( sep, 0, row, 3 );
-    row++;
+    create_separator( grid, ref row );
 
     var lbl = new Label( _( "Font" ) ) {
       xalign = (float)0
