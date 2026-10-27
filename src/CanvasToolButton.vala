@@ -97,6 +97,12 @@ public enum CanvasTool {
   }
 
   //-------------------------------------------------------------
+  // Returns true if this tool provides an alpha slider (but not a fill).
+  public bool has_alpha() {
+    return( (this == IMAGE) || (this == STICKER) );
+  }
+
+  //-------------------------------------------------------------
   // Returns true if this tool needs to display font options.
   public bool has_font() {
     return( (this == SEQUENCE) ||
@@ -248,6 +254,10 @@ public class CanvasToolButton : ToggleButton {
 
     if( tool.has_fill() ) {
       create_background_options( grid, ref row );
+    }
+
+    if( tool.has_alpha() ) {
+      create_alpha_options( grid, ref row );
     }
 
     if( tool.has_border() ) {
@@ -520,6 +530,32 @@ public class CanvasToolButton : ToggleButton {
       fill_lbl.visible = fill.active;
       color.visible    = fill.active;
     });
+
+  }
+
+  private void create_alpha_options( Grid grid, ref int row ) {
+
+    var sep = new Separator( Orientation.HORIZONTAL );
+    grid.attach( sep, 0, row, 3 );
+    row++;
+
+    var lbl = new Label( _( "Alpha" ) ) {
+      xalign = (float)0
+    };
+
+    var alpha = new Scale.with_range( Orientation.HORIZONTAL, 0.0, 1.0, 0.05 ) {
+      digits = 2,
+      draw_value = true,
+    };
+    alpha.set_value( _props.alpha );
+
+    alpha.value_changed.connect(() => {
+      _props.alpha = alpha.get_value();
+    });
+
+    grid.attach( lbl,   0, row );
+    grid.attach( alpha, 1, row, 2 );
+    row++;
 
   }
 

@@ -338,17 +338,17 @@ public class CanvasItems {
     return( item );
   }
 
-  private CanvasItem create_sticker( string? name, bool loading = false ) {
-    var item = new CanvasItemImage( _canvas, name, false, _canvas.props.get_properties( CanvasTool.STICKER ) );
-    if( (name != null) && !loading ) {
+  private CanvasItem create_sticker( bool loading = false ) {
+    var item = new CanvasItemImage( _canvas, false, _canvas.props.get_properties( CanvasTool.STICKER ) );
+    if( !loading ) {
       item.bbox = position_item();
     }
     return( item );
   }
 
-  private CanvasItem create_image( string? path, bool loading = false ) {
-    var item = new CanvasItemImage( _canvas, path, true, _canvas.props.get_properties( CanvasTool.IMAGE ) );
-    if( (path != null) && !loading ) {
+  private CanvasItem create_image( bool loading = false ) {
+    var item = new CanvasItemImage( _canvas, true, _canvas.props.get_properties( CanvasTool.IMAGE ) );
+    if( !loading ) {
       item.bbox = position_item();  // center_box( item.bbox.width, item.bbox.height );
     }
     return( item );
@@ -381,8 +381,8 @@ public class CanvasItems {
       case CanvasItemType.THINK     :  item = create_bubble( CanvasBubbleType.THINK );  break;
       case CanvasItemType.LINE      :  item = create_line();  break;
       case CanvasItemType.ARROW     :  item = create_arrow();  break;
-      case CanvasItemType.STICKER   :  item = create_sticker( null );  break;
-      case CanvasItemType.IMAGE     :  item = create_image( null );  break;
+      case CanvasItemType.STICKER   :  item = create_sticker();  break;
+      case CanvasItemType.IMAGE     :  item = create_image();  break;
       case CanvasItemType.TEXT      :  item = create_text();  break;
       case CanvasItemType.BLUR      :  item = create_blur();  break;
       case CanvasItemType.MAGNIFIER :  item = create_magnifier();  break;
@@ -396,7 +396,7 @@ public class CanvasItems {
   //-------------------------------------------------------------
   // Adds an image that the user can select from using a standard
   // file open dialog.
-  public void add_image() {
+  public void add_image( CanvasItemImage item ) {
 
     // Create file filters for each supported format
     var filters = new GLib.ListStore( typeof( FileFilter ) );
@@ -414,11 +414,16 @@ public class CanvasItems {
     dialog.open.begin( _canvas.win, null, (obj, res) => {
       try {
         var file     = dialog.open.end( res );
-        var filename = file.get_path();
-        var item     = create_image( filename );
-        add_item( item, -1, true );
-        Utils.store_chooser_folder( filename );
+        if( file != null ) {
+          var filename = file.get_path();
+          item.create_image( filename );
+          Utils.store_chooser_folder( filename );
+          _canvas.queue_draw();
+          return;
+        }
       } catch( Error e ) {}
+      remove_item( item );
+      _canvas.queue_draw();
     });
 
   }
@@ -662,7 +667,7 @@ public class CanvasItems {
     else if( !shift && Utils.has_key( kvs, Key.m ) ) { add_shape_item( CanvasItemType.MAGNIFIER );    return( true ); }
     else if( !shift && Utils.has_key( kvs, Key.p ) ) { add_shape_item( CanvasItemType.PENCIL );       return( true ); }
     else if( !shift && Utils.has_key( kvs, Key.q ) ) { add_shape_item( CanvasItemType.SEQUENCE );     return( true ); }
-    else if( !shift && Utils.has_key( kvs, Key.i ) ) { add_image();                                   return( true ); }
+    else if( !shift && Utils.has_key( kvs, Key.i ) ) { add_shape_item( CanvasItemType.IMAGE );        return( true ); }
     else if( !shift && Utils.has_key( kvs, Key.v ) ) { do_paste(); }
     else if( !shift && Utils.has_key( kvs, Key.Shift_L ) ) { return( handle_shift() ); }
     else if( !shift && Utils.has_key( kvs, Key.Control_L ) ) { return( handle_control() ); }
@@ -856,8 +861,6 @@ public class CanvasItems {
       return( false );
     }
 
-    stdout.printf( "current_tool: %s\n", current_tool.to_string() );
-
     if( current_tool == CanvasTool.SELECTOR ) { 
 
       // Reverse the list so that we grab the top-most item
@@ -1022,6 +1025,11 @@ public class CanvasItems {
     // If we are finished dragging the selector, clear it
     if( _selector_index != -1 ) {
       _canvas.undo_buffer.add_item( _active.get_undo_item_for_selector( _selector_index ) );
+      if( current_tool == CanvasTool.IMAGE ) {
+        add_image( (CanvasItemImage)_active );
+      } else if( current_tool == CanvasTool.STICKER ) {
+        // FOOBAR
+      }
       _selector_index = -1;
       _active.mode    = (current_tool == CanvasTool.SELECTOR) ? CanvasItemMode.SELECTED : CanvasItemMode.NONE;
       _active         = null;
@@ -1267,18 +1275,18 @@ public class CanvasItems {
         CanvasItem? item = null;
         var type = CanvasItem.get_type_from_xml( it );
         switch( type ) {
-          case CanvasItemType.RECT        :  item = create_rectangle();      break;
-          case CanvasItemType.OVAL        :  item = create_oval();           break;
-          case CanvasItemType.STAR        :  item = create_star();           break;
-          case CanvasItemType.LINE        :  item = create_line();           break;
-          case CanvasItemType.ARROW       :  item = create_arrow();          break;
-          case CanvasItemType.TEXT        :  item = create_text();           break;
-          case CanvasItemType.BLUR        :  item = create_blur();           break;
-          case CanvasItemType.MAGNIFIER   :  item = create_magnifier();      break;
-          case CanvasItemType.PENCIL      :  item = create_pencil();         break;
-          case CanvasItemType.SEQUENCE    :  item = create_sequence();       break;
-          case CanvasItemType.STICKER     :  item = create_sticker( null );  break;
-          case CanvasItemType.IMAGE       :  item = create_image( null );    break;
+          case CanvasItemType.RECT        :  item = create_rectangle();  break;
+          case CanvasItemType.OVAL        :  item = create_oval();       break;
+          case CanvasItemType.STAR        :  item = create_star();       break;
+          case CanvasItemType.LINE        :  item = create_line();       break;
+          case CanvasItemType.ARROW       :  item = create_arrow();      break;
+          case CanvasItemType.TEXT        :  item = create_text();       break;
+          case CanvasItemType.BLUR        :  item = create_blur();       break;
+          case CanvasItemType.MAGNIFIER   :  item = create_magnifier();  break;
+          case CanvasItemType.PENCIL      :  item = create_pencil();     break;
+          case CanvasItemType.SEQUENCE    :  item = create_sequence();   break;
+          case CanvasItemType.STICKER     :  item = create_sticker();    break;
+          case CanvasItemType.IMAGE       :  item = create_image();      break;
           default                         :  assert_not_reached();
         }
         if( item != null ) {
@@ -1364,8 +1372,8 @@ public class CanvasItems {
       case CanvasItemType.MAGNIFIER :  item = create_magnifier( true );         break;
       case CanvasItemType.PENCIL    :  item = create_pencil( true );            break;
       case CanvasItemType.SEQUENCE  :  item = create_sequence( true );          break;
-      case CanvasItemType.STICKER   :  item = create_sticker( null, true );     break;
-      case CanvasItemType.IMAGE     :  item = create_image( null );             break;
+      case CanvasItemType.STICKER   :  item = create_sticker( true );           break;
+      case CanvasItemType.IMAGE     :  item = create_image( true );             break;
       default                       :  assert_not_reached();
     }
     if( item != null ) {

@@ -26,16 +26,14 @@ using Cairo;
 public class CanvasItemImage : CanvasItem {
 
   private string? _name = null;
-  private bool    _file = false;
   private Pixbuf? _buf  = null;
   private Cursor  _sel_cursor;
 
   //-------------------------------------------------------------
   // Constructor.
-  public CanvasItemImage( Canvas canvas, string? name, bool file, CanvasItemProperties props ) {
+  public CanvasItemImage( Canvas canvas, bool file, CanvasItemProperties props ) {
     base( (file ? CanvasItemType.IMAGE : CanvasItemType.STICKER), canvas, props );
     create_points();
-    create_image( name, file, (file ? 300 : 64) );
     _sel_cursor = new Cursor.from_name( "se-resize", null );
   }
 
@@ -48,15 +46,14 @@ public class CanvasItemImage : CanvasItem {
   //-------------------------------------------------------------
   // Creates a pixbuf from the given filename or resource at full
   // size.
-  private void create_image( string? name, bool file, int width ) {
+  public void create_image( string? name ) {
     if( name == null ) return;
     try {
       _name = name;
-      _file = file;
-      if( file ) {
-        _buf = new Pixbuf.from_file_at_size( _name, width, -1 );
+      if( itype == CanvasItemType.IMAGE ) {
+        _buf = new Pixbuf.from_file_at_size( _name, (int)bbox.width, -1 );
       } else {
-        _buf = StickerSet.make_pixbuf( _name, width );
+        _buf = StickerSet.make_pixbuf( _name, (int)bbox.width );
       }
       bbox.width  = _buf.width;
       bbox.height = _buf.height;
@@ -71,10 +68,8 @@ public class CanvasItemImage : CanvasItem {
 
   //-------------------------------------------------------------
   // Creates an image from the specified filename.
-  private void resize_image( int width = 0 ) {
-    if( (_buf != null) && (width != 0) ) {
-      create_image( _name, _file, width );
-    }
+  private void resize_image() {
+    create_image( _name );
   }
 
   //-------------------------------------------------------------
@@ -84,16 +79,14 @@ public class CanvasItemImage : CanvasItem {
     var img_item = (CanvasItemImage)item;
     if( img_item != null ) {
       _name = img_item._name;
-      _file = img_item._file;
       _buf  = img_item._buf.copy();
-      resize_image();
     }
   }
 
   //-------------------------------------------------------------
   // Returns a copy of this item.
   public override CanvasItem duplicate() {
-    var item = new CanvasItemImage( canvas, _name, _file, props );
+    var item = new CanvasItemImage( canvas, (itype == CanvasItemType.IMAGE), props );
     item.copy( this );
     return( item );
   }
@@ -104,8 +97,8 @@ public class CanvasItemImage : CanvasItem {
 
     points.index( 0 ).copy_coords( bbox.x2(), bbox.y2() );
 
-    if( _buf.width != (int)bbox.width ) {
-      resize_image( (int)bbox.width );
+    if( (_buf == null) || (_buf.width != (int)bbox.width) ) {
+      resize_image();
     }
 
   }
@@ -118,9 +111,9 @@ public class CanvasItemImage : CanvasItem {
     var dy  = (diffx / box.width) * box.height;
 
     box.width  += diffx;
-    box.height += dy;
+    box.height += (_buf == null) ? diffy : dy;
 
-    if( box.width > 5 ) {
+    if( (box.width > 5) && (box.height > 5) ) {
       bbox = box;
     }
 
@@ -137,20 +130,18 @@ public class CanvasItemImage : CanvasItem {
   // Saves this item as XML.
   public override Xml.Node* save( int id, string image_dir ) {
     Xml.Node* node = base.save( id, image_dir );
-    if( (image_dir != null) && _file ) {
+    if( (image_dir != null) && (itype == CanvasItemType.IMAGE) ) {
       string[] options = { "compression" };
       string[] values  = { "9" };
       var fname = GLib.Path.build_filename( image_dir, "image%d.png".printf( id ) );
       try {
         _buf.savev( fname, "png", options, values );
         node->set_prop( "name", fname );
-        node->set_prop( "file", true.to_string() );
       } catch( Error e ) {
         critical( e.message );
       }
     } else {
       node->set_prop( "name", _name );
-      node->set_prop( "file", _file.to_string() );
     }
     return( node );
   }
@@ -162,25 +153,41 @@ public class CanvasItemImage : CanvasItem {
     if( n != null ) {
       _name = n;
     }
-    var f = node->get_prop( "file" );
-    if( f != null ) {
-      _file = bool.parse( f );
-    }
-    create_image( _name, _file, (int)bbox.width );
     base.load( node );
+    create_image( _name );
   }
 
   //-------------------------------------------------------------
   // Draw the rectangle.
   public override void draw_item( Context ctx, CanvasItemColor color ) {
 
-    ctx.set_line_width( 0 );
+    var alpha = mode.alpha( props.alpha );
+
     ctx.rectangle( bbox.x, bbox.y, bbox.width, bbox.height );
     save_path( ctx, CanvasItemPathType.FILL );
-    ctx.stroke();
 
-    cairo_set_source_pixbuf( ctx, _buf, bbox.x, bbox.y );
-   	ctx.paint();
+    if( props.outline || (_buf == null) ) {
+      var outline = Granite.contrasting_foreground_color( props.stroke_color );
+      set_color( ctx, color, outline, 0.5 );
+      if( props.stroke || (_buf == null) ) {
+        props.dash.set_bg_pattern( ctx );
+        ctx.set_line_width( props.stroke_width.width() + 2 );
+        ctx.stroke_preserve();
+      }
+    }
+
+    if( _buf != null ) {
+      cairo_set_source_pixbuf( ctx, _buf, bbox.x, bbox.y );
+     	ctx.paint_with_alpha( alpha );
+    }
+
+    if( props.stroke && (_buf != null) ) {
+      set_color( ctx, color, props.stroke_color, alpha );
+      ctx.set_line_width( props.stroke_width.width() );
+      props.dash.set_fg_pattern( ctx );
+      ctx.rectangle( bbox.x, bbox.y, bbox.width, bbox.height );
+      ctx.stroke();
+    }
 
   }
 

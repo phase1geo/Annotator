@@ -46,6 +46,7 @@ public class CanvasToolbar : Box {
     }
     set {
       if( _current != value ) {
+        _current = value;
         selected( value );
       }
     }
