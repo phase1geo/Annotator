@@ -46,8 +46,8 @@ public class CanvasItemStar : CanvasItem {
     points.append_val( new CanvasPoint( CanvasPointType.RESIZER0 ) );  // Outer radius
     points.append_val( new CanvasPoint( CanvasPointType.RESIZER0 ) );  // Inner radius
     points.append_val( new CanvasPoint( CanvasPointType.RESIZER0 ) );  // Upper left
-    points.append_val( new CanvasPoint( CanvasPointType.RESIZER0 ) );  // Upper right
-    points.append_val( new CanvasPoint( CanvasPointType.RESIZER0 ) );  // Lower left
+    points.append_val( new CanvasPoint( CanvasPointType.RESIZER1 ) );  // Upper right
+    points.append_val( new CanvasPoint( CanvasPointType.RESIZER1 ) );  // Lower left
     points.append_val( new CanvasPoint( CanvasPointType.RESIZER0 ) );  // Lower right
   }
 
@@ -138,7 +138,11 @@ public class CanvasItemStar : CanvasItem {
     // the outer radius.
     if( (inner_radius > 5) && ((box.height / 2) > inner_radius) ) {
       _inner_radius = inner_radius;
-      bbox          = box;
+      // bbox          = box;
+    }
+
+    if( box.height >= 1 ) {
+      bbox = box;
     }
 
   }

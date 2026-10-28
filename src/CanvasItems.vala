@@ -449,12 +449,12 @@ public class CanvasItems {
 
     var changed = false;
 
-    if( item.bbox.width < 30 ) {
-      item.bbox.width = 30;
+    if( item.bbox.width < 50 ) {
+      item.bbox.width = 50;
       changed = true;
     }
-    if( item.bbox.height < 30 ) {
-      item.bbox.height = 30;
+    if( item.bbox.height < 50 ) {
+      item.bbox.height = 50;
       changed = true;
     }
 

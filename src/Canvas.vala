@@ -61,6 +61,9 @@ public class Canvas : DrawingArea {
     // Create the canvas image
     image = new CanvasImage( this );
 
+    // Create properties
+    props = new ToolProperties( win );
+
     // Create the canvas items
     items = new CanvasItems( this );
     items.text_item_edit_changed.connect( edit_mode_changed );
@@ -68,9 +71,6 @@ public class Canvas : DrawingArea {
     // Create the undo buffers
     undo_buffer = new UndoBuffer( this );
     undo_text   = new UndoTextBuffer( this );
-
-    // Create properties
-    props = new ToolProperties( win );
 
     // Make sure the drawing area can receive keyboard focus
     can_focus = true;

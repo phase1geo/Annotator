@@ -125,15 +125,15 @@ public enum CanvasTool {
   // Returns the label displayed at the top of the options popup.
   public string options_title() {
     switch( this ) {
-      case ARROW     :  return( _( "Arrow Properties" ) );
-      case SHAPE     :  return( _( "Shape Properties" ) );
-      case STICKER   :  return( _( "Sticker Properties" ) );
-      case IMAGE     :  return( _( "Image Properties" ) );
-      case SEQUENCE  :  return( _( "Sequence Properties" ) );
-      case PENCIL    :  return( _( "Pencil Properties" ) );
-      case TEXT      :  return( _( "Text Properties" ) );
-      case MAGNIFIER :  return( _( "Magnifier Properties" ) );
-      case BLUR      :  return( _( "Blur Properties" ) );
+      case ARROW     :  return( _( "New Arrow Properties" ) );
+      case SHAPE     :  return( _( "New Shape Properties" ) );
+      case STICKER   :  return( _( "New Sticker Properties" ) );
+      case IMAGE     :  return( _( "New Image Properties" ) );
+      case SEQUENCE  :  return( _( "New Sequence Properties" ) );
+      case PENCIL    :  return( _( "New Pencil Properties" ) );
+      case TEXT      :  return( _( "New Text Properties" ) );
+      case MAGNIFIER :  return( _( "New Magnifier Properties" ) );
+      case BLUR      :  return( _( "New Blur Properties" ) );
       default        :  assert_not_reached();
     }
   }
@@ -245,14 +245,14 @@ public class CanvasToolButton : ToggleButton {
 
     var grid = new Grid() {
       row_spacing    = 5,
-      column_spacing = 5
+      column_spacing = 20 
     };
 
     var box = new Box( Orientation.VERTICAL, 5 ) {
-      margin_start  = 5,
-      margin_end    = 5,
-      margin_top    = 5,
-      margin_bottom = 5
+      margin_start  = 10,
+      margin_end    = 10,
+      margin_top    = 10,
+      margin_bottom = 10
     };
     box.append( lbl );
     box.append( grid );
@@ -312,6 +312,7 @@ public class CanvasToolButton : ToggleButton {
     };
 
     var stroke = new Switch() {
+      halign    = Align.START,
       active    = _props.stroke,
       sensitive = _props.fill
     };
@@ -352,7 +353,20 @@ public class CanvasToolButton : ToggleButton {
     var width_lbl = new Label( _( "Border Width" ) ) {
       xalign = (float)0
     };
-    grid.attach( width_lbl, 0, row );
+    var width_lev = new Revealer() {
+      reveal_child = _props.stroke,
+      child = width_lbl
+    };
+
+    var width_box = new Box( Orientation.VERTICAL, 5 );
+    var width_rev = new Revealer() {
+      reveal_child = _props.stroke,
+      child = width_box
+    };
+
+    grid.attach( width_lev, 0, row );
+    grid.attach( width_rev, 1, row, 2 );
+    row++;
 
     unowned CheckButton? width_group = null;
     for( int i=0; i<CanvasItemStrokeWidth.NUM; i++ ) {
@@ -368,14 +382,10 @@ public class CanvasToolButton : ToggleButton {
           _props.stroke_width = sw;
         }
       });
-      grid.attach( width, 1, row, 2 );
-      row++;
+      width_box.append( width );
       if( width_group == null ) {
         width_group = width;
       }
-      stroke.notify["active"].connect(() => {
-        width.visible = stroke.active;
-      });
     }
 
     var dash_sep = create_separator( grid, ref row );
@@ -384,7 +394,20 @@ public class CanvasToolButton : ToggleButton {
     var dash_lbl = new Label( _( "Border Dash" ) ) {
       xalign = (float)0,
     };
-    grid.attach( dash_lbl, 0, row );
+    var dash_lev = new Revealer() {
+      reveal_child = _props.stroke,
+      child = dash_lbl
+    };
+
+    var dash_box = new Box( Orientation.VERTICAL, 5 );
+    var dash_rev = new Revealer() {
+      reveal_child = _props.stroke,
+      child = dash_box
+    };
+
+    grid.attach( dash_lev, 0, row );
+    grid.attach( dash_rev, 1, row, 2 );
+    row++;
 
     unowned CheckButton? dash_group = null;
     for( int i=0; i<CanvasItemDashPattern.NUM; i++ ) {
@@ -400,24 +423,23 @@ public class CanvasToolButton : ToggleButton {
           _props.dash = dp;
         }
       });
-      grid.attach( dash, 1, row, 2 );
+      dash_box.append( dash );
       row++;
       if( dash_group == null ) {
         dash_group = dash;
       }
-      stroke.notify["active"].connect(() => {
-        dash.visible = stroke.active;
-      });
     }
 
     stroke.notify["active"].connect(() => {
-      _props.stroke = stroke.active;
-      color_lbl.visible = stroke.active;
-      color.visible     = stroke.active;
-      width_sep.visible = stroke.active;
-      width_lbl.visible = stroke.active;
-      dash_sep.visible  = stroke.active;
-      dash_lbl.visible  = stroke.active;
+      _props.stroke          = stroke.active;
+      color_lbl.visible      = stroke.active;
+      color.visible          = stroke.active;
+      width_sep.visible      = stroke.active;
+      width_lev.visible      = stroke.active;
+      width_rev.reveal_child = stroke.active;
+      dash_sep.visible       = stroke.active;
+      dash_lev.reveal_child  = stroke.active;
+      dash_rev.reveal_child  = stroke.active;
     });
 
   }
@@ -505,6 +527,7 @@ public class CanvasToolButton : ToggleButton {
     };
 
     var fill = new Switch() {
+      halign    = Align.START,
       active    = _props.fill,
       sensitive = _props.stroke
     };
@@ -520,6 +543,10 @@ public class CanvasToolButton : ToggleButton {
     var fill_lbl = new Label( _( "Fill Color" ) ) {
       xalign = (float)0
     };
+    var fill_lev = new Revealer() {
+      reveal_child = _props.fill,
+      child = fill_lbl
+    };
 
     var dialog = new ColorDialog() {
       modal = true,
@@ -533,15 +560,19 @@ public class CanvasToolButton : ToggleButton {
     color.notify["rgba"].connect(() => {
       _props.color = color.get_rgba();
     });
+    var color_rev = new Revealer() {
+      reveal_child = _props.fill,
+      child = color
+    };
 
-    grid.attach( fill_lbl, 0, row );
-    grid.attach( color,    1, row, 2 );
+    grid.attach( fill_lev,  0, row );
+    grid.attach( color_rev, 1, row, 2 );
     row++;
 
     fill.notify["active"].connect(() => {
-      _props.fill      = fill.active;
-      fill_lbl.visible = fill.active;
-      color.visible    = fill.active;
+      _props.fill            = fill.active;
+      fill_lev.reveal_child  = fill.active;
+      color_rev.reveal_child = fill.active;
     });
 
   }
@@ -583,6 +614,7 @@ public class CanvasToolButton : ToggleButton {
     };
 
     var outline = new Switch() {
+      halign = Align.START,
       active = _props.outline
     };
 
