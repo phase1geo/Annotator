@@ -958,7 +958,7 @@ public class CanvasItems {
       _active = null;
 
     // If we are not selecting anything, we are adding an item
-    } else {
+    } else if( current_tool.canvas_item_type() != CanvasItemType.NONE ) {
       add_shape_item( current_tool.canvas_item_type() );
     }
 

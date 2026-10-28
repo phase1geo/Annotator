@@ -95,15 +95,30 @@ public class Editor : Box {
     canvas.image.crop_ended.connect(() => {
       info_status.visible = false;
       crop_status.visible = false;
-      toolbar.crop_ended();
+      if( toolbar.current == CanvasTool.CROP ) {
+        toolbar.current = CanvasTool.SELECTOR;
+      }
       _sw.vscrollbar_policy = PolicyType.AUTOMATIC;
       _sw.hscrollbar_policy = PolicyType.AUTOMATIC;
     });
     canvas.image.crop_changed.connect((rect) => {
       crop_status.label = "%d x %d px".printf( (int)rect.width, (int)rect.height );
     });
+    canvas.image.resize_ended.connect(() => {
+      toolbar.current = CanvasTool.SELECTOR;
+    });
     canvas.image.color_picked.connect((color) => {
       // TBD - toolbar.set_color( color );
+    });
+    canvas.image.pick_started.connect(() => {
+      info_status.label   = _( "Click to select. Escape to cancel." );
+      info_status.visible = true;
+    });
+    canvas.image.pick_ended.connect(() => {
+      info_status.visible = false;
+      if( toolbar.current == CanvasTool.DROPPER ) {
+        toolbar.current = CanvasTool.SELECTOR;
+      }
     });
 
     var sep = new Separator( Orientation.HORIZONTAL ) {

@@ -66,14 +66,9 @@ public class StickerWindow : Granite.Dialog {
 
     // Handle any button clicks
     response.connect((id) => {
-      stdout.printf( "Response cancel\n" );
       _canvas.items.remove_item( _item );
+      _canvas.queue_draw();
       destroy();
-    });
-
-    close.connect(() => {
-      stdout.printf( "Closing\n" );
-      _canvas.items.remove_item( _item );
     });
 
   }

@@ -33,6 +33,8 @@ public enum CanvasTool {
   MAGNIFIER,
   BLUR,
   CROP,
+  RESIZE,
+  DROPPER,
   NUM;
 
   //-------------------------------------------------------------
@@ -50,6 +52,8 @@ public enum CanvasTool {
       case MAGNIFIER :  return( "magnifier" );
       case BLUR      :  return( "blur" );
       case CROP      :  return( "crop" );
+      case RESIZE    :  return( "resize" );
+      case DROPPER   :  return( "dropper" );
       default        :  assert_not_reached();
     }
   }
@@ -69,6 +73,8 @@ public enum CanvasTool {
       case "magnifier" :  return( MAGNIFIER );
       case "blur"      :  return( BLUR );
       case "crop"      :  return( CROP );
+      case "resize"    :  return( RESIZE );
+      case "dropper"   :  return( DROPPER );
       default          :  return( NUM );
     }
   }
@@ -112,7 +118,7 @@ public enum CanvasTool {
   //-------------------------------------------------------------
   // Returns true if this tool has properties.
   public bool has_properties() {
-    return( has_border() || has_fill() || has_font() );
+    return( has_border() || has_fill() || has_alpha() || has_font() );
   }
 
   //-------------------------------------------------------------
@@ -128,7 +134,6 @@ public enum CanvasTool {
       case TEXT      :  return( _( "Text Properties" ) );
       case MAGNIFIER :  return( _( "Magnifier Properties" ) );
       case BLUR      :  return( _( "Blur Properties" ) );
-      case CROP      :  return( _( "Crop Properties" ) );
       default        :  assert_not_reached();
     }
   }
@@ -148,6 +153,8 @@ public enum CanvasTool {
       case MAGNIFIER :  return( CanvasItemType.MAGNIFIER );
       case BLUR      :  return( CanvasItemType.BLUR );
       case CROP      :  return( CanvasItemType.NONE );
+      case RESIZE    :  return( CanvasItemType.NONE );
+      case DROPPER   :  return( CanvasItemType.NONE );
       default        :  assert_not_reached();
     }
   }

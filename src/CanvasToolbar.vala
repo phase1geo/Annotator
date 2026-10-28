@@ -27,7 +27,6 @@ public class CanvasToolbar : Box {
   private const int margin = 5;
 
   private Canvas              _canvas;
-  private ToggleButton        _crop_btn;
   private HashMap<CanvasItemCategory,CurrentItem> _current_item;
   private bool                _ignore = false;
   private CanvasTool          _current = CanvasTool.SELECTOR;
@@ -48,8 +47,10 @@ public class CanvasToolbar : Box {
       if( _current != value ) {
         var prev = _current;
         _current = value;
-        if( prev == CanvasTool.CROP ) {
-          _canvas.image.cancel_crop();
+        switch( prev ) {
+          case CanvasTool.CROP    :  _canvas.image.cancel_crop();       break;
+          case CanvasTool.DROPPER :  _canvas.image.cancel_pick_mode();  break;
+          default                 :  break;
         }
         selected( value );
       }
@@ -436,15 +437,15 @@ public class CanvasToolbar : Box {
   // Create the crop button
   private void create_crop() {
 
-    _crop_btn = new CanvasToolButton( this, CanvasTool.CROP ) {
+    var btn = new CanvasToolButton( this, CanvasTool.CROP ) {
       icon_name    = "image-crop-symbolic",
       tooltip_text = _( "Crop Image" ),
       margin_start = margin,
       margin_end   = margin
     };
 
-    _crop_btn.notify["active"].connect(() => {
-      if( _crop_btn.active ) {
+    btn.notify["active"].connect(() => {
+      if( btn.active ) {
         current = CanvasTool.CROP;
         _canvas.items.clear_selection();
         _canvas.image.start_crop();
@@ -453,7 +454,7 @@ public class CanvasToolbar : Box {
       }
     });
 
-    append( _crop_btn );
+    append( btn );
 
   }
 
@@ -461,18 +462,21 @@ public class CanvasToolbar : Box {
   // Create the image resizer button
   private void create_resize() {
 
-    var btn = new Button.from_icon_name( "view-fullscreen-symbolic" ) {
-      has_frame    = false,
+    var btn = new CanvasToolButton( this, CanvasTool.RESIZE ) {
+      icon_name    = "view-fullscreen-symbolic",
       tooltip_text = _( "Resize Image" ),
       margin_start = margin,
       margin_end   = margin
     };
 
-    btn.clicked.connect(() => {
-      _canvas.items.clear_selection();
-      _canvas.image.resize_image();
-      _canvas.queue_draw();
-      _canvas.grab_focus();
+    btn.notify["active"].connect(() => {
+      if( btn.active ) {
+        current = CanvasTool.RESIZE;
+        _canvas.items.clear_selection();
+        _canvas.image.resize_image();
+        _canvas.queue_draw();
+        _canvas.grab_focus();
+      }
     });
 
     append( btn );
@@ -483,14 +487,18 @@ public class CanvasToolbar : Box {
   // Creates the color picker
   private void create_dropper() {
 
-    var btn = new Button.from_icon_name( "eyedropper-symbolic" ) {
-      has_frame    = false,
+    var btn = new CanvasToolButton( this, CanvasTool.DROPPER ) {
+      icon_name    = "eyedropper-symbolic",
       tooltip_text = _( "Pick Color To Clipboard" ),
       margin_start = margin,
       margin_end   = margin
     };
-    btn.clicked.connect(() => {
-      _canvas.image.pick_color( true );
+
+    btn.notify["active"].connect(() => {
+      if( btn.active ) {
+        current = CanvasTool.DROPPER;
+        _canvas.image.pick_color( true );
+      }
     });
 
     append( btn );
@@ -574,36 +582,6 @@ public class CanvasToolbar : Box {
     append( sep );
 
   }
-
-  //-------------------------------------------------------------
-  // Called when the canvas image crop ends
-  public void crop_ended() {
-    if( current == CanvasTool.CROP ) {
-      selected( CanvasTool.SELECTOR );
-    }
-  }
-
-  //-------------------------------------------------------------
-  // Displays the custom menu for the specified item category type
-  // relative to the given widget.
-  /*
-  private void show_custom_menu( Widget w, CanvasItemCategory category ) {
-
-    var fb = new FlowBox();
-    fb.orientation = Orientation.HORIZONTAL;
-    fb.min_children_per_line = 4;
-    fb.max_children_per_line = 4;
-
-    var popover = new Popover( w );
-    _canvas.items.custom_items.populate_menu( category, null, popover, fb );
-
-    if( fb.get_children().length() > 0 ) {
-      popover.add( fb );
-      Utils.show_popover( popover );
-    }
-
-  }
-  */
 
 }
 

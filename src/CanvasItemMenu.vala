@@ -113,6 +113,10 @@ public class CanvasItemMenu {
 
     _actions.add_action( saction );
 
+    if( shortcut != null ) {
+      _canvas.win.application.set_accels_for_action( "item_menu.%s".printf( name ), { shortcut } );
+    }
+
   }
 
   //-------------------------------------------------------------

@@ -57,6 +57,7 @@ public class CanvasItemImage : CanvasItem {
       }
       bbox.width  = _buf.width;
       bbox.height = _buf.height;
+      bbox_changed();
     } catch( Error e ) {
       _buf = null;
     }
