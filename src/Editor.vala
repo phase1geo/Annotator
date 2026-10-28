@@ -35,7 +35,6 @@ public class Editor : Box {
   }
 
   public signal void image_loaded();
-  public signal void use_selection_tool();
 
   //-------------------------------------------------------------
   // Constructor
@@ -72,26 +71,29 @@ public class Editor : Box {
       hexpand = true
     };
 
-    use_selection_tool.connect(() => {
-      toolbar.current = CanvasTool.SELECTOR;
-    });
-
     toolbar.selected.connect((tool) => {
       canvas.items.current_tool = tool;
     });
 
+    var info_status = new Label( "" ) {
+      visible = false,
+      margin_start = 10
+    };
+
     var crop_status = new Label( "" ) {
-      halign = Align.END,
       visible = false,
       margin_end = 10
     };
 
     canvas.image.crop_started.connect(() => {
+      info_status.label   = _( "Return to crop. Escape to cancel." );
+      info_status.visible = true;
       crop_status.visible = true;
       _sw.vscrollbar_policy = PolicyType.EXTERNAL;
       _sw.hscrollbar_policy = PolicyType.EXTERNAL;
     });
     canvas.image.crop_ended.connect(() => {
+      info_status.visible = false;
       crop_status.visible = false;
       toolbar.crop_ended();
       _sw.vscrollbar_policy = PolicyType.AUTOMATIC;
@@ -109,16 +111,17 @@ public class Editor : Box {
       hexpand = true
     };
 
-    var box = new Box( Orientation.HORIZONTAL, 5 ) {
+    var box = new CenterBox() {
       halign        = Align.FILL,
       hexpand       = true,
+      start_widget  = info_status,
+      center_widget = toolbar,
+      end_widget    = crop_status,
       margin_start  = 10,
       margin_end    = 10,
       margin_top    = 10,
       margin_bottom = 10
     };
-    box.append( toolbar );
-    box.append( crop_status );
 
     // Pack the box
     append( box );

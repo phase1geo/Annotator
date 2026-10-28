@@ -12,6 +12,8 @@ sources += files(
     'UndoItemPaste.vala',
     'UndoItemPropChange.vala',
     'UndoItemSendBack.vala',
+    'UndoItemSendBackward.vala',
+    'UndoItemSendForward.vala',
     'UndoItemSendFront.vala',
     'UndoItemSequenceNum.vala',
     'UndoItemStarPoints.vala',

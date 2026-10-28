@@ -179,6 +179,8 @@ public class CanvasItems {
     { "action_cut",           action_cut },
     { "action_delete",        action_delete },
     { "action_send_to_front", action_send_to_front },
+    { "action_send_forward",  action_send_forward },
+    { "action_send_backward", action_send_backward },
     { "action_send_to_back",  action_send_to_back },
     { "action_save_custom",   action_save_custom }
   };
@@ -434,6 +436,28 @@ public class CanvasItems {
 
     var dialog = new StickerWindow( _canvas.win, item );
     dialog.present();
+
+  }
+
+  //-------------------------------------------------------------
+  // Checks the size of the item.  If it is smaller than the minimum,
+  // resize it by adjusting the width/height to the minimum.
+  private void optionally_resize( CanvasItem item ) {
+
+    var changed = false;
+
+    if( item.bbox.width < 30 ) {
+      item.bbox.width = 30;
+      changed = true;
+    }
+    if( item.bbox.height < 30 ) {
+      item.bbox.height = 30;
+      changed = true;
+    }
+
+    if( changed ) {
+      _canvas.queue_draw();
+    }
 
   }
 
@@ -1038,6 +1062,8 @@ public class CanvasItems {
         add_image( (CanvasItemImage)_active );
       } else if( current_tool == CanvasTool.STICKER ) {
         add_sticker( (CanvasItemImage)_active );
+      } else {
+        optionally_resize( _active );
       }
       _selector_index = -1;
       _active.mode    = (current_tool == CanvasTool.SELECTOR) ? CanvasItemMode.SELECTED : CanvasItemMode.NONE;
@@ -1138,6 +1164,8 @@ public class CanvasItems {
       menu.complete_section();
 
       menu.add_menu_item( item, _( "Send to Front" ), null, (pos != last), do_send_to_front );
+      menu.add_menu_item( item, _( "Send Forward" ),  null, (pos != last), do_send_forward );
+      menu.add_menu_item( item, _( "Send Backward" ), null, (pos != 0), do_send_backward );
       menu.add_menu_item( item, _( "Send to Back" ),  null, (pos != 0), do_send_to_back );
       menu.complete_section();
   
@@ -1230,6 +1258,34 @@ public class CanvasItems {
     _canvas.undo_buffer.add_item( new UndoItemSendFront( item, item_position( item ) ) );
     remove_item( item );
     move_to_front( item );
+    _canvas.queue_draw();
+  }
+
+  private void action_send_forward() {
+    do_send_forward( get_selected_item() );
+  }
+
+  //-------------------------------------------------------------
+  // Moves the item forward by one
+  private void do_send_forward( CanvasItem item ) {
+    var pos = item_position( item );
+    _canvas.undo_buffer.add_item( new UndoItemSendForward( item, pos ) );
+    remove_item( item );
+    insert_item( item, (pos + 1) );
+    _canvas.queue_draw();
+  }
+
+  private void action_send_backward() {
+    do_send_backward( get_selected_item() );
+  }
+
+  //-------------------------------------------------------------
+  // Moves the item backward by one
+  private void do_send_backward( CanvasItem item ) {
+    var pos = item_position( item );
+    _canvas.undo_buffer.add_item( new UndoItemSendBackward( item, pos ) );
+    remove_item( item );
+    insert_item( item, (pos - 1) );
     _canvas.queue_draw();
   }
 
