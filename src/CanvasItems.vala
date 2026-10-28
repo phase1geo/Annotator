@@ -234,7 +234,10 @@ public class CanvasItems {
     return( rect );
   }
 
-  private CanvasRect position_item( int width = 1, int height = 1 ) {
+  //-------------------------------------------------------------
+  // Creates a bbox for the last cursor position which is used to set
+  // the bbox of a CanvasItem.
+  public CanvasRect position_item( int width = 1, int height = 1 ) {
     var rect = new CanvasRect.from_coords( _last_x, _last_y, width, height );
     return( rect );
   }
@@ -957,9 +960,13 @@ public class CanvasItems {
       // Clear the active indicator
       _active = null;
 
-    // If we are not selecting anything, we are adding an item
-    } else if( current_tool.canvas_item_type() != CanvasItemType.NONE ) {
-      add_shape_item( current_tool.canvas_item_type() );
+    } else {
+      var current_item = _canvas.editor.get_current_item();
+      if( current_item != null ) {
+        current_item.add_item( this );
+      } else if( current_tool.canvas_item_type() != CanvasItemType.NONE ) {
+        add_shape_item( current_tool.canvas_item_type() );
+      }
     }
 
     // Clear the edit mode, if we are in it

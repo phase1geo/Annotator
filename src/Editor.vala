@@ -25,6 +25,7 @@ public class Editor : Box {
 
   private string         _filename;
   private ScrolledWindow _sw;
+  private CanvasToolbar  _toolbar;
 
   public Canvas canvas { get; private set; }
 
@@ -66,12 +67,12 @@ public class Editor : Box {
     _sw.add_css_class( Granite.CssClass.CHECKERBOARD );
 
     // Create the toolbar
-    var toolbar = new CanvasToolbar( canvas ) {
+    _toolbar = new CanvasToolbar( canvas ) {
       halign = Align.CENTER,
       hexpand = true
     };
 
-    toolbar.selected.connect((tool) => {
+    _toolbar.selected.connect((tool) => {
       canvas.items.current_tool = tool;
     });
 
@@ -95,8 +96,8 @@ public class Editor : Box {
     canvas.image.crop_ended.connect(() => {
       info_status.visible = false;
       crop_status.visible = false;
-      if( toolbar.current == CanvasTool.CROP ) {
-        toolbar.current = CanvasTool.SELECTOR;
+      if( _toolbar.current == CanvasTool.CROP ) {
+        _toolbar.current = CanvasTool.SELECTOR;
       }
       _sw.vscrollbar_policy = PolicyType.AUTOMATIC;
       _sw.hscrollbar_policy = PolicyType.AUTOMATIC;
@@ -105,10 +106,10 @@ public class Editor : Box {
       crop_status.label = "%d x %d px".printf( (int)rect.width, (int)rect.height );
     });
     canvas.image.resize_ended.connect(() => {
-      toolbar.current = CanvasTool.SELECTOR;
+      _toolbar.current = CanvasTool.SELECTOR;
     });
     canvas.image.color_picked.connect((color) => {
-      // TBD - toolbar.set_color( color );
+      // TBD - _toolbar.set_color( color );
     });
     canvas.image.pick_started.connect(() => {
       info_status.label   = _( "Click to select. Escape to cancel." );
@@ -116,8 +117,8 @@ public class Editor : Box {
     });
     canvas.image.pick_ended.connect(() => {
       info_status.visible = false;
-      if( toolbar.current == CanvasTool.DROPPER ) {
-        toolbar.current = CanvasTool.SELECTOR;
+      if( _toolbar.current == CanvasTool.DROPPER ) {
+        _toolbar.current = CanvasTool.SELECTOR;
       }
     });
 
@@ -130,7 +131,7 @@ public class Editor : Box {
       halign        = Align.FILL,
       hexpand       = true,
       start_widget  = info_status,
-      center_widget = toolbar,
+      center_widget = _toolbar,
       end_widget    = crop_status,
       margin_start  = 10,
       margin_end    = 10,
@@ -143,6 +144,13 @@ public class Editor : Box {
     append( sep );
     append( _sw );
 
+  }
+
+  //-------------------------------------------------------------
+  // Returns the currently selected arrow or shape or returns null
+  // if the arrow/shape tool is not currently selected.
+  public CurrentItem? get_current_item() {
+    return( _toolbar.get_current_item() );
   }
 
   //-------------------------------------------------------------

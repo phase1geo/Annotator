@@ -93,6 +93,17 @@ public class CanvasToolbar : Box {
   }
 
   //-------------------------------------------------------------
+  // Retrieves the currently selected arrow/shape (or null if arrow
+  // or shape is not the current tool).
+  public CurrentItem? get_current_item() {
+    switch( current ) {
+      case CanvasTool.ARROW :  return( _current_item.get( CanvasItemCategory.ARROW ) );
+      case CanvasTool.SHAPE :  return( _current_item.get( CanvasItemCategory.SHAPE ) );
+      default               :  return( null );
+    }
+  }
+
+  //-------------------------------------------------------------
   // Creates the selection tool
   private void create_selector() {
 
@@ -113,13 +124,6 @@ public class CanvasToolbar : Box {
         button.active = true;
       }
     });
-
-    // If the selection changes, update the toolbar
-    /* TBD
-    _canvas.items.selection_changed.connect((item) => {
-      button.set_props( item.itype, item.props );
-    });
-    */
 
     append( button );
 
@@ -157,12 +161,6 @@ public class CanvasToolbar : Box {
       }
     });
 
-    /*
-    btn.clicked.connect(() => {
-      _current_item.get( category ).add_item( _canvas.items );
-    });
-    */
-
     for( int i=0; i<CanvasItemType.NUM; i++ ) {
       var shape_type = (CanvasItemType)i;
       if( shape_type.category() == category ) {
@@ -190,7 +188,7 @@ public class CanvasToolbar : Box {
     _canvas.items.custom_items.item_selected.connect((cat, item) => {
       if( cat == category ) {
         _current_item.get( cat ).custom_item( item );
-        _current_item.get( cat ).add_item( _canvas.items );
+        // _current_item.get( cat ).add_item( _canvas.items );
         btn.child = _current_item.get( cat ).get_image( _canvas.win );
         popover.popdown();
       }
