@@ -692,6 +692,7 @@ public class CanvasItems {
     else if( Utils.has_key( kvs, Key.End ) )         { return( handle_cursor( control, shift, Key.End ) ); }
     else if( Utils.has_key( kvs, Key.Up ) )          { return( handle_cursor( control, shift, Key.Up ) ); }
     else if( Utils.has_key( kvs, Key.Down ) )        { return( handle_cursor( control, shift, Key.Down ) ); }
+    else if( !shift && Utils.has_key( kvs, Key.space ) ) { handle_space(); }
     else if( !shift && Utils.has_key( kvs, Key.r ) ) { add_shape_item( CanvasItemType.RECT );  return( true ); }
     else if( !shift && Utils.has_key( kvs, Key.o ) ) { add_shape_item( CanvasItemType.OVAL );  return( true ); }
     else if( !shift && Utils.has_key( kvs, Key.s ) ) { add_shape_item( CanvasItemType.STAR );  return( true ); }
@@ -762,6 +763,16 @@ public class CanvasItems {
       set_edit_mode( false );
       return( true );
     } else if( clear_selection() ) {
+      return( true );
+    }
+    return( false );
+  }
+
+  //-------------------------------------------------------------
+  // Handles the spacebar.
+  private bool handle_space() {
+    if( !in_edit_mode() ) {
+      _canvas.editor.set_toolbar_tool( CanvasTool.SELECTOR );
       return( true );
     }
     return( false );

@@ -154,6 +154,12 @@ public class Editor : Box {
   }
 
   //-------------------------------------------------------------
+  // Sets to the toolbar tool to the given tool.
+  public void set_toolbar_tool( CanvasTool tool ) {
+    _toolbar.current_tool = tool;
+  }
+
+  //-------------------------------------------------------------
   // Opens the given image.
   public bool open_image( string filename ) {
     _filename = filename;
