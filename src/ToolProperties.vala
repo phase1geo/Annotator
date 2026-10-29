@@ -53,7 +53,6 @@ public class ToolProperties {
   //-------------------------------------------------------------
   // Returns the item properties for the given canvas tool.
   public CanvasItemProperties? get_properties( CanvasTool tool ) {
-    var prop = _props.index( tool );
     return( _props.index( tool ) );
   }
 

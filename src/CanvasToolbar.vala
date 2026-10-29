@@ -26,11 +26,9 @@ public class CanvasToolbar : Box {
 
   private const int margin = 5;
 
-  private Canvas              _canvas;
+  private Canvas                                  _canvas;
   private HashMap<CanvasItemCategory,CurrentItem> _current_item;
-  private bool                _ignore = false;
-  private CanvasTool          _current = CanvasTool.SELECTOR;
-  private int                 _current_shape;
+  private CanvasTool                              _current_tool = CanvasTool.SELECTOR;
 
   public signal void selected( CanvasTool selected );
 
@@ -39,14 +37,14 @@ public class CanvasToolbar : Box {
       return( _canvas );
     }
   }
-  public CanvasTool current {
+  public CanvasTool current_tool {
     get {
-      return( _current );
+      return( _current_tool );
     }
     set {
-      if( _current != value ) {
-        var prev = _current;
-        _current = value;
+      if( _current_tool != value ) {
+        var prev = _current_tool;
+        _current_tool = value;
         switch( prev ) {
           case CanvasTool.CROP    :  _canvas.image.cancel_crop();       break;
           case CanvasTool.DROPPER :  _canvas.image.cancel_pick_mode();  break;
@@ -96,7 +94,7 @@ public class CanvasToolbar : Box {
   // Retrieves the currently selected arrow/shape (or null if arrow
   // or shape is not the current tool).
   public CurrentItem? get_current_item() {
-    switch( current ) {
+    switch( current_tool ) {
       case CanvasTool.ARROW :  return( _current_item.get( CanvasItemCategory.ARROW ) );
       case CanvasTool.SHAPE :  return( _current_item.get( CanvasItemCategory.SHAPE ) );
       default               :  return( null );
@@ -115,7 +113,7 @@ public class CanvasToolbar : Box {
 
     button.notify["active"].connect(() => {
       if( button.active ) {
-        current = CanvasTool.SELECTOR;
+        current_tool = CanvasTool.SELECTOR;
       }
     });
 
@@ -157,7 +155,7 @@ public class CanvasToolbar : Box {
 
     btn.notify["active"].connect(() => {
       if( btn.active ) {
-        current = tool;
+        current_tool = tool;
       }
     });
 
@@ -174,9 +172,10 @@ public class CanvasToolbar : Box {
           tooltip_markup = shape_type.tooltip(),
         };
         b.clicked.connect(() => {
-          _current_item.get( category ).canvas_item( shape_type );
-          // _current_item.get( category ).add_item( _canvas.items );
-          btn.child = _current_item.get( category ).get_image( _canvas.win );
+          var item = _current_item.get( category );
+          item.canvas_item( shape_type );
+          btn.set_item( item );
+          btn.child          = item.get_image( _canvas.win );
           popover.popdown();
         });
         fb.append( b );
@@ -185,11 +184,11 @@ public class CanvasToolbar : Box {
 
     box.append( fb );
     _canvas.items.custom_items.create_menu( _canvas.win, category, popover, box, custom_label, 4 );
-    _canvas.items.custom_items.item_selected.connect((cat, item) => {
+    _canvas.items.custom_items.item_selected.connect((cat, it) => {
       if( cat == category ) {
-        _current_item.get( cat ).custom_item( item );
-        // _current_item.get( cat ).add_item( _canvas.items );
-        btn.child = _current_item.get( cat ).get_image( _canvas.win );
+        var item = _current_item.get( cat );
+        item.custom_item( it );
+        btn.set_item( item );
         popover.popdown();
       }
     });
@@ -215,7 +214,7 @@ public class CanvasToolbar : Box {
 
     btn.notify["active"].connect(() => {
       if( btn.active ) {
-        current = CanvasTool.STICKER;
+        current_tool = CanvasTool.STICKER;
       }
     });
 
@@ -324,7 +323,7 @@ public class CanvasToolbar : Box {
 
     btn.notify["active"].connect(() => {
       if( btn.active ) {
-        current = CanvasTool.IMAGE;
+        current_tool = CanvasTool.IMAGE;
       }
     });
 
@@ -342,7 +341,7 @@ public class CanvasToolbar : Box {
 
     btn.notify["active"].connect(() => {
       if( btn.active ) {
-        current = CanvasTool.SEQUENCE;
+        current_tool = CanvasTool.SEQUENCE;
       }
     });
 
@@ -360,7 +359,7 @@ public class CanvasToolbar : Box {
 
     btn.notify["active"].connect(() => {
       if( btn.active ) {
-        current = CanvasTool.PENCIL;
+        current_tool = CanvasTool.PENCIL;
       }
     });
 
@@ -378,7 +377,7 @@ public class CanvasToolbar : Box {
 
     btn.notify["active"].connect(() => {
       if( btn.active ) {
-        current = CanvasTool.TEXT;
+        current_tool = CanvasTool.TEXT;
       }
     });
 
@@ -402,7 +401,7 @@ public class CanvasToolbar : Box {
 
     btn.notify["active"].connect(() => {
       if( btn.active ) {
-        current = CanvasTool.MAGNIFIER;
+        current_tool = CanvasTool.MAGNIFIER;
       }
     });
 
@@ -423,7 +422,7 @@ public class CanvasToolbar : Box {
 
     btn.notify["active"].connect(() => {
       if( btn.active ) {
-        current = CanvasTool.BLUR;
+        current_tool = CanvasTool.BLUR;
       }
     });
 
@@ -444,7 +443,7 @@ public class CanvasToolbar : Box {
 
     btn.notify["active"].connect(() => {
       if( btn.active ) {
-        current = CanvasTool.CROP;
+        current_tool = CanvasTool.CROP;
         _canvas.items.clear_selection();
         _canvas.image.start_crop();
         _canvas.queue_draw();
@@ -469,7 +468,7 @@ public class CanvasToolbar : Box {
 
     btn.notify["active"].connect(() => {
       if( btn.active ) {
-        current = CanvasTool.RESIZE;
+        current_tool = CanvasTool.RESIZE;
         _canvas.items.clear_selection();
         _canvas.image.resize_image();
         _canvas.queue_draw();
@@ -494,7 +493,7 @@ public class CanvasToolbar : Box {
 
     btn.notify["active"].connect(() => {
       if( btn.active ) {
-        current = CanvasTool.DROPPER;
+        current_tool = CanvasTool.DROPPER;
         _canvas.image.pick_color( true );
       }
     });

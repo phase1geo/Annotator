@@ -157,7 +157,7 @@ public enum CanvasItemType {
       case SEQUENCE  :  return( CanvasTool.SEQUENCE );
       case STICKER   :  return( CanvasTool.STICKER );
       case IMAGE     :  return( CanvasTool.IMAGE );
-      default        :  assert_not_reached();
+      default        :  return( CanvasTool.NUM );
     }
   }
 }

@@ -69,6 +69,23 @@ public class CurrentItem {
   }
 
   //-------------------------------------------------------------
+  // Returns the canvas tool associated with this item.
+  public CanvasItemType get_item_type() {
+    return( _canvas );
+  }
+
+  //-------------------------------------------------------------
+  // Returns the tooltip associated with this item.
+  public string? get_tooltip() {
+    if( _canvas != CanvasItemType.NONE ) {
+      return( _canvas.tooltip() );
+    } else if( _custom != null ) {
+      return( _( "Custom Shape" ) );
+    }
+    return( null );
+  }
+
+  //-------------------------------------------------------------
   // Returns the image to display for this item.
   public Image? get_image( MainWindow win ) {
     if( _canvas != CanvasItemType.NONE ) {

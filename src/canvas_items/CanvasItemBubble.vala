@@ -153,7 +153,7 @@ public class CanvasItemBubble : CanvasItem {
       case 8  :  points.index( 8 ).x += diffx;  points.index( 8 ).y += diffy;  _point_moved = true;  break;
     }
 
-    if( (box.width >= 60) && (box.height >= 1) ) {
+    if( (box.width >= 1) && (box.height >= 1) ) {
       bbox = box;
     }
 
@@ -555,7 +555,6 @@ public class CanvasItemBubble : CanvasItem {
   // Draw the rectangle
   public override void draw_item( Context ctx, CanvasItemColor color ) {
 
-    var fill  = Granite.contrasting_foreground_color( props.color );
     var alpha = mode.alpha( props.alpha );
 
     // Draw rounded rectangle with triangle talk point
@@ -581,7 +580,7 @@ public class CanvasItemBubble : CanvasItem {
     }
 
     if( props.fill ) {
-      set_color( ctx, color, fill, alpha );
+      set_color( ctx, color, props.color, alpha );
       if( props.stroke ) {
         ctx.fill_preserve();
       } else {
@@ -590,7 +589,7 @@ public class CanvasItemBubble : CanvasItem {
     }
 
     if( props.stroke ) {
-      set_color( ctx, color, props.color, alpha );
+      set_color( ctx, color, props.stroke_color, alpha );
       ctx.set_line_width( props.stroke_width.width() );
       props.dash.set_fg_pattern( ctx );
       ctx.stroke();

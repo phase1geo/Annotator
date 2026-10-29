@@ -96,8 +96,8 @@ public class Editor : Box {
     canvas.image.crop_ended.connect(() => {
       info_status.visible = false;
       crop_status.visible = false;
-      if( _toolbar.current == CanvasTool.CROP ) {
-        _toolbar.current = CanvasTool.SELECTOR;
+      if( _toolbar.current_tool == CanvasTool.CROP ) {
+        _toolbar.current_tool = CanvasTool.SELECTOR;
       }
       _sw.vscrollbar_policy = PolicyType.AUTOMATIC;
       _sw.hscrollbar_policy = PolicyType.AUTOMATIC;
@@ -106,7 +106,7 @@ public class Editor : Box {
       crop_status.label = "%d x %d px".printf( (int)rect.width, (int)rect.height );
     });
     canvas.image.resize_ended.connect(() => {
-      _toolbar.current = CanvasTool.SELECTOR;
+      _toolbar.current_tool = CanvasTool.SELECTOR;
     });
     canvas.image.color_picked.connect((color) => {
       // TBD - _toolbar.set_color( color );
@@ -117,8 +117,8 @@ public class Editor : Box {
     });
     canvas.image.pick_ended.connect(() => {
       info_status.visible = false;
-      if( _toolbar.current == CanvasTool.DROPPER ) {
-        _toolbar.current = CanvasTool.SELECTOR;
+      if( _toolbar.current_tool == CanvasTool.DROPPER ) {
+        _toolbar.current_tool = CanvasTool.SELECTOR;
       }
     });
 

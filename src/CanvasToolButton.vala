@@ -166,7 +166,8 @@ public class CanvasToolButton : ToggleButton {
   private static ToggleButton? _group = null;
 
   private Canvas                _canvas;
-  private CanvasItemProperties? _props = null;
+  private CanvasItemProperties? _props   = null;
+  private Popover?              _options = null;
 
   //-------------------------------------------------------------
   // Constructor
@@ -176,10 +177,6 @@ public class CanvasToolButton : ToggleButton {
 
     _canvas = toolbar.canvas;
     _props  = toolbar.canvas.props.get_properties( tool );
-
-    var item_type = tool.canvas_item_type();
-
-    tooltip_markup = item_type.tooltip();
 
     if( _group != null ) {
       set_group( _group );
@@ -208,31 +205,41 @@ public class CanvasToolButton : ToggleButton {
       }
     });
 
-    if( tool.has_properties() ) {
-
-      // Set the tooltip
-      tooltip_markup += "\n\n%s".printf( _( "Right-click for tool options" ) );
-
-      // Create options popover
-      var options = create_options( tool );
-
-      // Make sure that the options popover is displayed and hidden on right-click
-      var right = new GestureClick() {
-        button = Gdk.BUTTON_SECONDARY
-      };
-      add_controller( right );
-      right.pressed.connect((n_press, x, y) => {
+    // Make sure that the options popover is displayed and hidden on right-click
+    var right = new GestureClick() {
+      button = Gdk.BUTTON_SECONDARY
+    };
+    add_controller( right );
+    right.pressed.connect((n_press, x, y) => {
+      if( _options != null ) {
         Gdk.Rectangle rect = {(int)x, (int)y, 1, 1};
-        options.pointing_to = rect;
-        if( options.get_mapped() ) {
-          options.popdown();
+        _options.pointing_to = rect;
+        if( _options.get_mapped() ) {
+          _options.popdown();
         } else {
-          options.popup();
+          _options.popup();
         }
-      });
+      }
+    });
 
+    // Set the current tool, tooltip and options
+    var item = new CurrentItem.with_canvas_item( tool.canvas_item_type() );
+    set_item( item );
+
+  }
+
+  //-------------------------------------------------------------
+  // Changes the current tool and tooltip for the button.
+  public void set_item( CurrentItem item ) {
+    var tool = item.get_item_type().tool();
+    tooltip_markup = item.get_tooltip(); 
+    child          = item.get_image( _canvas.win );
+    if( tool.has_properties() ) {
+      tooltip_markup += "\n\n%s".printf( _( "Right-click for tool options" ) );
+      _options        = create_options( tool );
+    } else {
+      _options        = null;
     }
-
   }
 
   //-------------------------------------------------------------
