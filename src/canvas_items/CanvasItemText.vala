@@ -1012,46 +1012,53 @@ public class CanvasItemText : CanvasItem {
     Pango.Rectangle ink_rect, log_rect;
     layout.get_extents( out ink_rect, out log_rect );
 
-    // Output the text
-    ctx.move_to( (bbox.x - (log_rect.x / Pango.SCALE)), bbox.y );
-    Utils.set_context_color_with_alpha( ctx, props.color, alpha );
-    Pango.cairo_show_layout( ctx, layout );
-    ctx.new_path();
-
-    // Draw the text outline
     var x = bbox.x - _padding;
     var y = bbox.y - _padding;
     var w = bbox.width + (_padding * 2);
     var h = bbox.height + (_padding * 2);
+    ctx.rectangle( x, y, w, h );
 
-    // Draw the selection box, if needed
-    if( (mode == CanvasItemMode.SELECTED) || (mode == CanvasItemMode.EDITING) ) {
-
-      var dash = CanvasItemDashPattern.LONG;
-
-      if( props.outline ) {
-        Utils.set_context_color( ctx, Granite.contrasting_foreground_color( props.color ) );
-        dash.set_bg_pattern( ctx );
-        ctx.set_line_width( 6 );
-        ctx.rectangle( x, y, w, h );
-        ctx.stroke();
+    if( props.outline ) {
+      var outline = Granite.contrasting_foreground_color( props.color );
+      set_color( ctx, color, outline, 0.5 );
+      if( props.fill ) {
+        ctx.set_line_width( 1 );
+        ctx.stroke_preserve();
       }
-
-      Utils.set_context_color( ctx, props.color );
-      dash.set_fg_pattern( ctx );
-      ctx.set_line_width( 4 );
-      ctx.rectangle( x, y, w, h );
-      ctx.stroke();
-
-      ctx.set_dash( {}, 0 );
-
+      if( props.stroke ) {
+        props.dash.set_bg_pattern( ctx );
+        ctx.set_line_width( props.stroke_width.width() + 2 );
+        ctx.stroke_preserve();
+      }
     }
+
+    if( props.fill ) {
+      set_color( ctx, color, props.color, alpha );
+      if( props.stroke ) {
+        ctx.fill_preserve();
+      } else {
+        ctx.fill();
+      }
+    }
+
+    if( props.stroke ) {
+      set_color( ctx, color, props.stroke_color, alpha );
+      props.dash.set_bg_pattern( ctx );
+      ctx.set_line_width( props.stroke_width.width() );
+      ctx.stroke();
+    }
+
+    // Output the text
+    ctx.move_to( (bbox.x - (log_rect.x / Pango.SCALE)), bbox.y );
+    Utils.set_context_color_with_alpha( ctx, props.font_color, alpha );
+    Pango.cairo_show_layout( ctx, layout );
+    ctx.new_path();
 
     // Draw the insertion cursor if we are in the 'editable' state
     if( edit ) {
       var cpos = text.text.index_of_nth_char( _cursor );
       var rect = layout.index_to_pos( cpos );
-      Utils.set_context_color( ctx, props.color );
+      Utils.set_context_color( ctx, props.font_color );
       double ix, iy;
       ix = (bbox.x + (rect.x / Pango.SCALE) - 1) - (log_rect.x / Pango.SCALE);
       iy = bbox.y + (rect.y / Pango.SCALE);

@@ -658,6 +658,28 @@ public class CanvasToolButton : ToggleButton {
     grid.attach( font, 1, row, 2 );
     row++;
 
+    var color_lbl = new Label( _( "Font Color" ) ) {
+      xalign = (float)0
+    };
+
+    var color_dialog = new ColorDialog() {
+      modal = true,
+      title = _( "Choose Color" ),
+      with_alpha = true
+    };
+
+    var color = new ColorDialogButton( color_dialog ) {
+      rgba = _props.font_color
+    };
+    color.notify["rgba"].connect(() => {
+      _props.font_color = color.get_rgba();
+    });
+
+    grid.attach( color_lbl, 0, row );
+    grid.attach( color,     1, row, 2 );
+    row++;
+
+
   }
 
 }

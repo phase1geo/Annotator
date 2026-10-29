@@ -131,6 +131,7 @@ public class CanvasItemProperties {
   private CanvasItemDashPattern _dash         = CanvasItemDashPattern.NONE;
   private int                   _blur_radius  = 10;
   private FontDescription       _font;
+  private RGBA                  _font_color   = Utils.color_from_string( "white" );
 
   public RGBA color {
     get {
@@ -242,6 +243,17 @@ public class CanvasItemProperties {
       }
     }
   }
+  public RGBA font_color {
+    get {
+      return( _font_color );
+    }
+    set {
+      if( !_font_color.equal( value ) ) {
+        _font_color = value;
+        changed();
+      }
+    }
+  }
 
   public signal void changed();
 
@@ -264,6 +276,7 @@ public class CanvasItemProperties {
     dash          = props.dash;
     blur_radius   = props.blur_radius;
     font          = props.font.copy();
+    font_color    = props.font_color;
   }
 
   //-------------------------------------------------------------
@@ -280,7 +293,8 @@ public class CanvasItemProperties {
       (outline == props.outline) &&
       (dash == props.dash) &&
       (blur_radius == props.blur_radius) &&
-      font.equal( props.font)
+      font.equal( props.font) &&
+      font_color.equal( props.font_color )
     );
   }
 
@@ -288,11 +302,11 @@ public class CanvasItemProperties {
   // Outputs the contents of the class for debugging purposes in
   // string format
   public string to_string() {
-    return( "color: %s, fill: %s, alpha: %g, stroke: %s, stroke-width: %d, stroke-color: %s, dash: %s, outline: %s, blur: %d, font: %s\n".printf(
+    return( "color: %s, fill: %s, alpha: %g, stroke: %s, stroke-width: %d, stroke-color: %s, dash: %s, outline: %s, blur: %d, font: %s, font-color: %s\n".printf(
       Utils.color_to_string( color ), fill.to_string(), alpha,
       stroke.to_string(), stroke_width, Utils.color_to_string( stroke_color ),
       dash.to_string(), outline.to_string(),
-      blur_radius, font.to_string() ) );
+      blur_radius, font.to_string(), Utils.color_to_string( font_color ) ) );
   }
 
   //-------------------------------------------------------------
@@ -309,6 +323,7 @@ public class CanvasItemProperties {
     node->set_prop( "dash",         dash.to_string() );
     node->set_prop( "blur-radius",  blur_radius.to_string() );
     node->set_prop( "font",         font.to_string() );
+    node->set_prop( "font-color",   Utils.color_to_string( font_color ) );
     return( node );
   }
 
@@ -354,6 +369,10 @@ public class CanvasItemProperties {
     var f = node->get_prop( "font" );
     if( f != null ) {
       font = FontDescription.from_string( f );
+    }
+    var fc = node->get_prop( "font-color" );
+    if( fc != null ) {
+      _font_color.parse( fc );
     }
   }
 
