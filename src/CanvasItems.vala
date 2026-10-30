@@ -327,6 +327,7 @@ public class CanvasItems {
     var item = new CanvasItemPencil( _canvas, _canvas.props.get_properties( CanvasTool.PENCIL ) );
     if( !loading ) {
       _active = item;
+      _active.mode = CanvasItemMode.DRAWING;
       _canvas.set_cursor_from_name( "pencil" );
     }
     return( item );
@@ -358,8 +359,10 @@ public class CanvasItems {
 
   public void add_item( CanvasItem item, int position, bool undo, bool draw = true ) {
     clear_selection();
-    _selector_index = item.resize_selector();
-    item.mode = (_selector_index != -1) ? CanvasItemMode.SELECTED : CanvasItemMode.NONE;
+    if( !in_edit_mode() ) {
+      _selector_index = item.resize_selector();
+      item.mode = (_selector_index != -1) ? CanvasItemMode.SELECTED : CanvasItemMode.NONE;
+    }
     _items.insert( item, position );
     _active = item;
     _canvas.grab_focus();
@@ -907,12 +910,6 @@ public class CanvasItems {
     // Keep track of the press count
     _press_count = press_count;
 
-    // If the active item is a pencil, indicate that we are drawing
-    if( (_active != null) && (_active.itype == CanvasItemType.PENCIL) ) {
-      _active.mode = CanvasItemMode.DRAWING;
-      return( false );
-    }
-
     if( current_tool == CanvasTool.SELECTOR ) { 
 
       // Reverse the list so that we grab the top-most item
@@ -986,9 +983,11 @@ public class CanvasItems {
     }
 
     // Clear the edit mode, if we are in it
-    if( !in_edit_mode() ) {
+    /*
+    if( in_edit_mode() ) {
       retval = set_edit_mode( false );
     }
+    */
 
     return( retval );
 
