@@ -301,17 +301,14 @@ public class CanvasItems {
     });
     if( !loading ) {
       item.bbox = position_item();
-      /*
-      item.mode = CanvasItemMode.SELECTED;
       _active = item;
       set_edit_mode( true );
-      */
     }
     return( item );
   }
 
   private CanvasItem create_blur( bool loading = false ) {
-    var item = new CanvasItemBlur( _canvas, _canvas.props.get_properties( CanvasTool.BLUR ) );
+    var item = new CanvasItemBlur( _canvas );
     if( !loading ) {
       item.bbox = position_item();
     }
@@ -447,18 +444,25 @@ public class CanvasItems {
   // resize it by adjusting the width/height to the minimum.
   private void optionally_resize( CanvasItem item ) {
 
+    // If the item is a text or pencil item, don't attempt to change the size
+    if( (item.itype == CanvasItemType.TEXT) || (item.itype == CanvasItemType.PENCIL) ) {
+      return;
+    }
+
     var changed = false;
+    var box     = new CanvasRect.from_rect( item.bbox );
 
     if( item.bbox.width < 50 ) {
-      item.bbox.width = 50;
+      box.width = 50;
       changed = true;
     }
     if( item.bbox.height < 50 ) {
-      item.bbox.height = 50;
+      box.height = 50;
       changed = true;
     }
 
     if( changed ) {
+      item.bbox = box;
       _canvas.queue_draw();
     }
 
@@ -648,9 +652,10 @@ public class CanvasItems {
         } else {
           text.clear_selection();
           _canvas.set_cursor( null );
-          text.mode = CanvasItemMode.SELECTED;
+          text.mode = CanvasItemMode.NONE;
         }
         text_item_edit_changed( text );
+        _canvas.queue_draw();
         return( true );
       }
     }
@@ -682,7 +687,7 @@ public class CanvasItems {
       if( in_edit_mode() ) {
         return( handle_cursor( control, shift, Key.a ) );
       } else {
-        add_shape_item( CanvasItemType.ARROW );
+        _canvas.editor.set_toolbar_item( CanvasItemType.ARROW );
         return( true );
       }
     }
@@ -693,18 +698,18 @@ public class CanvasItems {
     else if( Utils.has_key( kvs, Key.Up ) )          { return( handle_cursor( control, shift, Key.Up ) ); }
     else if( Utils.has_key( kvs, Key.Down ) )        { return( handle_cursor( control, shift, Key.Down ) ); }
     else if( !shift && Utils.has_key( kvs, Key.space ) ) { handle_space(); }
-    else if( !shift && Utils.has_key( kvs, Key.r ) ) { add_shape_item( CanvasItemType.RECT );  return( true ); }
-    else if( !shift && Utils.has_key( kvs, Key.o ) ) { add_shape_item( CanvasItemType.OVAL );  return( true ); }
-    else if( !shift && Utils.has_key( kvs, Key.s ) ) { add_shape_item( CanvasItemType.STAR );  return( true ); }
-    else if( !shift && Utils.has_key( kvs, Key.k ) ) { add_shape_item( CanvasItemType.TALK );         return( true ); }
-    else if(  shift && Utils.has_key( kvs, Key.k ) ) { add_shape_item( CanvasItemType.THINK );        return( true ); }
-    else if( !shift && Utils.has_key( kvs, Key.l ) ) { add_shape_item( CanvasItemType.LINE );         return( true ); }
-    else if( !shift && Utils.has_key( kvs, Key.t ) ) { add_shape_item( CanvasItemType.TEXT );         return( true ); }
-    else if( !shift && Utils.has_key( kvs, Key.b ) ) { add_shape_item( CanvasItemType.BLUR );         return( true ); }
-    else if( !shift && Utils.has_key( kvs, Key.m ) ) { add_shape_item( CanvasItemType.MAGNIFIER );    return( true ); }
-    else if( !shift && Utils.has_key( kvs, Key.p ) ) { add_shape_item( CanvasItemType.PENCIL );       return( true ); }
-    else if( !shift && Utils.has_key( kvs, Key.q ) ) { add_shape_item( CanvasItemType.SEQUENCE );     return( true ); }
-    else if( !shift && Utils.has_key( kvs, Key.i ) ) { add_shape_item( CanvasItemType.IMAGE );        return( true ); }
+    else if( !shift && Utils.has_key( kvs, Key.r ) ) { _canvas.editor.set_toolbar_item( CanvasItemType.RECT );       return( true ); }
+    else if( !shift && Utils.has_key( kvs, Key.o ) ) { _canvas.editor.set_toolbar_item( CanvasItemType.OVAL );       return( true ); }
+    else if( !shift && Utils.has_key( kvs, Key.s ) ) { _canvas.editor.set_toolbar_item( CanvasItemType.STAR );       return( true ); }
+    else if( !shift && Utils.has_key( kvs, Key.k ) ) { _canvas.editor.set_toolbar_item( CanvasItemType.TALK );       return( true ); }
+    else if(  shift && Utils.has_key( kvs, Key.k ) ) { _canvas.editor.set_toolbar_item( CanvasItemType.THINK );      return( true ); }
+    else if( !shift && Utils.has_key( kvs, Key.l ) ) { _canvas.editor.set_toolbar_item( CanvasItemType.LINE );       return( true ); }
+    else if( !shift && Utils.has_key( kvs, Key.t ) ) { _canvas.editor.set_toolbar_item( CanvasItemType.TEXT );       return( true ); }
+    else if( !shift && Utils.has_key( kvs, Key.b ) ) { _canvas.editor.set_toolbar_item( CanvasItemType.BLUR );       return( true ); }
+    else if( !shift && Utils.has_key( kvs, Key.m ) ) { _canvas.editor.set_toolbar_item( CanvasItemType.MAGNIFIER );  return( true ); }
+    else if( !shift && Utils.has_key( kvs, Key.p ) ) { _canvas.editor.set_toolbar_item( CanvasItemType.PENCIL );     return( true ); }
+    else if( !shift && Utils.has_key( kvs, Key.q ) ) { _canvas.editor.set_toolbar_item( CanvasItemType.SEQUENCE );   return( true ); }
+    else if( !shift && Utils.has_key( kvs, Key.i ) ) { _canvas.editor.set_toolbar_item( CanvasItemType.IMAGE );      return( true ); }
     else if( !shift && Utils.has_key( kvs, Key.v ) ) { do_paste(); }
     else if( !shift && Utils.has_key( kvs, Key.Shift_L ) ) { return( handle_shift() ); }
     else if( !shift && Utils.has_key( kvs, Key.Control_L ) ) { return( handle_control() ); }
@@ -897,7 +902,7 @@ public class CanvasItems {
   // canvas should draw itself.
   public bool cursor_pressed( double x, double y, int press_count ) {
 
-    var retval  = false;
+    var retval = false;
 
     // Keep track of the press count
     _press_count = press_count;
@@ -981,7 +986,9 @@ public class CanvasItems {
     }
 
     // Clear the edit mode, if we are in it
-    retval = set_edit_mode( false );
+    if( !in_edit_mode() ) {
+      retval = set_edit_mode( false );
+    }
 
     return( retval );
 

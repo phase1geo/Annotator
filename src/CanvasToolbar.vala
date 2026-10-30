@@ -31,6 +31,7 @@ public class CanvasToolbar : Box {
   private CanvasTool                              _current_tool = CanvasTool.SELECTOR;
 
   public signal void selected( CanvasTool selected );
+  public signal void select( CanvasItemType item_type );
 
   public Canvas canvas {
     get {
@@ -43,14 +44,7 @@ public class CanvasToolbar : Box {
     }
     set {
       if( _current_tool != value ) {
-        var prev = _current_tool;
-        _current_tool = value;
-        switch( prev ) {
-          case CanvasTool.CROP    :  _canvas.image.cancel_crop();       break;
-          case CanvasTool.DROPPER :  _canvas.image.cancel_pick_mode();  break;
-          default                 :  break;
-        }
-        selected( value );
+        update_current_tool( value );
       }
     }
   }
@@ -102,6 +96,41 @@ public class CanvasToolbar : Box {
   }
 
   //-------------------------------------------------------------
+  // Sets the current tool to the given value.
+  private void update_current_tool( CanvasTool tool ) {
+    var prev = _current_tool;
+    _current_tool = tool;
+    switch( prev ) {
+      case CanvasTool.CROP    :  _canvas.image.cancel_crop();       break;
+      case CanvasTool.DROPPER :  _canvas.image.cancel_pick_mode();  break;
+      default                 :  break;
+    }
+    selected( tool );
+  }
+
+  //-------------------------------------------------------------
+  // Sets the current item based on the canvas item type specified.
+  // Causes the associated button to get activated as well.
+  public void set_current_item( CanvasItemType item_type ) {
+    CurrentItem? item = null;
+    var tool = item_type.tool();
+    switch( tool ) {
+      case CanvasTool.ARROW :  item = _current_item.get( CanvasItemCategory.ARROW );  break;
+      case CanvasTool.SHAPE :  item = _current_item.get( CanvasItemCategory.SHAPE );  break;
+      default               :  break;
+    }
+    if( _current_tool != tool ) {
+      if( item != null ) {
+        item.canvas_item( item_type );
+      }
+      update_current_tool( tool );
+    } else if( (item != null) && (item.get_item_type() != item_type) ) {
+      item.canvas_item( item_type );
+      update_current_tool( tool );
+    }
+  }
+
+  //-------------------------------------------------------------
   // Creates the selection tool
   private void create_selector() {
 
@@ -117,8 +146,8 @@ public class CanvasToolbar : Box {
       }
     });
 
-    selected.connect((tool) => {
-      if( (tool == CanvasTool.SELECTOR) && !button.active ) {
+    selected.connect((sel_tool) => {
+      if( (sel_tool == CanvasTool.SELECTOR) && !button.active ) {
         button.active = true;
       }
     });
@@ -159,6 +188,16 @@ public class CanvasToolbar : Box {
       }
     });
 
+    selected.connect((sel_tool) => {
+      if( sel_tool == tool ) {
+        var item = _current_item.get( category );
+        btn.set_item( item );
+        if( !btn.active ) {
+          btn.active = true;
+        }
+      }
+    });
+
     for( int i=0; i<CanvasItemType.NUM; i++ ) {
       var shape_type = (CanvasItemType)i;
       if( shape_type.category() == category ) {
@@ -175,7 +214,6 @@ public class CanvasToolbar : Box {
           var item = _current_item.get( category );
           item.canvas_item( shape_type );
           btn.set_item( item );
-          btn.child          = item.get_image( _canvas.win );
           popover.popdown();
         });
         fb.append( b );
@@ -215,6 +253,12 @@ public class CanvasToolbar : Box {
     btn.notify["active"].connect(() => {
       if( btn.active ) {
         current_tool = CanvasTool.STICKER;
+      }
+    });
+
+    selected.connect((sel_tool) => {
+      if( (sel_tool == CanvasTool.STICKER) && !btn.active ) {
+        btn.active = true;
       }
     });
 
@@ -327,6 +371,12 @@ public class CanvasToolbar : Box {
       }
     });
 
+    selected.connect((sel_tool) => {
+      if( (sel_tool == CanvasTool.IMAGE) && !btn.active ) {
+        btn.active = true;
+      }
+    });
+
     append( btn );
 
   }
@@ -342,6 +392,12 @@ public class CanvasToolbar : Box {
     btn.notify["active"].connect(() => {
       if( btn.active ) {
         current_tool = CanvasTool.SEQUENCE;
+      }
+    });
+
+    selected.connect((sel_tool) => {
+      if( (sel_tool == CanvasTool.SEQUENCE) && !btn.active ) {
+        btn.active = true;
       }
     });
 
@@ -363,6 +419,12 @@ public class CanvasToolbar : Box {
       }
     });
 
+    selected.connect((sel_tool) => {
+      if( (sel_tool == CanvasTool.PENCIL) && !btn.active ) {
+        btn.active = true;
+      }
+    });
+
     append( btn );
 
   }
@@ -378,6 +440,12 @@ public class CanvasToolbar : Box {
     btn.notify["active"].connect(() => {
       if( btn.active ) {
         current_tool = CanvasTool.TEXT;
+      }
+    });
+
+    selected.connect((sel_tool) => {
+      if( (sel_tool == CanvasTool.TEXT) && !btn.active ) {
+        btn.active = true;
       }
     });
 
@@ -405,6 +473,12 @@ public class CanvasToolbar : Box {
       }
     });
 
+    selected.connect((sel_tool) => {
+      if( (sel_tool == CanvasTool.MAGNIFIER) && !btn.active ) {
+        btn.active = true;
+      }
+    });
+
     append( btn );
 
   }
@@ -423,6 +497,12 @@ public class CanvasToolbar : Box {
     btn.notify["active"].connect(() => {
       if( btn.active ) {
         current_tool = CanvasTool.BLUR;
+      }
+    });
+
+    selected.connect((sel_tool) => {
+      if( (sel_tool == CanvasTool.BLUR) && !btn.active ) {
+        btn.active = true;
       }
     });
 
@@ -451,6 +531,12 @@ public class CanvasToolbar : Box {
       }
     });
 
+    selected.connect((sel_tool) => {
+      if( (sel_tool == CanvasTool.CROP) && !btn.active ) {
+        btn.active = true;
+      }
+    });
+
     append( btn );
 
   }
@@ -476,6 +562,12 @@ public class CanvasToolbar : Box {
       }
     });
 
+    selected.connect((sel_tool) => {
+      if( (sel_tool == CanvasTool.RESIZE) && !btn.active ) {
+        btn.active = true;
+      }
+    });
+
     append( btn );
 
   }
@@ -495,6 +587,12 @@ public class CanvasToolbar : Box {
       if( btn.active ) {
         current_tool = CanvasTool.DROPPER;
         _canvas.image.pick_color( true );
+      }
+    });
+
+    selected.connect((sel_tool) => {
+      if( (sel_tool == CanvasTool.DROPPER) && !btn.active ) {
+        btn.active = true;
       }
     });
 

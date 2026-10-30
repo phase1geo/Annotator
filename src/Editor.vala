@@ -154,9 +154,15 @@ public class Editor : Box {
   }
 
   //-------------------------------------------------------------
-  // Sets to the toolbar tool to the given tool.
+  // Sets the toolbar tool to the given tool.
   public void set_toolbar_tool( CanvasTool tool ) {
     _toolbar.current_tool = tool;
+  }
+
+  //-------------------------------------------------------------
+  // Sets the toolbar item to the given tool.
+  public void set_toolbar_item( CanvasItemType item_type ) {
+    _toolbar.set_current_item( item_type );
   }
 
   //-------------------------------------------------------------

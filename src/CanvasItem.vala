@@ -186,12 +186,14 @@ public class CanvasItem {
 
   //-------------------------------------------------------------
   // Constructor
-  public CanvasItem( CanvasItemType type, Canvas canvas, CanvasItemProperties props ) {
+  public CanvasItem( CanvasItemType type, Canvas canvas, CanvasItemProperties? props ) {
 
     this.canvas = canvas;
+    this.itype  = type;
 
-    this.itype = type;
-    this.props.copy( props );
+    if( props != null ) {
+      this.props.copy( props );
+    }
 
     _sel_cursor = new Cursor.from_name( "grab", null );
 
