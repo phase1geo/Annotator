@@ -974,6 +974,12 @@ public class CanvasItems {
       _active = null;
 
     } else {
+
+      // If we are editing text, disable editing
+      if( in_edit_mode() ) {
+        set_edit_mode( false );
+      }
+
       var current_item = _canvas.editor.get_current_item();
       if( current_item != null ) {
         current_item.add_item( this );
