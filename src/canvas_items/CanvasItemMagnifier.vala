@@ -154,15 +154,17 @@ public class CanvasItemMagnifier : CanvasItem {
         _zoom_factor = ((1 - (angle / half_PI)) * (max_zoom - min_zoom)) + min_zoom;
       }
     } else if( index == 1 ) {
-      box.width  += diffy;
-      box.height += diffy;
+      box.x      -= diffy;
+      box.y      -= diffy;
+      box.width  += (diffy * 2);
+      box.height += (diffy * 2);
     } else {
       points.index( 2 ).x += diffx;
       points.index( 2 ).y += diffy;
       _focus_moved = true;
     }
 
-    if( box.width >= (selector_width * 3) ) {
+    if( box.width >= 1 ) {  // (selector_width * 3) ) {
       bbox = box;
     }
 
