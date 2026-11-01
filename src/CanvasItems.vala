@@ -208,6 +208,7 @@ public class CanvasItems {
   private int                      _press_count    = -1;
   private FormatBar?               _format_bar     = null;
   private Cursor                   _xterm_cursor   = new Cursor.from_name( "text", null );
+  private CanvasTool               _current_tool   = CanvasTool.SELECTOR;
 
   private const GLib.ActionEntry[] action_entries = {
     { "action_copy",          action_copy },
@@ -226,8 +227,20 @@ public class CanvasItems {
   public CustomItems              custom_items     { get; private set; }
   public bool                     control_set      { get; private set; default = false; }
   public bool                     shift_set        { get; private set; default = false; }
-  public CanvasTool               current_tool     { get; set; default = CanvasTool.SELECTOR; }
-  public CanvasToolAutoSelectMode auto_select_mode { get; set; default = CanvasToolAutoSelectMode.AFTER_CLICK_DRAG; }
+  public CanvasToolAutoSelectMode auto_select_mode { get; set; default = CanvasToolAutoSelectMode.AFTER_TOOL_CLICK; }
+  public CanvasTool               current_tool {
+    get {
+      return( _current_tool );
+    }
+    set {
+      _current_tool = value;
+      if( auto_select_mode == CanvasToolAutoSelectMode.AFTER_TOOL_CLICK ) {
+        if( value.canvas_item_type() != CanvasItemType.NONE ) {
+          add_shape_item( value.canvas_item_type() );
+        }
+      }
+    }
+  }
 
   public signal void text_item_edit_changed( CanvasItemText item );
   public signal void selection_changed( CanvasItem item );
@@ -403,7 +416,8 @@ public class CanvasItems {
 
   public void add_item( CanvasItem item, int position, bool undo, bool draw = true ) {
     clear_selection();
-    if( auto_select_mode == CanvasToolAutoSelectMode.AFTER_TOOL_CLICK ) {
+    var after_tool_click = (auto_select_mode == CanvasToolAutoSelectMode.AFTER_TOOL_CLICK);
+    if( after_tool_click ) {
       _canvas.editor.set_toolbar_tool( CanvasTool.SELECTOR );
     }
     if( !in_edit_mode() ) {
@@ -411,7 +425,11 @@ public class CanvasItems {
       item.mode = (_selector_index != -1) ? CanvasItemMode.SELECTED : CanvasItemMode.NONE;
     }
     _items.insert( item, position );
-    _active = item;
+    if( after_tool_click ) {
+      _selector_index = -1;
+    } else {
+      _active = item;
+    }
     _canvas.grab_focus();
     if( undo ) {
       _canvas.undo_buffer.add_item( new UndoItemAdd( item, (int)(_items.length() - 1) ) );
