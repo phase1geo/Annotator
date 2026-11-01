@@ -162,17 +162,52 @@ public enum CanvasItemType {
   }
 }
 
+//-------------------------------------------------------------
+// This enumeration determines when a current tool is automatically
+// ended (tool is changed from non-selection to selection mode).
+// The values are as follows:
+// NONE             - Auto-select mode is disabled.  All tool changes must be caused by the user.
+// AFTER_CLICK_DRAG - New items are added by click and drag.  After drag has completed, switch to selection tool.
+// AFTER_TOOL_CLICK - New items are added by clicking tool button.  Items are placed in the center of the visible canvas
+//                    and we switch back to selection mode (this mimics the historic insertion mode).
+public enum CanvasToolAutoSelectMode {
+  NONE,
+  AFTER_CLICK_DRAG,
+  AFTER_TOOL_CLICK;
+
+  public string to_string() {
+    switch( this ) {
+      case NONE             :  return( "none" );
+      case AFTER_CLICK_DRAG :  return( "after-click-drag" );
+      case AFTER_TOOL_CLICK :  return( "after-tool-click" );
+      default               :  assert_not_reached();
+    }
+  }
+
+  public static CanvasToolAutoSelectMode parse( string val ) {
+    switch( val ) {
+      case "after-click-drag" :  return( AFTER_CLICK_DRAG );
+      case "after-tool-click" :  return( AFTER_TOOL_CLICK );
+      default                 :  return( NONE );
+    }
+  }
+
+  public bool auto_select() {
+    return( this != NONE );
+  }
+}
+
 public class CanvasItems {
 
-  private Canvas               _canvas;
-  private List<CanvasItem>     _items;
-  private CanvasItem?          _active         = null;
-  private int                  _selector_index = -1;
-  private double               _last_x;
-  private double               _last_y;
-  private int                  _press_count    = -1;
-  private FormatBar?           _format_bar     = null;
-  private Cursor               _xterm_cursor   = new Cursor.from_name( "text", null );
+  private Canvas                   _canvas;
+  private List<CanvasItem>         _items;
+  private CanvasItem?              _active         = null;
+  private int                      _selector_index = -1;
+  private double                   _last_x;
+  private double                   _last_y;
+  private int                      _press_count    = -1;
+  private FormatBar?               _format_bar     = null;
+  private Cursor                   _xterm_cursor   = new Cursor.from_name( "text", null );
 
   private const GLib.ActionEntry[] action_entries = {
     { "action_copy",          action_copy },
@@ -185,13 +220,14 @@ public class CanvasItems {
     { "action_save_custom",   action_save_custom }
   };
 
-  public CanvasItemProperties props        { get; private set; }
-  public string               hilite_color { get; set; default = "yellow"; }
-  public string               font_color   { get; set; default = "black"; }
-  public CustomItems          custom_items { get; private set; }
-  public bool                 control_set  { get; private set; default = false; }
-  public bool                 shift_set    { get; private set; default = false; }
-  public CanvasTool           current_tool { get; set; default = CanvasTool.SELECTOR; }
+  public CanvasItemProperties     props            { get; private set; }
+  public string                   hilite_color     { get; set; default = "yellow"; }
+  public string                   font_color       { get; set; default = "black"; }
+  public CustomItems              custom_items     { get; private set; }
+  public bool                     control_set      { get; private set; default = false; }
+  public bool                     shift_set        { get; private set; default = false; }
+  public CanvasTool               current_tool     { get; set; default = CanvasTool.SELECTOR; }
+  public CanvasToolAutoSelectMode auto_select_mode { get; set; default = CanvasToolAutoSelectMode.AFTER_CLICK_DRAG; }
 
   public signal void text_item_edit_changed( CanvasItemText item );
   public signal void selection_changed( CanvasItem item );
@@ -237,15 +273,19 @@ public class CanvasItems {
   //-------------------------------------------------------------
   // Creates a bbox for the last cursor position which is used to set
   // the bbox of a CanvasItem.
-  public CanvasRect position_item( int width = 1, int height = 1 ) {
-    var rect = new CanvasRect.from_coords( _last_x, _last_y, width, height );
-    return( rect );
+  public void position_item( CanvasItem item, double width, double height ) {
+    if( auto_select_mode == CanvasToolAutoSelectMode.AFTER_TOOL_CLICK ) {
+      item.bbox = center_box( width, height );
+    } else {
+      var rect = new CanvasRect.from_coords( _last_x, _last_y, 1, 1 );
+      item.bbox = rect;
+    }
   }
 
   private CanvasItem create_rectangle( bool loading = false ) {
     var item = new CanvasItemRect( _canvas, _canvas.props.get_properties( CanvasTool.SHAPE ) );
     if( !loading ) {
-      item.bbox = position_item();
+      position_item( item, 200, 50 );
     }
     return( item );
   }
@@ -253,7 +293,7 @@ public class CanvasItems {
   private CanvasItem create_oval( bool loading = false ) {
     var item = new CanvasItemOval( _canvas, _canvas.props.get_properties( CanvasTool.SHAPE ) );
     if( !loading ) {
-      item.bbox = position_item();
+      position_item( item, 200, 50 );
     }
     return( item );
   }
@@ -261,7 +301,7 @@ public class CanvasItems {
   private CanvasItem create_star( bool loading = false ) {
     var item = new CanvasItemStar( _canvas, 5, 25, _canvas.props.get_properties( CanvasTool.SHAPE ) );
     if( !loading ) {
-      item.bbox = position_item();
+      position_item( item, 100, 100 );
     }
     return( item );
   }
@@ -269,7 +309,7 @@ public class CanvasItems {
   private CanvasItem create_bubble( CanvasBubbleType type, bool loading = false ) {
     var item = new CanvasItemBubble( _canvas, type, _canvas.props.get_properties( CanvasTool.SHAPE ) );
     if( !loading ) {
-      item.bbox = position_item();
+      position_item( item, 200, 100 );
     }
     return( item );
   }
@@ -277,7 +317,7 @@ public class CanvasItems {
   private CanvasItem create_line( bool loading = false ) {
     var item = new CanvasItemLine( _canvas, _canvas.props.get_properties( CanvasTool.SHAPE ) );
     if( !loading ) {
-      item.bbox = position_item();
+      position_item( item, 200, 1 );
     }
     return( item );
   }
@@ -285,7 +325,7 @@ public class CanvasItems {
   private CanvasItem create_arrow( bool loading = false ) {
     var item = new CanvasItemArrow( _canvas, _canvas.props.get_properties( CanvasTool.ARROW ) );
     if( !loading ) {
-      item.bbox = position_item();
+      position_item( item, 200, 1 );
     }
     return( item );
   }
@@ -300,7 +340,7 @@ public class CanvasItems {
       }
     });
     if( !loading ) {
-      item.bbox = position_item();
+      position_item( item, 200, 1 );
       _active = item;
       set_edit_mode( true );
     }
@@ -310,7 +350,7 @@ public class CanvasItems {
   private CanvasItem create_blur( bool loading = false ) {
     var item = new CanvasItemBlur( _canvas );
     if( !loading ) {
-      item.bbox = position_item();
+      position_item( item, 200, 50 );
     }
     return( item );
   }
@@ -318,7 +358,7 @@ public class CanvasItems {
   private CanvasItem create_magnifier( bool loading = false ) {
     var item = new CanvasItemMagnifier( _canvas, 2.0, _canvas.props.get_properties( CanvasTool.MAGNIFIER ) );
     if( !loading ) {
-      item.bbox = position_item( 2, 2 );
+      position_item( item, 200, 200 );
     }
     return( item );
   }
@@ -336,7 +376,11 @@ public class CanvasItems {
   private CanvasItem create_sequence( bool loading = false ) {
     var item = new CanvasItemSequence( _canvas, _canvas.props.get_properties( CanvasTool.SEQUENCE ) );
     if( !loading ) {
-      item.bbox = new CanvasRect.from_coords( (_last_x - 25), (_last_y - 25), 50, 50 );
+      if( auto_select_mode == CanvasToolAutoSelectMode.AFTER_TOOL_CLICK ) {
+        item.bbox = center_box( 50, 50 );
+      } else {
+        item.bbox = new CanvasRect.from_coords( (_last_x - 25), (_last_y - 25), 50, 50 );
+      }
     }
     return( item );
   }
@@ -344,7 +388,7 @@ public class CanvasItems {
   private CanvasItem create_sticker( bool loading = false ) {
     var item = new CanvasItemImage( _canvas, false, _canvas.props.get_properties( CanvasTool.STICKER ) );
     if( !loading ) {
-      item.bbox = position_item();
+      position_item( item, 50, 50 );
     }
     return( item );
   }
@@ -352,13 +396,16 @@ public class CanvasItems {
   private CanvasItem create_image( bool loading = false ) {
     var item = new CanvasItemImage( _canvas, true, _canvas.props.get_properties( CanvasTool.IMAGE ) );
     if( !loading ) {
-      item.bbox = position_item();  // center_box( item.bbox.width, item.bbox.height );
+      position_item( item, item.bbox.width, item.bbox.height );
     }
     return( item );
   }
 
   public void add_item( CanvasItem item, int position, bool undo, bool draw = true ) {
     clear_selection();
+    if( auto_select_mode == CanvasToolAutoSelectMode.AFTER_TOOL_CLICK ) {
+      _canvas.editor.set_toolbar_tool( CanvasTool.SELECTOR );
+    }
     if( !in_edit_mode() ) {
       _selector_index = item.resize_selector();
       item.mode = (_selector_index != -1) ? CanvasItemMode.SELECTED : CanvasItemMode.NONE;
@@ -1094,6 +1141,9 @@ public class CanvasItems {
         add_sticker( (CanvasItemImage)_active );
       } else {
         optionally_resize( _active );
+      }
+      if( auto_select_mode == CanvasToolAutoSelectMode.AFTER_CLICK_DRAG ) {
+        _canvas.editor.set_toolbar_tool( CanvasTool.SELECTOR );
       }
       _selector_index = -1;
       _active.mode    = (current_tool == CanvasTool.SELECTOR) ? CanvasItemMode.SELECTED : CanvasItemMode.NONE;

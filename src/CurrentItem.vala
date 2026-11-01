@@ -63,7 +63,7 @@ public class CurrentItem {
       items.add_shape_item( _canvas );
     } else if( _custom != null ) {
       var it = _custom.item.duplicate();
-      it.bbox = items.position_item();
+      items.position_item( it, it.bbox.width, it.bbox.height );
       items.add_item( it, -1, true );
     }
   }
