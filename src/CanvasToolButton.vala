@@ -123,7 +123,7 @@ public enum CanvasTool {
 
   //-------------------------------------------------------------
   // Returns the label displayed at the top of the options popup.
-  public string options_title() {
+  public string new_options_title() {
     switch( this ) {
       case ARROW     :  return( _( "New Arrow Properties" ) );
       case SHAPE     :  return( _( "New Shape Properties" ) );
@@ -137,6 +137,24 @@ public enum CanvasTool {
       default        :  assert_not_reached();
     }
   }
+
+  //-------------------------------------------------------------
+  // Returns the label displayed at the top of the options popup.
+  public string selected_options_title() {
+    switch( this ) {
+      case ARROW     :  return( _( "Selected Arrow Properties" ) );
+      case SHAPE     :  return( _( "Selected Shape Properties" ) );
+      case STICKER   :  return( _( "Selected Sticker Properties" ) );
+      case IMAGE     :  return( _( "Selected Image Properties" ) );
+      case SEQUENCE  :  return( _( "Selected Sequence Properties" ) );
+      case PENCIL    :  return( _( "Selected Pencil Properties" ) );
+      case TEXT      :  return( _( "Selected Text Properties" ) );
+      case MAGNIFIER :  return( _( "Selected Magnifier Properties" ) );
+      case BLUR      :  return( _( "Selected Blur Properties" ) );
+      default        :  assert_not_reached();
+    }
+  }
+
 
   //-------------------------------------------------------------
   // Returns the CanvasItemType associated with this tool
@@ -236,17 +254,29 @@ public class CanvasToolButton : ToggleButton {
     child          = item.get_image( _canvas.win );
     if( tool.has_properties() ) {
       tooltip_markup += "\n\n%s".printf( _( "Right-click for tool options" ) );
-      _options        = create_options( tool );
+      _options        = create_options( tool, true );
     } else {
       _options        = null;
     }
   }
 
   //-------------------------------------------------------------
-  // Adds the options for this tool button.  We will 
-  private Popover create_options( CanvasTool tool ) {
+  // Sets to the options for the given tool.  This should only be
+  // called if we are the selection canvas tool button.
+  public void set_canvas_item( CanvasItem? item ) {
+    if( (item != null) && item.itype.tool().has_properties() ) {
+      _props   = item.props;
+      _options = create_options( item.itype.tool(), false );
+    } else {
+      _options = null;
+    }
+  }
 
-    var lbl = new Label( Utils.make_title( tool.options_title() ) ) {
+  //-------------------------------------------------------------
+  // Adds the options for this tool button.  We will 
+  private Popover create_options( CanvasTool tool, bool for_new ) {
+
+    var lbl = new Label( Utils.make_title( for_new ? tool.new_options_title() : tool.selected_options_title() ) ) {
       use_markup = true
     };
 
@@ -348,6 +378,7 @@ public class CanvasToolButton : ToggleButton {
     };
     color.notify["rgba"].connect(() => {
       _props.stroke_color = color.get_rgba();
+      _canvas.queue_draw();
     });
 
     grid.attach( color_lbl, 0, row );
@@ -387,6 +418,7 @@ public class CanvasToolButton : ToggleButton {
       width.toggled.connect(() => {
         if( width.get_active() ) {
           _props.stroke_width = sw;
+          _canvas.queue_draw();
         }
       });
       width_box.append( width );
@@ -428,6 +460,7 @@ public class CanvasToolButton : ToggleButton {
       dash.toggled.connect(() => {
         if( dash.get_active() ) {
           _props.dash = dp;
+          _canvas.queue_draw();
         }
       });
       dash_box.append( dash );
@@ -447,6 +480,7 @@ public class CanvasToolButton : ToggleButton {
       dash_sep.visible       = stroke.active;
       dash_lev.reveal_child  = stroke.active;
       dash_rev.reveal_child  = stroke.active;
+      _canvas.queue_draw();
     });
 
   }
@@ -566,6 +600,7 @@ public class CanvasToolButton : ToggleButton {
     };
     color.notify["rgba"].connect(() => {
       _props.color = color.get_rgba();
+      _canvas.queue_draw();
     });
     var color_rev = new Revealer() {
       reveal_child = _props.fill,
@@ -580,6 +615,7 @@ public class CanvasToolButton : ToggleButton {
       _props.fill            = fill.active;
       fill_lev.reveal_child  = fill.active;
       color_rev.reveal_child = fill.active;
+      _canvas.queue_draw();
     });
 
   }
@@ -602,6 +638,7 @@ public class CanvasToolButton : ToggleButton {
 
     alpha.value_changed.connect(() => {
       _props.alpha = alpha.get_value();
+      _canvas.queue_draw();
     });
 
     grid.attach( lbl,   0, row );
@@ -624,6 +661,11 @@ public class CanvasToolButton : ToggleButton {
       halign = Align.START,
       active = _props.outline
     };
+
+    outline.notify["active"].connect(() => {
+      _props.outline = outline.active;
+      _canvas.queue_draw();
+    });
 
     grid.attach( lbl,     0, row );
     grid.attach( outline, 1, row );
@@ -652,6 +694,7 @@ public class CanvasToolButton : ToggleButton {
 
     font.notify["font-desc"].connect(() => {
       _props.font = font.font_desc;
+      _canvas.queue_draw();
     });
 
     grid.attach( lbl,  0, row );
@@ -673,6 +716,7 @@ public class CanvasToolButton : ToggleButton {
     };
     color.notify["rgba"].connect(() => {
       _props.font_color = color.get_rgba();
+      _canvas.queue_draw();
     });
 
     grid.attach( color_lbl, 0, row );

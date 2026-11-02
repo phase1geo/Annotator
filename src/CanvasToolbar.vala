@@ -152,6 +152,10 @@ public class CanvasToolbar : Box {
       }
     });
 
+    _canvas.items.selection_changed.connect((item) => {
+      button.set_canvas_item( item );
+    });
+
     append( button );
 
   }
