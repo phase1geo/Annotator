@@ -142,6 +142,28 @@ public enum CanvasItemType {
     }
   }
 
+  //-------------------------------------------------------------
+  // Returns true if this item type is used as a persistent tool
+  // mode (the tool stays active and every press/drag on the canvas
+  // creates a new item) instead of adding a single item.
+  public bool is_tool() {
+    switch( this ) {
+      case RECT_STROKE  :
+      case RECT_FILL    :
+      case OVAL_STROKE  :
+      case OVAL_FILL    :
+      case STAR_STROKE  :
+      case STAR_FILL    :
+      case LINE         :
+      case ARROW        :
+      case BLUR         :
+      case MAGNIFIER    :
+      case PENCIL       :
+      case SEQUENCE     :  return( true );
+      default           :  return( false );
+    }
+  }
+
   public CanvasItemCategory category() {
     switch( this ) {
       case RECT_STROKE :  return( CanvasItemCategory.SHAPE );
@@ -171,6 +193,20 @@ public class CanvasItems {
   private int                  _press_count    = -1;
   private FormatBar?           _format_bar     = null;
   private Cursor               _xterm_cursor   = new Cursor.from_name( "text", null );
+  private CanvasItemType       _tool           = CanvasItemType.NONE;
+  private bool                 _creating       = false;
+  private double               _drag_x;
+  private double               _drag_y;
+  private int                  _drag_moves     = 0;
+
+  public signal void tool_changed( CanvasItemType tool );
+
+  // The currently active tool mode (NONE when no tool is active)
+  public CanvasItemType tool {
+    get {
+      return( _tool );
+    }
+  }
 
   private const GLib.ActionEntry[] action_entries = {
     { "action_copy",          action_copy },
@@ -223,6 +259,188 @@ public class CanvasItems {
 
   //-------------------------------------------------------------
   // Returns the box to place a canvas item into
+  //-------------------------------------------------------------
+  // Activates the given tool mode.  Passing NONE (or a type that
+  // is not a tool) leaves tool mode.
+  public void set_tool( CanvasItemType tool ) {
+    if( !tool.is_tool() ) {
+      tool = CanvasItemType.NONE;
+    }
+    if( _tool == tool ) return;
+    if( in_edit_mode() ) {
+      set_edit_mode( false );
+    }
+    clear_selection();
+    _tool = tool;
+    set_tool_cursor();
+    tool_changed( _tool );
+    _canvas.queue_draw();
+    _canvas.grab_focus();
+  }
+
+  //-------------------------------------------------------------
+  // Activates the given tool, or leaves tool mode if it is already
+  // the active tool.
+  public void toggle_tool( CanvasItemType tool ) {
+    set_tool( (_tool == tool) ? CanvasItemType.NONE : tool );
+  }
+
+  //-------------------------------------------------------------
+  // Sets the canvas cursor to match the active tool.
+  private void set_tool_cursor() {
+    switch( _tool ) {
+      case CanvasItemType.NONE   :  _canvas.set_cursor( null );                   break;
+      case CanvasItemType.PENCIL :  _canvas.set_cursor_from_name( "pencil" );     break;
+      default                    :  _canvas.set_cursor_from_name( "crosshair" );  break;
+    }
+  }
+
+  //-------------------------------------------------------------
+  // Returns the index of the point which follows the cursor when
+  // dragging out a new line-like item from its tail to its head.
+  private int tool_head_index() {
+    switch( _tool ) {
+      case CanvasItemType.ARROW :  return( 0 );  // CanvasItemArrow head
+      default                   :  return( 1 );  // Line end
+    }
+  }
+
+  //-------------------------------------------------------------
+  // Returns true if the active tool creates items by dragging out
+  // a line (tail to head) rather than a box.
+  private bool tool_is_linear() {
+    return( (_tool == CanvasItemType.LINE) ||
+            (_tool == CanvasItemType.ARROW) );
+  }
+
+  //-------------------------------------------------------------
+  // Returns the minimum width/height of an item being dragged out.
+  // Blur and magnifier sample image pixels and need a usable size.
+  private double tool_min_size() {
+    switch( _tool ) {
+      case CanvasItemType.BLUR      :
+      case CanvasItemType.MAGNIFIER :  return( 10 );
+      default                       :  return( 1 );
+    }
+  }
+
+  //-------------------------------------------------------------
+  // Creates a new, unpositioned item for the active tool.
+  private CanvasItem? create_tool_item() {
+    switch( _tool ) {
+      case CanvasItemType.RECT_STROKE  :  return( create_rectangle( false, true ) );
+      case CanvasItemType.RECT_FILL    :  return( create_rectangle( true, true ) );
+      case CanvasItemType.OVAL_STROKE  :  return( create_oval( false, true ) );
+      case CanvasItemType.OVAL_FILL    :  return( create_oval( true, true ) );
+      case CanvasItemType.STAR_STROKE  :  return( create_star( false, true ) );
+      case CanvasItemType.STAR_FILL    :  return( create_star( true, true ) );
+      case CanvasItemType.LINE         :  return( create_line( true ) );
+      case CanvasItemType.ARROW        :  return( create_arrow( true ) );
+      case CanvasItemType.BLUR         :  return( create_blur( true ) );
+      case CanvasItemType.MAGNIFIER    :  return( create_magnifier( true ) );
+      case CanvasItemType.PENCIL       :  return( create_pencil( true ) );
+      case CanvasItemType.SEQUENCE     :  return( create_sequence( true ) );
+      default                          :  return( null );
+    }
+  }
+
+  //-------------------------------------------------------------
+  // Starts creating a new item with the active tool at the given
+  // canvas position.  Returns true if the canvas should be redrawn.
+  private bool begin_tool_item( double x, double y ) {
+
+    var item = create_tool_item();
+    if( item == null ) return( false );
+
+    clear_selection();
+
+    _drag_x     = x;
+    _drag_y     = y;
+    _last_x     = x;
+    _last_y     = y;
+    _drag_moves = 0;
+
+    // Sequence numbers are simply placed where the user clicks
+    if( _tool == CanvasItemType.SEQUENCE ) {
+      item.bbox = new CanvasRect.from_coords( (x - 25), (y - 25), 50, 50 );
+      add_item( item, -1, true );
+      return( true );
+    }
+
+    // Everything else is dragged out.  The item is only recorded in
+    // the undo buffer once the drag completes (see end_tool_item).
+    item.bbox = new CanvasRect.from_coords( x, y, tool_min_size(), tool_min_size() );
+    _items.append( item );
+    item.mode = CanvasItemMode.DRAWING;
+    _active   = item;
+    _creating = true;
+
+    if( _tool == CanvasItemType.PENCIL ) {
+      item.draw( x, y );
+    }
+
+    return( true );
+
+  }
+
+  //-------------------------------------------------------------
+  // Updates the item being created as the cursor is dragged.
+  private void update_tool_item( double x, double y, double diff_x, double diff_y ) {
+
+    _drag_moves++;
+
+    if( _tool == CanvasItemType.PENCIL ) {
+      _active.draw( x, y );
+
+    } else if( tool_is_linear() ) {
+      _active.move_selector( tool_head_index(), diff_x, diff_y, shift_set );
+
+    } else {
+      var w = Math.fabs( x - _drag_x );
+      var h = Math.fabs( y - _drag_y );
+      // Shift constrains to a square; the magnifier is always round
+      if( shift_set || (_tool == CanvasItemType.MAGNIFIER) ) {
+        w = h = double.max( w, h );
+      }
+      var bx = (x < _drag_x) ? (_drag_x - w) : _drag_x;
+      var by = (y < _drag_y) ? (_drag_y - h) : _drag_y;
+      var min = tool_min_size();
+      _active.bbox = new CanvasRect.from_coords( bx, by, double.max( w, min ), double.max( h, min ) );
+    }
+
+  }
+
+  //-------------------------------------------------------------
+  // Finishes creating the current tool item.  Items that were
+  // barely dragged are discarded so that a stray click does not
+  // leave an invisible item behind.
+  private void end_tool_item( double x, double y ) {
+
+    var item = _active;
+    _creating = false;
+
+    var valid = (_tool == CanvasItemType.PENCIL) ?
+                (_drag_moves > 1) :
+                (Math.sqrt( ((x - _drag_x) * (x - _drag_x)) + ((y - _drag_y) * (y - _drag_y)) ) >= 5);
+
+    if( !valid ) {
+      _items.remove( item );
+      return;
+    }
+
+    _canvas.undo_buffer.add_item( new UndoItemAdd( item, _items.index( item ) ) );
+
+    // Keep shapes selected so they can be adjusted right away.  Pencil
+    // strokes are left unselected so drawing can continue freely.
+    if( _tool == CanvasItemType.PENCIL ) {
+      item.mode = CanvasItemMode.NONE;
+    } else {
+      item.mode = CanvasItemMode.SELECTED;
+      selection_changed( item.props );
+    }
+
+  }
+
   public CanvasRect center_box( double width, double height ) {
     var rect = _canvas.editor.get_displayed_rect();
     rect.copy_coords( (rect.x + ((rect.width - width) / 2)), (rect.y + ((rect.height - height) / 2)), width, height );
@@ -360,6 +578,9 @@ public class CanvasItems {
   //-------------------------------------------------------------
   // Adds the given shape to the top of the item stack
   public void add_shape_item( CanvasItemType type ) {
+    if( !type.is_tool() ) {
+      set_tool( CanvasItemType.NONE );
+    }
     CanvasItem? item = null;
     switch( type ) {
       case CanvasItemType.RECT_STROKE  :  item = create_rectangle( false );  break;
@@ -383,6 +604,7 @@ public class CanvasItems {
   }
 
   public void add_sticker( string name ) {
+    set_tool( CanvasItemType.NONE );
     var item = create_sticker( name );
     add_item( item, -1, true );
   }
@@ -391,6 +613,8 @@ public class CanvasItems {
   // Adds an image that the user can select from using a standard
   // file open dialog.
   public void add_image() {
+
+    set_tool( CanvasItemType.NONE );
 
     // Create file filters for each supported format
     var filters = new GLib.ListStore( typeof( FileFilter ) );
@@ -635,7 +859,7 @@ public class CanvasItems {
       if( in_edit_mode() ) {
         return( handle_cursor( control, shift, Key.a ) );
       } else {
-        add_shape_item( CanvasItemType.ARROW );
+        toggle_tool( CanvasItemType.ARROW );
         return( true );
       }
     }
@@ -645,20 +869,20 @@ public class CanvasItems {
     else if( Utils.has_key( kvs, Key.End ) )         { return( handle_cursor( control, shift, Key.End ) ); }
     else if( Utils.has_key( kvs, Key.Up ) )          { return( handle_cursor( control, shift, Key.Up ) ); }
     else if( Utils.has_key( kvs, Key.Down ) )        { return( handle_cursor( control, shift, Key.Down ) ); }
-    else if( !shift && Utils.has_key( kvs, Key.r ) ) { add_shape_item( CanvasItemType.RECT_STROKE );  return( true ); }
-    else if(  shift && Utils.has_key( kvs, Key.r ) ) { add_shape_item( CanvasItemType.RECT_FILL );    return( true ); }
-    else if( !shift && Utils.has_key( kvs, Key.o ) ) { add_shape_item( CanvasItemType.OVAL_STROKE );  return( true ); }
-    else if(  shift && Utils.has_key( kvs, Key.o ) ) { add_shape_item( CanvasItemType.OVAL_FILL );    return( true ); }
-    else if( !shift && Utils.has_key( kvs, Key.s ) ) { add_shape_item( CanvasItemType.STAR_STROKE );  return( true ); }
-    else if(  shift && Utils.has_key( kvs, Key.s ) ) { add_shape_item( CanvasItemType.STAR_FILL );    return( true ); }
+    else if( !shift && Utils.has_key( kvs, Key.r ) ) { toggle_tool( CanvasItemType.RECT_STROKE );  return( true ); }
+    else if(  shift && Utils.has_key( kvs, Key.r ) ) { toggle_tool( CanvasItemType.RECT_FILL );    return( true ); }
+    else if( !shift && Utils.has_key( kvs, Key.o ) ) { toggle_tool( CanvasItemType.OVAL_STROKE );  return( true ); }
+    else if(  shift && Utils.has_key( kvs, Key.o ) ) { toggle_tool( CanvasItemType.OVAL_FILL );    return( true ); }
+    else if( !shift && Utils.has_key( kvs, Key.s ) ) { toggle_tool( CanvasItemType.STAR_STROKE );  return( true ); }
+    else if(  shift && Utils.has_key( kvs, Key.s ) ) { toggle_tool( CanvasItemType.STAR_FILL );    return( true ); }
     else if( !shift && Utils.has_key( kvs, Key.k ) ) { add_shape_item( CanvasItemType.TALK );         return( true ); }
     else if(  shift && Utils.has_key( kvs, Key.k ) ) { add_shape_item( CanvasItemType.THINK );        return( true ); }
-    else if( !shift && Utils.has_key( kvs, Key.l ) ) { add_shape_item( CanvasItemType.LINE );         return( true ); }
+    else if( !shift && Utils.has_key( kvs, Key.l ) ) { toggle_tool( CanvasItemType.LINE );         return( true ); }
     else if( !shift && Utils.has_key( kvs, Key.t ) ) { add_shape_item( CanvasItemType.TEXT );         return( true ); }
-    else if( !shift && Utils.has_key( kvs, Key.b ) ) { add_shape_item( CanvasItemType.BLUR );         return( true ); }
-    else if( !shift && Utils.has_key( kvs, Key.m ) ) { add_shape_item( CanvasItemType.MAGNIFIER );    return( true ); }
-    else if( !shift && Utils.has_key( kvs, Key.p ) ) { add_shape_item( CanvasItemType.PENCIL );       return( true ); }
-    else if( !shift && Utils.has_key( kvs, Key.q ) ) { add_shape_item( CanvasItemType.SEQUENCE );     return( true ); }
+    else if( !shift && Utils.has_key( kvs, Key.b ) ) { toggle_tool( CanvasItemType.BLUR );         return( true ); }
+    else if( !shift && Utils.has_key( kvs, Key.m ) ) { toggle_tool( CanvasItemType.MAGNIFIER );    return( true ); }
+    else if( !shift && Utils.has_key( kvs, Key.p ) ) { toggle_tool( CanvasItemType.PENCIL );       return( true ); }
+    else if( !shift && Utils.has_key( kvs, Key.q ) ) { toggle_tool( CanvasItemType.SEQUENCE );     return( true ); }
     else if( !shift && Utils.has_key( kvs, Key.i ) ) { add_image();                                   return( true ); }
     else if( !shift && Utils.has_key( kvs, Key.v ) ) { do_paste(); }
     else if( !shift && Utils.has_key( kvs, Key.Shift_L ) ) { return( handle_shift() ); }
@@ -716,6 +940,9 @@ public class CanvasItems {
   private bool handle_escape() {
     if( in_edit_mode() ) {
       set_edit_mode( false );
+      return( true );
+    } else if( _tool != CanvasItemType.NONE ) {
+      set_tool( CanvasItemType.NONE );
       return( true );
     } else if( clear_selection() ) {
       return( true );
@@ -853,6 +1080,25 @@ public class CanvasItems {
       return( false );
     }
 
+    // In tool mode, a press creates a new item, unless it lands on a
+    // handle of the selected item (so it can still be adjusted).
+    if( _tool != CanvasItemType.NONE ) {
+      if( press_count > 1 ) {
+        return( false );
+      }
+      foreach( CanvasItem item in _items ) {
+        if( item.mode == CanvasItemMode.SELECTED ) {
+          _selector_index = item.is_within_selector( x, y );
+          if( _selector_index != -1 ) {
+            _active      = item;
+            _active.mode = CanvasItemMode.RESIZING;
+            return( false );
+          }
+        }
+      }
+      return( begin_tool_item( x, y ) );
+    }
+
     // Reverse the list so that we grab the top-most item
     _items.reverse();
 
@@ -954,7 +1200,11 @@ public class CanvasItems {
 
     // If we are in drawing mode, indicate that the cursor has moved
     } else if( in_draw_mode() ) {
-      _active.draw( x, y );
+      if( _creating ) {
+        update_tool_item( x, y, diff_x, diff_y );
+      } else {
+        _active.draw( x, y );
+      }
       return( true );
 
     // Otherwise, move any selected items by the given amount
@@ -981,6 +1231,10 @@ public class CanvasItems {
         }
       }
       _canvas.set_tooltip_text( null );
+      if( _tool != CanvasItemType.NONE ) {
+        set_tool_cursor();
+        return( false );
+      }
       foreach( CanvasItem item in _items ) {
         if( item.is_within( x, y ) ) {
           if( control_set ) {
@@ -1021,8 +1275,12 @@ public class CanvasItems {
 
     // Indicate that we are done editing
     } else if( in_draw_mode() ) {
-      _active.mode = CanvasItemMode.SELECTED;
-      selection_changed( _active.props );
+      if( _creating ) {
+        end_tool_item( x, y );
+      } else {
+        _active.mode = CanvasItemMode.SELECTED;
+        selection_changed( _active.props );
+      }
       retval = true;
 
     // If we were move one or more items, make sure that they stay selected
@@ -1048,8 +1306,8 @@ public class CanvasItems {
     // Clear the active element
     _active = null;
 
-    // Clear the cursor
-    _canvas.set_cursor( null );
+    // Restore the cursor (keeping the tool cursor in tool mode)
+    set_tool_cursor();
 
     // Make sure that the canvas has input focus
     _canvas.grab_focus();

@@ -28,6 +28,18 @@ public class CurrentItem {
 
   //-------------------------------------------------------------
   // Default constructor
+  // The built-in item type, or NONE if a custom item is current
+  public CanvasItemType canvas_type {
+    get {
+      return( _canvas );
+    }
+  }
+
+  // Returns true if the current item is used as a tool mode
+  public bool is_tool() {
+    return( (_custom == null) && _canvas.is_tool() );
+  }
+
   public CurrentItem() {}
 
   //-------------------------------------------------------------

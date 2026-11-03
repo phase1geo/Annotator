@@ -106,6 +106,13 @@
             <property name="visible">1</property>
             <child>
               <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes">Exit Current Tool</property>
+                <property name="accelerator">Escape</property>
+                <property name="visible">1</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
                 <property name="title" translatable="yes">Show Contextual Menu</property>
                 <property name="accelerator">&lt;shift&gt;F10 Menu</property>
                 <property name="visible">1</property>

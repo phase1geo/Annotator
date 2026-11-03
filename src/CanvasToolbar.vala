@@ -32,6 +32,8 @@ public class CanvasToolbar : Box {
   private Array<CheckButton> _dash_btns;
   private ColorDialogButton  _color_chooser;
   private HashMap<CanvasItemCategory,CurrentItem> _current_item;
+  private Array<CanvasToolButton>                 _tool_btns;
+  private bool                                    _syncing_tools = false;
 
   //-------------------------------------------------------------
   // Constructor
@@ -43,6 +45,12 @@ public class CanvasToolbar : Box {
     _width_btns   = new Array<CheckButton>();
     _dash_btns    = new Array<CheckButton>();
     _current_item = new HashMap<CanvasItemCategory,CurrentItem>();
+    _tool_btns    = new Array<CanvasToolButton>();
+
+    // Keep the toolbar's toggle buttons in sync with the active tool
+    _canvas.items.tool_changed.connect((tool) => {
+      sync_tool_buttons();
+    });
 
     // Create current items
     _current_item.set( CanvasItemCategory.ARROW, new CurrentItem.with_canvas_item( CanvasItemType.ARROW ) );
@@ -106,16 +114,25 @@ public class CanvasToolbar : Box {
       popover.popup();
     });
 
-    var btn = new Button() {
+    var btn = new ToggleButton() {
       has_frame    = false,
       margin_start = margin,
       margin_end   = 0,
       tooltip_text = tooltip,
       child        = _current_item.get( category ).get_image( _canvas.win )
     };
-    btn.clicked.connect(() => {
-      _current_item.get( category ).add_item( _canvas.items );
+    btn.toggled.connect(() => {
+      if( _syncing_tools ) return;
+      var current = _current_item.get( category );
+      if( current.is_tool() ) {
+        _canvas.items.set_tool( btn.active ? current.canvas_type : CanvasItemType.NONE );
+      } else {
+        _canvas.items.set_tool( CanvasItemType.NONE );
+        current.add_item( _canvas.items );
+      }
+      sync_tool_buttons();
     });
+    _tool_btns.append_val( new CanvasToolButton( btn, category, CanvasItemType.NONE ) );
 
     for( int i=0; i<CanvasItemType.NUM; i++ ) {
       var shape_type = (CanvasItemType)i;
@@ -131,8 +148,14 @@ public class CanvasToolbar : Box {
         };
         b.clicked.connect(() => {
           _current_item.get( category ).canvas_item( shape_type );
-          _current_item.get( category ).add_item( _canvas.items );
           btn.child = _current_item.get( category ).get_image( _canvas.win );
+          if( shape_type.is_tool() ) {
+            _canvas.items.set_tool( shape_type );
+          } else {
+            _canvas.items.set_tool( CanvasItemType.NONE );
+            _current_item.get( category ).add_item( _canvas.items );
+          }
+          sync_tool_buttons();
           popover.popdown();
         });
         fb.append( b );
@@ -143,8 +166,10 @@ public class CanvasToolbar : Box {
     _canvas.items.custom_items.create_menu( _canvas.win, category, popover, box, custom_label, 4 );
     _canvas.items.custom_items.item_selected.connect((cat, item) => {
       if( cat == category ) {
+        _canvas.items.set_tool( CanvasItemType.NONE );
         _current_item.get( cat ).custom_item( item );
         _current_item.get( cat ).add_item( _canvas.items );
+        sync_tool_buttons();
         btn.child = _current_item.get( cat ).get_image( _canvas.win );
         popover.popdown();
       }
@@ -161,6 +186,42 @@ public class CanvasToolbar : Box {
       popover.hide();
     });
 
+  }
+
+  //-------------------------------------------------------------
+  // Creates a toggle button which activates the given tool mode.
+  private ToggleButton create_tool_button( CanvasItemType type ) {
+    var btn = new ToggleButton() {
+      icon_name      = type.icon_name(),
+      has_frame      = false,
+      tooltip_markup = type.tooltip(),
+      margin_start   = margin,
+      margin_end     = margin
+    };
+    btn.toggled.connect(() => {
+      if( _syncing_tools ) return;
+      _canvas.items.set_tool( btn.active ? type : CanvasItemType.NONE );
+      sync_tool_buttons();
+    });
+    _tool_btns.append_val( new CanvasToolButton( btn, CanvasItemCategory.NONE, type ) );
+    return( btn );
+  }
+
+  //-------------------------------------------------------------
+  // Updates the pressed state of every tool button to match the
+  // currently active tool.
+  private void sync_tool_buttons() {
+    var tool = _canvas.items.tool;
+    _syncing_tools = true;
+    for( int i=0; i<_tool_btns.length; i++ ) {
+      var tb   = _tool_btns.index( i );
+      var type = (tb.category != CanvasItemCategory.NONE) ?
+                 _current_item.get( tb.category ).canvas_type : tb.tool;
+      var current_is_tool = (tb.category == CanvasItemCategory.NONE) ||
+                            _current_item.get( tb.category ).is_tool();
+      tb.button.active = current_is_tool && (tool != CanvasItemType.NONE) && (tool == type);
+    }
+    _syncing_tools = false;
   }
 
   //-------------------------------------------------------------
@@ -289,15 +350,7 @@ public class CanvasToolbar : Box {
 
     var sequence = CanvasItemType.SEQUENCE;
 
-    var btn = new Button.from_icon_name( sequence.icon_name() ) {
-      has_frame      = false,
-      tooltip_markup = sequence.tooltip(),
-      margin_start   = margin,
-      margin_end     = margin
-    };
-    btn.clicked.connect(() => {
-      _canvas.items.add_shape_item( CanvasItemType.SEQUENCE );
-    });
+    var btn = create_tool_button( sequence );
 
     append( btn );
 
@@ -309,15 +362,7 @@ public class CanvasToolbar : Box {
 
     var pencil = CanvasItemType.PENCIL;
 
-    var btn = new Button.from_icon_name( pencil.icon_name() ) {
-      has_frame      = false,
-      tooltip_markup = pencil.tooltip(),
-      margin_start   = margin,
-      margin_end     = margin
-    };
-    btn.clicked.connect(() => {
-      _canvas.items.add_shape_item( CanvasItemType.PENCIL );
-    });
+    var btn = create_tool_button( pencil );
 
     append( btn );
 
@@ -347,15 +392,7 @@ public class CanvasToolbar : Box {
 
     var magnifier = CanvasItemType.MAGNIFIER;
 
-    var btn = new Button.from_icon_name( magnifier.icon_name() ) {
-      has_frame      = false,
-      tooltip_markup = magnifier.tooltip(),
-      margin_start   = margin,
-      margin_end     = margin
-    };
-    btn.clicked.connect(() => {
-      _canvas.items.add_shape_item( CanvasItemType.MAGNIFIER );
-    });
+    var btn = create_tool_button( magnifier );
 
     append( btn );
 
@@ -367,15 +404,7 @@ public class CanvasToolbar : Box {
 
     var blur = CanvasItemType.BLUR;
 
-    var btn = new Button.from_icon_name( blur.icon_name() ) {
-      has_frame      = false,
-      tooltip_markup = blur.tooltip(),
-      margin_start   = margin,
-      margin_end     = margin
-    };
-    btn.clicked.connect(() => {
-      _canvas.items.add_shape_item( CanvasItemType.BLUR );
-    });
+    var btn = create_tool_button( blur );
 
     append( btn );
 
@@ -398,6 +427,7 @@ public class CanvasToolbar : Box {
       if( !_crop_btn.active ) {
         _canvas.image.cancel_crop();
       } else {
+        _canvas.items.set_tool( CanvasItemType.NONE );
         _canvas.items.clear_selection();
         _canvas.image.start_crop();
       }
@@ -867,3 +897,17 @@ public class CanvasToolbar : Box {
 
 }
 
+//-------------------------------------------------------------
+// Associates a toolbar toggle button with the tool it activates.
+// Category buttons (arrows/shapes) resolve their tool from the
+// toolbar's current item for that category.
+public class CanvasToolButton {
+  public ToggleButton       button   { get; private set; }
+  public CanvasItemCategory category { get; private set; }
+  public CanvasItemType     tool     { get; private set; }
+  public CanvasToolButton( ToggleButton button, CanvasItemCategory category, CanvasItemType tool ) {
+    this.button   = button;
+    this.category = category;
+    this.tool     = tool;
+  }
+}

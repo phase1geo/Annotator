@@ -182,8 +182,9 @@ public class CanvasItemBlur : CanvasItem {
     ctx.rectangle( bbox.x, bbox.y, bbox.width, bbox.height );
     save_path( ctx, CanvasItemPathType.FILL );
 
-    // If we are moving the node or resizing it, just draw an alpha box
-    if( mode.moving() ) {
+    // If we are moving, resizing or still dragging out the node, just
+    // draw an alpha box (the blur is recalculated once it is placed)
+    if( mode.moving() || (mode == CanvasItemMode.DRAWING) ) {
       ctx.fill();
 
     // Otherwise, calculate and apply the blur
