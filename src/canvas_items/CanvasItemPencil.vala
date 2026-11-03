@@ -122,8 +122,8 @@ public class CanvasItemPencil : CanvasItem {
 
     if( _edit_points.length == 0 ) return;
 
-    var alpha   = mode.alpha( props.alpha );
-    var outline = Granite.contrasting_foreground_color( props.color );
+    var alpha   = mode.alpha( props.stroke_color.alpha );
+    var outline = Granite.contrasting_foreground_color( props.stroke_color );
     var sw      = props.stroke_width.width();
 
     // Draw the outline
@@ -146,7 +146,7 @@ public class CanvasItemPencil : CanvasItem {
       ctx.stroke_preserve();
     }
 
-    set_color( ctx, color, props.color, alpha );
+    set_color( ctx, color, props.stroke_color, alpha );
     ctx.set_line_width( sw );
     props.dash.set_fg_pattern( ctx );
     ctx.stroke();

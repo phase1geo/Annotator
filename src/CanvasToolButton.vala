@@ -88,8 +88,7 @@ public enum CanvasTool {
             (this == IMAGE)    ||
             (this == SEQUENCE) ||
             (this == PENCIL)   ||
-            (this == TEXT)     ||
-            (this == MAGNIFIER) );
+            (this == TEXT) );
   }
 
   //-------------------------------------------------------------
@@ -191,8 +190,7 @@ public enum CanvasTool {
   }
 
   private void setup_magnifier_properties( CanvasItemProperties props ) {
-    props.stroke  = false;
-    props.outline = true;
+    props.outline = false;
   }
 
   private void setup_blur_properties( CanvasItemProperties props ) {

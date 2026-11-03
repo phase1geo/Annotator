@@ -129,7 +129,7 @@ public class CanvasItemOval : CanvasItem {
     var scale_width  = (bbox.width < bbox.height) ? (bbox.width / bbox.height) : 1.0;
     var scale_height = (bbox.width < bbox.height) ? 1.0 : (bbox.height / bbox.width);
     var radius       = (bbox.width < bbox.height) ? (bbox.height / 2.0) : (bbox.width / 2.0);
-    var alpha        = mode.alpha( props.alpha );
+    var alpha        = mode.alpha( props.color.alpha );
 
     var save_matrix = ctx.get_matrix();
     ctx.translate( bbox.mid_x(), bbox.mid_y() );
@@ -143,7 +143,7 @@ public class CanvasItemOval : CanvasItem {
 
     if( props.outline ) {
       var outline = Granite.contrasting_foreground_color( props.color );
-      set_color( ctx, color, outline, 0.5 );
+      set_color( ctx, color, outline, (alpha / 2) );
       if( props.fill ) {
         ctx.set_line_width( 1 );
         ctx.stroke_preserve();
@@ -165,7 +165,7 @@ public class CanvasItemOval : CanvasItem {
     }
 
     if( props.stroke ) {
-      set_color( ctx, color, props.stroke_color, alpha );
+      set_color( ctx, color, props.stroke_color, mode.alpha( props.stroke_color.alpha ) );
       ctx.set_line_width( props.stroke_width.width() );
       props.dash.set_fg_pattern( ctx );
       ctx.stroke();

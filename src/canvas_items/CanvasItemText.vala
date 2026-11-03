@@ -1007,7 +1007,7 @@ public class CanvasItemText : CanvasItem {
   public override void draw_item( Cairo.Context ctx, CanvasItemColor color ) {
 
     var layout = _pango_layout;
-    var alpha  = mode.alpha( props.alpha );
+    var alpha  = mode.alpha( props.color.alpha );
 
     Pango.Rectangle ink_rect, log_rect;
     layout.get_extents( out ink_rect, out log_rect );
@@ -1020,7 +1020,7 @@ public class CanvasItemText : CanvasItem {
 
     if( props.outline ) {
       var outline = Granite.contrasting_foreground_color( props.color );
-      set_color( ctx, color, outline, 0.5 );
+      set_color( ctx, color, outline, (alpha / 2) );
       if( props.fill ) {
         ctx.set_line_width( 1 );
         ctx.stroke_preserve();
@@ -1042,7 +1042,7 @@ public class CanvasItemText : CanvasItem {
     }
 
     if( props.stroke ) {
-      set_color( ctx, color, props.stroke_color, alpha );
+      set_color( ctx, color, props.stroke_color, mode.alpha( props.stroke_color.alpha ) );
       props.dash.set_bg_pattern( ctx );
       ctx.set_line_width( props.stroke_width.width() );
       ctx.stroke();
@@ -1050,7 +1050,7 @@ public class CanvasItemText : CanvasItem {
 
     // Output the text
     ctx.move_to( (bbox.x - (log_rect.x / Pango.SCALE)), bbox.y );
-    Utils.set_context_color_with_alpha( ctx, props.font_color, alpha );
+    Utils.set_context_color_with_alpha( ctx, props.font_color, mode.alpha( props.font_color.alpha ) );
     Pango.cairo_show_layout( ctx, layout );
     ctx.new_path();
 

@@ -555,7 +555,7 @@ public class CanvasItemBubble : CanvasItem {
   // Draw the rectangle
   public override void draw_item( Context ctx, CanvasItemColor color ) {
 
-    var alpha = mode.alpha( props.alpha );
+    var alpha = mode.alpha( props.color.alpha );
 
     // Draw rounded rectangle with triangle talk point
     switch( _type ) {
@@ -567,7 +567,7 @@ public class CanvasItemBubble : CanvasItem {
 
     if( props.outline ) {
       var outline = Granite.contrasting_foreground_color( props.color );
-      set_color( ctx, color, outline, 0.5 );
+      set_color( ctx, color, outline, (alpha / 2) );
       if( props.fill ) {
         ctx.set_line_width( 1 );
         ctx.stroke_preserve();
@@ -589,7 +589,7 @@ public class CanvasItemBubble : CanvasItem {
     }
 
     if( props.stroke ) {
-      set_color( ctx, color, props.stroke_color, alpha );
+      set_color( ctx, color, props.stroke_color, mode.alpha( props.stroke_color.alpha ) );
       ctx.set_line_width( props.stroke_width.width() );
       props.dash.set_fg_pattern( ctx );
       ctx.stroke();

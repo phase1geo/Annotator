@@ -178,7 +178,7 @@ public class CanvasItemSequence : CanvasItem {
   public override void draw_item( Context ctx, CanvasItemColor color ) {
 
     var seq_color = Granite.contrasting_foreground_color( props.color );
-    var alpha     = mode.alpha( props.alpha );
+    var alpha     = mode.alpha( props.color.alpha );
 
     // Draw the sequence circle
     Utils.set_context_color_with_alpha( ctx, props.color, alpha );

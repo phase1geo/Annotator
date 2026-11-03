@@ -169,7 +169,7 @@ public class CanvasItemImage : CanvasItem {
 
     if( props.outline || (_buf == null) ) {
       var outline = Granite.contrasting_foreground_color( props.stroke_color );
-      set_color( ctx, color, outline, 0.5 );
+      set_color( ctx, color, outline, (alpha / 2) );
       if( props.stroke || (_buf == null) ) {
         props.dash.set_bg_pattern( ctx );
         ctx.set_line_width( props.stroke_width.width() + 2 );
