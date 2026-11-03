@@ -179,6 +179,121 @@ public enum CanvasTool {
 
 }
 
+//-------------------------------------------------------------
+// Color button that hides its parent popover while the color
+// dialog is displayed.
+public class PopoverColorButton : Button {
+
+  private ColorDialog _dialog;
+  private DrawingArea _swatch;
+  private Gdk.RGBA    _rgba;
+
+  public Gdk.RGBA rgba {
+    get { return( _rgba ); }
+    set {
+      _rgba = value;
+      _swatch.queue_draw();
+    }
+  }
+
+  public PopoverColorButton( ColorDialog dialog, Gdk.RGBA initial ) {
+
+    _dialog = dialog;
+    _rgba   = initial;
+
+    _swatch = new DrawingArea() {
+      content_width  = 32,
+      content_height = 16
+    };
+    _swatch.set_draw_func((area, ctx, w, h) => {
+      Gdk.cairo_set_source_rgba( ctx, _rgba );
+      ctx.rectangle( 0, 0, w, h );
+      ctx.fill();
+    });
+
+    child = _swatch;
+
+    clicked.connect( choose_color );
+
+  }
+
+  private void choose_color() {
+
+    var pop = get_ancestor( typeof(Popover) ) as Popover;
+    var win = get_root() as Window;
+
+    if( pop != null ) {
+      pop.popdown();
+    }
+
+    _dialog.choose_rgba.begin( win, _rgba, null, (obj, res) => {
+      try {
+        rgba = _dialog.choose_rgba.end( res );
+      } catch( Error e ) {
+        // User cancelled the dialog
+      }
+      if( pop != null ) {
+        pop.popup();
+      }
+    });
+
+  }
+
+}
+
+//-------------------------------------------------------------
+// Font button that hides its parent popover while the font
+// dialog is displayed.
+public class PopoverFontButton : Button {
+
+  private FontDialog            _dialog;
+  private Label                 _label;
+  private Pango.FontDescription? _font_desc = null;
+
+  public Pango.FontDescription? font_desc {
+    get { return( _font_desc ); }
+    set {
+      _font_desc  = value;
+      _label.label = (value != null) ? value.to_string() : _( "Font" );
+    }
+  }
+
+  public PopoverFontButton( FontDialog dialog, Pango.FontDescription? initial = null ) {
+
+    _dialog = dialog;
+    _label  = new Label( _( "Font" ) );
+
+    child     = _label;
+    font_desc = initial;
+
+    clicked.connect( choose_font );
+
+  }
+
+  private void choose_font() {
+
+    var pop = get_ancestor( typeof(Popover) ) as Popover;
+    var win = get_root() as Window;
+
+    if( pop != null ) {
+      pop.popdown();
+    }
+
+    _dialog.choose_font.begin( win, _font_desc, null, (obj, res) => {
+      try {
+        font_desc = _dialog.choose_font.end( res );
+      } catch( Error e ) {
+        // User cancelled the dialog
+      }
+      if( pop != null ) {
+        pop.popup();
+      }
+    });
+
+  }
+
+}
+
 public class CanvasToolButton : ToggleButton {
 
   private static ToggleButton? _group = null;
@@ -372,12 +487,11 @@ public class CanvasToolButton : ToggleButton {
       with_alpha = true
     };
 
-    var color = new ColorDialogButton( dialog ) {
-      rgba = _props.stroke_color,
+    var color = new PopoverColorButton( dialog, _props.stroke_color ) {
       margin_top = 5
     };
     color.notify["rgba"].connect(() => {
-      _props.stroke_color = color.get_rgba();
+      _props.stroke_color = color.rgba;
       _canvas.queue_draw();
     });
 
@@ -595,11 +709,9 @@ public class CanvasToolButton : ToggleButton {
       with_alpha = true
     };
 
-    var color = new ColorDialogButton( dialog ) {
-      rgba = _props.color
-    };
+    var color = new PopoverColorButton( dialog, _props.color );
     color.notify["rgba"].connect(() => {
-      _props.color = color.get_rgba();
+      _props.color = color.rgba;
       _canvas.queue_draw();
     });
     var color_rev = new Revealer() {
@@ -688,9 +800,7 @@ public class CanvasToolButton : ToggleButton {
       title = _( "Select Font" )
     };
 
-    var font = new FontDialogButton( dialog ) {
-      use_font = true
-    };
+    var font = new PopoverFontButton( dialog, _props.font );
 
     font.notify["font-desc"].connect(() => {
       _props.font = font.font_desc;
@@ -711,11 +821,10 @@ public class CanvasToolButton : ToggleButton {
       with_alpha = true
     };
 
-    var color = new ColorDialogButton( color_dialog ) {
-      rgba = _props.font_color
-    };
+    var color = new PopoverColorButton( color_dialog, _props.font_color );
+
     color.notify["rgba"].connect(() => {
-      _props.font_color = color.get_rgba();
+      _props.font_color = color.rgba;
       _canvas.queue_draw();
     });
 
