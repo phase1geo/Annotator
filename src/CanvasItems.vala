@@ -42,6 +42,7 @@ public enum CanvasItemType {
   THINK,
   LINE,
   ARROW,
+  MODERN_ARROW,
   TEXT,
   BLUR,
   MAGNIFIER,
@@ -64,6 +65,7 @@ public enum CanvasItemType {
       case THINK       :  return( "think" );
       case LINE        :  return( "line" );
       case ARROW       :  return( "arrow" );
+      case MODERN_ARROW :  return( "modern-arrow" );
       case TEXT        :  return( "text" );
       case BLUR        :  return( "blur" );
       case MAGNIFIER   :  return( "magnifier" );
@@ -87,6 +89,7 @@ public enum CanvasItemType {
       case "think"       :  return( THINK );
       case "line"        :  return( LINE );
       case "arrow"       :  return( ARROW );
+      case "modern-arrow" :  return( MODERN_ARROW );
       case "text"        :  return( TEXT );
       case "blur"        :  return( BLUR );
       case "magnifier"   :  return( MAGNIFIER );
@@ -110,6 +113,7 @@ public enum CanvasItemType {
       case THINK       :  return( "bubble-think-symbolic" );
       case LINE        :  return( "line-symbolic" );
       case ARROW       :  return( "arrow-symbolic" );
+      case MODERN_ARROW :  return( "arrow-modern-symbolic" );
       case BLUR        :  return( "blur-symbolic" );
       case MAGNIFIER   :  return( "magnifier-symbolic" );
       case PENCIL      :  return( "edit-symbolic" );
@@ -131,6 +135,7 @@ public enum CanvasItemType {
       case THINK       :  return( Utils.tooltip_with_accel( _( "Think Bubble" ), "<shift>k" ) );
       case LINE        :  return( Utils.tooltip_with_accel( _( "Line" ), "l" ) );
       case ARROW       :  return( Utils.tooltip_with_accel( _( "Arrow" ), "a" ) );
+      case MODERN_ARROW :  return( _( "Modern Arrow" ) );
       case TEXT        :  return( Utils.tooltip_with_accel( _( "Text" ), "t" ) );
       case BLUR        :  return( Utils.tooltip_with_accel( _( "Blur" ), "b" ) );
       case MAGNIFIER   :  return( Utils.tooltip_with_accel( _( "Magnifier" ), "m" ) );
@@ -154,6 +159,7 @@ public enum CanvasItemType {
       case THINK       :  return( CanvasItemCategory.SHAPE );
       case LINE        :  return( CanvasItemCategory.SHAPE );
       case ARROW       :  return( CanvasItemCategory.ARROW );
+      case MODERN_ARROW :  return( CanvasItemCategory.ARROW );
       case TEXT        :  return( CanvasItemCategory.TEXT );
       default          :  return( CanvasItemCategory.NONE );
     }
@@ -277,6 +283,14 @@ public class CanvasItems {
     return( item );
   }
 
+  private CanvasItem create_modern_arrow( bool loading = false ) {
+    var item = new CanvasItemModernArrow( _canvas, props );
+    if( !loading ) {
+      item.bbox = center_box( 200, 1 );
+    }
+    return( item );
+  }
+
   private CanvasItem create_text( bool loading = false ) {
     var item = new CanvasItemText( _canvas, props );
     item.select_mode.connect((value) => {
@@ -372,6 +386,7 @@ public class CanvasItems {
       case CanvasItemType.THINK        :  item = create_bubble( CanvasBubbleType.THINK );  break;
       case CanvasItemType.LINE         :  item = create_line();  break;
       case CanvasItemType.ARROW        :  item = create_arrow();  break;
+      case CanvasItemType.MODERN_ARROW :  item = create_modern_arrow();  break;
       case CanvasItemType.TEXT         :  item = create_text();  break;
       case CanvasItemType.BLUR         :  item = create_blur();  break;
       case CanvasItemType.MAGNIFIER    :  item = create_magnifier();  break;
@@ -1265,6 +1280,7 @@ public class CanvasItems {
           case CanvasItemType.THINK       :  item = create_bubble( CanvasBubbleType.THINK );  break;
           case CanvasItemType.LINE        :  item = create_line();              break;
           case CanvasItemType.ARROW       :  item = create_arrow();             break;
+          case CanvasItemType.MODERN_ARROW :  item = create_modern_arrow();     break;
           case CanvasItemType.TEXT        :  item = create_text();              break;
           case CanvasItemType.BLUR        :  item = create_blur();              break;
           case CanvasItemType.MAGNIFIER   :  item = create_magnifier();         break;
@@ -1355,6 +1371,7 @@ public class CanvasItems {
       case CanvasItemType.THINK       :  item = create_bubble( CanvasBubbleType.THINK, true );            break;
       case CanvasItemType.LINE        :  item = create_line( true );              break;
       case CanvasItemType.ARROW       :  item = create_arrow( true );             break;
+      case CanvasItemType.MODERN_ARROW :  item = create_modern_arrow( true );     break;
       case CanvasItemType.TEXT        :  item = create_text( true );              break;
       case CanvasItemType.BLUR        :  item = create_blur( true );              break;
       case CanvasItemType.MAGNIFIER   :  item = create_magnifier( true );         break;
