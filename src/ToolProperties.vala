@@ -35,7 +35,7 @@ public class ToolProperties {
     for( int i=0; i<CanvasTool.NUM; i++ ) {
       var tool = (CanvasTool)i;
       if( tool.has_properties() ) {
-        var prop = new CanvasItemProperties();
+        var prop = tool.make_properties();
         prop.changed.connect(() => {
           _changed = true;
         });

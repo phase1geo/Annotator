@@ -155,6 +155,68 @@ public enum CanvasTool {
     }
   }
 
+  private void setup_shape_properties( CanvasItemProperties props ) {
+    props.fill    = true;
+    props.color   = Utils.color_from_string( "red" );
+    props.stroke  = false;
+    props.outline = true;
+  }
+
+  private void setup_image_properties( CanvasItemProperties props ) {
+    props.stroke  = false;
+    props.outline = true;
+  }
+
+  private void setup_sequence_properties( CanvasItemProperties props ) {
+    props.fill    = true;
+    props.color   = Utils.color_from_string( "yellow" );
+    props.stroke  = false;
+    props.outline = true;
+  }
+
+  private void setup_pencil_properties( CanvasItemProperties props ) {
+    props.stroke       = true;
+    props.stroke_width = CanvasItemStrokeWidth.WIDTH1;
+    props.stroke_color = Utils.color_from_string( "red" );
+    props.dash         = CanvasItemDashPattern.NONE;
+    props.outline      = true;
+  }
+
+  private void setup_text_properties( CanvasItemProperties props ) {
+    props.fill       = true;
+    props.color      = Utils.color_from_string( "red" );
+    props.stroke     = false;
+    props.outline    = true;
+    props.font_color = Utils.color_from_string( "black" );
+  }
+
+  private void setup_magnifier_properties( CanvasItemProperties props ) {
+    props.stroke  = false;
+    props.outline = true;
+  }
+
+  private void setup_blur_properties( CanvasItemProperties props ) {
+    props.outline = false;
+  }
+
+  //-------------------------------------------------------------
+  // Create default properties.
+  public CanvasItemProperties make_properties() {
+    var props = new CanvasItemProperties();
+    switch( this ) {
+      case ARROW     :  setup_shape_properties( props );      break;
+      case SHAPE     :  setup_shape_properties( props );      break;
+      case STICKER   :  setup_image_properties( props );      break;
+      case IMAGE     :  setup_image_properties( props );      break;
+      case SEQUENCE  :  setup_sequence_properties( props );   break;
+      case PENCIL    :  setup_pencil_properties( props );     break;
+      case TEXT      :  setup_text_properties( props );       break;
+      case MAGNIFIER :  setup_magnifier_properties( props );  break;
+      case BLUR      :  setup_blur_properties( props );       break;
+      default        :  break;
+    }
+    return( props );
+  }
 
   //-------------------------------------------------------------
   // Returns the CanvasItemType associated with this tool
@@ -412,7 +474,7 @@ public class CanvasToolButton : ToggleButton {
     var row = 0;
 
     if( tool.has_fill() ) {
-      create_background_options( grid, ref row );
+      create_fill_options( grid, ref row );
     }
 
     if( tool.has_alpha() ) {
@@ -478,7 +540,8 @@ public class CanvasToolButton : ToggleButton {
     row++;
 
     var color_lbl = new Label( _( "Border Color" ) ) {
-      xalign = (float)0
+      xalign = (float)0,
+      visible = _props.stroke
     };
 
     var dialog = new ColorDialog() {
@@ -488,6 +551,7 @@ public class CanvasToolButton : ToggleButton {
     };
 
     var color = new PopoverColorButton( dialog, _props.stroke_color ) {
+      visible    = _props.stroke,
       margin_top = 5
     };
     color.notify["rgba"].connect(() => {
@@ -673,7 +737,7 @@ public class CanvasToolButton : ToggleButton {
 
   //-------------------------------------------------------------
   // Adds the background color options to this tool menu.
-  private void create_background_options( Grid grid, ref int row ) {
+  private void create_fill_options( Grid grid, ref int row ) {
 
     create_separator( grid, ref row );
 
