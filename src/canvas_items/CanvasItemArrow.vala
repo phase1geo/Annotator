@@ -329,9 +329,6 @@ public class CanvasItemArrow : CanvasItem {
 
     var alpha = mode.alpha( props.alpha );
 
-    set_color( ctx, color, props.color, alpha );
-
-    ctx.set_line_width( 1 );
     ctx.new_path();
     ctx.move_to( points.index( 0 ).x, points.index( 0 ).y );
     for( int i=1; i<6; i++ ) {
@@ -339,15 +336,34 @@ public class CanvasItemArrow : CanvasItem {
     }
     ctx.close_path();
     save_path( ctx, CanvasItemPathType.FILL );
-    if( props.outline ) {
-      ctx.fill_preserve();
-    } else {
-      ctx.fill();
-    }
 
     if( props.outline ) {
       var outline = Granite.contrasting_foreground_color( props.color );
-      set_color( ctx, color, outline, (alpha / 2) );
+      set_color( ctx, color, outline, 0.5 );
+      if( props.fill ) {
+        ctx.set_line_width( 1 );
+        ctx.stroke_preserve();
+      }
+      if( props.stroke ) {
+        props.dash.set_bg_pattern( ctx );
+        ctx.set_line_width( props.stroke_width.width() + 2 );
+        ctx.stroke_preserve();
+      }
+    }
+
+    if( props.fill ) {
+      set_color( ctx, color, props.color, alpha );
+      if( props.stroke ) {
+        ctx.fill_preserve();
+      } else {
+        ctx.fill();
+      }
+    }
+
+    if( props.stroke ) {
+      props.dash.set_fg_pattern( ctx );
+      set_color( ctx, color, props.stroke_color, alpha );
+      ctx.set_line_width( props.stroke_width.width() );
       ctx.stroke();
     }
 

@@ -243,7 +243,7 @@ public class CanvasItems {
   }
 
   public signal void text_item_edit_changed( CanvasItemText item );
-  public signal void selection_changed( CanvasItem item );
+  public signal void selection_changed( CanvasItem? item );
 
   //-------------------------------------------------------------
   // Constructor
@@ -430,6 +430,7 @@ public class CanvasItems {
     } else {
       _active = item;
     }
+    selection_changed( item );
     _canvas.grab_focus();
     if( undo ) {
       _canvas.undo_buffer.add_item( new UndoItemAdd( item, (int)(_items.length() - 1) ) );
@@ -625,6 +626,7 @@ public class CanvasItems {
       retval |= (item.mode != CanvasItemMode.NONE);
       item.mode = CanvasItemMode.NONE;
     }
+    selection_changed( null );
     return( retval );
   }
 
@@ -1166,6 +1168,7 @@ public class CanvasItems {
       _selector_index = -1;
       _active.mode    = (current_tool == CanvasTool.SELECTOR) ? CanvasItemMode.SELECTED : CanvasItemMode.NONE;
       _active         = null;
+      selection_changed( null );
       retval = true;
 
     // If we are editing text, do nothing
@@ -1242,6 +1245,9 @@ public class CanvasItems {
 
   }
 
+  //-------------------------------------------------------------
+  // Creates the contextual menu and displays it for the current
+  // item.
   private void create_contextual_menu( CanvasItem item ) {
 
     var pos  = item_position( item );
@@ -1266,7 +1272,7 @@ public class CanvasItems {
       menu.add_menu_item( item, _( "Send Backward" ), null, (pos != 0), do_send_backward );
       menu.add_menu_item( item, _( "Send to Back" ),  null, (pos != 0), do_send_to_back );
       menu.complete_section();
-  
+
       if( item.itype.category() != CanvasItemCategory.NONE ) {
         menu.add_menu_item( item, _( "Save As Custom" ), null, true, do_save_custom );
         menu.complete_section();
