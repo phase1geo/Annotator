@@ -41,8 +41,8 @@ public enum CanvasItemType {
   TALK,
   THINK,
   LINE,
-  ARROW,
   MODERN_ARROW,
+  ARROW,
   TEXT,
   BLUR,
   MAGNIFIER,
@@ -134,8 +134,8 @@ public enum CanvasItemType {
       case TALK        :  return( Utils.tooltip_with_accel( _( "Talk Bubble" ), "k" ) );
       case THINK       :  return( Utils.tooltip_with_accel( _( "Think Bubble" ), "<shift>k" ) );
       case LINE        :  return( Utils.tooltip_with_accel( _( "Line" ), "l" ) );
-      case ARROW       :  return( Utils.tooltip_with_accel( _( "Arrow" ), "a" ) );
-      case MODERN_ARROW :  return( _( "Modern Arrow" ) );
+      case ARROW       :  return( _( "Classic Arrow" ) );
+      case MODERN_ARROW :  return( Utils.tooltip_with_accel( _( "Arrow" ), "a" ) );
       case TEXT        :  return( Utils.tooltip_with_accel( _( "Text" ), "t" ) );
       case BLUR        :  return( Utils.tooltip_with_accel( _( "Blur" ), "b" ) );
       case MAGNIFIER   :  return( Utils.tooltip_with_accel( _( "Magnifier" ), "m" ) );
@@ -650,7 +650,7 @@ public class CanvasItems {
       if( in_edit_mode() ) {
         return( handle_cursor( control, shift, Key.a ) );
       } else {
-        add_shape_item( CanvasItemType.ARROW );
+        add_shape_item( CanvasItemType.MODERN_ARROW );
         return( true );
       }
     }
