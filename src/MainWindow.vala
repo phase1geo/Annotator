@@ -31,6 +31,7 @@ public class MainWindow : Gtk.ApplicationWindow {
   private Button              _redo_btn;
   private MenuButton          _pref_btn;
   private MenuButton          _export_btn;
+  private Exporter            _exporter;
   private MenuButton          _zoom_btn;
   private ZoomWidget          _zoom;
   private Editor              _editor;
@@ -55,6 +56,7 @@ public class MainWindow : Gtk.ApplicationWindow {
     { "action_about",             do_about },
     { "action_contextual_menu",   do_contextual_menu },
     { "action_copy_to_clipboard", do_copy_to_clipboard },
+    { "action_export",            do_export_current },
     { "action_print",             do_print },
     { "action_emoji",             do_emoji }
   };
@@ -160,6 +162,8 @@ public class MainWindow : Gtk.ApplicationWindow {
     app.set_accels_for_action( "win.action_shortcuts",       { "<Control>question" } );
     app.set_accels_for_action( "win.action_contextual_menu", { "<Shift>F10", "Menu" } );
     app.set_accels_for_action( "win.action_print",           { "<Control>p" } );
+    app.set_accels_for_action( "win.action_copy_to_clipboard", { "<Control><Shift>c" } );
+    app.set_accels_for_action( "win.action_export",          { "<Control>e" } );
     app.set_accels_for_action( "win.action_emoji",           { "<Control>slash" } );
   }
 
@@ -260,6 +264,7 @@ public class MainWindow : Gtk.ApplicationWindow {
 
     // Add the export UI
     var export_ui = new Exporter( this );
+    _exporter = export_ui;
     var export_mi = new GLib.MenuItem( null, null );
     export_mi.set_attribute( "custom", "s", "export" );
 
@@ -777,7 +782,18 @@ public class MainWindow : Gtk.ApplicationWindow {
   //-------------------------------------------------------------
   // Copies the annotated image to the clipboard.
   private void do_copy_to_clipboard() {
-    _editor.canvas.image.export_clipboard();
+    if( _editor.canvas.image.is_surface_set() ) {
+      _editor.canvas.image.export_clipboard();
+    }
+  }
+
+  //-------------------------------------------------------------
+  // Exports the annotated image using the currently selected
+  // export format (same as clicking the Export… button).
+  private void do_export_current() {
+    if( _editor.canvas.image.is_surface_set() ) {
+      _exporter.do_export( this );
+    }
   }
 
   //-------------------------------------------------------------

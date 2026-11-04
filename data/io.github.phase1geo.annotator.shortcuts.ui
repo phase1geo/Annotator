@@ -37,6 +37,20 @@
                 <property name="visible">1</property>
               </object>
             </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes">Copy Image To Clipboard</property>
+                <property name="accelerator">&lt;ctrl&gt;&lt;shift&gt;c</property>
+                <property name="visible">1</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes">Export With Current Settings</property>
+                <property name="accelerator">&lt;ctrl&gt;e</property>
+                <property name="visible">1</property>
+              </object>
+            </child>
           </object>
         </child>
         <child>
