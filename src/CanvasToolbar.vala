@@ -73,7 +73,7 @@ public class CanvasToolbar : Box {
     }
 
     // Create current items
-    _current_item.set( CanvasItemCategory.ARROW, new CurrentItem.with_canvas_item( CanvasItemType.ARROW ) );
+    _current_item.set( CanvasItemCategory.ARROW, new CurrentItem.with_canvas_item( CanvasItemType.MODERN_ARROW ) );
     _current_item.set( CanvasItemCategory.SHAPE, new CurrentItem.with_canvas_item( CanvasItemType.RECT ) );
 
     create_selector();

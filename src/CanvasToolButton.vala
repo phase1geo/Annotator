@@ -221,7 +221,7 @@ public enum CanvasTool {
   public CanvasItemType canvas_item_type() {
     switch( this ) {
       case SELECTOR  :  return( CanvasItemType.NONE );
-      case ARROW     :  return( CanvasItemType.ARROW );
+      case ARROW     :  return( CanvasItemType.MODERN_ARROW );
       case SHAPE     :  return( CanvasItemType.RECT );
       case STICKER   :  return( CanvasItemType.STICKER );
       case IMAGE     :  return( CanvasItemType.IMAGE );

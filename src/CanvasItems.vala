@@ -38,6 +38,7 @@ public enum CanvasItemType {
   TALK,
   THINK,
   LINE,
+  MODERN_ARROW,
   ARROW,
   TEXT,
   BLUR,
@@ -51,113 +52,119 @@ public enum CanvasItemType {
 
   public string to_string() {
     switch( this ) {
-      case RECT      :  return( "rect" );
-      case OVAL      :  return( "oval" );
-      case STAR      :  return( "star" );
-      case TALK      :  return( "talk" );
-      case THINK     :  return( "think" );
-      case LINE      :  return( "line" );
-      case ARROW     :  return( "arrow" );
-      case TEXT      :  return( "text" );
-      case BLUR      :  return( "blur" );
-      case MAGNIFIER :  return( "magnifier" );
-      case PENCIL    :  return( "pencil" );
-      case SEQUENCE  :  return( "sequence" );
-      case STICKER   :  return( "sticker" );
-      case IMAGE     :  return( "image" );
-      default        :  return( "none" );
+      case RECT         :  return( "rect" );
+      case OVAL         :  return( "oval" );
+      case STAR         :  return( "star" );
+      case TALK         :  return( "talk" );
+      case THINK        :  return( "think" );
+      case LINE         :  return( "line" );
+      case MODERN_ARROW :  return( "modern-arrow" );
+      case ARROW        :  return( "arrow" );
+      case TEXT         :  return( "text" );
+      case BLUR         :  return( "blur" );
+      case MAGNIFIER    :  return( "magnifier" );
+      case PENCIL       :  return( "pencil" );
+      case SEQUENCE     :  return( "sequence" );
+      case STICKER      :  return( "sticker" );
+      case IMAGE        :  return( "image" );
+      default           :  return( "none" );
     }
   }
 
   public static CanvasItemType parse( string value ) {
     switch( value ) {
-      case "rect"        :  return( RECT );
-      case "oval"        :  return( OVAL );
-      case "star"        :  return( STAR );
-      case "talk"        :  return( TALK );
-      case "think"       :  return( THINK );
-      case "line"        :  return( LINE );
-      case "arrow"       :  return( ARROW );
-      case "text"        :  return( TEXT );
-      case "blur"        :  return( BLUR );
-      case "magnifier"   :  return( MAGNIFIER );
-      case "pencil"      :  return( PENCIL );
-      case "sequence"    :  return( SEQUENCE );
-      case "sticker"     :  return( STICKER );
-      case "image"       :  return( IMAGE );
-      default            :  return( NONE );
+      case "rect"         :  return( RECT );
+      case "oval"         :  return( OVAL );
+      case "star"         :  return( STAR );
+      case "talk"         :  return( TALK );
+      case "think"        :  return( THINK );
+      case "line"         :  return( LINE );
+      case "modern-arrow" :  return( MODERN_ARROW );
+      case "arrow"        :  return( ARROW );
+      case "text"         :  return( TEXT );
+      case "blur"         :  return( BLUR );
+      case "magnifier"    :  return( MAGNIFIER );
+      case "pencil"       :  return( PENCIL );
+      case "sequence"     :  return( SEQUENCE );
+      case "sticker"      :  return( STICKER );
+      case "image"        :  return( IMAGE );
+      default             :  return( NONE );
     }
   }
 
   public string icon_name() {
     switch( this ) {
-      case RECT        :  return( "rect-stroke-symbolic" );
-      case OVAL        :  return( "circle-stroke-symbolic" );
-      case STAR        :  return( "star-stroke-symbolic" );
-      case TALK        :  return( "bubble-talk-symbolic" );
-      case THINK       :  return( "bubble-think-symbolic" );
-      case LINE        :  return( "line-symbolic" );
-      case ARROW       :  return( "arrow-symbolic" );
-      case BLUR        :  return( "blur-symbolic" );
-      case MAGNIFIER   :  return( "magnifier-symbolic" );
-      case PENCIL      :  return( "edit-symbolic" );
-      case SEQUENCE    :  return( "sequence-symbolic" );
-      case STICKER     :  return( "sticker-symbolic" );
-      default          :  return( "" );
+      case RECT         :  return( "rect-stroke-symbolic" );
+      case OVAL         :  return( "circle-stroke-symbolic" );
+      case STAR         :  return( "star-stroke-symbolic" );
+      case TALK         :  return( "bubble-talk-symbolic" );
+      case THINK        :  return( "bubble-think-symbolic" );
+      case LINE         :  return( "line-symbolic" );
+      case MODERN_ARROW :  return( "arrow-modern-symbolic" );
+      case ARROW        :  return( "arrow-symbolic" );
+      case BLUR         :  return( "blur-symbolic" );
+      case MAGNIFIER    :  return( "magnifier-symbolic" );
+      case PENCIL       :  return( "edit-symbolic" );
+      case SEQUENCE     :  return( "sequence-symbolic" );
+      case STICKER      :  return( "sticker-symbolic" );
+      default           :  return( "" );
     }
   }
 
   public string tooltip() {
     switch( this ) {
-      case RECT      :  return( Utils.tooltip_with_accel( _( "Rectangle Outline" ), "r" ) );
-      case OVAL      :  return( Utils.tooltip_with_accel( _( "Oval Outline" ), "o" ) );
-      case STAR      :  return( Utils.tooltip_with_accel( _( "Star Outline" ), "s" ) );
-      case TALK      :  return( Utils.tooltip_with_accel( _( "Talk Bubble" ), "k" ) );
-      case THINK     :  return( Utils.tooltip_with_accel( _( "Think Bubble" ), "<shift>k" ) );
-      case LINE      :  return( Utils.tooltip_with_accel( _( "Line" ), "l" ) );
-      case ARROW     :  return( Utils.tooltip_with_accel( _( "Arrow" ), "a" ) );
-      case TEXT      :  return( Utils.tooltip_with_accel( _( "Text" ), "t" ) );
-      case BLUR      :  return( Utils.tooltip_with_accel( _( "Blur" ), "b" ) );
-      case MAGNIFIER :  return( Utils.tooltip_with_accel( _( "Magnifier" ), "m" ) );
-      case PENCIL    :  return( Utils.tooltip_with_accel( _( "Pencil Tool" ), "p" ) );
-      case SEQUENCE  :  return( Utils.tooltip_with_accel( _( "Sequence Number" ), "q" ) );
-      case STICKER   :  return( _( "Sticker" ) );
-      case IMAGE     :  return( Utils.tooltip_with_accel( _( "Image" ), "i" ) );
-      default        :  return( "" );
+      case RECT         :  return( Utils.tooltip_with_accel( _( "Rectangle Outline" ), "r" ) );
+      case OVAL         :  return( Utils.tooltip_with_accel( _( "Oval Outline" ), "o" ) );
+      case STAR         :  return( Utils.tooltip_with_accel( _( "Star Outline" ), "s" ) );
+      case TALK         :  return( Utils.tooltip_with_accel( _( "Talk Bubble" ), "k" ) );
+      case THINK        :  return( Utils.tooltip_with_accel( _( "Think Bubble" ), "<shift>k" ) );
+      case LINE         :  return( Utils.tooltip_with_accel( _( "Line" ), "l" ) );
+      case MODERN_ARROW :  return( Utils.tooltip_with_accel( _( "Modern Arrow" ), "a" ) );
+      case ARROW        :  return( _( "Classic Arrow" ) );
+      case TEXT         :  return( Utils.tooltip_with_accel( _( "Text" ), "t" ) );
+      case BLUR         :  return( Utils.tooltip_with_accel( _( "Blur" ), "b" ) );
+      case MAGNIFIER    :  return( Utils.tooltip_with_accel( _( "Magnifier" ), "m" ) );
+      case PENCIL       :  return( Utils.tooltip_with_accel( _( "Pencil Tool" ), "p" ) );
+      case SEQUENCE     :  return( Utils.tooltip_with_accel( _( "Sequence Number" ), "q" ) );
+      case STICKER      :  return( _( "Sticker" ) );
+      case IMAGE        :  return( Utils.tooltip_with_accel( _( "Image" ), "i" ) );
+      default           :  return( "" );
     }
   }
 
   public CanvasItemCategory category() {
     switch( this ) {
-      case RECT  :  return( CanvasItemCategory.SHAPE );
-      case OVAL  :  return( CanvasItemCategory.SHAPE );
-      case STAR  :  return( CanvasItemCategory.SHAPE );
-      case TALK  :  return( CanvasItemCategory.SHAPE );
-      case THINK :  return( CanvasItemCategory.SHAPE );
-      case LINE  :  return( CanvasItemCategory.SHAPE );
-      case ARROW :  return( CanvasItemCategory.ARROW );
-      case TEXT  :  return( CanvasItemCategory.TEXT );
-      default    :  return( CanvasItemCategory.NONE );
+      case RECT         :  return( CanvasItemCategory.SHAPE );
+      case OVAL         :  return( CanvasItemCategory.SHAPE );
+      case STAR         :  return( CanvasItemCategory.SHAPE );
+      case TALK         :  return( CanvasItemCategory.SHAPE );
+      case THINK        :  return( CanvasItemCategory.SHAPE );
+      case LINE         :  return( CanvasItemCategory.SHAPE );
+      case MODERN_ARROW :  return( CanvasItemCategory.ARROW );
+      case ARROW        :  return( CanvasItemCategory.ARROW );
+      case TEXT         :  return( CanvasItemCategory.TEXT );
+      default           :  return( CanvasItemCategory.NONE );
     }
   }
 
   public CanvasTool tool() {
     switch( this ) {  
-      case RECT      :  return( CanvasTool.SHAPE );
-      case OVAL      :  return( CanvasTool.SHAPE );
-      case STAR      :  return( CanvasTool.SHAPE );
-      case TALK      :  return( CanvasTool.SHAPE );
-      case THINK     :  return( CanvasTool.SHAPE );
-      case LINE      :  return( CanvasTool.SHAPE );
-      case ARROW     :  return( CanvasTool.ARROW );
-      case TEXT      :  return( CanvasTool.TEXT );
-      case BLUR      :  return( CanvasTool.BLUR );
-      case MAGNIFIER :  return( CanvasTool.MAGNIFIER );
-      case PENCIL    :  return( CanvasTool.PENCIL );
-      case SEQUENCE  :  return( CanvasTool.SEQUENCE );
-      case STICKER   :  return( CanvasTool.STICKER );
-      case IMAGE     :  return( CanvasTool.IMAGE );
-      default        :  return( CanvasTool.NUM );
+      case RECT         :  return( CanvasTool.SHAPE );
+      case OVAL         :  return( CanvasTool.SHAPE );
+      case STAR         :  return( CanvasTool.SHAPE );
+      case TALK         :  return( CanvasTool.SHAPE );
+      case THINK        :  return( CanvasTool.SHAPE );
+      case LINE         :  return( CanvasTool.SHAPE );
+      case MODERN_ARROW :  return( CanvasTool.ARROW );
+      case ARROW        :  return( CanvasTool.ARROW );
+      case TEXT         :  return( CanvasTool.TEXT );
+      case BLUR         :  return( CanvasTool.BLUR );
+      case MAGNIFIER    :  return( CanvasTool.MAGNIFIER );
+      case PENCIL       :  return( CanvasTool.PENCIL );
+      case SEQUENCE     :  return( CanvasTool.SEQUENCE );
+      case STICKER      :  return( CanvasTool.STICKER );
+      case IMAGE        :  return( CanvasTool.IMAGE );
+      default           :  return( CanvasTool.NUM );
     }
   }
 }
@@ -227,7 +234,7 @@ public class CanvasItems {
   public CustomItems              custom_items     { get; private set; }
   public bool                     control_set      { get; private set; default = false; }
   public bool                     shift_set        { get; private set; default = false; }
-  public CanvasToolAutoSelectMode auto_select_mode { get; set; default = CanvasToolAutoSelectMode.AFTER_TOOL_CLICK; }
+  public CanvasToolAutoSelectMode auto_select_mode { get; set; default = CanvasToolAutoSelectMode.NONE; }
   public CanvasTool               current_tool {
     get {
       return( _current_tool );
@@ -343,6 +350,14 @@ public class CanvasItems {
     return( item );
   }
 
+  private CanvasItem create_modern_arrow( bool loading = false ) {
+    var item = new CanvasItemModernArrow( _canvas, _canvas.props.get_properties( CanvasTool.ARROW ) );
+    if( !loading ) {
+      position_item( item, 200, 1 );
+    }
+    return( item );
+  }
+
   private CanvasItem create_text( bool loading = false ) {
     var item = new CanvasItemText( _canvas, _canvas.props.get_properties( CanvasTool.TEXT ) );
     item.select_mode.connect((value) => {
@@ -445,20 +460,21 @@ public class CanvasItems {
   public void add_shape_item( CanvasItemType type ) {
     CanvasItem? item = null;
     switch( type ) {
-      case CanvasItemType.RECT      :  item = create_rectangle();  break;
-      case CanvasItemType.OVAL      :  item = create_oval();  break;
-      case CanvasItemType.STAR      :  item = create_star();  break;
-      case CanvasItemType.TALK      :  item = create_bubble( CanvasBubbleType.TALK );  break;
-      case CanvasItemType.THINK     :  item = create_bubble( CanvasBubbleType.THINK );  break;
-      case CanvasItemType.LINE      :  item = create_line();  break;
-      case CanvasItemType.ARROW     :  item = create_arrow();  break;
-      case CanvasItemType.STICKER   :  item = create_sticker();  break;
-      case CanvasItemType.IMAGE     :  item = create_image();  break;
-      case CanvasItemType.TEXT      :  item = create_text();  break;
-      case CanvasItemType.BLUR      :  item = create_blur();  break;
-      case CanvasItemType.MAGNIFIER :  item = create_magnifier();  break;
-      case CanvasItemType.PENCIL    :  item = create_pencil();  break;
-      case CanvasItemType.SEQUENCE  :  item = create_sequence();  break;
+      case CanvasItemType.RECT         :  item = create_rectangle();  break;
+      case CanvasItemType.OVAL         :  item = create_oval();  break;
+      case CanvasItemType.STAR         :  item = create_star();  break;
+      case CanvasItemType.TALK         :  item = create_bubble( CanvasBubbleType.TALK );  break;
+      case CanvasItemType.THINK        :  item = create_bubble( CanvasBubbleType.THINK );  break;
+      case CanvasItemType.LINE         :  item = create_line();  break;
+      case CanvasItemType.ARROW        :  item = create_arrow();  break;
+      case CanvasItemType.MODERN_ARROW :  item = create_modern_arrow();  break;
+      case CanvasItemType.STICKER      :  item = create_sticker();  break;
+      case CanvasItemType.IMAGE        :  item = create_image();  break;
+      case CanvasItemType.TEXT         :  item = create_text();  break;
+      case CanvasItemType.BLUR         :  item = create_blur();  break;
+      case CanvasItemType.MAGNIFIER    :  item = create_magnifier();  break;
+      case CanvasItemType.PENCIL       :  item = create_pencil();  break;
+      case CanvasItemType.SEQUENCE     :  item = create_sequence();  break;
       default :  assert_not_reached();
     }
     add_item( item, -1, true );
@@ -757,7 +773,7 @@ public class CanvasItems {
       if( in_edit_mode() ) {
         return( handle_cursor( control, shift, Key.a ) );
       } else {
-        _canvas.editor.set_toolbar_item( CanvasItemType.ARROW );
+        _canvas.editor.set_toolbar_item( CanvasItemType.MODERN_ARROW );
         return( true );
       }
     }
@@ -1444,19 +1460,20 @@ public class CanvasItems {
         CanvasItem? item = null;
         var type = CanvasItem.get_type_from_xml( it );
         switch( type ) {
-          case CanvasItemType.RECT        :  item = create_rectangle();  break;
-          case CanvasItemType.OVAL        :  item = create_oval();       break;
-          case CanvasItemType.STAR        :  item = create_star();       break;
-          case CanvasItemType.LINE        :  item = create_line();       break;
-          case CanvasItemType.ARROW       :  item = create_arrow();      break;
-          case CanvasItemType.TEXT        :  item = create_text();       break;
-          case CanvasItemType.BLUR        :  item = create_blur();       break;
-          case CanvasItemType.MAGNIFIER   :  item = create_magnifier();  break;
-          case CanvasItemType.PENCIL      :  item = create_pencil();     break;
-          case CanvasItemType.SEQUENCE    :  item = create_sequence();   break;
-          case CanvasItemType.STICKER     :  item = create_sticker();    break;
-          case CanvasItemType.IMAGE       :  item = create_image();      break;
-          default                         :  assert_not_reached();
+          case CanvasItemType.RECT         :  item = create_rectangle();     break;
+          case CanvasItemType.OVAL         :  item = create_oval();          break;
+          case CanvasItemType.STAR         :  item = create_star();          break;
+          case CanvasItemType.LINE         :  item = create_line();          break;
+          case CanvasItemType.ARROW        :  item = create_arrow();         break;
+          case CanvasItemType.MODERN_ARROW :  item = create_modern_arrow();  break;
+          case CanvasItemType.TEXT         :  item = create_text();          break;
+          case CanvasItemType.BLUR         :  item = create_blur();          break;
+          case CanvasItemType.MAGNIFIER    :  item = create_magnifier();     break;
+          case CanvasItemType.PENCIL       :  item = create_pencil();        break;
+          case CanvasItemType.SEQUENCE     :  item = create_sequence();      break;
+          case CanvasItemType.STICKER      :  item = create_sticker();       break;
+          case CanvasItemType.IMAGE        :  item = create_image();         break;
+          default                          :  assert_not_reached();
         }
         if( item != null ) {
           item.load( it );
@@ -1529,21 +1546,22 @@ public class CanvasItems {
     CanvasItem? item = null;
     var type = CanvasItem.get_type_from_xml( node );
     switch( type ) {
-      case CanvasItemType.RECT      :  item = create_rectangle( true );   break;
-      case CanvasItemType.OVAL      :  item = create_oval( true );        break;
-      case CanvasItemType.STAR      :  item = create_star( true );        break;
-      case CanvasItemType.TALK      :  item = create_bubble( CanvasBubbleType.TALK, true );   break;
-      case CanvasItemType.THINK     :  item = create_bubble( CanvasBubbleType.THINK, true );  break;
-      case CanvasItemType.LINE      :  item = create_line( true );              break;
-      case CanvasItemType.ARROW     :  item = create_arrow( true );             break;
-      case CanvasItemType.TEXT      :  item = create_text( true );              break;
-      case CanvasItemType.BLUR      :  item = create_blur( true );              break;
-      case CanvasItemType.MAGNIFIER :  item = create_magnifier( true );         break;
-      case CanvasItemType.PENCIL    :  item = create_pencil( true );            break;
-      case CanvasItemType.SEQUENCE  :  item = create_sequence( true );          break;
-      case CanvasItemType.STICKER   :  item = create_sticker( true );           break;
-      case CanvasItemType.IMAGE     :  item = create_image( true );             break;
-      default                       :  assert_not_reached();
+      case CanvasItemType.RECT         :  item = create_rectangle( true );   break;
+      case CanvasItemType.OVAL         :  item = create_oval( true );        break;
+      case CanvasItemType.STAR         :  item = create_star( true );        break;
+      case CanvasItemType.TALK         :  item = create_bubble( CanvasBubbleType.TALK, true );   break;
+      case CanvasItemType.THINK        :  item = create_bubble( CanvasBubbleType.THINK, true );  break;
+      case CanvasItemType.LINE         :  item = create_line( true );              break;
+      case CanvasItemType.ARROW        :  item = create_arrow( true );             break;
+      case CanvasItemType.MODERN_ARROW :  item = create_modern_arrow( true );      break;
+      case CanvasItemType.TEXT         :  item = create_text( true );              break;
+      case CanvasItemType.BLUR         :  item = create_blur( true );              break;
+      case CanvasItemType.MAGNIFIER    :  item = create_magnifier( true );         break;
+      case CanvasItemType.PENCIL       :  item = create_pencil( true );            break;
+      case CanvasItemType.SEQUENCE     :  item = create_sequence( true );          break;
+      case CanvasItemType.STICKER      :  item = create_sticker( true );           break;
+      case CanvasItemType.IMAGE        :  item = create_image( true );             break;
+      default                          :  assert_not_reached();
     }
     if( item != null ) {
       item.load( node );
