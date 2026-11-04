@@ -289,11 +289,11 @@ public class MainWindow : Gtk.ApplicationWindow {
     });
 
     var export_btn = new MenuButton() {
-      has_frame    = !on_elementary,
-      child        = new Image.from_icon_name( (on_elementary ? "document-export" : "document-send-symbolic") ),
-      sensitive    = false,
-      tooltip_text = _( "Export Image" ),
-      popover      = popover
+      has_frame      = !on_elementary,
+      child          = new Image.from_icon_name( (on_elementary ? "document-export" : "document-send-symbolic") ),
+      sensitive      = false,
+      tooltip_markup = Utils.tooltip_with_accel( _( "Export Image" ), "<Control>e" ),
+      popover        = popover
     };
 
     return( export_btn );
