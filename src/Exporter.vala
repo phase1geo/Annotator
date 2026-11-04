@@ -179,6 +179,7 @@ public class Exporter : Box {
     var dialog = new FileDialog() {
       title = _( "Export As %s" ).printf( export.label ),
       modal = true,
+      initial_name = "annotated" + export.extensions[0],
       default_filter = filter
     };
 

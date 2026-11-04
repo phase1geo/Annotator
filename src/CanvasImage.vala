@@ -586,6 +586,7 @@ public class CanvasImage {
   public void export_clipboard() {
     clean_image();
     exports.clipboard.export( _buf );
+    _canvas.win.notification( _( "Image to Clipboard" ), "Copied!" );
   }
 
   //-------------------------------------------------------------
