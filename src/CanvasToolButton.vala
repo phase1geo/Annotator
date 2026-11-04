@@ -405,8 +405,6 @@ public class CanvasToolButton : ToggleButton {
     add_controller( right );
     right.pressed.connect((n_press, x, y) => {
       if( _options != null ) {
-        Gdk.Rectangle rect = {(int)x, (int)y, 1, 1};
-        _options.pointing_to = rect;
         if( _options.get_mapped() ) {
           _options.popdown();
         } else {

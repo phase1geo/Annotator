@@ -105,5 +105,13 @@
       <summary>Maximum supported image size in MB</summary>
       <description>Maximum supported image size in megabytes (MB)</description>
     </key>
+    <key name="drag-export-name" type="s">
+      <default>"png"</default>
+      <summary>Name of default export type used in the toolbar drag button.</summary>
+      <description>
+        Name of default export type used in the toolbar drag button.  Valid values are:
+        "jpeg", "tiff", "bmp", "pdf", "png", "svg", "webp"
+      </description>
+    </key>
   </schema>
 </schemalist>

@@ -29,6 +29,12 @@ public class CanvasToolbar : Box {
   private Canvas                                  _canvas;
   private HashMap<CanvasItemCategory,CurrentItem> _current_item;
   private CanvasTool                              _current_tool = CanvasTool.SELECTOR;
+  private Label                                   _drag_label;
+  private Export                                  _drag_export;
+
+  private const GLib.ActionEntry[] action_entries = {
+    { "action_set_export", action_set_export, "i" },
+  };
 
   public signal void selected( CanvasTool selected );
   public signal void select( CanvasItemType item_type );
@@ -58,6 +64,14 @@ public class CanvasToolbar : Box {
     _canvas       = canvas;
     _current_item = new HashMap<CanvasItemCategory,CurrentItem>();
 
+    // Get the export type to use
+    _drag_export = _canvas.image.exports.get_by_name( Annotator.settings.get_string( "drag-export-name" ) );
+    if( _drag_export == null ) {
+      Annotator.settings.set_string( "drag-export-name", "png" );
+      _drag_export = _canvas.image.exports.get_by_name( "png" );
+      assert( _drag_export != null );
+    }
+
     // Create current items
     _current_item.set( CanvasItemCategory.ARROW, new CurrentItem.with_canvas_item( CanvasItemType.ARROW ) );
     _current_item.set( CanvasItemCategory.SHAPE, new CurrentItem.with_canvas_item( CanvasItemType.RECT ) );
@@ -81,6 +95,11 @@ public class CanvasToolbar : Box {
 
     // Select the Selector tool by default
     selected( CanvasTool.SELECTOR );
+
+    // Set the stage for menu actions
+    var actions = new SimpleActionGroup();
+    actions.add_action_entries( action_entries, this );
+    insert_action_group( "exports", actions );
 
   }
 
@@ -608,45 +627,71 @@ public class CanvasToolbar : Box {
   // Creates a label that we can drag an image from. 
   private void create_drag_label() {
 
-    var drag_label = new Label( "PNG" ) {
-      tooltip_text = _( "Drag PNG Image" ),
+    _drag_label = new Label( _drag_export.label ) {
+      tooltip_text = _( "Drag To Create Image File\n\nRight-click to change export type" ),
       margin_start = 20
     };
 
+    var menu = new GLib.Menu();
+    for( int i=0; i<_canvas.image.exports.length(); i++ ) {
+      var export = _canvas.image.exports.index( i );
+      if( export.name != "annotator" ) {
+        menu.append( export.label, "exports.action_set_export(%d)".printf( i ) );
+      }
+    }
+
+    var popover = new PopoverMenu.from_model( menu ) {
+      autohide = true,
+      position = PositionType.BOTTOM
+    };
+    popover.set_parent( _drag_label );
+
     var motion = new EventControllerMotion();
-    drag_label.add_controller( motion );
+    _drag_label.add_controller( motion );
 
     motion.enter.connect((x, y) => {
       var cursor = new Gdk.Cursor.from_name( "grab", null );
-      drag_label.set_cursor( cursor );
+      _drag_label.set_cursor( cursor );
     });
 
     motion.leave.connect(() => {
-      drag_label.set_cursor( null );
+      _drag_label.set_cursor( null );
     });
 
-    var click = new GestureClick();
-    drag_label.add_controller( click );
+    var click = new GestureClick() {
+      button = Gdk.BUTTON_PRIMARY
+    };
+    _drag_label.add_controller( click );
 
     click.pressed.connect((x, y) => {
       var cursor = new Gdk.Cursor.from_name( "grabbing", null );
-      drag_label.set_cursor( cursor );
+      _drag_label.set_cursor( cursor );
     });
 
     click.released.connect(() => {
       var cursor = new Gdk.Cursor.from_name( "grab", null );
-      drag_label.set_cursor( cursor );
+      _drag_label.set_cursor( cursor );
+    });
+
+    var right = new GestureClick() {
+      button = Gdk.BUTTON_SECONDARY
+    };
+    _drag_label.add_controller( right );
+
+    right.pressed.connect((x, y) => {
+      popover.popup();
     });
 
     var drag = new DragSource() {
       actions = Gdk.DragAction.MOVE
     };
-    drag_label.add_controller( drag );
+    _drag_label.add_controller( drag );
 
     drag.prepare.connect((d) => {
-      var val = Value( typeof(GLib.File) );
-      var fname = Utils.create_temp_filename( "png" );
-      _canvas.win.editor.canvas.image.export_image( "png", fname );
+      var val   = Value( typeof(GLib.File) );
+      var ext   = _drag_export.extensions[0];
+      var fname = Utils.create_temp_filename( ext );
+      _canvas.win.editor.canvas.image.export_image( _drag_export.name, fname );
       val = File.new_for_path( fname );
       var cp = new Gdk.ContentProvider.for_value( val );
       return( cp );
@@ -665,8 +710,19 @@ public class CanvasToolbar : Box {
       }
     });
 
-    append( drag_label );
+    append( _drag_label );
 
+  }
+
+  //-------------------------------------------------------------
+  // Sets the drag export to the one at the given index.
+  private void action_set_export( SimpleAction action, Variant? variant ) {
+    if( variant != null ) {
+      var index = variant.get_int32();
+      _drag_export = _canvas.image.exports.index( index );
+      _drag_label.label = _drag_export.label;
+      Annotator.settings.set_string( "drag-export-name", _drag_export.name );
+    }
   }
 
   //-------------------------------------------------------------
