@@ -25,6 +25,7 @@ public enum CanvasTool {
   SELECTOR,
   ARROW,
   SHAPE,
+  LINE,
   STICKER,
   IMAGE,
   SEQUENCE,
@@ -44,6 +45,7 @@ public enum CanvasTool {
       case SELECTOR  :  return( "selector" );
       case ARROW     :  return( "arrow" );
       case SHAPE     :  return( "shape" );
+      case LINE      :  return( "line" );
       case STICKER   :  return( "sticker" );
       case IMAGE     :  return( "image" );
       case SEQUENCE  :  return( "sequence" );
@@ -54,7 +56,7 @@ public enum CanvasTool {
       case CROP      :  return( "crop" );
       case RESIZE    :  return( "resize" );
       case DROPPER   :  return( "dropper" );
-      default        :  assert_not_reached();
+      default        :  return( "num" );
     }
   }
 
@@ -65,6 +67,7 @@ public enum CanvasTool {
       case "selector"  :  return( SELECTOR );
       case "arrow"     :  return( ARROW );
       case "shape"     :  return( SHAPE );
+      case "line"      :  return( LINE );
       case "sticker"   :  return( STICKER );
       case "image"     :  return( IMAGE );
       case "sequence"  :  return( SEQUENCE );
@@ -87,7 +90,6 @@ public enum CanvasTool {
             (this == STICKER)  ||
             (this == IMAGE)    ||
             (this == SEQUENCE) ||
-            (this == PENCIL)   ||
             (this == TEXT) );
   }
 
@@ -97,8 +99,13 @@ public enum CanvasTool {
     return( (this == ARROW)    ||
             (this == SHAPE)    ||
             (this == SEQUENCE) ||
-            (this == PENCIL)   ||
             (this == TEXT) );
+  }
+
+  //-------------------------------------------------------------
+  // Returns true if this tool needs to display line options.
+  public bool has_line() {
+    return( (this == PENCIL) || (this == LINE) );
   }
 
   //-------------------------------------------------------------
@@ -117,7 +124,7 @@ public enum CanvasTool {
   //-------------------------------------------------------------
   // Returns true if this tool has properties.
   public bool has_properties() {
-    return( has_border() || has_fill() || has_alpha() || has_font() );
+    return( has_border() || has_line() || has_fill() || has_alpha() || has_font() );
   }
 
   //-------------------------------------------------------------
@@ -126,6 +133,7 @@ public enum CanvasTool {
     switch( this ) {
       case ARROW     :  return( _( "New Arrow Properties" ) );
       case SHAPE     :  return( _( "New Shape Properties" ) );
+      case LINE      :  return( _( "New Line Properties" ) );
       case STICKER   :  return( _( "New Sticker Properties" ) );
       case IMAGE     :  return( _( "New Image Properties" ) );
       case SEQUENCE  :  return( _( "New Sequence Properties" ) );
@@ -143,6 +151,7 @@ public enum CanvasTool {
     switch( this ) {
       case ARROW     :  return( _( "Selected Arrow Properties" ) );
       case SHAPE     :  return( _( "Selected Shape Properties" ) );
+      case LINE      :  return( _( "Selected Line Properties" ) );
       case STICKER   :  return( _( "Selected Sticker Properties" ) );
       case IMAGE     :  return( _( "Selected Image Properties" ) );
       case SEQUENCE  :  return( _( "Selected Sequence Properties" ) );
@@ -161,6 +170,14 @@ public enum CanvasTool {
     props.outline = true;
   }
 
+  private void setup_line_properties( CanvasItemProperties props ) {
+    props.stroke       = true;
+    props.stroke_width = CanvasItemStrokeWidth.WIDTH1;
+    props.stroke_color = Utils.color_from_string( "red" );
+    props.dash         = CanvasItemDashPattern.NONE;
+    props.outline      = true;
+  }
+
   private void setup_image_properties( CanvasItemProperties props ) {
     props.stroke  = false;
     props.outline = true;
@@ -171,14 +188,6 @@ public enum CanvasTool {
     props.color   = Utils.color_from_string( "yellow" );
     props.stroke  = false;
     props.outline = true;
-  }
-
-  private void setup_pencil_properties( CanvasItemProperties props ) {
-    props.stroke       = true;
-    props.stroke_width = CanvasItemStrokeWidth.WIDTH1;
-    props.stroke_color = Utils.color_from_string( "red" );
-    props.dash         = CanvasItemDashPattern.NONE;
-    props.outline      = true;
   }
 
   private void setup_text_properties( CanvasItemProperties props ) {
@@ -204,10 +213,11 @@ public enum CanvasTool {
     switch( this ) {
       case ARROW     :  setup_shape_properties( props );      break;
       case SHAPE     :  setup_shape_properties( props );      break;
+      case LINE      :  setup_line_properties( props );       break;
       case STICKER   :  setup_image_properties( props );      break;
       case IMAGE     :  setup_image_properties( props );      break;
       case SEQUENCE  :  setup_sequence_properties( props );   break;
-      case PENCIL    :  setup_pencil_properties( props );     break;
+      case PENCIL    :  setup_line_properties( props );       break;
       case TEXT      :  setup_text_properties( props );       break;
       case MAGNIFIER :  setup_magnifier_properties( props );  break;
       case BLUR      :  setup_blur_properties( props );       break;
@@ -223,6 +233,7 @@ public enum CanvasTool {
       case SELECTOR  :  return( CanvasItemType.NONE );
       case ARROW     :  return( CanvasItemType.MODERN_ARROW );
       case SHAPE     :  return( CanvasItemType.RECT );
+      case LINE      :  return( CanvasItemType.LINE );
       case STICKER   :  return( CanvasItemType.STICKER );
       case IMAGE     :  return( CanvasItemType.IMAGE );
       case SEQUENCE  :  return( CanvasItemType.SEQUENCE );
@@ -481,6 +492,10 @@ public class CanvasToolButton : ToggleButton {
       create_border_options( grid, ref row );
     }
 
+    if( tool.has_line() ) {
+      create_line_options( grid, ref row );
+    }
+
     if( tool.has_fill() || tool.has_border() ) {
       create_outline_options( grid, ref row );
     }
@@ -656,6 +671,122 @@ public class CanvasToolButton : ToggleButton {
       dash_rev.reveal_child  = stroke.active;
       _canvas.queue_draw();
     });
+
+  }
+
+  //-------------------------------------------------------------
+  // Adds the line options to this tool menu.
+  private void create_line_options( Grid grid, ref int row ) {
+
+    create_separator( grid, ref row );
+
+    var color_lbl = new Label( _( "Line Color" ) ) {
+      xalign = (float)0
+    };
+
+    var dialog = new ColorDialog() {
+      modal = true,
+      title = _( "Choose Color" ),
+      with_alpha = true
+    };
+
+    var color = new PopoverColorButton( dialog, _props.stroke_color ) {
+      visible    = _props.stroke,
+      margin_top = 5
+    };
+    color.notify["rgba"].connect(() => {
+      _props.stroke_color = color.rgba;
+      _canvas.queue_draw();
+    });
+
+    grid.attach( color_lbl, 0, row );
+    grid.attach( color,     1, row, 2 );
+    row++;
+
+    var width_sep = create_separator( grid, ref row );
+    width_sep.visible = _props.stroke;
+
+    var width_lbl = new Label( _( "Line Width" ) ) {
+      xalign = (float)0
+    };
+    var width_lev = new Revealer() {
+      reveal_child = _props.stroke,
+      child = width_lbl
+    };
+
+    var width_box = new Box( Orientation.VERTICAL, 5 );
+    var width_rev = new Revealer() {
+      reveal_child = _props.stroke,
+      child = width_box
+    };
+
+    grid.attach( width_lev, 0, row );
+    grid.attach( width_rev, 1, row, 2 );
+    row++;
+
+    unowned CheckButton? width_group = null;
+    for( int i=0; i<CanvasItemStrokeWidth.NUM; i++ ) {
+      var sw = (CanvasItemStrokeWidth)i;
+      var width = new CheckButton() {
+        halign = Align.FILL,
+        active = (_props.stroke_width == sw),
+        child  = make_width_icon( 100, sw.width() )
+      };
+      width.set_group( width_group );
+      width.toggled.connect(() => {
+        if( width.get_active() ) {
+          _props.stroke_width = sw;
+          _canvas.queue_draw();
+        }
+      });
+      width_box.append( width );
+      if( width_group == null ) {
+        width_group = width;
+      }
+    }
+
+    var dash_sep = create_separator( grid, ref row );
+    dash_sep.visible = _props.stroke;
+
+    var dash_lbl = new Label( _( "Line Dash" ) ) {
+      xalign = (float)0,
+    };
+    var dash_lev = new Revealer() {
+      reveal_child = _props.stroke,
+      child = dash_lbl
+    };
+
+    var dash_box = new Box( Orientation.VERTICAL, 5 );
+    var dash_rev = new Revealer() {
+      reveal_child = _props.stroke,
+      child = dash_box
+    };
+
+    grid.attach( dash_lev, 0, row );
+    grid.attach( dash_rev, 1, row, 2 );
+    row++;
+
+    unowned CheckButton? dash_group = null;
+    for( int i=0; i<CanvasItemDashPattern.NUM; i++ ) {
+      var dp = (CanvasItemDashPattern)i;
+      var dash = new CheckButton() {
+        halign = Align.FILL,
+        active = (_props.dash == dp),
+        child  = make_dash_icon( 100, dp )
+      };
+      dash.set_group( dash_group );
+      dash.toggled.connect(() => {
+        if( dash.get_active() ) {
+          _props.dash = dp;
+          _canvas.queue_draw();
+        }
+      });
+      dash_box.append( dash );
+      row++;
+      if( dash_group == null ) {
+        dash_group = dash;
+      }
+    }
 
   }
 

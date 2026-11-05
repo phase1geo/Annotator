@@ -154,7 +154,7 @@ public enum CanvasItemType {
       case STAR         :  return( CanvasTool.SHAPE );
       case TALK         :  return( CanvasTool.SHAPE );
       case THINK        :  return( CanvasTool.SHAPE );
-      case LINE         :  return( CanvasTool.SHAPE );
+      case LINE         :  return( CanvasTool.LINE );
       case MODERN_ARROW :  return( CanvasTool.ARROW );
       case ARROW        :  return( CanvasTool.ARROW );
       case TEXT         :  return( CanvasTool.TEXT );

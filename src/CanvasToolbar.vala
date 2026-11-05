@@ -136,6 +136,7 @@ public class CanvasToolbar : Box {
     switch( tool ) {
       case CanvasTool.ARROW :  item = _current_item.get( CanvasItemCategory.ARROW );  break;
       case CanvasTool.SHAPE :  item = _current_item.get( CanvasItemCategory.SHAPE );  break;
+      case CanvasTool.LINE  :  item = _current_item.get( CanvasItemCategory.SHAPE );  break;
       default               :  break;
     }
     if( _current_tool != tool ) {
