@@ -36,13 +36,12 @@ public class CanvasItemStar : CanvasItem {
     base( CanvasItemType.STAR, canvas, props );
     create_points();
     num_points = point_num;
-    _sel_cursors = new Cursor[6];
+    _sel_cursors = new Cursor[5];
     _sel_cursors[0] = new Cursor.from_name( "crosshair", null );
-    _sel_cursors[1] = new Cursor.from_name( "crosshair", null );
-    _sel_cursors[2] = new Cursor.from_name( "nw-resize", null );
-    _sel_cursors[3] = new Cursor.from_name( "ne-resize", null );
-    _sel_cursors[4] = new Cursor.from_name( "sw-resize", null );
-    _sel_cursors[5] = new Cursor.from_name( "se-resize", null );
+    _sel_cursors[1] = new Cursor.from_name( "nw-resize", null );
+    _sel_cursors[2] = new Cursor.from_name( "ne-resize", null );
+    _sel_cursors[3] = new Cursor.from_name( "sw-resize", null );
+    _sel_cursors[4] = new Cursor.from_name( "se-resize", null );
   }
 
   private double regular_ratio( int n ) {
@@ -60,7 +59,6 @@ public class CanvasItemStar : CanvasItem {
   // Creates the item points
   private void create_points() {
     points.append_val( new CanvasPoint( CanvasPointType.RESIZER0 ) );  // Outer radius
-    points.append_val( new CanvasPoint( CanvasPointType.RESIZER0 ) );  // Inner radius
     points.append_val( new CanvasPoint( CanvasPointType.RESIZER0 ) );  // Upper left
     points.append_val( new CanvasPoint( CanvasPointType.RESIZER1 ) );  // Upper right
     points.append_val( new CanvasPoint( CanvasPointType.RESIZER1 ) );  // Lower left
@@ -68,7 +66,7 @@ public class CanvasItemStar : CanvasItem {
   }
 
   public override int resize_selector() {
-    return( 5 );
+    return( 4 );
   }
 
   //-------------------------------------------------------------
@@ -108,13 +106,12 @@ public class CanvasItemStar : CanvasItem {
 
     // Calculate the inner and outer control points
     calculate_point( 0, points.index( 0 ) );
-    calculate_point( ((num_points * 2) - 1), points.index( 1 ) );
 
     // Update the selector positions for changing the boundary
-    points.index( 2 ).copy_coords( bbox.x1(), bbox.y1() );
-    points.index( 3 ).copy_coords( bbox.x2(), bbox.y1() );
-    points.index( 4 ).copy_coords( bbox.x1(), bbox.y2() );
-    points.index( 5 ).copy_coords( bbox.x2(), bbox.y2() );
+    points.index( 1 ).copy_coords( bbox.x1(), bbox.y1() );
+    points.index( 2 ).copy_coords( bbox.x2(), bbox.y1() );
+    points.index( 3 ).copy_coords( bbox.x1(), bbox.y2() );
+    points.index( 4 ).copy_coords( bbox.x2(), bbox.y2() );
 
   }
 
@@ -130,11 +127,10 @@ public class CanvasItemStar : CanvasItem {
       case 0 :
         _inner_ratio = Math.fmax( 0.05, Math.fmin( 0.95, _inner_ratio - (diffy / outer) ) );
         break;
-      case 1 :  box.x += diffy;  box.y += diffy;  box.width -= (diffy * 2);  box.height -= (diffy * 2);  break;
-      case 2 :  box.x += diffy;  box.y += diffy;  box.width -= diffy;        box.height -= diffy;  break;
-      case 3 :                   box.y += diffy;  box.width -= diffy;        box.height -= diffy;  break;
-      case 4 :  box.x -= diffy;                   box.width += diffy;        box.height += diffy;  break;
-      case 5 :                                    box.width += diffy;        box.height += diffy;  break;
+      case 1 :  box.x += diffy;  box.y += diffy;  box.width -= diffy;        box.height -= diffy;  break;
+      case 2 :                   box.y += diffy;  box.width -= diffy;        box.height -= diffy;  break;
+      case 3 :  box.x -= diffy;                   box.width += diffy;        box.height += diffy;  break;
+      case 4 :                                    box.width += diffy;        box.height += diffy;  break;
     }
 
     if( box.height >= 1 ) {
