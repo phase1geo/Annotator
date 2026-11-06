@@ -1028,7 +1028,7 @@ public class CanvasItems {
             _active.mode = CanvasItemMode.SELECTED;
             _canvas.set_cursor_from_name( "grabbing" );
             add_item( _active, -1, true, false );
-            selection_changed( item );
+            _selector_index = -1;
           } else {
             switch( press_count ) {
               case 1 :
@@ -1182,9 +1182,10 @@ public class CanvasItems {
         _canvas.editor.set_toolbar_tool( CanvasTool.SELECTOR );
       }
       _selector_index = -1;
-      _active.mode    = (current_tool == CanvasTool.SELECTOR) ? CanvasItemMode.SELECTED : CanvasItemMode.NONE;
-      _active         = null;
-      selection_changed( null );
+      var was_selector = (current_tool == CanvasTool.SELECTOR);
+      _active.mode = was_selector ? CanvasItemMode.SELECTED : CanvasItemMode.NONE;
+      selection_changed( was_selector ? _active : null );
+      _active = null;
       retval = true;
 
     // If we are editing text, do nothing
@@ -1477,8 +1478,10 @@ public class CanvasItems {
         }
         if( item != null ) {
           item.load( it );
-          item.bbox = center_box( item.bbox.width, item.bbox.height );
+          var rect = new CanvasRect.from_coords( _last_x, _last_y, item.bbox.width, item.bbox.height );
+          item.bbox = rect;
           add_item( item, -1, false, false );
+          _selector_index = -1;
           undo_item.add( item );
         }
       }
