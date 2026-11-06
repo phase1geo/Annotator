@@ -233,19 +233,35 @@ public class CanvasItemModernArrow : CanvasItem {
     build_path( ctx );
     save_path( ctx, CanvasItemPathType.FILL );
 
-    // Optional contrasting outline drawn underneath the fill
     if( props.outline ) {
       var outline = Granite.contrasting_foreground_color( props.color );
       set_color( ctx, color, outline, (alpha / 2) );
-      ctx.set_line_width( 4 );
-      ctx.stroke_preserve();
+      if( props.fill ) {
+        ctx.set_line_width( 1 );
+        ctx.stroke_preserve();
+      }
+      if( props.stroke ) {
+        props.dash.set_bg_pattern( ctx );
+        ctx.set_line_width( props.stroke_width.width() + 2 );
+        ctx.stroke_preserve();
+      }
     }
 
-    // Fill, plus a thin same-colour stroke to soften the corners
-    set_color( ctx, color, props.color, alpha );
-    ctx.fill_preserve();
-    ctx.set_line_width( 1.5 );
-    ctx.stroke();
+    if( props.fill ) {
+      set_color( ctx, color, props.color, alpha );
+      if( props.stroke ) {
+        ctx.fill_preserve();
+      } else {
+        ctx.fill();
+      }
+    }
+
+    if( props.stroke ) {
+      props.dash.set_fg_pattern( ctx );
+      set_color( ctx, color, props.stroke_color, mode.alpha( props.stroke_color.alpha ) );
+      ctx.set_line_width( props.stroke_width.width() );
+      ctx.stroke();
+    }
 
   }
 
