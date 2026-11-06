@@ -319,7 +319,7 @@ public class CanvasItems {
   }
 
   private CanvasItem create_star( bool loading = false ) {
-    var item = new CanvasItemStar( _canvas, 5, 25, _canvas.props.get_properties( CanvasTool.SHAPE ) );
+    var item = new CanvasItemStar( _canvas, 5, _canvas.props.get_properties( CanvasTool.SHAPE ) );
     if( !loading ) {
       position_item( item, 100, 100 );
     }
@@ -435,7 +435,7 @@ public class CanvasItems {
     if( after_tool_click ) {
       _canvas.editor.set_toolbar_tool( CanvasTool.SELECTOR );
     }
-    if( !in_edit_mode() ) {
+    if( !in_edit_mode() && !in_draw_mode() ) {
       _selector_index = item.resize_selector();
       item.mode = (_selector_index != -1) ? CanvasItemMode.SELECTED : CanvasItemMode.NONE;
     }

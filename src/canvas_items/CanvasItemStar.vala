@@ -25,19 +25,35 @@ using Cairo;
 
 public class CanvasItemStar : CanvasItem {
 
-  private double _inner_radius = 15;
-  private Cursor _sel_cursor;
+  private double   _inner_ratio = 0.381966;
+  private Cursor[] _sel_cursors;
 
   public int num_points { get; set; default = 5; }
 
   //-------------------------------------------------------------
   // Constructor
-  public CanvasItemStar( Canvas canvas, int point_num, double inner_radius, CanvasItemProperties props ) {
+  public CanvasItemStar( Canvas canvas, int point_num, CanvasItemProperties props ) {
     base( CanvasItemType.STAR, canvas, props );
-    num_points    = point_num;
-    _inner_radius = inner_radius;
     create_points();
-    _sel_cursor = new Cursor.from_name( "crosshair", null );
+    num_points = point_num;
+    _sel_cursors = new Cursor[6];
+    _sel_cursors[0] = new Cursor.from_name( "crosshair", null );
+    _sel_cursors[1] = new Cursor.from_name( "crosshair", null );
+    _sel_cursors[2] = new Cursor.from_name( "nw-resize", null );
+    _sel_cursors[3] = new Cursor.from_name( "ne-resize", null );
+    _sel_cursors[4] = new Cursor.from_name( "sw-resize", null );
+    _sel_cursors[5] = new Cursor.from_name( "se-resize", null );
+  }
+
+  private double regular_ratio( int n ) {
+    if( n < 5 ) {
+      return( 0.5 );
+    }
+    return( Math.cos( (2 * Math.PI) / n ) / Math.cos( Math.PI / n ) );
+  }
+
+  private double outer_radius() {
+    return( Math.fmin( bbox.width, bbox.height ) / 2 );
   }
 
   //-------------------------------------------------------------
@@ -60,38 +76,29 @@ public class CanvasItemStar : CanvasItem {
   public override void copy( CanvasItem item ) {
     base.copy( item );
     var star = (CanvasItemStar)item;
-    _inner_radius = star._inner_radius;
-    num_points    = star.num_points;
+    _inner_ratio = star._inner_ratio;
+    num_points   = star.num_points;
   }
 
   //-------------------------------------------------------------
   // Returns a duplicate of this item
   public override CanvasItem duplicate() {
-    var item = new CanvasItemStar( canvas, num_points, _inner_radius, props );
+    var item = new CanvasItemStar( canvas, num_points, props );
     item.copy( this );
     return( item );
   }
 
   private void calculate_point( int point_num, CanvasPoint point ) {
 
-    var start_x      = bbox.mid_x();
-    var start_y      = bbox.mid_y();
-    var RAD_distance = ((2 * Math.PI) / num_points);
-    var RAD_half_PI  = Math.PI /2;
+    var outer     = outer_radius();
+    var RAD_dist  = (2 * Math.PI) / num_points;
+    var outer_RAD = ((point_num / 2) + 1) * RAD_dist;
+    var is_inner  = ((point_num % 2) == 0);
+    var angle     = (is_inner ? (outer_RAD - (RAD_dist / 2)) : outer_RAD) - (Math.PI / 2);
+    var radius    = is_inner ? (outer * _inner_ratio) : outer;
 
-    var new_outer_RAD      = ((point_num / 2) + 1) * RAD_distance;
-    var half_new_outer_RAD = new_outer_RAD - (RAD_distance / 2);
-
-    if( (point_num % 2) == 0 ) {
-      var x = start_x + Math.cos(half_new_outer_RAD - RAD_half_PI) * _inner_radius;
-      var y = start_y + Math.sin(half_new_outer_RAD - RAD_half_PI) * _inner_radius;
-      point.copy_coords( x, y );
-    } else {
-      var outer_radius = bbox.height / 2;
-      var x = start_x + Math.cos(new_outer_RAD - RAD_half_PI) * outer_radius;
-      var y = start_y + Math.sin(new_outer_RAD - RAD_half_PI) * outer_radius;
-      point.copy_coords( x, y );
-    }
+    point.copy_coords( bbox.mid_x() + (Math.cos( angle ) * radius),
+                       bbox.mid_y() + (Math.sin( angle ) * radius) );
 
   }
 
@@ -115,30 +122,19 @@ public class CanvasItemStar : CanvasItem {
   // Adjusts the bounding box
   public override void move_selector( int index, double diffx, double diffy, bool shift ) {
 
-    var box          = new CanvasRect.from_rect( bbox );
-    var inner_radius = _inner_radius;
+    var box   = new CanvasRect.from_rect( bbox );
+    var outer = outer_radius();
 
     // If we are moving the selector representing the outer radius, update the box
     switch( index ) {
-      case 0 :  inner_radius -= diffy;  break;
+      case 0 :
+        _inner_ratio = Math.fmax( 0.05, Math.fmin( 0.95, _inner_ratio - (diffy / outer) ) );
+        break;
       case 1 :  box.x += diffy;  box.y += diffy;  box.width -= (diffy * 2);  box.height -= (diffy * 2);  break;
       case 2 :  box.x += diffy;  box.y += diffy;  box.width -= diffy;        box.height -= diffy;  break;
       case 3 :                   box.y += diffy;  box.width -= diffy;        box.height -= diffy;  break;
       case 4 :  box.x -= diffy;                   box.width += diffy;        box.height += diffy;  break;
       case 5 :                                    box.width += diffy;        box.height += diffy;  break;
-    }
-
-    // Adjust the inner radius if the bbox resizers were moved
-    if( index >= 2 ) {
-      var inner_ratio = inner_radius / (box.height * 0.5);
-      inner_radius = (box.height / 2) * inner_ratio;
-    }
-
-    // If the inner radius value is greater than zero and the inner radius is less than
-    // the outer radius.
-    if( (inner_radius > 5) && ((box.height / 2) > inner_radius) ) {
-      _inner_radius = inner_radius;
-      // bbox          = box;
     }
 
     if( box.height >= 1 ) {
@@ -151,7 +147,7 @@ public class CanvasItemStar : CanvasItem {
   // Provides cursor to display when mouse cursor is hovering over
   // the given selector
   public override Cursor? get_selector_cursor( int index ) {
-    return( _sel_cursor );
+    return( _sel_cursors[index] );
   }
 
   //-------------------------------------------------------------
@@ -161,7 +157,6 @@ public class CanvasItemStar : CanvasItem {
     menu.add_spinner( this, _( "Points:" ), 3, 50, 1, num_points,
       (item, value) => {
         num_points = value;
-        create_points();
         bbox_changed();
         canvas.queue_draw();
       },
@@ -178,8 +173,8 @@ public class CanvasItemStar : CanvasItem {
   // Saves the contents of this canvas item in XML format.
   public override Xml.Node* save( int id, string image_dir ) {
     Xml.Node* node = base.save( id, image_dir );
-    node->set_prop( "points",       num_points.to_string() );
-    node->set_prop( "inner-radius", _inner_radius.to_string() );
+    node->set_prop( "points",      num_points.to_string() );
+    node->set_prop( "inner-ratio", _inner_ratio.to_string() );
     return( node );
   }
 
@@ -190,9 +185,14 @@ public class CanvasItemStar : CanvasItem {
     if( p != null ) {
       num_points = int.parse( p );
     }
-    var i = node->get_prop( "inner-radius" );
-    if( i != null ) {
-      _inner_radius = double.parse( i );
+    var r = node->get_prop( "inner-ratio" );
+    if( r != null ) {
+      _inner_ratio = double.parse( r );
+    } else {
+      var i = node->get_prop( "inner-radius" );
+      if( (i != null) && (outer_radius() > 0) ) {
+        _inner_ratio = double.parse( i ) / outer_radius();
+      }
     }
     base.load( node );
   }
