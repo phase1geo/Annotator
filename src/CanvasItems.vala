@@ -1037,7 +1037,10 @@ public class CanvasItems {
                 selection_changed( item );
                 break;
               case 2 :
-                if( _active.itype != CanvasItemType.TEXT ) return( false );
+                if( _active.itype != CanvasItemType.TEXT ) {
+                  _items.reverse();
+                  return( false );
+                }
                 set_edit_mode( true );
                 break;
             }
@@ -1247,7 +1250,7 @@ public class CanvasItems {
         create_contextual_menu( item );
         return;
       }
-      if( (within == null) && item.is_within( x, y ) ) {
+      if( item.is_within( x, y ) ) {
         within = item;
       }
     }
