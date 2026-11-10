@@ -1482,6 +1482,7 @@ public class CanvasItems {
           item.bbox = rect;
           add_item( item, -1, false, false );
           _selector_index = -1;
+          _active = null;
           undo_item.add( item );
         }
       }
