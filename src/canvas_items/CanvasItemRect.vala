@@ -29,8 +29,8 @@ public class CanvasItemRect : CanvasItem {
 
   //-------------------------------------------------------------
   // Constructor
-  public CanvasItemRect( Canvas canvas, bool fill, CanvasItemProperties props ) {
-    base( (fill ? CanvasItemType.RECT_FILL : CanvasItemType.RECT_STROKE), canvas, props );
+  public CanvasItemRect( Canvas canvas, CanvasItemProperties props ) {
+    base( CanvasItemType.RECT, canvas, props );
     create_points();
     _sel_cursors = new Cursor[8];
     _sel_cursors[0] = new Cursor.from_name( "nw-resize", null );
@@ -57,9 +57,15 @@ public class CanvasItemRect : CanvasItem {
   }
 
   //-------------------------------------------------------------
+  // Returns the southeast selector.
+  public override int resize_selector() {
+    return( 3 );
+  }
+
+  //-------------------------------------------------------------
   // Returns a duplicate of this item
   public override CanvasItem duplicate() {
-    var item = new CanvasItemRect( canvas, (itype == CanvasItemType.RECT_FILL), props );
+    var item = new CanvasItemRect( canvas, props );
     item.copy( this );
     return( item );
   }
@@ -122,44 +128,42 @@ public class CanvasItemRect : CanvasItem {
   // Draw the rectangle
   public override void draw_item( Context ctx, CanvasItemColor color ) {
 
-    var outline = Granite.contrasting_foreground_color( props.color );
-    var alpha   = mode.alpha( props.alpha );
+    var alpha = mode.alpha( props.color.alpha );
 
     ctx.rectangle( bbox.x, bbox.y, bbox.width, bbox.height );
 
     save_path( ctx, CanvasItemPathType.FILL );
 
-    if( itype == CanvasItemType.RECT_FILL ) {
-
-      set_color( ctx, color, props.color, alpha );
-
-      if( props.outline ) {
-        ctx.fill_preserve();
-        set_color( ctx, color, outline, 0.5 );
+    if( props.outline ) {
+      var outline = Granite.contrasting_foreground_color( props.color );
+      set_color( ctx, color, outline, (alpha / 2) );
+      if( props.fill ) {
         ctx.set_line_width( 1 );
-        ctx.stroke();
+        ctx.stroke_preserve();
+      }
+      if( props.stroke ) {
+        props.dash.set_bg_pattern( ctx );
+        ctx.set_line_width( props.stroke_width.width() + 2 );
+        ctx.stroke_preserve();
+      }
+    }
+
+    if( props.fill ) {
+      set_color( ctx, color, props.color, alpha );
+      if( props.stroke ) {
+        ctx.fill_preserve();
       } else {
         ctx.fill();
       }
-  
-    } else {
-
-      var sw = props.stroke_width.width();
-
-      if( props.outline ) {
-        set_color( ctx, color, outline, 0.5 );
-        ctx.set_line_width( sw + 2 );
-        props.dash.set_bg_pattern( ctx );
-        ctx.stroke_preserve();
-      }
-
-      set_color( ctx, color, props.color, alpha );
-      ctx.set_line_width( sw );
-      props.dash.set_fg_pattern( ctx );
-      ctx.stroke();
-
     }
 
+    if( props.stroke ) {
+      props.dash.set_fg_pattern( ctx );
+      set_color( ctx, color, props.stroke_color, mode.alpha( props.stroke_color.alpha ) );
+      ctx.set_line_width( props.stroke_width.width() );
+      ctx.stroke();
+    }
+  
   }
 
 }

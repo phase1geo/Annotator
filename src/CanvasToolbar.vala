@@ -26,12 +26,34 @@ public class CanvasToolbar : Box {
 
   private const int margin = 5;
 
-  private Canvas             _canvas;
-  private ToggleButton       _crop_btn;
-  private Array<CheckButton> _width_btns;
-  private Array<CheckButton> _dash_btns;
-  private ColorDialogButton  _color_chooser;
+  private Canvas                                  _canvas;
   private HashMap<CanvasItemCategory,CurrentItem> _current_item;
+  private CanvasTool                              _current_tool = CanvasTool.SELECTOR;
+  private Label                                   _drag_label;
+  private Export                                  _drag_export;
+
+  private const GLib.ActionEntry[] action_entries = {
+    { "action_set_export", action_set_export, "i" },
+  };
+
+  public signal void selected( CanvasTool selected );
+  public signal void select( CanvasItemType item_type );
+
+  public Canvas canvas {
+    get {
+      return( _canvas );
+    }
+  }
+  public CanvasTool current_tool {
+    get {
+      return( _current_tool );
+    }
+    set {
+      if( _current_tool != value ) {
+        update_current_tool( value );
+      }
+    }
+  }
 
   //-------------------------------------------------------------
   // Constructor
@@ -40,16 +62,23 @@ public class CanvasToolbar : Box {
     Object( orientation: Orientation.HORIZONTAL, spacing: 5 );
 
     _canvas       = canvas;
-    _width_btns   = new Array<CheckButton>();
-    _dash_btns    = new Array<CheckButton>();
     _current_item = new HashMap<CanvasItemCategory,CurrentItem>();
 
-    // Create current items
-    _current_item.set( CanvasItemCategory.ARROW, new CurrentItem.with_canvas_item( CanvasItemType.ARROW ) );
-    _current_item.set( CanvasItemCategory.SHAPE, new CurrentItem.with_canvas_item( CanvasItemType.RECT_STROKE ) );
+    // Get the export type to use
+    _drag_export = _canvas.image.exports.get_by_name( Annotator.settings.get_string( "drag-export-name" ) );
+    if( _drag_export == null ) {
+      Annotator.settings.set_string( "drag-export-name", "png" );
+      _drag_export = _canvas.image.exports.get_by_name( "png" );
+      assert( _drag_export != null );
+    }
 
-    create_shapes( CanvasItemCategory.ARROW, _( "Add Arrow" ), _( "More Arrows" ), _( "Custom Arrows" ) );
-    create_shapes( CanvasItemCategory.SHAPE, _( "Add Shape" ), _( "More Shapes" ), _( "Custom Shapes" ) );
+    // Create current items
+    _current_item.set( CanvasItemCategory.ARROW, new CurrentItem.with_canvas_item( CanvasItemType.MODERN_ARROW ) );
+    _current_item.set( CanvasItemCategory.SHAPE, new CurrentItem.with_canvas_item( CanvasItemType.RECT ) );
+
+    create_selector();
+    create_shapes( CanvasItemCategory.ARROW, _( "More Arrows" ), _( "Custom Arrows" ) );
+    create_shapes( CanvasItemCategory.SHAPE, _( "More Shapes" ), _( "Custom Shapes" ) );
     create_sticker();
     create_image();
     create_sequence();
@@ -62,20 +91,101 @@ public class CanvasToolbar : Box {
     create_resize();
     create_dropper();
     create_separator();
-    create_color();
-    create_stroke();
-    create_fonts();
-    create_separator();
     create_drag_label();
 
-    // If the selection changes, update the toolbar
-    _canvas.items.selection_changed.connect( selection_changed );
+    // Select the Selector tool by default
+    selected( CanvasTool.SELECTOR );
+
+    // Set the stage for menu actions
+    var actions = new SimpleActionGroup();
+    actions.add_action_entries( action_entries, this );
+    insert_action_group( "exports", actions );
+
+  }
+
+  //-------------------------------------------------------------
+  // Retrieves the currently selected arrow/shape (or null if arrow
+  // or shape is not the current tool).
+  public CurrentItem? get_current_item() {
+    switch( current_tool ) {
+      case CanvasTool.ARROW :  return( _current_item.get( CanvasItemCategory.ARROW ) );
+      case CanvasTool.SHAPE :  return( _current_item.get( CanvasItemCategory.SHAPE ) );
+      default               :  return( null );
+    }
+  }
+
+  //-------------------------------------------------------------
+  // Sets the current tool to the given value.
+  private void update_current_tool( CanvasTool tool ) {
+    var prev = _current_tool;
+    _current_tool = tool;
+    switch( prev ) {
+      case CanvasTool.CROP    :  _canvas.image.cancel_crop();       break;
+      case CanvasTool.DROPPER :  _canvas.image.cancel_pick_mode();  break;
+      default                 :  break;
+    }
+    selected( tool );
+  }
+
+  //-------------------------------------------------------------
+  // Sets the current item based on the canvas item type specified.
+  // Causes the associated button to get activated as well.
+  public void set_current_item( CanvasItemType item_type ) {
+    CurrentItem? item = null;
+    var tool = item_type.tool();
+    switch( tool ) {
+      case CanvasTool.ARROW :  item = _current_item.get( CanvasItemCategory.ARROW );  break;
+      case CanvasTool.SHAPE :  item = _current_item.get( CanvasItemCategory.SHAPE );  break;
+      case CanvasTool.LINE  :  item = _current_item.get( CanvasItemCategory.SHAPE );  break;
+      default               :  break;
+    }
+    if( _current_tool != tool ) {
+      if( item != null ) {
+        item.canvas_item( item_type );
+      }
+      update_current_tool( tool );
+    } else if( (item != null) && (item.get_item_type() != item_type) ) {
+      item.canvas_item( item_type );
+      update_current_tool( tool );
+    }
+  }
+
+  //-------------------------------------------------------------
+  // Creates the selection tool
+  private void create_selector() {
+
+    var button = new CanvasToolButton( this, CanvasTool.SELECTOR ) {
+      halign       = Align.START,
+      icon_name    = "selection-symbolic",
+      tooltip_text = _( "Selection Tool" )
+    };
+
+    button.notify["active"].connect(() => {
+      if( button.active ) {
+        current_tool = CanvasTool.SELECTOR;
+      }
+    });
+
+    selected.connect((sel_tool) => {
+      if( (sel_tool == CanvasTool.SELECTOR) && !button.active ) {
+        button.active = true;
+      }
+    });
+
+    _canvas.items.selection_changed.connect((item, msg) => {
+      button.set_canvas_item( item );
+      if( (item != null) && (item.mode == CanvasItemMode.SELECTED) ) {
+        selected( CanvasTool.SELECTOR );
+      }
+    });
+
+    append( button );
 
   }
 
   //-------------------------------------------------------------
   // Creates the shape toolbar item
-  private void create_shapes( CanvasItemCategory category, string tooltip, string mb_tooltip, string custom_label ) {
+  private void create_shapes( CanvasItemCategory category, string mb_tooltip, string custom_label ) {
 
     var box = new Box( Orientation.VERTICAL, 5 ) {
       margin_start  = 5,
@@ -90,31 +200,29 @@ public class CanvasToolbar : Box {
       max_children_per_line = 4
     };
 
-    var mb = new Button.with_label( "\u23f7" ) {
-      has_frame    = false,
-      tooltip_text = mb_tooltip,
-      margin_start = 0,
-      margin_end   = margin
-    };
-
     var popover = new Popover() {
       child = box
     };
-    popover.set_parent( mb );
 
-    mb.clicked.connect(() => {
-      popover.popup();
+    var tool = (category == CanvasItemCategory.ARROW) ? CanvasTool.ARROW : CanvasTool.SHAPE;
+    var btn = new CanvasToolButton( this, tool, popover ) {
+      child = _current_item.get( category ).get_image( _canvas.win )
+    };
+
+    btn.notify["active"].connect(() => {
+      if( btn.active ) {
+        current_tool = tool;
+      }
     });
 
-    var btn = new Button() {
-      has_frame    = false,
-      margin_start = margin,
-      margin_end   = 0,
-      tooltip_text = tooltip,
-      child        = _current_item.get( category ).get_image( _canvas.win )
-    };
-    btn.clicked.connect(() => {
-      _current_item.get( category ).add_item( _canvas.items );
+    selected.connect((sel_tool) => {
+      if( sel_tool == tool ) {
+        var item = _current_item.get( category );
+        btn.set_item( item );
+        if( !btn.active ) {
+          btn.active = true;
+        }
+      }
     });
 
     for( int i=0; i<CanvasItemType.NUM; i++ ) {
@@ -130,9 +238,9 @@ public class CanvasToolbar : Box {
           tooltip_markup = shape_type.tooltip(),
         };
         b.clicked.connect(() => {
-          _current_item.get( category ).canvas_item( shape_type );
-          _current_item.get( category ).add_item( _canvas.items );
-          btn.child = _current_item.get( category ).get_image( _canvas.win );
+          var item = _current_item.get( category );
+          item.canvas_item( shape_type );
+          btn.set_item( item );
           popover.popdown();
         });
         fb.append( b );
@@ -141,20 +249,16 @@ public class CanvasToolbar : Box {
 
     box.append( fb );
     _canvas.items.custom_items.create_menu( _canvas.win, category, popover, box, custom_label, 4 );
-    _canvas.items.custom_items.item_selected.connect((cat, item) => {
+    _canvas.items.custom_items.item_selected.connect((cat, it) => {
       if( cat == category ) {
-        _current_item.get( cat ).custom_item( item );
-        _current_item.get( cat ).add_item( _canvas.items );
-        btn.child = _current_item.get( cat ).get_image( _canvas.win );
+        var item = _current_item.get( cat );
+        item.custom_item( it );
+        btn.set_item( item );
         popover.popdown();
       }
     });
 
-    var shape_box = new Box( Orientation.HORIZONTAL, 0 );
-    shape_box.append( btn );
-    shape_box.append( mb );
-
-    append( shape_box );
+    append( btn );
 
     // If the system dark mode changes, hide the popover
     _canvas.win.theme_changed.connect((dark_mode) => {
@@ -167,14 +271,23 @@ public class CanvasToolbar : Box {
   // Creates the sticker toolbar item
   private void create_sticker() {
 
-    var sticker = CanvasItemType.STICKER;
+    var popover = new Popover();
 
-    var mb = new MenuButton() {
-      icon_name      = sticker.icon_name(),
-      tooltip_markup = sticker.tooltip(),
-      has_frame      = false,
-      popover        = new Popover()
+    var btn = new CanvasToolButton( this, CanvasTool.STICKER ) {
+      icon_name = "sticker-symbolic",
     };
+
+    btn.notify["active"].connect(() => {
+      if( btn.active ) {
+        current_tool = CanvasTool.STICKER;
+      }
+    });
+
+    selected.connect((sel_tool) => {
+      if( (sel_tool == CanvasTool.STICKER) && !btn.active ) {
+        btn.active = true;
+      }
+    });
 
     var box = new Box( Orientation.VERTICAL, 0 );
     var sw = new ScrolledWindow() {
@@ -184,11 +297,11 @@ public class CanvasToolbar : Box {
     };
     sw.set_size_request( 400, 400 );
 
-    create_sticker_set( box, mb.popover );
+    create_sticker_set( box, popover );
 
-    mb.popover.child = sw;
+    popover.child = sw;
 
-    append( mb );
+    append( btn );
 
   }
 
@@ -256,10 +369,13 @@ public class CanvasToolbar : Box {
       tooltip_text = info.tooltip,
       child        = picture
     };
+
+    /*
     btn.clicked.connect((e) => {
       _canvas.items.add_sticker( info.resource );
       popover.popdown();
     });
+    */
 
     box.append( btn );
 
@@ -269,14 +385,23 @@ public class CanvasToolbar : Box {
   // Add an image button
   private void create_image() {
 
-    var btn = new Button.from_icon_name( "insert-image-symbolic" ) {
-      has_frame      = false,
-      tooltip_markup = CanvasItemType.IMAGE.tooltip(),
-      margin_start   = margin,
-      margin_end     = margin
+    var btn = new CanvasToolButton( this, CanvasTool.IMAGE ) {
+      has_frame    = false,
+      icon_name    = "insert-image-symbolic",
+      margin_start = margin,
+      margin_end   = margin
     };
-    btn.clicked.connect(() => {
-      _canvas.items.add_image();
+
+    btn.notify["active"].connect(() => {
+      if( btn.active ) {
+        current_tool = CanvasTool.IMAGE;
+      }
+    });
+
+    selected.connect((sel_tool) => {
+      if( (sel_tool == CanvasTool.IMAGE) && !btn.active ) {
+        btn.active = true;
+      }
     });
 
     append( btn );
@@ -287,16 +412,20 @@ public class CanvasToolbar : Box {
   // Adds the sequence button
   private void create_sequence() {
 
-    var sequence = CanvasItemType.SEQUENCE;
-
-    var btn = new Button.from_icon_name( sequence.icon_name() ) {
-      has_frame      = false,
-      tooltip_markup = sequence.tooltip(),
-      margin_start   = margin,
-      margin_end     = margin
+    var btn = new CanvasToolButton( this, CanvasTool.SEQUENCE ) {
+      icon_name = "sequence-symbolic",
     };
-    btn.clicked.connect(() => {
-      _canvas.items.add_shape_item( CanvasItemType.SEQUENCE );
+
+    btn.notify["active"].connect(() => {
+      if( btn.active ) {
+        current_tool = CanvasTool.SEQUENCE;
+      }
+    });
+
+    selected.connect((sel_tool) => {
+      if( (sel_tool == CanvasTool.SEQUENCE) && !btn.active ) {
+        btn.active = true;
+      }
     });
 
     append( btn );
@@ -307,16 +436,20 @@ public class CanvasToolbar : Box {
   // Starts a drawing operation with the pencil tool
   private void create_pencil() {
 
-    var pencil = CanvasItemType.PENCIL;
-
-    var btn = new Button.from_icon_name( pencil.icon_name() ) {
-      has_frame      = false,
-      tooltip_markup = pencil.tooltip(),
-      margin_start   = margin,
-      margin_end     = margin
+    var btn = new CanvasToolButton( this, CanvasTool.PENCIL ) {
+      icon_name = "edit-symbolic",
     };
-    btn.clicked.connect(() => {
-      _canvas.items.add_shape_item( CanvasItemType.PENCIL );
+
+    btn.notify["active"].connect(() => {
+      if( btn.active ) {
+        current_tool = CanvasTool.PENCIL;
+      }
+    });
+
+    selected.connect((sel_tool) => {
+      if( (sel_tool == CanvasTool.PENCIL) && !btn.active ) {
+        btn.active = true;
+      }
     });
 
     append( btn );
@@ -327,14 +460,20 @@ public class CanvasToolbar : Box {
   // Adds the text insertion button
   private void create_text() {
 
-    var btn = new Button.from_icon_name( "insert-text-symbolic" ) {
-      has_frame      = false,
-      tooltip_markup = CanvasItemType.TEXT.tooltip(),
-      margin_start   = margin,
-      margin_end     = margin
+    var btn = new CanvasToolButton( this, CanvasTool.TEXT ) {
+      icon_name = "insert-text-symbolic",
     };
-    btn.clicked.connect(() => {
-      _canvas.items.add_shape_item( CanvasItemType.TEXT );
+
+    btn.notify["active"].connect(() => {
+      if( btn.active ) {
+        current_tool = CanvasTool.TEXT;
+      }
+    });
+
+    selected.connect((sel_tool) => {
+      if( (sel_tool == CanvasTool.TEXT) && !btn.active ) {
+        btn.active = true;
+      }
     });
 
     append( btn );
@@ -347,14 +486,24 @@ public class CanvasToolbar : Box {
 
     var magnifier = CanvasItemType.MAGNIFIER;
 
-    var btn = new Button.from_icon_name( magnifier.icon_name() ) {
+    var btn = new CanvasToolButton( this, CanvasTool.MAGNIFIER ) {
       has_frame      = false,
+      icon_name      = "magnifier-symbolic",
       tooltip_markup = magnifier.tooltip(),
       margin_start   = margin,
       margin_end     = margin
     };
-    btn.clicked.connect(() => {
-      _canvas.items.add_shape_item( CanvasItemType.MAGNIFIER );
+
+    btn.notify["active"].connect(() => {
+      if( btn.active ) {
+        current_tool = CanvasTool.MAGNIFIER;
+      }
+    });
+
+    selected.connect((sel_tool) => {
+      if( (sel_tool == CanvasTool.MAGNIFIER) && !btn.active ) {
+        btn.active = true;
+      }
     });
 
     append( btn );
@@ -367,14 +516,21 @@ public class CanvasToolbar : Box {
 
     var blur = CanvasItemType.BLUR;
 
-    var btn = new Button.from_icon_name( blur.icon_name() ) {
-      has_frame      = false,
-      tooltip_markup = blur.tooltip(),
-      margin_start   = margin,
-      margin_end     = margin
+    var btn = new CanvasToolButton( this, CanvasTool.BLUR ) {
+      icon_name      = "blur-symbolic",
+      tooltip_markup = blur.tooltip()
     };
-    btn.clicked.connect(() => {
-      _canvas.items.add_shape_item( CanvasItemType.BLUR );
+
+    btn.notify["active"].connect(() => {
+      if( btn.active ) {
+        current_tool = CanvasTool.BLUR;
+      }
+    });
+
+    selected.connect((sel_tool) => {
+      if( (sel_tool == CanvasTool.BLUR) && !btn.active ) {
+        btn.active = true;
+      }
     });
 
     append( btn );
@@ -385,28 +541,30 @@ public class CanvasToolbar : Box {
   // Create the crop button
   private void create_crop() {
 
-    _crop_btn = new ToggleButton() {
+    var btn = new CanvasToolButton( this, CanvasTool.CROP ) {
       icon_name    = "image-crop-symbolic",
-      has_frame    = false,
-      // TODO - tooltip_text = _( "Crop/Rotate Image" ),
       tooltip_text = _( "Crop Image" ),
       margin_start = margin,
       margin_end   = margin
     };
 
-    _crop_btn.toggled.connect(() => {
-      if( !_crop_btn.active ) {
-        _canvas.image.cancel_crop();
-      } else {
+    btn.notify["active"].connect(() => {
+      if( btn.active ) {
+        current_tool = CanvasTool.CROP;
         _canvas.items.clear_selection();
         _canvas.image.start_crop();
+        _canvas.queue_draw();
+        _canvas.grab_focus();
       }
-      _canvas.items.clear_selection();
-      _canvas.queue_draw();
-      _canvas.grab_focus();
     });
 
-    append( _crop_btn );
+    selected.connect((sel_tool) => {
+      if( (sel_tool == CanvasTool.CROP) && !btn.active ) {
+        btn.active = true;
+      }
+    });
+
+    append( btn );
 
   }
 
@@ -414,17 +572,27 @@ public class CanvasToolbar : Box {
   // Create the image resizer button
   private void create_resize() {
 
-    var btn = new Button.from_icon_name( "view-fullscreen-symbolic" ) {
-      has_frame    = false,
+    var btn = new CanvasToolButton( this, CanvasTool.RESIZE ) {
+      icon_name    = "view-fullscreen-symbolic",
       tooltip_text = _( "Resize Image" ),
       margin_start = margin,
       margin_end   = margin
     };
-    btn.clicked.connect(() => {
-      _canvas.items.clear_selection();
-      _canvas.image.resize_image();
-      _canvas.queue_draw();
-      _canvas.grab_focus();
+
+    btn.notify["active"].connect(() => {
+      if( btn.active ) {
+        current_tool = CanvasTool.RESIZE;
+        _canvas.items.clear_selection();
+        _canvas.image.resize_image();
+        _canvas.queue_draw();
+        _canvas.grab_focus();
+      }
+    });
+
+    selected.connect((sel_tool) => {
+      if( (sel_tool == CanvasTool.RESIZE) && !btn.active ) {
+        btn.active = true;
+      }
     });
 
     append( btn );
@@ -435,198 +603,24 @@ public class CanvasToolbar : Box {
   // Creates the color picker
   private void create_dropper() {
 
-    var btn = new Button.from_icon_name( "eyedropper-symbolic" ) {
-      has_frame    = false,
+    var btn = new CanvasToolButton( this, CanvasTool.DROPPER ) {
+      icon_name    = "eyedropper-symbolic",
       tooltip_text = _( "Pick Color To Clipboard" ),
       margin_start = margin,
       margin_end   = margin
     };
-    btn.clicked.connect(() => {
-      _canvas.image.pick_color( true );
-    });
 
-    append( btn );
-
-  }
-
-  //-------------------------------------------------------------
-  // Creates the color dropdown
-  private void create_color() {
-
-    var dialog = new ColorDialog() {
-      modal      = true,
-      title      = _( "Selection Shape Color" ),
-      with_alpha = true
-    };
-
-    _color_chooser = new ColorDialogButton( dialog ) {
-      tooltip_text = _( "Shape Color" ),
-      rgba         = _canvas.items.props.color
-    };
-
-    _color_chooser.notify["rgba"].connect(() => {
-      _canvas.items.props.color = _color_chooser.get_rgba();
-    });
-
-    append( _color_chooser );
-
-  }
-
-  //-------------------------------------------------------------
-  // Sets the current color
-  public void set_color( Gdk.RGBA color ) {
-
-    _color_chooser.rgba = color;
-
-  }
-
-  //-------------------------------------------------------------
-  // Adds the stroke dropdown
-  private void create_stroke() {
-
-    var mb = new MenuButton() {
-      has_frame    = false,
-      tooltip_text = _( "Shape Border" ),
-      popover      = new Gtk.Popover(),
-      child        = make_stroke_icon()
-    };
-
-    _canvas.win.theme_changed.connect((dark) => {
-      mb.child = make_stroke_icon();
-    });
-
-    var box = new Box( Orientation.VERTICAL, 5 ) {
-      margin_start  = 10,
-      margin_end    = 10,
-      margin_top    = 10,
-      margin_bottom = 10
-    };
-
-    // Add stroke width
-    var width_title = new Label( Utils.make_title( _( "Border Width" ) ) ) {
-      halign     = Align.START,
-      use_markup = true
-    };
-    box.append( width_title );
-
-    unowned CheckButton? width_group = null;
-    for( int i=0; i<CanvasItemStrokeWidth.NUM; i++ ) {
-      var sw  = (CanvasItemStrokeWidth)i;
-      var btn = new CheckButton() {
-        margin_start = 20,
-        active       = (_canvas.items.props.stroke_width == sw)
-      };
-      btn.set_group( width_group );
-      btn.toggled.connect(() => {
-        if( btn.get_active() ) {
-          _canvas.items.props.stroke_width = sw;
-          mb.child = make_stroke_icon();
-        }
-      });
-      _width_btns.append_val( btn );
-      if( width_group == null ) {
-        width_group = btn;
+    btn.notify["active"].connect(() => {
+      if( btn.active ) {
+        current_tool = CanvasTool.DROPPER;
+        _canvas.image.pick_color( true );
       }
-      var icn = new Picture.for_paintable( make_width_icon( 100, sw.width() ) ) {
-        can_shrink = false
-      };
-      _canvas.win.theme_changed.connect((dark) => {
-        icn.paintable = make_width_icon( 100, sw.width() );
-      });
-      var rbox = new Box( Orientation.HORIZONTAL, 5 );
-      rbox.append( btn );
-      rbox.append( icn );
-      box.append( rbox );
-    }
-
-    // Add dash patterns
-    var dash_title = new Label( Utils.make_title( _( "Dash Pattern" ) ) ) {
-      halign     = Align.START,
-      margin_top = 20,
-      use_markup = true
-    };
-    box.append( dash_title );
-
-    unowned CheckButton? dash_group = null;
-    for( int i=0; i<CanvasItemDashPattern.NUM; i++ ) {
-      var dash = (CanvasItemDashPattern)i;
-      var btn  = new CheckButton() {
-        margin_start = 20,
-        active       = (_canvas.items.props.dash == dash),
-      };
-      btn.set_group( dash_group );
-      btn.toggled.connect(() => {
-        if( btn.get_active() ) {
-          _canvas.items.props.dash = dash;
-          mb.child = make_stroke_icon();
-        }
-      });
-      _dash_btns.append_val( btn );
-      if( dash_group == null ) {
-        dash_group = btn;
-      }
-      var icn = new Picture.for_paintable( make_dash_icon( 100, dash ) ) {
-        can_shrink = false
-      };
-      _canvas.win.theme_changed.connect((dark) => {
-        icn.paintable = make_dash_icon( 100, dash );
-      });
-      var rbox = new Box( Orientation.HORIZONTAL, 5 );
-      rbox.append( btn );
-      rbox.append( icn );
-      box.append( rbox );
-    }
-
-    // Add outline
-    var outline_title = new Label( Utils.make_title( _( "Show Outline" ) ) ) {
-      halign     = Align.START,
-      use_markup = true
-    };
-    var outline_sw = new Switch() {
-      halign = Align.END,
-      active = _canvas.items.props.outline
-    };
-    outline_sw.notify["active"].connect(() => {
-      _canvas.items.props.outline = !_canvas.items.props.outline;
     });
-    var outline_box = new Box( Orientation.HORIZONTAL, 10 ) {
-      homogeneous = false,
-      margin_top  = 20
-    };
-    outline_box.append( outline_title );
-    outline_box.append( outline_sw );
-    box.append( outline_box );
 
-    mb.popover.child = box;
-
-    append( mb );
-
-  }
-
-  //-------------------------------------------------------------
-  // Adds the font menubutton
-  private void create_fonts() {
-
-    var btn = new Button.from_icon_name( "font-symbolic" ) {
-      tooltip_text  = _( "Font Properties" ),
-      has_frame     = false,
-      margin_start  = 10,
-      margin_end    = 10,
-      margin_top    = 10,
-      margin_bottom = 10
-    };
-
-    var font_chooser = new FontDialog() {
-      title = _( "Change Font" )
-    };
-
-    btn.clicked.connect(() => {
-      font_chooser.choose_font.begin( _canvas.win, _canvas.items.props.font, null, (obj, res) => {
-        try {
-          var fd = font_chooser.choose_font.end( res );
-          _canvas.items.props.font = fd;
-        } catch( Error e ) {}
-      });
+    selected.connect((sel_tool) => {
+      if( (sel_tool == CanvasTool.DROPPER) && !btn.active ) {
+        btn.active = true;
+      }
     });
 
     append( btn );
@@ -637,45 +631,71 @@ public class CanvasToolbar : Box {
   // Creates a label that we can drag an image from. 
   private void create_drag_label() {
 
-    var drag_label = new Label( "PNG" ) {
-      tooltip_text = _( "Drag PNG Image" ),
+    _drag_label = new Label( _drag_export.label ) {
+      tooltip_text = _( "Drag To Create Image File\n\nRight-click to change export type" ),
       margin_start = 20
     };
 
+    var menu = new GLib.Menu();
+    for( int i=0; i<_canvas.image.exports.length(); i++ ) {
+      var export = _canvas.image.exports.index( i );
+      if( export.name != "annotator" ) {
+        menu.append( export.label, "exports.action_set_export(%d)".printf( i ) );
+      }
+    }
+
+    var popover = new PopoverMenu.from_model( menu ) {
+      autohide = true,
+      position = PositionType.BOTTOM
+    };
+    popover.set_parent( _drag_label );
+
     var motion = new EventControllerMotion();
-    drag_label.add_controller( motion );
+    _drag_label.add_controller( motion );
 
     motion.enter.connect((x, y) => {
       var cursor = new Gdk.Cursor.from_name( "grab", null );
-      drag_label.set_cursor( cursor );
+      _drag_label.set_cursor( cursor );
     });
 
     motion.leave.connect(() => {
-      drag_label.set_cursor( null );
+      _drag_label.set_cursor( null );
     });
 
-    var click = new GestureClick();
-    drag_label.add_controller( click );
+    var click = new GestureClick() {
+      button = Gdk.BUTTON_PRIMARY
+    };
+    _drag_label.add_controller( click );
 
     click.pressed.connect((x, y) => {
       var cursor = new Gdk.Cursor.from_name( "grabbing", null );
-      drag_label.set_cursor( cursor );
+      _drag_label.set_cursor( cursor );
     });
 
     click.released.connect(() => {
       var cursor = new Gdk.Cursor.from_name( "grab", null );
-      drag_label.set_cursor( cursor );
+      _drag_label.set_cursor( cursor );
+    });
+
+    var right = new GestureClick() {
+      button = Gdk.BUTTON_SECONDARY
+    };
+    _drag_label.add_controller( right );
+
+    right.pressed.connect((x, y) => {
+      popover.popup();
     });
 
     var drag = new DragSource() {
       actions = Gdk.DragAction.MOVE
     };
-    drag_label.add_controller( drag );
+    _drag_label.add_controller( drag );
 
     drag.prepare.connect((d) => {
-      var val = Value( typeof(GLib.File) );
-      var fname = Utils.create_temp_filename( "png" );
-      _canvas.win.editor.canvas.image.export_image( "png", fname );
+      var val   = Value( typeof(GLib.File) );
+      var ext   = _drag_export.extensions[0];
+      var fname = Utils.create_temp_filename( ext );
+      _canvas.win.editor.canvas.image.export_image( _drag_export.name, fname );
       val = File.new_for_path( fname );
       var cp = new Gdk.ContentProvider.for_value( val );
       return( cp );
@@ -694,116 +714,19 @@ public class CanvasToolbar : Box {
       }
     });
 
-    append( drag_label );
+    append( _drag_label );
 
   }
-
-  /*
-  private Image make_color_icon() {
-
-    var snapshot = new Snapshot();
-    var rect     = Graphene.Rect();
-    rect.init( 0, 0, (float)30, (float)24 );
-    var ctx      = snapshot.append_cairo( rect );
-
-    // Draw the image
-    var stroke = Granite.contrasting_foreground_color( _canvas.items.props.color );
-    Utils.set_context_color_with_alpha( ctx, _canvas.items.props.color, _canvas.items.props.alpha );
-    ctx.rectangle( 0, 0, 30, 24 );
-    ctx.fill_preserve();
-
-    Utils.set_context_color_with_alpha( ctx, stroke, 0.5 );
-    ctx.stroke();
-
-    var image = new Image.from_paintable( snapshot.free_to_paintable( null ) );
-
-    return( image );
-
-  }
-  */
 
   //-------------------------------------------------------------
-  // Returns true if the current mode is dark mode
-  private bool is_dark_mode() {
-
-    var settings = Gtk.Settings.get_default();
-    if( settings != null ) {
-      return( settings.gtk_application_prefer_dark_theme );
+  // Sets the drag export to the one at the given index.
+  private void action_set_export( SimpleAction action, Variant? variant ) {
+    if( variant != null ) {
+      var index = variant.get_int32();
+      _drag_export = _canvas.image.exports.index( index );
+      _drag_label.label = _drag_export.label;
+      Annotator.settings.set_string( "drag-export-name", _drag_export.name );
     }
-
-    return( false );
-
-  }
-
-  //-------------------------------------------------------------
-  // Creates the width icon
-  private Gdk.Paintable make_width_icon( int width, int stroke_width ) {
-
-    var height = stroke_width;
-
-    var snapshot = new Snapshot();
-    var rect     = Graphene.Rect();
-    rect.init( 0, 0, (float)width, (float)height );
-    var ctx      = snapshot.append_cairo( rect );
-
-    // Draw the stroke
-    Utils.set_context_color( ctx, Utils.color_from_string( is_dark_mode() ? "white" : "black" ) );
-    ctx.set_line_width( stroke_width );
-    ctx.move_to( 0, (height / 2) );
-    ctx.line_to( width, (height / 2) );
-    ctx.stroke();
-
-    return( snapshot.free_to_paintable( null ) );
-
-  }
-
-  //-------------------------------------------------------------
-  // Creates the dash icon
-  private Gdk.Paintable make_dash_icon( int width, CanvasItemDashPattern dash ) {
-
-    var height = 5;
-
-    var snapshot = new Snapshot();
-    var rect     = Graphene.Rect();
-    rect.init( 0, 0, (float)width, (float)height );
-    var ctx      = snapshot.append_cairo( rect );
-
-    // Draw the image
-    Utils.set_context_color( ctx, Utils.color_from_string( is_dark_mode() ? "white" : "black" ) );
-    ctx.set_line_width( height );
-    dash.set_fg_pattern( ctx );
-    ctx.move_to( 0, (height / 2) );
-    ctx.line_to( width, (height / 2) );
-    ctx.stroke();
-
-    return( snapshot.free_to_paintable( null ) );
-
-  }
-
-  //-------------------------------------------------------------
-  // Creates the stroke icon
-  private Image make_stroke_icon() {
-
-    var width   = 50;
-    var height  = _canvas.items.props.stroke_width.width();
-
-    var snapshot = new Snapshot();
-    var rect     = Graphene.Rect();
-    rect.init( 0, 0, (float)50, (float)height );
-    var ctx      = snapshot.append_cairo( rect );
-
-    // Draw the image
-    Utils.set_context_color( ctx, Utils.color_from_string( is_dark_mode() ? "white" : "black" ) );
-    ctx.set_line_width( height );
-    _canvas.items.props.dash.set_fg_pattern( ctx );
-    ctx.move_to( 0, (height / 2) );
-    ctx.line_to( width, (height / 2) );
-    ctx.stroke();
-
-    var image = new Image.from_paintable( snapshot.free_to_paintable( null ) );
-
-    return( image );
-
   }
 
   //-------------------------------------------------------------
@@ -818,52 +741,6 @@ public class CanvasToolbar : Box {
     append( sep );
 
   }
-
-  //-------------------------------------------------------------
-  // Called when the canvas image crop ends
-  public void crop_ended() {
-    _crop_btn.active = false;
-  }
-
-  //-------------------------------------------------------------
-  // Called whenever the item selection changes
-  private void selection_changed( CanvasItemProperties props ) {
-
-    var p = new CanvasItemProperties();
-    p.copy( props );
-
-    // Updates the width group
-    _width_btns.index( (int)p.stroke_width ).set_active( true );
-
-    // Updates the dash group
-    _dash_btns.index( (int)p.dash ).set_active( true );
-
-    // Set the color
-    _color_chooser.rgba = p.color;
-
-  }
-
-  //-------------------------------------------------------------
-  // Displays the custom menu for the specified item category type
-  // relative to the given widget.
-  /*
-  private void show_custom_menu( Widget w, CanvasItemCategory category ) {
-
-    var fb = new FlowBox();
-    fb.orientation = Orientation.HORIZONTAL;
-    fb.min_children_per_line = 4;
-    fb.max_children_per_line = 4;
-
-    var popover = new Popover( w );
-    _canvas.items.custom_items.populate_menu( category, null, popover, fb );
-
-    if( fb.get_children().length() > 0 ) {
-      popover.add( fb );
-      Utils.show_popover( popover );
-    }
-
-  }
-  */
 
 }
 

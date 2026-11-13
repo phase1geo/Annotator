@@ -1,0 +1,1040 @@
+/*
+* Copyright (c) 2025 (https://github.com/phase1geo/Minder)
+*
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public
+* License as published by the Free Software Foundation; either
+* version 2 of the License, or (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+* General Public License for more details.
+*
+* You should have received a copy of the GNU General Public
+* License along with this program; if not, write to the
+* Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+* Boston, MA 02110-1301 USA
+*
+* Authored by: Trevor Williams <phase1geo@gmail.com>
+*/
+
+using Gtk;
+
+public enum CanvasTool {
+  SELECTOR,
+  ARROW,
+  SHAPE,
+  LINE,
+  STICKER,
+  IMAGE,
+  SEQUENCE,
+  PENCIL,
+  TEXT,
+  MAGNIFIER,
+  BLUR,
+  CROP,
+  RESIZE,
+  DROPPER,
+  NUM;
+
+  //-------------------------------------------------------------
+  // Converts to a string.
+  public string to_string() {
+    switch( this ) {
+      case SELECTOR  :  return( "selector" );
+      case ARROW     :  return( "arrow" );
+      case SHAPE     :  return( "shape" );
+      case LINE      :  return( "line" );
+      case STICKER   :  return( "sticker" );
+      case IMAGE     :  return( "image" );
+      case SEQUENCE  :  return( "sequence" );
+      case PENCIL    :  return( "pencil" );
+      case TEXT      :  return( "text" );
+      case MAGNIFIER :  return( "magnifier" );
+      case BLUR      :  return( "blur" );
+      case CROP      :  return( "crop" );
+      case RESIZE    :  return( "resize" );
+      case DROPPER   :  return( "dropper" );
+      default        :  return( "num" );
+    }
+  }
+
+  //-------------------------------------------------------------
+  // Parses a string for the matching canvas tool.
+  public static CanvasTool parse( string val ) {
+    switch( val ) {
+      case "selector"  :  return( SELECTOR );
+      case "arrow"     :  return( ARROW );
+      case "shape"     :  return( SHAPE );
+      case "line"      :  return( LINE );
+      case "sticker"   :  return( STICKER );
+      case "image"     :  return( IMAGE );
+      case "sequence"  :  return( SEQUENCE );
+      case "pencil"    :  return( PENCIL );
+      case "text"      :  return( TEXT );
+      case "magnifier" :  return( MAGNIFIER );
+      case "blur"      :  return( BLUR );
+      case "crop"      :  return( CROP );
+      case "resize"    :  return( RESIZE );
+      case "dropper"   :  return( DROPPER );
+      default          :  return( NUM );
+    }
+  }
+
+  //-------------------------------------------------------------
+  // Returns true if this tool needs to display border options.
+  public bool has_border() {
+    return( (this == ARROW)    ||
+            (this == SHAPE)    ||
+            (this == STICKER)  ||
+            (this == IMAGE)    ||
+            (this == SEQUENCE) ||
+            (this == TEXT)     ||
+            (this == MAGNIFIER) );
+  }
+
+  //-------------------------------------------------------------
+  // Returns true if this tool needs to display background options.
+  public bool has_fill() {
+    return( (this == ARROW)    ||
+            (this == SHAPE)    ||
+            (this == SEQUENCE) ||
+            (this == TEXT) );
+  }
+
+  //-------------------------------------------------------------
+  // Returns true if this tool needs to display line options.
+  public bool has_line() {
+    return( (this == PENCIL) || (this == LINE) );
+  }
+
+  //-------------------------------------------------------------
+  // Returns true if this tool provides an alpha slider (but not a fill).
+  public bool has_alpha() {
+    return( (this == IMAGE) || (this == STICKER) );
+  }
+
+  //-------------------------------------------------------------
+  // Returns true if this tool needs to display font options.
+  public bool has_font() {
+    return( (this == SEQUENCE) ||
+            (this == TEXT) );
+  }
+
+  //-------------------------------------------------------------
+  // Returns true if this tool has properties.
+  public bool has_properties() {
+    return( has_border() || has_line() || has_fill() || has_alpha() || has_font() );
+  }
+
+  //-------------------------------------------------------------
+  // Returns the label displayed at the top of the options popup.
+  public string new_options_title() {
+    switch( this ) {
+      case ARROW     :  return( _( "New Arrow Properties" ) );
+      case SHAPE     :  return( _( "New Shape Properties" ) );
+      case LINE      :  return( _( "New Line Properties" ) );
+      case STICKER   :  return( _( "New Sticker Properties" ) );
+      case IMAGE     :  return( _( "New Image Properties" ) );
+      case SEQUENCE  :  return( _( "New Sequence Properties" ) );
+      case PENCIL    :  return( _( "New Pencil Properties" ) );
+      case TEXT      :  return( _( "New Text Properties" ) );
+      case MAGNIFIER :  return( _( "New Magnifier Properties" ) );
+      case BLUR      :  return( _( "New Blur Properties" ) );
+      default        :  assert_not_reached();
+    }
+  }
+
+  //-------------------------------------------------------------
+  // Returns the label displayed at the top of the options popup.
+  public string selected_options_title() {
+    switch( this ) {
+      case ARROW     :  return( _( "Selected Arrow Properties" ) );
+      case SHAPE     :  return( _( "Selected Shape Properties" ) );
+      case LINE      :  return( _( "Selected Line Properties" ) );
+      case STICKER   :  return( _( "Selected Sticker Properties" ) );
+      case IMAGE     :  return( _( "Selected Image Properties" ) );
+      case SEQUENCE  :  return( _( "Selected Sequence Properties" ) );
+      case PENCIL    :  return( _( "Selected Pencil Properties" ) );
+      case TEXT      :  return( _( "Selected Text Properties" ) );
+      case MAGNIFIER :  return( _( "Selected Magnifier Properties" ) );
+      case BLUR      :  return( _( "Selected Blur Properties" ) );
+      default        :  assert_not_reached();
+    }
+  }
+
+  private void setup_shape_properties( CanvasItemProperties props ) {
+    props.fill    = true;
+    props.color   = Utils.color_from_string( "red" );
+    props.stroke  = false;
+    props.outline = true;
+  }
+
+  private void setup_line_properties( CanvasItemProperties props ) {
+    props.stroke       = true;
+    props.stroke_width = CanvasItemStrokeWidth.WIDTH1;
+    props.stroke_color = Utils.color_from_string( "red" );
+    props.dash         = CanvasItemDashPattern.NONE;
+    props.outline      = true;
+  }
+
+  private void setup_image_properties( CanvasItemProperties props ) {
+    props.stroke  = false;
+    props.outline = true;
+  }
+
+  private void setup_sequence_properties( CanvasItemProperties props ) {
+    props.fill    = true;
+    props.color   = Utils.color_from_string( "yellow" );
+    props.stroke  = false;
+    props.outline = true;
+  }
+
+  private void setup_text_properties( CanvasItemProperties props ) {
+    props.fill       = true;
+    props.color      = Utils.color_from_string( "red" );
+    props.stroke     = false;
+    props.outline    = true;
+    props.font_color = Utils.color_from_string( "black" );
+  }
+
+  private void setup_magnifier_properties( CanvasItemProperties props ) {
+    props.fill    = true;  // This won't be used but we need it to keep stroke changeable
+    props.color   = Utils.color_from_string( "black" );
+    props.stroke  = false;
+    props.outline = true;
+  }
+
+  private void setup_blur_properties( CanvasItemProperties props ) {
+    props.outline = false;
+  }
+
+  //-------------------------------------------------------------
+  // Create default properties.
+  public CanvasItemProperties make_properties() {
+    var props = new CanvasItemProperties();
+    switch( this ) {
+      case ARROW     :  setup_shape_properties( props );      break;
+      case SHAPE     :  setup_shape_properties( props );      break;
+      case LINE      :  setup_line_properties( props );       break;
+      case STICKER   :  setup_image_properties( props );      break;
+      case IMAGE     :  setup_image_properties( props );      break;
+      case SEQUENCE  :  setup_sequence_properties( props );   break;
+      case PENCIL    :  setup_line_properties( props );       break;
+      case TEXT      :  setup_text_properties( props );       break;
+      case MAGNIFIER :  setup_magnifier_properties( props );  break;
+      case BLUR      :  setup_blur_properties( props );       break;
+      default        :  break;
+    }
+    return( props );
+  }
+
+  //-------------------------------------------------------------
+  // Returns the CanvasItemType associated with this tool
+  public CanvasItemType canvas_item_type() {
+    switch( this ) {
+      case SELECTOR  :  return( CanvasItemType.NONE );
+      case ARROW     :  return( CanvasItemType.MODERN_ARROW );
+      case SHAPE     :  return( CanvasItemType.RECT );
+      case LINE      :  return( CanvasItemType.LINE );
+      case STICKER   :  return( CanvasItemType.STICKER );
+      case IMAGE     :  return( CanvasItemType.IMAGE );
+      case SEQUENCE  :  return( CanvasItemType.SEQUENCE );
+      case PENCIL    :  return( CanvasItemType.PENCIL );
+      case TEXT      :  return( CanvasItemType.TEXT );
+      case MAGNIFIER :  return( CanvasItemType.MAGNIFIER );
+      case BLUR      :  return( CanvasItemType.BLUR );
+      case CROP      :  return( CanvasItemType.NONE );
+      case RESIZE    :  return( CanvasItemType.NONE );
+      case DROPPER   :  return( CanvasItemType.NONE );
+      default        :  assert_not_reached();
+    }
+  }
+
+}
+
+//-------------------------------------------------------------
+// Color button that hides its parent popover while the color
+// dialog is displayed.
+public class PopoverColorButton : Button {
+
+  private ColorDialog _dialog;
+  private DrawingArea _swatch;
+  private Gdk.RGBA    _rgba;
+
+  public Gdk.RGBA rgba {
+    get { return( _rgba ); }
+    set {
+      _rgba = value;
+      _swatch.queue_draw();
+    }
+  }
+
+  public PopoverColorButton( ColorDialog dialog, Gdk.RGBA initial ) {
+
+    _dialog = dialog;
+    _rgba   = initial;
+
+    _swatch = new DrawingArea() {
+      content_width  = 32,
+      content_height = 16
+    };
+    _swatch.set_draw_func((area, ctx, w, h) => {
+      Gdk.cairo_set_source_rgba( ctx, _rgba );
+      ctx.rectangle( 0, 0, w, h );
+      ctx.fill();
+    });
+
+    child = _swatch;
+
+    clicked.connect( choose_color );
+
+  }
+
+  private void choose_color() {
+
+    var pop = get_ancestor( typeof(Popover) ) as Popover;
+    var win = get_root() as Window;
+
+    if( pop != null ) {
+      pop.popdown();
+    }
+
+    _dialog.choose_rgba.begin( win, _rgba, null, (obj, res) => {
+      try {
+        rgba = _dialog.choose_rgba.end( res );
+      } catch( Error e ) {
+        // User cancelled the dialog
+      }
+      if( pop != null ) {
+        pop.popup();
+      }
+    });
+
+  }
+
+}
+
+//-------------------------------------------------------------
+// Font button that hides its parent popover while the font
+// dialog is displayed.
+public class PopoverFontButton : Button {
+
+  private FontDialog            _dialog;
+  private Label                 _label;
+  private Pango.FontDescription? _font_desc = null;
+
+  public Pango.FontDescription? font_desc {
+    get { return( _font_desc ); }
+    set {
+      _font_desc  = value;
+      _label.label = (value != null) ? value.to_string() : _( "Font" );
+    }
+  }
+
+  public PopoverFontButton( FontDialog dialog, Pango.FontDescription? initial = null ) {
+
+    _dialog = dialog;
+    _label  = new Label( _( "Font" ) );
+
+    child     = _label;
+    font_desc = initial;
+
+    clicked.connect( choose_font );
+
+  }
+
+  private void choose_font() {
+
+    var pop = get_ancestor( typeof(Popover) ) as Popover;
+    var win = get_root() as Window;
+
+    if( pop != null ) {
+      pop.popdown();
+    }
+
+    _dialog.choose_font.begin( win, _font_desc, null, (obj, res) => {
+      try {
+        font_desc = _dialog.choose_font.end( res );
+      } catch( Error e ) {
+        // User cancelled the dialog
+      }
+      if( pop != null ) {
+        pop.popup();
+      }
+    });
+
+  }
+
+}
+
+public class CanvasToolButton : ToggleButton {
+
+  private static ToggleButton? _group = null;
+
+  private Canvas                _canvas;
+  private CanvasItemProperties? _props   = null;
+  private Popover?              _options = null;
+
+  //-------------------------------------------------------------
+  // Constructor
+  public CanvasToolButton( CanvasToolbar toolbar, CanvasTool tool, Popover? popover = null ) {
+
+    Object( has_frame: false, active: false );
+
+    _canvas = toolbar.canvas;
+    _props  = toolbar.canvas.props.get_properties( tool );
+
+    if( _group != null ) {
+      set_group( _group );
+    } else {
+      _group = (ToggleButton)this;
+    }
+
+    if( popover != null ) {
+      popover.set_parent( this );
+    }
+
+    var left = new GestureClick() {
+      button = Gdk.BUTTON_PRIMARY,
+      propagation_phase = PropagationPhase.CAPTURE 
+    };
+    add_controller( left );
+    left.pressed.connect((n_press, x, y) => {
+      if( popover != null ) {
+        if( !active ) {
+          active = true;
+          popover.popup();
+        } else if( popover.get_mapped() ) {
+          popover.popdown();
+        } else {
+          popover.popup();
+        }
+      }
+    });
+
+    // Make sure that the options popover is displayed and hidden on right-click
+    var right = new GestureClick() {
+      button = Gdk.BUTTON_SECONDARY
+    };
+    add_controller( right );
+    right.pressed.connect((n_press, x, y) => {
+      if( _options != null ) {
+        if( _options.get_mapped() ) {
+          _options.popdown();
+        } else {
+          _options.popup();
+        }
+      }
+    });
+
+    // Set the current tool, tooltip and options
+    var item = new CurrentItem.with_canvas_item( tool.canvas_item_type() );
+    set_item( item );
+
+  }
+
+  //-------------------------------------------------------------
+  // Changes the current tool and tooltip for the button.
+  public void set_item( CurrentItem item ) {
+    var tool = item.get_item_type().tool();
+    tooltip_markup = item.get_tooltip(); 
+    child          = item.get_image( _canvas.win );
+    if( _options != null ) {
+      _options.unparent();
+    }
+    if( tool.has_properties() ) {
+      tooltip_markup += "\n\n%s".printf( _( "Right-click for tool options" ) );
+      _options = create_options( tool, true );
+    } else {
+      _options = null;
+    }
+  }
+
+  //-------------------------------------------------------------
+  // Sets to the options for the given tool.  This should only be
+  // called if we are the selection canvas tool button.
+  public void set_canvas_item( CanvasItem? item ) {
+    if( _options != null ) {
+      _options.unparent();
+    }
+    if( (item != null) && item.itype.tool().has_properties() ) {
+      _props   = item.props;
+      _options = create_options( item.itype.tool(), false );
+    } else {
+      _options = null;
+    }
+  }
+
+  //-------------------------------------------------------------
+  // Adds the options for this tool button.  We will 
+  private Popover create_options( CanvasTool tool, bool for_new ) {
+
+    var lbl = new Label( Utils.make_title( for_new ? tool.new_options_title() : tool.selected_options_title() ) ) {
+      use_markup = true
+    };
+
+    var grid = new Grid() {
+      row_spacing    = 5,
+      column_spacing = 20 
+    };
+
+    var box = new Box( Orientation.VERTICAL, 5 ) {
+      margin_start  = 10,
+      margin_end    = 10,
+      margin_top    = 10,
+      margin_bottom = 10
+    };
+    box.append( lbl );
+    box.append( grid );
+
+    var row = 0;
+
+    if( tool.has_fill() ) {
+      create_fill_options( grid, ref row );
+    }
+
+    if( tool.has_alpha() ) {
+      create_alpha_options( grid, ref row );
+    }
+
+    if( tool.has_border() ) {
+      create_border_options( grid, ref row );
+    }
+
+    if( tool.has_line() ) {
+      create_line_options( grid, ref row );
+    }
+
+    if( tool.has_fill() || tool.has_border() ) {
+      create_outline_options( grid, ref row );
+    }
+
+    if( tool.has_font() ) {
+      create_font_options( grid, ref row );
+    }
+
+    var options = new Popover() {
+      child    = box,
+      position = PositionType.BOTTOM
+    };
+    options.set_parent( this );
+
+    return( options );
+
+  }
+
+  //-------------------------------------------------------------
+  // Adds a separator to the grid.
+  private Separator create_separator( Grid grid, ref int row ) {
+
+    var sep = new Separator( Orientation.HORIZONTAL );
+    grid.attach( sep, 0, row, 3 );
+    row++;
+
+    return( sep );
+
+  }
+
+  //-------------------------------------------------------------
+  // Adds the border options to this tool menu.
+  private void create_border_options( Grid grid, ref int row ) {
+
+    create_separator( grid, ref row );
+
+    var lbl = new Label( _( "Border" ) ) {
+      xalign = (float)0
+    };
+
+    var stroke = new Switch() {
+      halign    = Align.START,
+      active    = _props.stroke,
+      sensitive = _props.fill
+    };
+
+    _props.changed.connect(() => {
+      stroke.sensitive = _props.fill;
+    });
+
+    grid.attach( lbl,    0, row );
+    grid.attach( stroke, 1, row );
+    row++;
+
+    var color_lbl = new Label( _( "Border Color" ) ) {
+      xalign = (float)0,
+      visible = _props.stroke
+    };
+
+    var dialog = new ColorDialog() {
+      modal = true,
+      title = _( "Choose Color" ),
+      with_alpha = true
+    };
+
+    var color = new PopoverColorButton( dialog, _props.stroke_color ) {
+      visible    = _props.stroke,
+      margin_top = 5
+    };
+    color.notify["rgba"].connect(() => {
+      _props.stroke_color = color.rgba;
+      _canvas.queue_draw();
+    });
+
+    grid.attach( color_lbl, 0, row );
+    grid.attach( color,     1, row, 2 );
+    row++;
+
+    var width_sep = create_separator( grid, ref row );
+    width_sep.visible = _props.stroke;
+
+    var width_lbl = new Label( _( "Border Width" ) ) {
+      xalign = (float)0
+    };
+    var width_lev = new Revealer() {
+      reveal_child = _props.stroke,
+      child = width_lbl
+    };
+
+    var width_box = new Box( Orientation.VERTICAL, 5 );
+    var width_rev = new Revealer() {
+      reveal_child = _props.stroke,
+      child = width_box
+    };
+
+    grid.attach( width_lev, 0, row );
+    grid.attach( width_rev, 1, row, 2 );
+    row++;
+
+    unowned CheckButton? width_group = null;
+    for( int i=0; i<CanvasItemStrokeWidth.NUM; i++ ) {
+      var sw = (CanvasItemStrokeWidth)i;
+      var width = new CheckButton() {
+        halign = Align.FILL,
+        active = (_props.stroke_width == sw),
+        child  = make_width_icon( 100, sw.width() )
+      };
+      width.set_group( width_group );
+      width.toggled.connect(() => {
+        if( width.get_active() ) {
+          _props.stroke_width = sw;
+          _canvas.queue_draw();
+        }
+      });
+      width_box.append( width );
+      if( width_group == null ) {
+        width_group = width;
+      }
+    }
+
+    var dash_sep = create_separator( grid, ref row );
+    dash_sep.visible = _props.stroke;
+
+    var dash_lbl = new Label( _( "Border Dash" ) ) {
+      xalign = (float)0,
+    };
+    var dash_lev = new Revealer() {
+      reveal_child = _props.stroke,
+      child = dash_lbl
+    };
+
+    var dash_box = new Box( Orientation.VERTICAL, 5 );
+    var dash_rev = new Revealer() {
+      reveal_child = _props.stroke,
+      child = dash_box
+    };
+
+    grid.attach( dash_lev, 0, row );
+    grid.attach( dash_rev, 1, row, 2 );
+    row++;
+
+    unowned CheckButton? dash_group = null;
+    for( int i=0; i<CanvasItemDashPattern.NUM; i++ ) {
+      var dp = (CanvasItemDashPattern)i;
+      var dash = new CheckButton() {
+        halign = Align.FILL,
+        active = (_props.dash == dp),
+        child  = make_dash_icon( 100, dp )
+      };
+      dash.set_group( dash_group );
+      dash.toggled.connect(() => {
+        if( dash.get_active() ) {
+          _props.dash = dp;
+          _canvas.queue_draw();
+        }
+      });
+      dash_box.append( dash );
+      row++;
+      if( dash_group == null ) {
+        dash_group = dash;
+      }
+    }
+
+    stroke.notify["active"].connect(() => {
+      _props.stroke          = stroke.active;
+      color_lbl.visible      = stroke.active;
+      color.visible          = stroke.active;
+      width_sep.visible      = stroke.active;
+      width_lev.visible      = stroke.active;
+      width_rev.reveal_child = stroke.active;
+      dash_sep.visible       = stroke.active;
+      dash_lev.reveal_child  = stroke.active;
+      dash_rev.reveal_child  = stroke.active;
+      _canvas.queue_draw();
+    });
+
+  }
+
+  //-------------------------------------------------------------
+  // Adds the line options to this tool menu.
+  private void create_line_options( Grid grid, ref int row ) {
+
+    create_separator( grid, ref row );
+
+    var color_lbl = new Label( _( "Line Color" ) ) {
+      xalign = (float)0
+    };
+
+    var dialog = new ColorDialog() {
+      modal = true,
+      title = _( "Choose Color" ),
+      with_alpha = true
+    };
+
+    var color = new PopoverColorButton( dialog, _props.stroke_color ) {
+      visible    = _props.stroke,
+      margin_top = 5
+    };
+    color.notify["rgba"].connect(() => {
+      _props.stroke_color = color.rgba;
+      _canvas.queue_draw();
+    });
+
+    grid.attach( color_lbl, 0, row );
+    grid.attach( color,     1, row, 2 );
+    row++;
+
+    var width_sep = create_separator( grid, ref row );
+    width_sep.visible = _props.stroke;
+
+    var width_lbl = new Label( _( "Line Width" ) ) {
+      xalign = (float)0
+    };
+    var width_lev = new Revealer() {
+      reveal_child = _props.stroke,
+      child = width_lbl
+    };
+
+    var width_box = new Box( Orientation.VERTICAL, 5 );
+    var width_rev = new Revealer() {
+      reveal_child = _props.stroke,
+      child = width_box
+    };
+
+    grid.attach( width_lev, 0, row );
+    grid.attach( width_rev, 1, row, 2 );
+    row++;
+
+    unowned CheckButton? width_group = null;
+    for( int i=0; i<CanvasItemStrokeWidth.NUM; i++ ) {
+      var sw = (CanvasItemStrokeWidth)i;
+      var width = new CheckButton() {
+        halign = Align.FILL,
+        active = (_props.stroke_width == sw),
+        child  = make_width_icon( 100, sw.width() )
+      };
+      width.set_group( width_group );
+      width.toggled.connect(() => {
+        if( width.get_active() ) {
+          _props.stroke_width = sw;
+          _canvas.queue_draw();
+        }
+      });
+      width_box.append( width );
+      if( width_group == null ) {
+        width_group = width;
+      }
+    }
+
+    var dash_sep = create_separator( grid, ref row );
+    dash_sep.visible = _props.stroke;
+
+    var dash_lbl = new Label( _( "Line Dash" ) ) {
+      xalign = (float)0,
+    };
+    var dash_lev = new Revealer() {
+      reveal_child = _props.stroke,
+      child = dash_lbl
+    };
+
+    var dash_box = new Box( Orientation.VERTICAL, 5 );
+    var dash_rev = new Revealer() {
+      reveal_child = _props.stroke,
+      child = dash_box
+    };
+
+    grid.attach( dash_lev, 0, row );
+    grid.attach( dash_rev, 1, row, 2 );
+    row++;
+
+    unowned CheckButton? dash_group = null;
+    for( int i=0; i<CanvasItemDashPattern.NUM; i++ ) {
+      var dp = (CanvasItemDashPattern)i;
+      var dash = new CheckButton() {
+        halign = Align.FILL,
+        active = (_props.dash == dp),
+        child  = make_dash_icon( 100, dp )
+      };
+      dash.set_group( dash_group );
+      dash.toggled.connect(() => {
+        if( dash.get_active() ) {
+          _props.dash = dp;
+          _canvas.queue_draw();
+        }
+      });
+      dash_box.append( dash );
+      row++;
+      if( dash_group == null ) {
+        dash_group = dash;
+      }
+    }
+
+  }
+
+  //-------------------------------------------------------------
+  // Returns true if the current mode is dark mode
+  private bool is_dark_mode() {
+
+    var settings = Gtk.Settings.get_default();
+    if( settings != null ) {
+      return( settings.gtk_application_prefer_dark_theme );
+    }
+
+    return( false );
+
+  }
+
+  //-------------------------------------------------------------
+  // Creates the width icon
+  private Picture make_width_icon( int width, int stroke_width ) {
+
+    var height = stroke_width;
+
+    var snapshot = new Snapshot();
+    var rect     = Graphene.Rect();
+    rect.init( 0, 0, (float)width, (float)height );
+    var ctx      = snapshot.append_cairo( rect );
+
+    // Draw the stroke
+    Utils.set_context_color( ctx, Utils.color_from_string( is_dark_mode() ? "white" : "black" ) );
+    ctx.set_line_width( stroke_width );
+    ctx.move_to( 0, (height / 2) );
+    ctx.line_to( width, (height / 2) );
+    ctx.stroke();
+
+    var image = new Picture.for_paintable( snapshot.free_to_paintable( null ) ) {
+      halign      = Align.START,
+      hexpand     = true,
+      content_fit = ContentFit.SCALE_DOWN,
+      can_shrink  = false
+    };
+
+    return( image );
+
+  }
+
+  //-------------------------------------------------------------
+  // Creates the dash icon
+  private Picture make_dash_icon( int width, CanvasItemDashPattern dash ) {
+
+    var height = 5;
+
+    var snapshot = new Snapshot();
+    var rect     = Graphene.Rect();
+    rect.init( 0, 0, (float)width, (float)height );
+    var ctx      = snapshot.append_cairo( rect );
+
+    // Draw the image
+    Utils.set_context_color( ctx, Utils.color_from_string( is_dark_mode() ? "white" : "black" ) );
+    ctx.set_line_width( height );
+    dash.set_fg_pattern( ctx );
+    ctx.move_to( 0, (height / 2) );
+    ctx.line_to( width, (height / 2) );
+    ctx.stroke();
+
+    var image = new Picture.for_paintable( snapshot.free_to_paintable( null ) ) {
+      halign      = Align.START,
+      hexpand     = true,
+      content_fit = ContentFit.SCALE_DOWN,
+      can_shrink  = false
+    };
+
+    return( image );
+
+  }
+
+  //-------------------------------------------------------------
+  // Adds the background color options to this tool menu.
+  private void create_fill_options( Grid grid, ref int row ) {
+
+    create_separator( grid, ref row );
+
+    var lbl = new Label( _( "Fill" ) ) {
+      xalign = (float)0
+    };
+
+    var fill = new Switch() {
+      halign    = Align.START,
+      active    = _props.fill,
+      sensitive = _props.stroke
+    };
+
+    _props.changed.connect(() => {
+      fill.sensitive = _props.stroke;
+    });
+
+    grid.attach( lbl,  0, row );
+    grid.attach( fill, 1, row );
+    row++;
+
+    var fill_lbl = new Label( _( "Fill Color" ) ) {
+      xalign = (float)0
+    };
+    var fill_lev = new Revealer() {
+      reveal_child = _props.fill,
+      child = fill_lbl
+    };
+
+    var dialog = new ColorDialog() {
+      modal = true,
+      title = _( "Choose Color" ),
+      with_alpha = true
+    };
+
+    var color = new PopoverColorButton( dialog, _props.color );
+    color.notify["rgba"].connect(() => {
+      _props.color = color.rgba;
+      _canvas.queue_draw();
+    });
+    var color_rev = new Revealer() {
+      reveal_child = _props.fill,
+      child = color
+    };
+
+    grid.attach( fill_lev,  0, row );
+    grid.attach( color_rev, 1, row, 2 );
+    row++;
+
+    fill.notify["active"].connect(() => {
+      _props.fill            = fill.active;
+      fill_lev.reveal_child  = fill.active;
+      color_rev.reveal_child = fill.active;
+      _canvas.queue_draw();
+    });
+
+  }
+
+  //-------------------------------------------------------------
+  // Displays options to adjust alpha value of image/sticker.
+  private void create_alpha_options( Grid grid, ref int row ) {
+
+    create_separator( grid, ref row );
+
+    var lbl = new Label( _( "Alpha" ) ) {
+      xalign = (float)0
+    };
+
+    var alpha = new Scale.with_range( Orientation.HORIZONTAL, 0.0, 1.0, 0.05 ) {
+      digits = 2,
+      draw_value = true,
+    };
+    alpha.set_value( _props.alpha );
+
+    alpha.value_changed.connect(() => {
+      _props.alpha = alpha.get_value();
+      _canvas.queue_draw();
+    });
+
+    grid.attach( lbl,   0, row );
+    grid.attach( alpha, 1, row, 2 );
+    row++;
+
+  }
+
+  //-------------------------------------------------------------
+  // Displays option to enable/disable shape outlining.
+  private void create_outline_options( Grid grid, ref int row ) {
+
+    create_separator( grid, ref row );
+
+    var lbl = new Label( _( "Outline" ) ) {
+      xalign = (float)0
+    };
+
+    var outline = new Switch() {
+      halign = Align.START,
+      active = _props.outline
+    };
+
+    outline.notify["active"].connect(() => {
+      _props.outline = outline.active;
+      _canvas.queue_draw();
+    });
+
+    grid.attach( lbl,     0, row );
+    grid.attach( outline, 1, row );
+    row++;
+
+  }
+
+  //-------------------------------------------------------------
+  // Adds the font options to this tool menu.
+  private void create_font_options( Grid grid, ref int row ) {
+
+    create_separator( grid, ref row );
+
+    var lbl = new Label( _( "Font" ) ) {
+      xalign = (float)0
+    };
+
+    var dialog = new FontDialog() {
+      modal = true,
+      title = _( "Select Font" )
+    };
+
+    var font = new PopoverFontButton( dialog, _props.font );
+
+    font.notify["font-desc"].connect(() => {
+      _props.font = font.font_desc;
+      _canvas.queue_draw();
+    });
+
+    grid.attach( lbl,  0, row );
+    grid.attach( font, 1, row, 2 );
+    row++;
+
+    var color_lbl = new Label( _( "Font Color" ) ) {
+      xalign = (float)0
+    };
+
+    var color_dialog = new ColorDialog() {
+      modal = true,
+      title = _( "Choose Color" ),
+      with_alpha = true
+    };
+
+    var color = new PopoverColorButton( color_dialog, _props.font_color );
+
+    color.notify["rgba"].connect(() => {
+      _props.font_color = color.rgba;
+      _canvas.queue_draw();
+    });
+
+    grid.attach( color_lbl, 0, row );
+    grid.attach( color,     1, row, 2 );
+    row++;
+
+
+  }
+
+}

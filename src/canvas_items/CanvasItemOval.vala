@@ -29,8 +29,8 @@ public class CanvasItemOval : CanvasItem {
 
   //-------------------------------------------------------------
   // Constructor
-  public CanvasItemOval( Canvas canvas, bool fill, CanvasItemProperties props ) {
-    base( (fill ? CanvasItemType.OVAL_FILL : CanvasItemType.OVAL_STROKE), canvas, props );
+  public CanvasItemOval( Canvas canvas, CanvasItemProperties props ) {
+    base( CanvasItemType.OVAL, canvas, props );
     create_points();
     _sel_cursors = new Cursor[8];
     _sel_cursors[0] = new Cursor.from_name( "nw-resize", null );
@@ -56,10 +56,14 @@ public class CanvasItemOval : CanvasItem {
     points.append_val( new CanvasPoint( CanvasPointType.RESIZER3 ) );  // left
   }
 
+  public override int resize_selector() {
+    return( 3 );
+  }
+
   //-------------------------------------------------------------
   // Returns a copy of this item
   public override CanvasItem duplicate() {
-    var item = new CanvasItemOval( canvas, (itype == CanvasItemType.OVAL_FILL), props );
+    var item = new CanvasItemOval( canvas, props );
     item.copy( this );
     return( item );
   }
@@ -125,10 +129,7 @@ public class CanvasItemOval : CanvasItem {
     var scale_width  = (bbox.width < bbox.height) ? (bbox.width / bbox.height) : 1.0;
     var scale_height = (bbox.width < bbox.height) ? 1.0 : (bbox.height / bbox.width);
     var radius       = (bbox.width < bbox.height) ? (bbox.height / 2.0) : (bbox.width / 2.0);
-    var outline      = Granite.contrasting_foreground_color( props.color );
-    var alpha        = mode.alpha( props.alpha );
-
-    set_color( ctx, color, props.color, alpha );
+    var alpha        = mode.alpha( props.color.alpha );
 
     var save_matrix = ctx.get_matrix();
     ctx.translate( bbox.mid_x(), bbox.mid_y() );
@@ -140,33 +141,34 @@ public class CanvasItemOval : CanvasItem {
 
     save_path( ctx, CanvasItemPathType.FILL );
 
-    if( itype == CanvasItemType.OVAL_FILL ) {
-
-      if( props.outline ) {
-        ctx.fill_preserve();
-        set_color( ctx, color, outline, 0.5 );
+    if( props.outline ) {
+      var outline = Granite.contrasting_foreground_color( props.color );
+      set_color( ctx, color, outline, (alpha / 2) );
+      if( props.fill ) {
         ctx.set_line_width( 1 );
-        ctx.stroke();
+        ctx.stroke_preserve();
+      }
+      if( props.stroke ) {
+        props.dash.set_bg_pattern( ctx );
+        ctx.set_line_width( props.stroke_width.width() + 2 );
+        ctx.stroke_preserve();
+      }
+    }
+
+    if( props.fill ) {
+      set_color( ctx, color, props.color, alpha );
+      if( props.stroke ) {
+        ctx.fill_preserve();
       } else {
         ctx.fill();
       }
+    }
 
-    } else {
-
-      var sw = props.stroke_width.width();
-
-      if( props.outline ) {
-        set_color( ctx, color, outline, 0.5 );
-        ctx.set_line_width( sw + 2 );
-        props.dash.set_bg_pattern( ctx );
-        ctx.stroke_preserve();
-      }
-
-      set_color( ctx, color, props.color, alpha );
-      ctx.set_line_width( sw );
+    if( props.stroke ) {
+      set_color( ctx, color, props.stroke_color, mode.alpha( props.stroke_color.alpha ) );
+      ctx.set_line_width( props.stroke_width.width() );
       props.dash.set_fg_pattern( ctx );
       ctx.stroke();
-
     }
 
   }

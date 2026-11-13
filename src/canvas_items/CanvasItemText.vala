@@ -40,10 +40,12 @@ public class CanvasItemText : CanvasItem {
   private int            _selanchor    = 0;
   private double         _max_width    = 400;
   private double         _orig_width   = 400;
+  private double         _resize_width;
   private double         _height       = 0;
   private bool           _debug        = false;
   private int            _font_size    = 16;
   private Cursor         _sel_cursor;
+  private bool           _resized      = false;
 
   // Signals
   public signal void select_mode( bool mode );
@@ -133,6 +135,10 @@ public class CanvasItemText : CanvasItem {
     _pango_layout.set_font_description( props.font );
   }
 
+  public override int resize_selector() {
+    return( 0 );
+  }
+
   //-------------------------------------------------------------
   // Copies an existing CanvasText to this CanvasText
   public override void copy( CanvasItem item ) {
@@ -161,7 +167,12 @@ public class CanvasItemText : CanvasItem {
   // If we start to resize, capture the original width
   public override void mode_changed() {
     if( mode == CanvasItemMode.RESIZING ) {
+      int text_width, text_height;
       _orig_width = max_width;
+      _pango_layout.get_size( out text_width, out text_height );
+      _resize_width = (text_width / Pango.SCALE);
+    } else if( _resize_width != _max_width ) {
+      _max_width = _resize_width;
     }
   }
 
@@ -176,7 +187,11 @@ public class CanvasItemText : CanvasItem {
   }
 
   public override void move_selector( int index, double diffx, double diffy, bool shift ) {
-    max_width += diffx;
+    if( (_resize_width + diffx) > 0 ) {
+      _resize_width += diffx;
+      _pango_layout.set_width( (int)_resize_width * Pango.SCALE );
+      update_size();
+    }
   }
 
   public override Cursor? get_selector_cursor( int index ) {
@@ -280,7 +295,7 @@ public class CanvasItemText : CanvasItem {
   //-------------------------------------------------------------
   // Resizes the node width by the given amount.
   public virtual void resize( double diff ) {
-    _max_width += diff;
+    max_width = bbox.width + diff;
     _pango_layout.set_width( (int)_max_width * Pango.SCALE );
     update_size();
   }
@@ -1003,51 +1018,58 @@ public class CanvasItemText : CanvasItem {
   public override void draw_item( Cairo.Context ctx, CanvasItemColor color ) {
 
     var layout = _pango_layout;
-    var alpha  = mode.alpha( props.alpha );
+    var alpha  = mode.alpha( props.color.alpha );
 
     Pango.Rectangle ink_rect, log_rect;
     layout.get_extents( out ink_rect, out log_rect );
 
-    // Output the text
-    ctx.move_to( (bbox.x - (log_rect.x / Pango.SCALE)), bbox.y );
-    Utils.set_context_color_with_alpha( ctx, props.color, alpha );
-    Pango.cairo_show_layout( ctx, layout );
-    ctx.new_path();
-
-    // Draw the text outline
     var x = bbox.x - _padding;
     var y = bbox.y - _padding;
     var w = bbox.width + (_padding * 2);
     var h = bbox.height + (_padding * 2);
+    ctx.rectangle( x, y, w, h );
 
-    // Draw the selection box, if needed
-    if( (mode == CanvasItemMode.SELECTED) || (mode == CanvasItemMode.EDITING) ) {
-
-      var dash = CanvasItemDashPattern.LONG;
-
-      if( props.outline ) {
-        Utils.set_context_color( ctx, Granite.contrasting_foreground_color( props.color ) );
-        dash.set_bg_pattern( ctx );
-        ctx.set_line_width( 6 );
-        ctx.rectangle( x, y, w, h );
-        ctx.stroke();
+    if( props.outline ) {
+      var outline = Granite.contrasting_foreground_color( props.color );
+      set_color( ctx, color, outline, (alpha / 2) );
+      if( props.fill ) {
+        ctx.set_line_width( 1 );
+        ctx.stroke_preserve();
       }
-
-      Utils.set_context_color( ctx, props.color );
-      dash.set_fg_pattern( ctx );
-      ctx.set_line_width( 4 );
-      ctx.rectangle( x, y, w, h );
-      ctx.stroke();
-
-      ctx.set_dash( {}, 0 );
-
+      if( props.stroke ) {
+        props.dash.set_bg_pattern( ctx );
+        ctx.set_line_width( props.stroke_width.width() + 2 );
+        ctx.stroke_preserve();
+      }
     }
+
+    if( props.fill ) {
+      set_color( ctx, color, props.color, alpha );
+      if( props.stroke ) {
+        ctx.fill_preserve();
+      } else {
+        ctx.fill();
+      }
+    }
+
+    if( props.stroke ) {
+      set_color( ctx, color, props.stroke_color, mode.alpha( props.stroke_color.alpha ) );
+      props.dash.set_bg_pattern( ctx );
+      ctx.set_line_width( props.stroke_width.width() );
+      ctx.stroke();
+    }
+
+    // Output the text
+    ctx.move_to( (bbox.x - (log_rect.x / Pango.SCALE)), bbox.y );
+    Utils.set_context_color_with_alpha( ctx, props.font_color, mode.alpha( props.font_color.alpha ) );
+    Pango.cairo_show_layout( ctx, layout );
+    ctx.new_path();
 
     // Draw the insertion cursor if we are in the 'editable' state
     if( edit ) {
       var cpos = text.text.index_of_nth_char( _cursor );
       var rect = layout.index_to_pos( cpos );
-      Utils.set_context_color( ctx, props.color );
+      Utils.set_context_color( ctx, props.font_color );
       double ix, iy;
       ix = (bbox.x + (rect.x / Pango.SCALE) - 1) - (log_rect.x / Pango.SCALE);
       iy = bbox.y + (rect.y / Pango.SCALE);

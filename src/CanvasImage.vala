@@ -86,8 +86,11 @@ public class CanvasImage {
   public signal void crop_started();
   public signal void crop_ended();
   public signal void crop_changed( CanvasRect rect );
+  public signal void resize_ended();
   public signal void image_changed();
   public signal void color_picked( RGBA color );
+  public signal void pick_started();
+  public signal void pick_ended();
 
   //-------------------------------------------------------------
   // Constructor
@@ -187,6 +190,7 @@ public class CanvasImage {
         do_resize( old_info, new_info );
       }
       dialog.close();
+      resize_ended();
     });
 
     dialog.show();
@@ -477,10 +481,20 @@ public class CanvasImage {
       }
     }
 
+    // Disable pick mode
     _pick_mode = PickMode.NONE;
+    pick_ended();
+
+    _canvas.queue_draw();
 
     return( true );
 
+  }
+
+  //-------------------------------------------------------------
+  // Cancels the pick mode.
+  public void cancel_pick_mode() {
+    complete_pick_mode( true );
   }
 
   //-------------------------------------------------------------
@@ -542,6 +556,8 @@ public class CanvasImage {
 
     // Make sure that the canvas has the keyboard focus to handle keypresses
     _canvas.grab_focus();
+
+    pick_started();
 
   }
 

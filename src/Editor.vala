@@ -25,6 +25,7 @@ public class Editor : Box {
 
   private string         _filename;
   private ScrolledWindow _sw;
+  private CanvasToolbar  _toolbar;
 
   public Canvas canvas { get; private set; }
 
@@ -63,36 +64,62 @@ public class Editor : Box {
       child = canvas
     };
     ((Viewport)_sw.child).scroll_to_focus = false;
-    _sw.add_css_class( Granite.STYLE_CLASS_CHECKERBOARD );
+    _sw.add_css_class( Granite.CssClass.CHECKERBOARD );
 
     // Create the toolbar
-    var toolbar = new CanvasToolbar( canvas ) {
+    _toolbar = new CanvasToolbar( canvas ) {
       halign = Align.CENTER,
       hexpand = true
     };
 
+    _toolbar.selected.connect((tool) => {
+      canvas.items.current_tool = tool;
+    });
+
+    var info_status = new Label( "" ) {
+      visible = false,
+      margin_start = 10
+    };
+
     var crop_status = new Label( "" ) {
-      halign = Align.END,
       visible = false,
       margin_end = 10
     };
 
     canvas.image.crop_started.connect(() => {
+      info_status.label   = _( "Return to crop. Escape to cancel." );
+      info_status.visible = true;
       crop_status.visible = true;
       _sw.vscrollbar_policy = PolicyType.EXTERNAL;
       _sw.hscrollbar_policy = PolicyType.EXTERNAL;
     });
     canvas.image.crop_ended.connect(() => {
+      info_status.visible = false;
       crop_status.visible = false;
-      toolbar.crop_ended();
+      if( _toolbar.current_tool == CanvasTool.CROP ) {
+        _toolbar.current_tool = CanvasTool.SELECTOR;
+      }
       _sw.vscrollbar_policy = PolicyType.AUTOMATIC;
       _sw.hscrollbar_policy = PolicyType.AUTOMATIC;
     });
     canvas.image.crop_changed.connect((rect) => {
       crop_status.label = "%d x %d px".printf( (int)rect.width, (int)rect.height );
     });
+    canvas.image.resize_ended.connect(() => {
+      _toolbar.current_tool = CanvasTool.SELECTOR;
+    });
     canvas.image.color_picked.connect((color) => {
-      toolbar.set_color( color );
+      // TBD - _toolbar.set_color( color );
+    });
+    canvas.image.pick_started.connect(() => {
+      info_status.label   = _( "Click to select. Escape to cancel." );
+      info_status.visible = true;
+    });
+    canvas.image.pick_ended.connect(() => {
+      info_status.visible = false;
+      if( _toolbar.current_tool == CanvasTool.DROPPER ) {
+        _toolbar.current_tool = CanvasTool.SELECTOR;
+      }
     });
 
     var sep = new Separator( Orientation.HORIZONTAL ) {
@@ -100,22 +127,42 @@ public class Editor : Box {
       hexpand = true
     };
 
-    var box = new Box( Orientation.HORIZONTAL, 5 ) {
+    var box = new CenterBox() {
       halign        = Align.FILL,
       hexpand       = true,
+      start_widget  = info_status,
+      center_widget = _toolbar,
+      end_widget    = crop_status,
       margin_start  = 10,
       margin_end    = 10,
       margin_top    = 10,
       margin_bottom = 10
     };
-    box.append( toolbar );
-    box.append( crop_status );
 
     // Pack the box
     append( box );
     append( sep );
     append( _sw );
 
+  }
+
+  //-------------------------------------------------------------
+  // Returns the currently selected arrow or shape or returns null
+  // if the arrow/shape tool is not currently selected.
+  public CurrentItem? get_current_item() {
+    return( _toolbar.get_current_item() );
+  }
+
+  //-------------------------------------------------------------
+  // Sets the toolbar tool to the given tool.
+  public void set_toolbar_tool( CanvasTool tool ) {
+    _toolbar.current_tool = tool;
+  }
+
+  //-------------------------------------------------------------
+  // Sets the toolbar item to the given tool.
+  public void set_toolbar_item( CanvasItemType item_type ) {
+    _toolbar.set_current_item( item_type );
   }
 
   //-------------------------------------------------------------

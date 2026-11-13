@@ -186,12 +186,14 @@ public class CanvasItem {
 
   //-------------------------------------------------------------
   // Constructor
-  public CanvasItem( CanvasItemType type, Canvas canvas, CanvasItemProperties props ) {
+  public CanvasItem( CanvasItemType type, Canvas canvas, CanvasItemProperties? props ) {
 
     this.canvas = canvas;
+    this.itype  = type;
 
-    this.itype = type;
-    this.props.copy( props );
+    if( props != null ) {
+      this.props.copy( props );
+    }
 
     _sel_cursor = new Cursor.from_name( "grab", null );
 
@@ -211,6 +213,13 @@ public class CanvasItem {
       points.append_val( point );
     }
 
+  }
+
+  //-------------------------------------------------------------
+  // Returns the index of the selector that is used to resize
+  // this item on creation.
+  public virtual int resize_selector() {
+    return( -1 );
   }
 
   //-------------------------------------------------------------

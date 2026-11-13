@@ -92,6 +92,10 @@ public class CanvasItemBubble : CanvasItem {
     points.append_val( new CanvasPoint( CanvasPointType.CONTROL ) );   // Talk point
   }
 
+  public override int resize_selector() {
+    return( 3 );
+  }
+
   public override void copy( CanvasItem item ) {
     base.copy( item );
     var bubble_item = (CanvasItemBubble)item;
@@ -149,7 +153,7 @@ public class CanvasItemBubble : CanvasItem {
       case 8  :  points.index( 8 ).x += diffx;  points.index( 8 ).y += diffy;  _point_moved = true;  break;
     }
 
-    if( (box.width >= 60) && (box.height >= 1) ) {
+    if( (box.width >= 1) && (box.height >= 1) ) {
       bbox = box;
     }
 
@@ -551,9 +555,7 @@ public class CanvasItemBubble : CanvasItem {
   // Draw the rectangle
   public override void draw_item( Context ctx, CanvasItemColor color ) {
 
-    var fill   = Granite.contrasting_foreground_color( props.color );
-    var alpha  = mode.alpha( props.alpha );
-    var sw     = props.stroke_width.width();
+    var alpha = mode.alpha( props.color.alpha );
 
     // Draw rounded rectangle with triangle talk point
     switch( _type ) {
@@ -563,12 +565,35 @@ public class CanvasItemBubble : CanvasItem {
 
     save_path( ctx, CanvasItemPathType.FILL );
 
-    set_color( ctx, color, fill, alpha );
-    ctx.fill_preserve();
+    if( props.outline ) {
+      var outline = Granite.contrasting_foreground_color( props.color );
+      set_color( ctx, color, outline, (alpha / 2) );
+      if( props.fill ) {
+        ctx.set_line_width( 1 );
+        ctx.stroke_preserve();
+      }
+      if( props.stroke ) {
+        props.dash.set_bg_pattern( ctx );
+        ctx.set_line_width( props.stroke_width.width() + 2 );
+        ctx.stroke_preserve();
+      }
+    }
 
-    set_color( ctx, color, props.color, 1.0 );
-    ctx.set_line_width( sw );
-    ctx.stroke();
+    if( props.fill ) {
+      set_color( ctx, color, props.color, alpha );
+      if( props.stroke ) {
+        ctx.fill_preserve();
+      } else {
+        ctx.fill();
+      }
+    }
+
+    if( props.stroke ) {
+      set_color( ctx, color, props.stroke_color, mode.alpha( props.stroke_color.alpha ) );
+      ctx.set_line_width( props.stroke_width.width() );
+      props.dash.set_fg_pattern( ctx );
+      ctx.stroke();
+    }
   
   }
 

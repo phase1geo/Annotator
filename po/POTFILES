@@ -9,8 +9,11 @@ src/canvas_items/CanvasItemText.vala
 src/CanvasItems.vala
 src/CanvasItem.vala
 src/CanvasToolbar.vala
+src/CanvasToolButton.vala
 src/Canvas.vala
+src/CurrentItem.vala
 src/CustomItems.vala
+src/Editor.vala
 src/Exporter.vala
 src/exports/ExportEditable.vala
 src/exports/ExportImage.vala
@@ -33,6 +36,8 @@ src/undo_actions/UndoItemMagnifierZoom.vala
 src/undo_actions/UndoItemPaste.vala
 src/undo_actions/UndoItemPropChange.vala
 src/undo_actions/UndoItemSendBack.vala
+src/undo_actions/UndoItemSendBackward.vala
+src/undo_actions/UndoItemSendForward.vala
 src/undo_actions/UndoItemSendFront.vala
 src/undo_actions/UndoItemSequenceNum.vala
 src/undo_actions/UndoItemStarPoints.vala

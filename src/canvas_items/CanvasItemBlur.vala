@@ -35,8 +35,8 @@ public class CanvasItemBlur : CanvasItem {
 
   //-------------------------------------------------------------
   // Constructor
-  public CanvasItemBlur( Canvas canvas, CanvasItemProperties props ) {
-    base( CanvasItemType.BLUR, canvas, props );
+  public CanvasItemBlur( Canvas canvas ) {
+    base( CanvasItemType.BLUR, canvas, null );
     create_points();
     _sel_cursors = new Cursor[8];
     _sel_cursors[0] = new Cursor.from_name( "nw-resize", null );
@@ -63,6 +63,12 @@ public class CanvasItemBlur : CanvasItem {
   }
 
   //-------------------------------------------------------------
+  // Returns southeast resize selector
+  public override int resize_selector() {
+    return( 3 );
+  }
+
+  //-------------------------------------------------------------
   // Copies the information from the given item to ourselves
   public override void copy( CanvasItem item) {
     base.copy( item );
@@ -75,7 +81,7 @@ public class CanvasItemBlur : CanvasItem {
   //-------------------------------------------------------------
   // Returns a copy of this item
   public override CanvasItem duplicate() {
-    var item = new CanvasItemBlur( canvas, props );
+    var item = new CanvasItemBlur( canvas );
     item.copy( this );
     return( item );
   }

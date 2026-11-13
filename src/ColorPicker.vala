@@ -55,7 +55,7 @@ public enum ColorPickerType {
 
 }
 
-public class ColorPicker : Box {
+public class ColorPicker : Granite.Box {
 
   private ColorPickerType _type;
   private ToggleButton    _toggle;
@@ -67,7 +67,10 @@ public class ColorPicker : Box {
 
   public ColorPicker( MainWindow win, RGBA init_color, ColorPickerType type ) {
 
-    Object( orientation: Orientation.HORIZONTAL );
+    Object(
+      orientation: Orientation.HORIZONTAL,
+      child_spacing: Granite.Box.Spacing.LINKED
+    );
 
     _type  = type;
     _color = init_color.copy();
@@ -106,8 +109,6 @@ public class ColorPicker : Box {
 
     append( _toggle );
     append( _select );
-
-    add_css_class( Granite.STYLE_CLASS_LINKED );
 
     update_css( _color );
 

@@ -32,15 +32,13 @@ public enum CanvasItemCategory {
 }
 
 public enum CanvasItemType {
-  RECT_STROKE,
-  RECT_FILL,
-  OVAL_STROKE,
-  OVAL_FILL,
-  STAR_STROKE,
-  STAR_FILL,
+  RECT,
+  OVAL,
+  STAR,
   TALK,
   THINK,
   LINE,
+  MODERN_ARROW,
   ARROW,
   TEXT,
   BLUR,
@@ -54,142 +52,209 @@ public enum CanvasItemType {
 
   public string to_string() {
     switch( this ) {
-      case RECT_STROKE :  return( "rect-stroke" );
-      case RECT_FILL   :  return( "rect-fill" );
-      case OVAL_STROKE :  return( "oval-stroke" );
-      case OVAL_FILL   :  return( "oval-fill" );
-      case STAR_STROKE :  return( "star-stroke" );
-      case STAR_FILL   :  return( "star-fill" );
-      case TALK        :  return( "talk" );
-      case THINK       :  return( "think" );
-      case LINE        :  return( "line" );
-      case ARROW       :  return( "arrow" );
-      case TEXT        :  return( "text" );
-      case BLUR        :  return( "blur" );
-      case MAGNIFIER   :  return( "magnifier" );
-      case PENCIL      :  return( "pencil" );
-      case SEQUENCE    :  return( "sequence" );
-      case STICKER     :  return( "sticker" );
-      case IMAGE       :  return( "image" );
-      default          :  return( "none" );
+      case RECT         :  return( "rect" );
+      case OVAL         :  return( "oval" );
+      case STAR         :  return( "star" );
+      case TALK         :  return( "talk" );
+      case THINK        :  return( "think" );
+      case LINE         :  return( "line" );
+      case MODERN_ARROW :  return( "modern-arrow" );
+      case ARROW        :  return( "arrow" );
+      case TEXT         :  return( "text" );
+      case BLUR         :  return( "blur" );
+      case MAGNIFIER    :  return( "magnifier" );
+      case PENCIL       :  return( "pencil" );
+      case SEQUENCE     :  return( "sequence" );
+      case STICKER      :  return( "sticker" );
+      case IMAGE        :  return( "image" );
+      default           :  return( "none" );
     }
   }
 
   public static CanvasItemType parse( string value ) {
     switch( value ) {
-      case "rect-stroke" :  return( RECT_STROKE );
-      case "rect-fill"   :  return( RECT_FILL );
-      case "oval-stroke" :  return( OVAL_STROKE );
-      case "oval-fill"   :  return( OVAL_FILL );
-      case "star-stroke" :  return( STAR_STROKE );
-      case "star-fill"   :  return( STAR_FILL );
-      case "talk"        :  return( TALK );
-      case "think"       :  return( THINK );
-      case "line"        :  return( LINE );
-      case "arrow"       :  return( ARROW );
-      case "text"        :  return( TEXT );
-      case "blur"        :  return( BLUR );
-      case "magnifier"   :  return( MAGNIFIER );
-      case "pencil"      :  return( PENCIL );
-      case "sequence"    :  return( SEQUENCE );
-      case "sticker"     :  return( STICKER );
-      case "image"       :  return( IMAGE );
-      default            :  return( NONE );
+      case "rect"         :  return( RECT );
+      case "oval"         :  return( OVAL );
+      case "star"         :  return( STAR );
+      case "talk"         :  return( TALK );
+      case "think"        :  return( THINK );
+      case "line"         :  return( LINE );
+      case "modern-arrow" :  return( MODERN_ARROW );
+      case "arrow"        :  return( ARROW );
+      case "text"         :  return( TEXT );
+      case "blur"         :  return( BLUR );
+      case "magnifier"    :  return( MAGNIFIER );
+      case "pencil"       :  return( PENCIL );
+      case "sequence"     :  return( SEQUENCE );
+      case "sticker"      :  return( STICKER );
+      case "image"        :  return( IMAGE );
+      default             :  return( NONE );
     }
   }
 
   public string icon_name() {
     switch( this ) {
-      case RECT_STROKE :  return( "rect-stroke-symbolic" );
-      case RECT_FILL   :  return( "rect-fill-symbolic" );
-      case OVAL_STROKE :  return( "circle-stroke-symbolic" );
-      case OVAL_FILL   :  return( "circle-fill-symbolic" );
-      case STAR_STROKE :  return( "star-stroke-symbolic" );
-      case STAR_FILL   :  return( "star-fill-symbolic" );
-      case TALK        :  return( "bubble-talk-symbolic" );
-      case THINK       :  return( "bubble-think-symbolic" );
-      case LINE        :  return( "line-symbolic" );
-      case ARROW       :  return( "arrow-symbolic" );
-      case BLUR        :  return( "blur-symbolic" );
-      case MAGNIFIER   :  return( "magnifier-symbolic" );
-      case PENCIL      :  return( "edit-symbolic" );
-      case SEQUENCE    :  return( "sequence-symbolic" );
-      case STICKER     :  return( "sticker-symbolic" );
-      default          :  return( "" );
+      case RECT         :  return( "rect-stroke-symbolic" );
+      case OVAL         :  return( "circle-stroke-symbolic" );
+      case STAR         :  return( "star-stroke-symbolic" );
+      case TALK         :  return( "bubble-talk-symbolic" );
+      case THINK        :  return( "bubble-think-symbolic" );
+      case LINE         :  return( "line-symbolic" );
+      case MODERN_ARROW :  return( "arrow-modern-symbolic" );
+      case ARROW        :  return( "arrow-symbolic" );
+      case BLUR         :  return( "blur-symbolic" );
+      case MAGNIFIER    :  return( "magnifier-symbolic" );
+      case PENCIL       :  return( "edit-symbolic" );
+      case SEQUENCE     :  return( "sequence-symbolic" );
+      case STICKER      :  return( "sticker-symbolic" );
+      default           :  return( "" );
     }
   }
 
   public string tooltip() {
     switch( this ) {
-      case RECT_STROKE :  return( Utils.tooltip_with_accel( _( "Rectangle Outline" ), "r" ) );
-      case RECT_FILL   :  return( Utils.tooltip_with_accel( _( "Rectangle" ), "<shift>r" ) );
-      case OVAL_STROKE :  return( Utils.tooltip_with_accel( _( "Oval Outline" ), "o" ) );
-      case OVAL_FILL   :  return( Utils.tooltip_with_accel( _( "Oval" ), "<shift>o" ) );
-      case STAR_STROKE :  return( Utils.tooltip_with_accel( _( "Star Outline" ), "s" ) );
-      case STAR_FILL   :  return( Utils.tooltip_with_accel( _( "Star" ), "<shift>s" ) );
-      case TALK        :  return( Utils.tooltip_with_accel( _( "Talk Bubble" ), "k" ) );
-      case THINK       :  return( Utils.tooltip_with_accel( _( "Think Bubble" ), "<shift>k" ) );
-      case LINE        :  return( Utils.tooltip_with_accel( _( "Line" ), "l" ) );
-      case ARROW       :  return( Utils.tooltip_with_accel( _( "Arrow" ), "a" ) );
-      case TEXT        :  return( Utils.tooltip_with_accel( _( "Text" ), "t" ) );
-      case BLUR        :  return( Utils.tooltip_with_accel( _( "Blur" ), "b" ) );
-      case MAGNIFIER   :  return( Utils.tooltip_with_accel( _( "Magnifier" ), "m" ) );
-      case PENCIL      :  return( Utils.tooltip_with_accel( _( "Pencil Tool" ), "p" ) );
-      case SEQUENCE    :  return( Utils.tooltip_with_accel( _( "Sequence Number" ), "q" ) );
-      case STICKER     :  return( _( "Sticker" ) );
-      case IMAGE       :  return( Utils.tooltip_with_accel( _( "Image" ), "i" ) );
-      default          :  return( "" );
+      case RECT         :  return( Utils.tooltip_with_accel( _( "Rectangle Outline" ), "r" ) );
+      case OVAL         :  return( Utils.tooltip_with_accel( _( "Oval Outline" ), "o" ) );
+      case STAR         :  return( Utils.tooltip_with_accel( _( "Star Outline" ), "s" ) );
+      case TALK         :  return( Utils.tooltip_with_accel( _( "Talk Bubble" ), "k" ) );
+      case THINK        :  return( Utils.tooltip_with_accel( _( "Think Bubble" ), "<shift>k" ) );
+      case LINE         :  return( Utils.tooltip_with_accel( _( "Line" ), "l" ) );
+      case MODERN_ARROW :  return( Utils.tooltip_with_accel( _( "Modern Arrow" ), "a" ) );
+      case ARROW        :  return( _( "Classic Arrow" ) );
+      case TEXT         :  return( Utils.tooltip_with_accel( _( "Text" ), "t" ) );
+      case BLUR         :  return( Utils.tooltip_with_accel( _( "Blur" ), "b" ) );
+      case MAGNIFIER    :  return( Utils.tooltip_with_accel( _( "Magnifier" ), "m" ) );
+      case PENCIL       :  return( Utils.tooltip_with_accel( _( "Pencil Tool" ), "p" ) );
+      case SEQUENCE     :  return( Utils.tooltip_with_accel( _( "Sequence Number" ), "q" ) );
+      case STICKER      :  return( _( "Sticker" ) );
+      case IMAGE        :  return( Utils.tooltip_with_accel( _( "Image" ), "i" ) );
+      default           :  return( "" );
     }
   }
 
   public CanvasItemCategory category() {
     switch( this ) {
-      case RECT_STROKE :  return( CanvasItemCategory.SHAPE );
-      case RECT_FILL   :  return( CanvasItemCategory.SHAPE );
-      case OVAL_STROKE :  return( CanvasItemCategory.SHAPE );
-      case OVAL_FILL   :  return( CanvasItemCategory.SHAPE );
-      case STAR_STROKE :  return( CanvasItemCategory.SHAPE );
-      case STAR_FILL   :  return( CanvasItemCategory.SHAPE );
-      case TALK        :  return( CanvasItemCategory.SHAPE );
-      case THINK       :  return( CanvasItemCategory.SHAPE );
-      case LINE        :  return( CanvasItemCategory.SHAPE );
-      case ARROW       :  return( CanvasItemCategory.ARROW );
-      case TEXT        :  return( CanvasItemCategory.TEXT );
-      default          :  return( CanvasItemCategory.NONE );
+      case RECT         :  return( CanvasItemCategory.SHAPE );
+      case OVAL         :  return( CanvasItemCategory.SHAPE );
+      case STAR         :  return( CanvasItemCategory.SHAPE );
+      case TALK         :  return( CanvasItemCategory.SHAPE );
+      case THINK        :  return( CanvasItemCategory.SHAPE );
+      case LINE         :  return( CanvasItemCategory.SHAPE );
+      case MODERN_ARROW :  return( CanvasItemCategory.ARROW );
+      case ARROW        :  return( CanvasItemCategory.ARROW );
+      case TEXT         :  return( CanvasItemCategory.TEXT );
+      default           :  return( CanvasItemCategory.NONE );
     }
+  }
+
+  public CanvasTool tool() {
+    switch( this ) {  
+      case RECT         :  return( CanvasTool.SHAPE );
+      case OVAL         :  return( CanvasTool.SHAPE );
+      case STAR         :  return( CanvasTool.SHAPE );
+      case TALK         :  return( CanvasTool.SHAPE );
+      case THINK        :  return( CanvasTool.SHAPE );
+      case LINE         :  return( CanvasTool.LINE );
+      case MODERN_ARROW :  return( CanvasTool.ARROW );
+      case ARROW        :  return( CanvasTool.ARROW );
+      case TEXT         :  return( CanvasTool.TEXT );
+      case BLUR         :  return( CanvasTool.BLUR );
+      case MAGNIFIER    :  return( CanvasTool.MAGNIFIER );
+      case PENCIL       :  return( CanvasTool.PENCIL );
+      case SEQUENCE     :  return( CanvasTool.SEQUENCE );
+      case STICKER      :  return( CanvasTool.STICKER );
+      case IMAGE        :  return( CanvasTool.IMAGE );
+      default           :  return( CanvasTool.NUM );
+    }
+  }
+}
+
+//-------------------------------------------------------------
+// This enumeration determines when a current tool is automatically
+// ended (tool is changed from non-selection to selection mode).
+// The values are as follows:
+// NONE             - Auto-select mode is disabled.  All tool changes must be caused by the user.
+// AFTER_CLICK_DRAG - New items are added by click and drag.  After drag has completed, switch to selection tool.
+// AFTER_TOOL_CLICK - New items are added by clicking tool button.  Items are placed in the center of the visible canvas
+//                    and we switch back to selection mode (this mimics the historic insertion mode).
+public enum CanvasToolAutoSelectMode {
+  NONE,
+  AFTER_CLICK_DRAG,
+  AFTER_TOOL_CLICK;
+
+  public string to_string() {
+    switch( this ) {
+      case NONE             :  return( "none" );
+      case AFTER_CLICK_DRAG :  return( "after-click-drag" );
+      case AFTER_TOOL_CLICK :  return( "after-tool-click" );
+      default               :  assert_not_reached();
+    }
+  }
+
+  public static CanvasToolAutoSelectMode parse( string val ) {
+    switch( val ) {
+      case "after-click-drag" :  return( AFTER_CLICK_DRAG );
+      case "after-tool-click" :  return( AFTER_TOOL_CLICK );
+      default                 :  return( NONE );
+    }
+  }
+
+  public bool auto_select() {
+    return( this != NONE );
   }
 }
 
 public class CanvasItems {
 
-  private Canvas               _canvas;
-  private List<CanvasItem>     _items;
-  private CanvasItem?          _active         = null;
-  private int                  _selector_index = -1;
-  private double               _last_x;
-  private double               _last_y;
-  private int                  _press_count    = -1;
-  private FormatBar?           _format_bar     = null;
-  private Cursor               _xterm_cursor   = new Cursor.from_name( "text", null );
+  private Canvas                   _canvas;
+  private List<CanvasItem>         _items;
+  private CanvasItem?              _active         = null;
+  private int                      _selector_index = -1;
+  private double                   _last_x;
+  private double                   _last_y;
+  private int                      _press_count    = -1;
+  private FormatBar?               _format_bar     = null;
+  private Cursor                   _xterm_cursor   = new Cursor.from_name( "text", null );
+  private CanvasTool               _current_tool   = CanvasTool.SELECTOR;
 
   private const GLib.ActionEntry[] action_entries = {
     { "action_copy",          action_copy },
     { "action_cut",           action_cut },
     { "action_delete",        action_delete },
     { "action_send_to_front", action_send_to_front },
+    { "action_send_forward",  action_send_forward },
+    { "action_send_backward", action_send_backward },
     { "action_send_to_back",  action_send_to_back },
     { "action_save_custom",   action_save_custom }
   };
 
-  public CanvasItemProperties props        { get; private set; }
-  public string               hilite_color { get; set; default = "yellow"; }
-  public string               font_color   { get; set; default = "black"; }
-  public CustomItems          custom_items { get; private set; }
-  public bool                 control_set  { get; private set; default = false; }
-  public bool                 shift_set    { get; private set; default = false; }
+  public CanvasItemProperties     props            { get; private set; }
+  public string                   hilite_color     { get; set; default = "yellow"; }
+  public string                   font_color       { get; set; default = "black"; }
+  public CustomItems              custom_items     { get; private set; }
+  public bool                     control_set      { get; private set; default = false; }
+  public bool                     shift_set        { get; private set; default = false; }
+  public CanvasToolAutoSelectMode auto_select_mode { get; set; default = CanvasToolAutoSelectMode.NONE; }
+  public CanvasTool               current_tool {
+    get {
+      return( _current_tool );
+    }
+    set {
+      if( value != CanvasTool.SELECTOR ) {
+        clear_selection();
+      }
+      _current_tool = value;
+      if( auto_select_mode == CanvasToolAutoSelectMode.AFTER_TOOL_CLICK ) {
+        if( value.canvas_item_type() != CanvasItemType.NONE ) {
+          add_shape_item( value.canvas_item_type() );
+        }
+      }
+    }
+  }
 
   public signal void text_item_edit_changed( CanvasItemText item );
-  public signal void selection_changed( CanvasItemProperties props );
+  public signal void selection_changed( CanvasItem? item, string msg );
+  public signal void change_tool( CanvasTool tool );
 
   //-------------------------------------------------------------
   // Constructor
@@ -201,7 +266,7 @@ public class CanvasItems {
     _items = new List<CanvasItem>();
 
     // Create the overall properties structure
-    props = new CanvasItemProperties( true );
+    props = new CanvasItemProperties();
     props.changed.connect( update_selected_attributes );
 
     // Create the CustomItems object
@@ -229,56 +294,76 @@ public class CanvasItems {
     return( rect );
   }
 
-  private CanvasItem create_rectangle( bool fill, bool loading = false ) {
-    var item = new CanvasItemRect( _canvas, fill, props );
+  //-------------------------------------------------------------
+  // Creates a bbox for the last cursor position which is used to set
+  // the bbox of a CanvasItem.
+  public void position_item( CanvasItem item, double width, double height ) {
+    if( auto_select_mode == CanvasToolAutoSelectMode.AFTER_TOOL_CLICK ) {
+      item.bbox = center_box( width, height );
+    } else {
+      var rect = new CanvasRect.from_coords( _last_x, _last_y, 1, 1 );
+      item.bbox = rect;
+    }
+  }
+
+  private CanvasItem create_rectangle( bool loading = false ) {
+    var item = new CanvasItemRect( _canvas, _canvas.props.get_properties( CanvasTool.SHAPE ) );
     if( !loading ) {
-      item.bbox = center_box( 200, 50 );
+      position_item( item, 200, 50 );
     }
     return( item );
   }
 
-  private CanvasItem create_oval( bool fill, bool loading = false ) {
-    var item = new CanvasItemOval( _canvas, fill, props );
+  private CanvasItem create_oval( bool loading = false ) {
+    var item = new CanvasItemOval( _canvas, _canvas.props.get_properties( CanvasTool.SHAPE ) );
     if( !loading ) {
-      item.bbox = center_box( 200, 50 );
+      position_item( item, 200, 50 );
     }
     return( item );
   }
 
-  private CanvasItem create_star( bool fill, bool loading = false ) {
-    var item = new CanvasItemStar( _canvas, fill, 5, 25, props );
+  private CanvasItem create_star( bool loading = false ) {
+    var item = new CanvasItemStar( _canvas, 5, _canvas.props.get_properties( CanvasTool.SHAPE ) );
     if( !loading ) {
-      item.bbox = center_box( 100, 100 );
+      position_item( item, 100, 100 );
     }
     return( item );
   }
 
   private CanvasItem create_bubble( CanvasBubbleType type, bool loading = false ) {
-    var item = new CanvasItemBubble( _canvas, type, props );
+    var item = new CanvasItemBubble( _canvas, type, _canvas.props.get_properties( CanvasTool.SHAPE ) );
     if( !loading ) {
-      item.bbox = center_box( 200, 100 );
+      position_item( item, 200, 100 );
     }
     return( item );
   }
 
   private CanvasItem create_line( bool loading = false ) {
-    var item = new CanvasItemLine( _canvas, props );
+    var item = new CanvasItemLine( _canvas, _canvas.props.get_properties( CanvasTool.SHAPE ) );
     if( !loading ) {
-      item.bbox = center_box( 200, 1 );
+      position_item( item, 200, 1 );
     }
     return( item );
   }
 
   private CanvasItem create_arrow( bool loading = false ) {
-    var item = new CanvasItemArrow( _canvas, props );
+    var item = new CanvasItemArrow( _canvas, _canvas.props.get_properties( CanvasTool.ARROW ) );
     if( !loading ) {
-      item.bbox = center_box( 200, 1 );
+      position_item( item, 200, 1 );
+    }
+    return( item );
+  }
+
+  private CanvasItem create_modern_arrow( bool loading = false ) {
+    var item = new CanvasItemModernArrow( _canvas, _canvas.props.get_properties( CanvasTool.ARROW ) );
+    if( !loading ) {
+      position_item( item, 200, 1 );
     }
     return( item );
   }
 
   private CanvasItem create_text( bool loading = false ) {
-    var item = new CanvasItemText( _canvas, props );
+    var item = new CanvasItemText( _canvas, _canvas.props.get_properties( CanvasTool.TEXT ) );
     item.select_mode.connect((value) => {
       if( value ) {
         show_format_bar();
@@ -287,8 +372,7 @@ public class CanvasItems {
       }
     });
     if( !loading ) {
-      item.bbox = center_box( 200, 1 );
-      item.mode = CanvasItemMode.SELECTED;
+      position_item( item, 200, 1 );
       _active = item;
       set_edit_mode( true );
     }
@@ -296,58 +380,75 @@ public class CanvasItems {
   }
 
   private CanvasItem create_blur( bool loading = false ) {
-    var item = new CanvasItemBlur( _canvas, props );
+    var item = new CanvasItemBlur( _canvas );
     if( !loading ) {
-      item.bbox = center_box( 200, 50 );
+      position_item( item, 200, 50 );
     }
     return( item );
   }
 
   private CanvasItem create_magnifier( bool loading = false ) {
-    var item = new CanvasItemMagnifier( _canvas, 2.0, props );
+    var item = new CanvasItemMagnifier( _canvas, 2.0, _canvas.props.get_properties( CanvasTool.MAGNIFIER ) );
     if( !loading ) {
-      item.bbox = center_box( 200, 200 );
+      position_item( item, 200, 200 );
     }
     return( item );
   }
 
   private CanvasItem create_pencil( bool loading = false ) {
-    var item = new CanvasItemPencil( _canvas, props );
+    var item = new CanvasItemPencil( _canvas, _canvas.props.get_properties( CanvasTool.PENCIL ) );
     if( !loading ) {
       _active = item;
+      _active.mode = CanvasItemMode.DRAWING;
       _canvas.set_cursor_from_name( "pencil" );
     }
     return( item );
   }
 
   private CanvasItem create_sequence( bool loading = false ) {
-    var item = new CanvasItemSequence( _canvas, props );
+    var item = new CanvasItemSequence( _canvas, _canvas.props.get_properties( CanvasTool.SEQUENCE ) );
     if( !loading ) {
-      item.bbox = center_box( 50, 50 );
+      if( auto_select_mode == CanvasToolAutoSelectMode.AFTER_TOOL_CLICK ) {
+        item.bbox = center_box( 50, 50 );
+      } else {
+        item.bbox = new CanvasRect.from_coords( (_last_x - 25), (_last_y - 25), 50, 50 );
+      }
     }
     return( item );
   }
 
-  private CanvasItem create_sticker( string? name, bool loading = false ) {
-    var item = new CanvasItemImage( _canvas, name, false, props );
-    if( (name != null) && !loading ) {
-      item.bbox = center_box( 50, 50 );
+  private CanvasItem create_sticker( bool loading = false ) {
+    var item = new CanvasItemImage( _canvas, false, _canvas.props.get_properties( CanvasTool.STICKER ) );
+    if( !loading ) {
+      position_item( item, 50, 50 );
     }
     return( item );
   }
 
-  private CanvasItem create_image( string? path, bool loading = false ) {
-    var item = new CanvasItemImage( _canvas, path, true, props );
-    if( (path != null) && !loading ) {
-      item.bbox = center_box( item.bbox.width, item.bbox.height );
+  private CanvasItem create_image( bool loading = false ) {
+    var item = new CanvasItemImage( _canvas, true, _canvas.props.get_properties( CanvasTool.IMAGE ) );
+    if( !loading ) {
+      position_item( item, item.bbox.width, item.bbox.height );
     }
     return( item );
   }
 
   public void add_item( CanvasItem item, int position, bool undo, bool draw = true ) {
-    clear_selection();
-    item.mode = CanvasItemMode.SELECTED;
+    var after_tool_click = (auto_select_mode == CanvasToolAutoSelectMode.AFTER_TOOL_CLICK);
+    if( after_tool_click ) {
+      _canvas.editor.set_toolbar_tool( CanvasTool.SELECTOR );
+    }
+    if( !in_edit_mode() && !in_draw_mode() ) {
+      _selector_index = item.resize_selector();
+      item.mode = (_selector_index != -1) ? CanvasItemMode.RESIZING : CanvasItemMode.NONE;
+    }
     _items.insert( item, position );
+    if( after_tool_click ) {
+      _selector_index = -1;
+    } else {
+      _active = item;
+    }
+    selection_changed( item, "add_item" );
     _canvas.grab_focus();
     if( undo ) {
       _canvas.undo_buffer.add_item( new UndoItemAdd( item, (int)(_items.length() - 1) ) );
@@ -362,16 +463,16 @@ public class CanvasItems {
   public void add_shape_item( CanvasItemType type ) {
     CanvasItem? item = null;
     switch( type ) {
-      case CanvasItemType.RECT_STROKE  :  item = create_rectangle( false );  break;
-      case CanvasItemType.RECT_FILL    :  item = create_rectangle( true );  break;
-      case CanvasItemType.OVAL_STROKE  :  item = create_oval( false );  break;
-      case CanvasItemType.OVAL_FILL    :  item = create_oval( true );  break;
-      case CanvasItemType.STAR_STROKE  :  item = create_star( false );  break;
-      case CanvasItemType.STAR_FILL    :  item = create_star( true );  break;
+      case CanvasItemType.RECT         :  item = create_rectangle();  break;
+      case CanvasItemType.OVAL         :  item = create_oval();  break;
+      case CanvasItemType.STAR         :  item = create_star();  break;
       case CanvasItemType.TALK         :  item = create_bubble( CanvasBubbleType.TALK );  break;
       case CanvasItemType.THINK        :  item = create_bubble( CanvasBubbleType.THINK );  break;
       case CanvasItemType.LINE         :  item = create_line();  break;
       case CanvasItemType.ARROW        :  item = create_arrow();  break;
+      case CanvasItemType.MODERN_ARROW :  item = create_modern_arrow();  break;
+      case CanvasItemType.STICKER      :  item = create_sticker();  break;
+      case CanvasItemType.IMAGE        :  item = create_image();  break;
       case CanvasItemType.TEXT         :  item = create_text();  break;
       case CanvasItemType.BLUR         :  item = create_blur();  break;
       case CanvasItemType.MAGNIFIER    :  item = create_magnifier();  break;
@@ -382,15 +483,10 @@ public class CanvasItems {
     add_item( item, -1, true );
   }
 
-  public void add_sticker( string name ) {
-    var item = create_sticker( name );
-    add_item( item, -1, true );
-  }
-
   //-------------------------------------------------------------
   // Adds an image that the user can select from using a standard
   // file open dialog.
-  public void add_image() {
+  public void add_image( CanvasItemImage item ) {
 
     // Create file filters for each supported format
     var filters = new GLib.ListStore( typeof( FileFilter ) );
@@ -408,12 +504,46 @@ public class CanvasItems {
     dialog.open.begin( _canvas.win, null, (obj, res) => {
       try {
         var file     = dialog.open.end( res );
-        var filename = file.get_path();
-        var item     = create_image( filename );
-        add_item( item, -1, true );
-        Utils.store_chooser_folder( filename );
+        if( file != null ) {
+          var filename = file.get_path();
+          item.create_image( filename );
+          Utils.store_chooser_folder( filename );
+          _canvas.queue_draw();
+          return;
+        }
       } catch( Error e ) {}
+      remove_item( item );
+      _canvas.queue_draw();
     });
+
+  }
+
+  //-------------------------------------------------------------
+  // Adds a sticker selected from a dialog window.
+  public void add_sticker( CanvasItemImage item ) {
+
+    var dialog = new StickerWindow( _canvas.win, item );
+    dialog.present();
+
+  }
+
+  //-------------------------------------------------------------
+  // Checks the size of the item.  If it is smaller than the minimum,
+  // resize it by adjusting the width/height to the minimum.
+  private void optionally_resize( CanvasItem item ) {
+
+    // If the item is a text or pencil item, don't attempt to change the size
+    if( (item.itype == CanvasItemType.TEXT) || (item.itype == CanvasItemType.PENCIL) ) {
+      return;
+    }
+
+    if( (item.bbox.width < 5) && (item.bbox.height < 5) ) {
+      var box    = new CanvasRect.from_rect( item.bbox );
+      box.width  = 50;
+      box.height = 50;
+      item.bbox  = box;
+      _canvas.queue_draw();
+    }
 
   }
 
@@ -601,9 +731,10 @@ public class CanvasItems {
         } else {
           text.clear_selection();
           _canvas.set_cursor( null );
-          text.mode = CanvasItemMode.SELECTED;
+          text.mode = CanvasItemMode.NONE;
         }
         text_item_edit_changed( text );
+        _canvas.queue_draw();
         return( true );
       }
     }
@@ -635,7 +766,7 @@ public class CanvasItems {
       if( in_edit_mode() ) {
         return( handle_cursor( control, shift, Key.a ) );
       } else {
-        add_shape_item( CanvasItemType.ARROW );
+        _canvas.editor.set_toolbar_item( CanvasItemType.MODERN_ARROW );
         return( true );
       }
     }
@@ -645,21 +776,19 @@ public class CanvasItems {
     else if( Utils.has_key( kvs, Key.End ) )         { return( handle_cursor( control, shift, Key.End ) ); }
     else if( Utils.has_key( kvs, Key.Up ) )          { return( handle_cursor( control, shift, Key.Up ) ); }
     else if( Utils.has_key( kvs, Key.Down ) )        { return( handle_cursor( control, shift, Key.Down ) ); }
-    else if( !shift && Utils.has_key( kvs, Key.r ) ) { add_shape_item( CanvasItemType.RECT_STROKE );  return( true ); }
-    else if(  shift && Utils.has_key( kvs, Key.r ) ) { add_shape_item( CanvasItemType.RECT_FILL );    return( true ); }
-    else if( !shift && Utils.has_key( kvs, Key.o ) ) { add_shape_item( CanvasItemType.OVAL_STROKE );  return( true ); }
-    else if(  shift && Utils.has_key( kvs, Key.o ) ) { add_shape_item( CanvasItemType.OVAL_FILL );    return( true ); }
-    else if( !shift && Utils.has_key( kvs, Key.s ) ) { add_shape_item( CanvasItemType.STAR_STROKE );  return( true ); }
-    else if(  shift && Utils.has_key( kvs, Key.s ) ) { add_shape_item( CanvasItemType.STAR_FILL );    return( true ); }
-    else if( !shift && Utils.has_key( kvs, Key.k ) ) { add_shape_item( CanvasItemType.TALK );         return( true ); }
-    else if(  shift && Utils.has_key( kvs, Key.k ) ) { add_shape_item( CanvasItemType.THINK );        return( true ); }
-    else if( !shift && Utils.has_key( kvs, Key.l ) ) { add_shape_item( CanvasItemType.LINE );         return( true ); }
-    else if( !shift && Utils.has_key( kvs, Key.t ) ) { add_shape_item( CanvasItemType.TEXT );         return( true ); }
-    else if( !shift && Utils.has_key( kvs, Key.b ) ) { add_shape_item( CanvasItemType.BLUR );         return( true ); }
-    else if( !shift && Utils.has_key( kvs, Key.m ) ) { add_shape_item( CanvasItemType.MAGNIFIER );    return( true ); }
-    else if( !shift && Utils.has_key( kvs, Key.p ) ) { add_shape_item( CanvasItemType.PENCIL );       return( true ); }
-    else if( !shift && Utils.has_key( kvs, Key.q ) ) { add_shape_item( CanvasItemType.SEQUENCE );     return( true ); }
-    else if( !shift && Utils.has_key( kvs, Key.i ) ) { add_image();                                   return( true ); }
+    else if( !shift && Utils.has_key( kvs, Key.space ) ) { handle_space(); }
+    else if( !shift && Utils.has_key( kvs, Key.r ) ) { _canvas.editor.set_toolbar_item( CanvasItemType.RECT );       return( true ); }
+    else if( !shift && Utils.has_key( kvs, Key.o ) ) { _canvas.editor.set_toolbar_item( CanvasItemType.OVAL );       return( true ); }
+    else if( !shift && Utils.has_key( kvs, Key.s ) ) { _canvas.editor.set_toolbar_item( CanvasItemType.STAR );       return( true ); }
+    else if( !shift && Utils.has_key( kvs, Key.k ) ) { _canvas.editor.set_toolbar_item( CanvasItemType.TALK );       return( true ); }
+    else if(  shift && Utils.has_key( kvs, Key.k ) ) { _canvas.editor.set_toolbar_item( CanvasItemType.THINK );      return( true ); }
+    else if( !shift && Utils.has_key( kvs, Key.l ) ) { _canvas.editor.set_toolbar_item( CanvasItemType.LINE );       return( true ); }
+    else if( !shift && Utils.has_key( kvs, Key.t ) ) { _canvas.editor.set_toolbar_item( CanvasItemType.TEXT );       return( true ); }
+    else if( !shift && Utils.has_key( kvs, Key.b ) ) { _canvas.editor.set_toolbar_item( CanvasItemType.BLUR );       return( true ); }
+    else if( !shift && Utils.has_key( kvs, Key.m ) ) { _canvas.editor.set_toolbar_item( CanvasItemType.MAGNIFIER );  return( true ); }
+    else if( !shift && Utils.has_key( kvs, Key.p ) ) { _canvas.editor.set_toolbar_item( CanvasItemType.PENCIL );     return( true ); }
+    else if( !shift && Utils.has_key( kvs, Key.q ) ) { _canvas.editor.set_toolbar_item( CanvasItemType.SEQUENCE );   return( true ); }
+    else if( !shift && Utils.has_key( kvs, Key.i ) ) { _canvas.editor.set_toolbar_item( CanvasItemType.IMAGE );      return( true ); }
     else if( !shift && Utils.has_key( kvs, Key.v ) ) { do_paste(); }
     else if( !shift && Utils.has_key( kvs, Key.Shift_L ) ) { return( handle_shift() ); }
     else if( !shift && Utils.has_key( kvs, Key.Control_L ) ) { return( handle_control() ); }
@@ -717,7 +846,17 @@ public class CanvasItems {
     if( in_edit_mode() ) {
       set_edit_mode( false );
       return( true );
-    } else if( clear_selection() ) {
+    } else {
+      _canvas.editor.set_toolbar_tool( CanvasTool.SELECTOR );
+      return( clear_selection() );
+    }
+  }
+
+  //-------------------------------------------------------------
+  // Handles the spacebar.
+  private bool handle_space() {
+    if( !in_edit_mode() ) {
+      _canvas.editor.set_toolbar_tool( CanvasTool.SELECTOR );
       return( true );
     }
     return( false );
@@ -842,80 +981,91 @@ public class CanvasItems {
   // canvas should draw itself.
   public bool cursor_pressed( double x, double y, int press_count ) {
 
-    var retval  = false;
+    var retval = false;
 
     // Keep track of the press count
     _press_count = press_count;
 
-    // If the active item is a pencil, indicate that we are drawing
-    if( (_active != null) && (_active.itype == CanvasItemType.PENCIL) ) {
-      _active.mode = CanvasItemMode.DRAWING;
-      return( false );
-    }
+    if( current_tool == CanvasTool.SELECTOR ) { 
 
-    // Reverse the list so that we grab the top-most item
-    _items.reverse();
+      // Reverse the list so that we grab the top-most item
+      _items.reverse();
 
-    // Handle a click within a selector
-    foreach( CanvasItem item in _items ) {
-      _selector_index = item.is_within_selector( x, y );
-      if( _selector_index != -1 ) {
-        _active = item;
-        _active.mode = CanvasItemMode.RESIZING;
-        _items.reverse();
-        return( false );
+      // Handle a click within a selector
+      foreach( CanvasItem item in _items ) {
+        _selector_index = item.is_within_selector( x, y );
+        if( _selector_index != -1 ) {
+          _active = item;
+          _active.mode = CanvasItemMode.RESIZING;
+          _items.reverse();
+          return( false );
+        }
+      }
+
+      // Handle a click within an item
+      foreach( CanvasItem item in _items ) {
+        if( item.is_within( x, y ) ) {
+          _active = item;
+          if( _active.mode == CanvasItemMode.NONE ) {
+            clear_selection();
+          }
+          if( in_edit_mode() ) {
+            var text = get_active_text();
+            switch( press_count ) {
+              case 1 :  text.set_cursor_at_char( x, y, false );  break;
+              case 2 :  text.set_cursor_at_word( x, y, false );  break;
+              case 3 :  text.set_cursor_all( false );            break;
+            }
+          } else if( control_set && (press_count == 1) ) {  // Make a duplicate of the clicked on item
+            _active = item.duplicate();
+            _active.mode = CanvasItemMode.SELECTED;
+            _canvas.set_cursor_from_name( "grabbing" );
+            add_item( _active, -1, true, false );
+            _selector_index = -1;
+          } else {
+            switch( press_count ) {
+              case 1 :
+                _active.mode = CanvasItemMode.SELECTED;
+                _canvas.set_cursor_from_name( "grabbing" );
+                selection_changed( item, "cursor-pressed-1" );
+                break;
+              case 2 :
+                if( _active.itype != CanvasItemType.TEXT ) {
+                  _items.reverse();
+                  return( false );
+                }
+                set_edit_mode( true );
+                break;
+            }
+          }
+          _items.reverse();
+          return( true );
+        }
+      }
+
+      // Return the list order
+      _items.reverse();
+
+      // If we didn't click on anything, clear the selection
+      clear_selection();
+
+      // Clear the active indicator
+      _active = null;
+
+    } else {
+
+      // If we are editing text, disable editing
+      if( in_edit_mode() ) {
+        set_edit_mode( false );
+      }
+
+      var current_item = _canvas.editor.get_current_item();
+      if( current_item != null ) {
+        current_item.add_item( this );
+      } else if( current_tool.canvas_item_type() != CanvasItemType.NONE ) {
+        add_shape_item( current_tool.canvas_item_type() );
       }
     }
-
-    // Handle a click within an item
-    foreach( CanvasItem item in _items ) {
-      if( item.is_within( x, y ) ) {
-        _active = item;
-        if( _active.mode == CanvasItemMode.NONE ) {
-          clear_selection();
-        }
-        if( in_edit_mode() ) {
-          var text = get_active_text();
-          switch( press_count ) {
-            case 1 :  text.set_cursor_at_char( x, y, false );  break;
-            case 2 :  text.set_cursor_at_word( x, y, false );  break;
-            case 3 :  text.set_cursor_all( false );            break;
-          }
-        } else if( control_set && (press_count == 1) ) {  // Make a duplicate of the clicked on item
-          _active = item.duplicate();
-          _active.mode = CanvasItemMode.SELECTED;
-          _canvas.set_cursor_from_name( "grabbing" );
-          add_item( _active, -1, true, false );
-          selection_changed( item.props );
-        } else {
-          switch( press_count ) {
-            case 1 :
-              _active.mode = CanvasItemMode.SELECTED;
-              _canvas.set_cursor_from_name( "grabbing" );
-              selection_changed( item.props );
-              break;
-            case 2 :
-              if( _active.itype != CanvasItemType.TEXT ) return( false );
-              set_edit_mode( true );
-              break;
-          }
-        }
-        _items.reverse();
-        return( true );
-      }
-    }
-
-    // Return the list order
-    _items.reverse();
-
-    // If we didn't click on anything, clear the selection
-    clear_selection();
-
-    // Clear the edit mode, if we are in it
-    retval = set_edit_mode( false );
-
-    // Clear the active indicator
-    _active = null;
 
     return( retval );
 
@@ -985,7 +1135,7 @@ public class CanvasItems {
         if( item.is_within( x, y ) ) {
           if( control_set ) {
             _canvas.set_cursor_from_name( "copy" );
-          } else {
+          } else if( current_tool == CanvasTool.SELECTOR ) {
             _canvas.set_cursor_from_name( "grab" );
           }
           return( false );
@@ -1010,9 +1160,21 @@ public class CanvasItems {
     // If we are finished dragging the selector, clear it
     if( _selector_index != -1 ) {
       _canvas.undo_buffer.add_item( _active.get_undo_item_for_selector( _selector_index ) );
+      if( current_tool == CanvasTool.IMAGE ) {
+        add_image( (CanvasItemImage)_active );
+      } else if( current_tool == CanvasTool.STICKER ) {
+        add_sticker( (CanvasItemImage)_active );
+      } else if( current_tool != CanvasTool.SELECTOR ) {
+        optionally_resize( _active );
+      }
+      if( auto_select_mode == CanvasToolAutoSelectMode.AFTER_CLICK_DRAG ) {
+        _canvas.editor.set_toolbar_tool( CanvasTool.SELECTOR );
+      }
       _selector_index = -1;
-      _active.mode    = CanvasItemMode.SELECTED;
-      _active         = null;
+      var was_selector = (current_tool == CanvasTool.SELECTOR);
+      _active.mode = was_selector ? CanvasItemMode.SELECTED : CanvasItemMode.NONE;
+      selection_changed( was_selector ? _active : null, "cursor-released-1" );
+      _active = null;
       retval = true;
 
     // If we are editing text, do nothing
@@ -1021,8 +1183,8 @@ public class CanvasItems {
 
     // Indicate that we are done editing
     } else if( in_draw_mode() ) {
-      _active.mode = CanvasItemMode.SELECTED;
-      selection_changed( _active.props );
+      _active.mode = (auto_select_mode != CanvasToolAutoSelectMode.NONE) ? CanvasItemMode.SELECTED : CanvasItemMode.NONE;
+      selection_changed( _active, "cursor-released-2" );
       retval = true;
 
     // If we were move one or more items, make sure that they stay selected
@@ -1074,7 +1236,7 @@ public class CanvasItems {
         create_contextual_menu( item );
         return;
       }
-      if( (within == null) && item.is_within( x, y ) ) {
+      if( item.is_within( x, y ) ) {
         within = item;
       }
     }
@@ -1083,12 +1245,15 @@ public class CanvasItems {
     if( within != null ) {
       create_contextual_menu( within );
       within.mode = CanvasItemMode.SELECTED;
-      selection_changed( within.props );
+      selection_changed( within, "show-contextual" );
       _canvas.queue_draw();
     }
 
   }
 
+  //-------------------------------------------------------------
+  // Creates the contextual menu and displays it for the current
+  // item.
   private void create_contextual_menu( CanvasItem item ) {
 
     var pos  = item_position( item );
@@ -1109,9 +1274,11 @@ public class CanvasItems {
       menu.complete_section();
 
       menu.add_menu_item( item, _( "Send to Front" ), null, (pos != last), do_send_to_front );
+      menu.add_menu_item( item, _( "Send Forward" ),  null, (pos != last), do_send_forward );
+      menu.add_menu_item( item, _( "Send Backward" ), null, (pos != 0), do_send_backward );
       menu.add_menu_item( item, _( "Send to Back" ),  null, (pos != 0), do_send_to_back );
       menu.complete_section();
-  
+
       if( item.itype.category() != CanvasItemCategory.NONE ) {
         menu.add_menu_item( item, _( "Save As Custom" ), null, true, do_save_custom );
         menu.complete_section();
@@ -1204,6 +1371,34 @@ public class CanvasItems {
     _canvas.queue_draw();
   }
 
+  private void action_send_forward() {
+    do_send_forward( get_selected_item() );
+  }
+
+  //-------------------------------------------------------------
+  // Moves the item forward by one
+  private void do_send_forward( CanvasItem item ) {
+    var pos = item_position( item );
+    _canvas.undo_buffer.add_item( new UndoItemSendForward( item, pos ) );
+    remove_item( item );
+    insert_item( item, (pos + 1) );
+    _canvas.queue_draw();
+  }
+
+  private void action_send_backward() {
+    do_send_backward( get_selected_item() );
+  }
+
+  //-------------------------------------------------------------
+  // Moves the item backward by one
+  private void do_send_backward( CanvasItem item ) {
+    var pos = item_position( item );
+    _canvas.undo_buffer.add_item( new UndoItemSendBackward( item, pos ) );
+    remove_item( item );
+    insert_item( item, (pos - 1) );
+    _canvas.queue_draw();
+  }
+
   private void action_send_to_back() {
     do_send_to_back( get_selected_item() );
   }
@@ -1255,29 +1450,28 @@ public class CanvasItems {
         CanvasItem? item = null;
         var type = CanvasItem.get_type_from_xml( it );
         switch( type ) {
-          case CanvasItemType.RECT_STROKE :  item = create_rectangle( false );  break;
-          case CanvasItemType.RECT_FILL   :  item = create_rectangle( true );   break;
-          case CanvasItemType.OVAL_STROKE :  item = create_oval( false );       break;
-          case CanvasItemType.OVAL_FILL   :  item = create_oval( true );        break;
-          case CanvasItemType.STAR_STROKE :  item = create_star( false );       break;
-          case CanvasItemType.STAR_FILL   :  item = create_star( true );        break;
-          case CanvasItemType.TALK        :  item = create_bubble( CanvasBubbleType.TALK );  break;
-          case CanvasItemType.THINK       :  item = create_bubble( CanvasBubbleType.THINK );  break;
-          case CanvasItemType.LINE        :  item = create_line();              break;
-          case CanvasItemType.ARROW       :  item = create_arrow();             break;
-          case CanvasItemType.TEXT        :  item = create_text();              break;
-          case CanvasItemType.BLUR        :  item = create_blur();              break;
-          case CanvasItemType.MAGNIFIER   :  item = create_magnifier();         break;
-          case CanvasItemType.PENCIL      :  item = create_pencil();            break;
-          case CanvasItemType.SEQUENCE    :  item = create_sequence();          break;
-          case CanvasItemType.STICKER     :  item = create_sticker( null );     break;
-          case CanvasItemType.IMAGE       :  item = create_image( null );       break;
-          default                         :  break;
+          case CanvasItemType.RECT         :  item = create_rectangle();     break;
+          case CanvasItemType.OVAL         :  item = create_oval();          break;
+          case CanvasItemType.STAR         :  item = create_star();          break;
+          case CanvasItemType.LINE         :  item = create_line();          break;
+          case CanvasItemType.ARROW        :  item = create_arrow();         break;
+          case CanvasItemType.MODERN_ARROW :  item = create_modern_arrow();  break;
+          case CanvasItemType.TEXT         :  item = create_text();          break;
+          case CanvasItemType.BLUR         :  item = create_blur();          break;
+          case CanvasItemType.MAGNIFIER    :  item = create_magnifier();     break;
+          case CanvasItemType.PENCIL       :  item = create_pencil();        break;
+          case CanvasItemType.SEQUENCE     :  item = create_sequence();      break;
+          case CanvasItemType.STICKER      :  item = create_sticker();       break;
+          case CanvasItemType.IMAGE        :  item = create_image();         break;
+          default                          :  assert_not_reached();
         }
         if( item != null ) {
           item.load( it );
-          item.bbox = center_box( item.bbox.width, item.bbox.height );
+          var rect = new CanvasRect.from_coords( _last_x, _last_y, item.bbox.width, item.bbox.height );
+          item.bbox = rect;
           add_item( item, -1, false, false );
+          _selector_index = -1;
+          _active = null;
           undo_item.add( item );
         }
       }
@@ -1345,24 +1539,22 @@ public class CanvasItems {
     CanvasItem? item = null;
     var type = CanvasItem.get_type_from_xml( node );
     switch( type ) {
-      case CanvasItemType.RECT_STROKE :  item = create_rectangle( false, true );  break;
-      case CanvasItemType.RECT_FILL   :  item = create_rectangle( true, true );   break;
-      case CanvasItemType.OVAL_STROKE :  item = create_oval( false, true );       break;
-      case CanvasItemType.OVAL_FILL   :  item = create_oval( true, true );        break;
-      case CanvasItemType.STAR_STROKE :  item = create_star( false, true );       break;
-      case CanvasItemType.STAR_FILL   :  item = create_star( true, true );        break;
-      case CanvasItemType.TALK        :  item = create_bubble( CanvasBubbleType.TALK, true );            break;
-      case CanvasItemType.THINK       :  item = create_bubble( CanvasBubbleType.THINK, true );            break;
-      case CanvasItemType.LINE        :  item = create_line( true );              break;
-      case CanvasItemType.ARROW       :  item = create_arrow( true );             break;
-      case CanvasItemType.TEXT        :  item = create_text( true );              break;
-      case CanvasItemType.BLUR        :  item = create_blur( true );              break;
-      case CanvasItemType.MAGNIFIER   :  item = create_magnifier( true );         break;
-      case CanvasItemType.PENCIL      :  item = create_pencil( true );            break;
-      case CanvasItemType.SEQUENCE    :  item = create_sequence( true );          break;
-      case CanvasItemType.STICKER     :  item = create_sticker( null, true );     break;
-      case CanvasItemType.IMAGE       :  item = create_image( null );             break;
-      default                         :  break;
+      case CanvasItemType.RECT         :  item = create_rectangle( true );   break;
+      case CanvasItemType.OVAL         :  item = create_oval( true );        break;
+      case CanvasItemType.STAR         :  item = create_star( true );        break;
+      case CanvasItemType.TALK         :  item = create_bubble( CanvasBubbleType.TALK, true );   break;
+      case CanvasItemType.THINK        :  item = create_bubble( CanvasBubbleType.THINK, true );  break;
+      case CanvasItemType.LINE         :  item = create_line( true );              break;
+      case CanvasItemType.ARROW        :  item = create_arrow( true );             break;
+      case CanvasItemType.MODERN_ARROW :  item = create_modern_arrow( true );      break;
+      case CanvasItemType.TEXT         :  item = create_text( true );              break;
+      case CanvasItemType.BLUR         :  item = create_blur( true );              break;
+      case CanvasItemType.MAGNIFIER    :  item = create_magnifier( true );         break;
+      case CanvasItemType.PENCIL       :  item = create_pencil( true );            break;
+      case CanvasItemType.SEQUENCE     :  item = create_sequence( true );          break;
+      case CanvasItemType.STICKER      :  item = create_sticker( true );           break;
+      case CanvasItemType.IMAGE        :  item = create_image( true );             break;
+      default                          :  assert_not_reached();
     }
     if( item != null ) {
       item.load( node );

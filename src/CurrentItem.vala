@@ -63,9 +63,26 @@ public class CurrentItem {
       items.add_shape_item( _canvas );
     } else if( _custom != null ) {
       var it = _custom.item.duplicate();
-      it.bbox = items.center_box( it.bbox.width, it.bbox.height );
+      items.position_item( it, it.bbox.width, it.bbox.height );
       items.add_item( it, -1, true );
     }
+  }
+
+  //-------------------------------------------------------------
+  // Returns the canvas tool associated with this item.
+  public CanvasItemType get_item_type() {
+    return( _canvas );
+  }
+
+  //-------------------------------------------------------------
+  // Returns the tooltip associated with this item.
+  public string? get_tooltip() {
+    if( _canvas != CanvasItemType.NONE ) {
+      return( _canvas.tooltip() );
+    } else if( _custom != null ) {
+      return( _( "Custom Shape" ) );
+    }
+    return( null );
   }
 
   //-------------------------------------------------------------
