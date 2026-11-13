@@ -240,6 +240,9 @@ public class CanvasItems {
       return( _current_tool );
     }
     set {
+      if( value != CanvasTool.SELECTOR ) {
+        clear_selection();
+      }
       _current_tool = value;
       if( auto_select_mode == CanvasToolAutoSelectMode.AFTER_TOOL_CLICK ) {
         if( value.canvas_item_type() != CanvasItemType.NONE ) {
@@ -250,7 +253,8 @@ public class CanvasItems {
   }
 
   public signal void text_item_edit_changed( CanvasItemText item );
-  public signal void selection_changed( CanvasItem? item );
+  public signal void selection_changed( CanvasItem? item, string msg );
+  public signal void change_tool( CanvasTool tool );
 
   //-------------------------------------------------------------
   // Constructor
@@ -430,14 +434,13 @@ public class CanvasItems {
   }
 
   public void add_item( CanvasItem item, int position, bool undo, bool draw = true ) {
-    clear_selection();
     var after_tool_click = (auto_select_mode == CanvasToolAutoSelectMode.AFTER_TOOL_CLICK);
     if( after_tool_click ) {
       _canvas.editor.set_toolbar_tool( CanvasTool.SELECTOR );
     }
     if( !in_edit_mode() && !in_draw_mode() ) {
       _selector_index = item.resize_selector();
-      item.mode = (_selector_index != -1) ? CanvasItemMode.SELECTED : CanvasItemMode.NONE;
+      item.mode = (_selector_index != -1) ? CanvasItemMode.RESIZING : CanvasItemMode.NONE;
     }
     _items.insert( item, position );
     if( after_tool_click ) {
@@ -445,7 +448,7 @@ public class CanvasItems {
     } else {
       _active = item;
     }
-    selection_changed( item );
+    selection_changed( item, "add_item" );
     _canvas.grab_focus();
     if( undo ) {
       _canvas.undo_buffer.add_item( new UndoItemAdd( item, (int)(_items.length() - 1) ) );
@@ -534,20 +537,11 @@ public class CanvasItems {
       return;
     }
 
-    var changed = false;
-    var box     = new CanvasRect.from_rect( item.bbox );
-
-    if( item.bbox.width < 50 ) {
-      box.width = 50;
-      changed = true;
-    }
-    if( item.bbox.height < 50 ) {
+    if( (item.bbox.width < 5) && (item.bbox.height < 5) ) {
+      var box    = new CanvasRect.from_rect( item.bbox );
+      box.width  = 50;
       box.height = 50;
-      changed = true;
-    }
-
-    if( changed ) {
-      item.bbox = box;
+      item.bbox  = box;
       _canvas.queue_draw();
     }
 
@@ -642,7 +636,6 @@ public class CanvasItems {
       retval |= (item.mode != CanvasItemMode.NONE);
       item.mode = CanvasItemMode.NONE;
     }
-    selection_changed( null );
     return( retval );
   }
 
@@ -853,10 +846,10 @@ public class CanvasItems {
     if( in_edit_mode() ) {
       set_edit_mode( false );
       return( true );
-    } else if( clear_selection() ) {
-      return( true );
+    } else {
+      _canvas.editor.set_toolbar_tool( CanvasTool.SELECTOR );
+      return( clear_selection() );
     }
-    return( false );
   }
 
   //-------------------------------------------------------------
@@ -1034,7 +1027,7 @@ public class CanvasItems {
               case 1 :
                 _active.mode = CanvasItemMode.SELECTED;
                 _canvas.set_cursor_from_name( "grabbing" );
-                selection_changed( item );
+                selection_changed( item, "cursor-pressed-1" );
                 break;
               case 2 :
                 if( _active.itype != CanvasItemType.TEXT ) {
@@ -1073,13 +1066,6 @@ public class CanvasItems {
         add_shape_item( current_tool.canvas_item_type() );
       }
     }
-
-    // Clear the edit mode, if we are in it
-    /*
-    if( in_edit_mode() ) {
-      retval = set_edit_mode( false );
-    }
-    */
 
     return( retval );
 
@@ -1178,7 +1164,7 @@ public class CanvasItems {
         add_image( (CanvasItemImage)_active );
       } else if( current_tool == CanvasTool.STICKER ) {
         add_sticker( (CanvasItemImage)_active );
-      } else {
+      } else if( current_tool != CanvasTool.SELECTOR ) {
         optionally_resize( _active );
       }
       if( auto_select_mode == CanvasToolAutoSelectMode.AFTER_CLICK_DRAG ) {
@@ -1187,7 +1173,7 @@ public class CanvasItems {
       _selector_index = -1;
       var was_selector = (current_tool == CanvasTool.SELECTOR);
       _active.mode = was_selector ? CanvasItemMode.SELECTED : CanvasItemMode.NONE;
-      selection_changed( was_selector ? _active : null );
+      selection_changed( was_selector ? _active : null, "cursor-released-1" );
       _active = null;
       retval = true;
 
@@ -1197,8 +1183,8 @@ public class CanvasItems {
 
     // Indicate that we are done editing
     } else if( in_draw_mode() ) {
-      _active.mode = CanvasItemMode.SELECTED;
-      selection_changed( _active );
+      _active.mode = (auto_select_mode != CanvasToolAutoSelectMode.NONE) ? CanvasItemMode.SELECTED : CanvasItemMode.NONE;
+      selection_changed( _active, "cursor-released-2" );
       retval = true;
 
     // If we were move one or more items, make sure that they stay selected
@@ -1259,7 +1245,7 @@ public class CanvasItems {
     if( within != null ) {
       create_contextual_menu( within );
       within.mode = CanvasItemMode.SELECTED;
-      selection_changed( within );
+      selection_changed( within, "show-contextual" );
       _canvas.queue_draw();
     }
 

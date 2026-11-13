@@ -90,7 +90,8 @@ public enum CanvasTool {
             (this == STICKER)  ||
             (this == IMAGE)    ||
             (this == SEQUENCE) ||
-            (this == TEXT) );
+            (this == TEXT)     ||
+            (this == MAGNIFIER) );
   }
 
   //-------------------------------------------------------------
@@ -199,7 +200,10 @@ public enum CanvasTool {
   }
 
   private void setup_magnifier_properties( CanvasItemProperties props ) {
-    props.outline = false;
+    props.fill    = true;  // This won't be used but we need it to keep stroke changeable
+    props.color   = Utils.color_from_string( "black" );
+    props.stroke  = false;
+    props.outline = true;
   }
 
   private void setup_blur_properties( CanvasItemProperties props ) {
@@ -437,11 +441,14 @@ public class CanvasToolButton : ToggleButton {
     var tool = item.get_item_type().tool();
     tooltip_markup = item.get_tooltip(); 
     child          = item.get_image( _canvas.win );
+    if( _options != null ) {
+      _options.unparent();
+    }
     if( tool.has_properties() ) {
       tooltip_markup += "\n\n%s".printf( _( "Right-click for tool options" ) );
-      _options        = create_options( tool, true );
+      _options = create_options( tool, true );
     } else {
-      _options        = null;
+      _options = null;
     }
   }
 
@@ -449,6 +456,9 @@ public class CanvasToolButton : ToggleButton {
   // Sets to the options for the given tool.  This should only be
   // called if we are the selection canvas tool button.
   public void set_canvas_item( CanvasItem? item ) {
+    if( _options != null ) {
+      _options.unparent();
+    }
     if( (item != null) && item.itype.tool().has_properties() ) {
       _props   = item.props;
       _options = create_options( item.itype.tool(), false );

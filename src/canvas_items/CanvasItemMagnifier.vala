@@ -315,13 +315,14 @@ public class CanvasItemMagnifier : CanvasItem {
     if( !_focus_moved ) return;
 
     var center = new CanvasPoint.from_coords( bbox.mid_x(), bbox.mid_y() );
+    var black  = Utils.color_from_string( "black" );
     var pt1    = new CanvasPoint();
     var pt2    = new CanvasPoint();
 
     if( !find_tangents( center, (bbox.width / 2), points.index( 2 ), pt1, pt2 ) ) return;
 
     // Draw the triangle
-    Utils.set_context_color_with_alpha( ctx, props.color, 0.2 );
+    Utils.set_context_color_with_alpha( ctx, black, 0.2 );
     ctx.set_line_width( 1 );
     ctx.move_to( pt1.x, pt1.y );
     ctx.line_to( points.index( 2 ).x, points.index( 2 ).y );
@@ -335,16 +336,35 @@ public class CanvasItemMagnifier : CanvasItem {
   // Draw the rectangle
   public override void draw_item( Context ctx, CanvasItemColor color ) {
 
+    if( (_zoom_rect.width < 1) || (_zoom_rect.height < 1) ) return;
+
     var pixbuf = _image.get_pixbuf_for_rect( _zoom_rect );
     var black  = Utils.color_from_string( "black" );
+    var alpha  = mode.alpha( props.stroke_color.alpha );
 
     draw_focal_point( ctx );
 
-    Utils.set_context_color_with_alpha( ctx, black, 0.5 );
-    ctx.set_line_width( 5 );
     ctx.arc( bbox.mid_x(), bbox.mid_y(), (bbox.width / 2), 0, (2 * Math.PI) );
     save_path( ctx, CanvasItemPathType.FILL );
-    ctx.stroke_preserve();
+
+    if( props.outline ) {
+      var outline = props.stroke ? Granite.contrasting_foreground_color( props.stroke_color ) : black;
+      set_color( ctx, color, outline, (alpha / 2) );
+      if( props.stroke ) {
+        props.dash.set_bg_pattern( ctx );
+        ctx.set_line_width( props.stroke_width.width() + 2 );
+      } else {
+        ctx.set_line_width( 1 );
+      }
+      ctx.stroke_preserve();
+    }
+
+    if( props.stroke ) {
+      set_color( ctx, color, props.stroke_color, alpha );
+      props.dash.set_bg_pattern( ctx );
+      ctx.set_line_width( props.stroke_width.width() );
+      ctx.stroke_preserve();
+    }
 
     ctx.save();
     ctx.clip();

@@ -172,8 +172,11 @@ public class CanvasToolbar : Box {
       }
     });
 
-    _canvas.items.selection_changed.connect((item) => {
+    _canvas.items.selection_changed.connect((item, msg) => {
       button.set_canvas_item( item );
+      if( (item != null) && (item.mode == CanvasItemMode.SELECTED) ) {
+        selected( CanvasTool.SELECTOR );
+      }
     });
 
     append( button );

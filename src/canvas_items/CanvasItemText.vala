@@ -40,10 +40,12 @@ public class CanvasItemText : CanvasItem {
   private int            _selanchor    = 0;
   private double         _max_width    = 400;
   private double         _orig_width   = 400;
+  private double         _resize_width;
   private double         _height       = 0;
   private bool           _debug        = false;
   private int            _font_size    = 16;
   private Cursor         _sel_cursor;
+  private bool           _resized      = false;
 
   // Signals
   public signal void select_mode( bool mode );
@@ -165,7 +167,12 @@ public class CanvasItemText : CanvasItem {
   // If we start to resize, capture the original width
   public override void mode_changed() {
     if( mode == CanvasItemMode.RESIZING ) {
+      int text_width, text_height;
       _orig_width = max_width;
+      _pango_layout.get_size( out text_width, out text_height );
+      _resize_width = (text_width / Pango.SCALE);
+    } else if( _resize_width != _max_width ) {
+      _max_width = _resize_width;
     }
   }
 
@@ -180,7 +187,11 @@ public class CanvasItemText : CanvasItem {
   }
 
   public override void move_selector( int index, double diffx, double diffy, bool shift ) {
-    max_width += diffx;
+    if( (_resize_width + diffx) > 0 ) {
+      _resize_width += diffx;
+      _pango_layout.set_width( (int)_resize_width * Pango.SCALE );
+      update_size();
+    }
   }
 
   public override Cursor? get_selector_cursor( int index ) {
@@ -284,7 +295,7 @@ public class CanvasItemText : CanvasItem {
   //-------------------------------------------------------------
   // Resizes the node width by the given amount.
   public virtual void resize( double diff ) {
-    _max_width += diff;
+    max_width = bbox.width + diff;
     _pango_layout.set_width( (int)_max_width * Pango.SCALE );
     update_size();
   }
