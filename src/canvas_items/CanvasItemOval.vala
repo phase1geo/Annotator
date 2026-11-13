@@ -32,7 +32,7 @@ public class CanvasItemOval : CanvasItem {
   public CanvasItemOval( Canvas canvas, CanvasItemProperties props ) {
     base( CanvasItemType.OVAL, canvas, props );
     create_points();
-    _sel_cursors = new Cursor[8];
+    _sel_cursors = new Cursor[8];  // The rotator uses the default cursor
     _sel_cursors[0] = new Cursor.from_name( "nw-resize", null );
     _sel_cursors[1] = new Cursor.from_name( "ne-resize", null );
     _sel_cursors[2] = new Cursor.from_name( "sw-resize", null );
@@ -54,6 +54,8 @@ public class CanvasItemOval : CanvasItem {
     points.append_val( new CanvasPoint( CanvasPointType.RESIZER3 ) );  // right
     points.append_val( new CanvasPoint( CanvasPointType.RESIZER2 ) );  // bottom
     points.append_val( new CanvasPoint( CanvasPointType.RESIZER3 ) );  // left
+    points.append_val( new CanvasPoint( CanvasPointType.ROTATOR ) );   // rotator
+    rotator_index = 8;
   }
 
   public override int resize_selector() {
@@ -72,15 +74,17 @@ public class CanvasItemOval : CanvasItem {
   // Updates the selection boxes whenever the bounding box changes
   protected override void bbox_changed() {
 
-    points.index( 0 ).copy_coords( bbox.x1(), bbox.y1() );
-    points.index( 1 ).copy_coords( bbox.x2(), bbox.y1() );
-    points.index( 2 ).copy_coords( bbox.x1(), bbox.y2() );
-    points.index( 3 ).copy_coords( bbox.x2(), bbox.y2() );
+    set_point_rotated( 0, bbox.x1(),    bbox.y1() );
+    set_point_rotated( 1, bbox.x2(),    bbox.y1() );
+    set_point_rotated( 2, bbox.x1(),    bbox.y2() );
+    set_point_rotated( 3, bbox.x2(),    bbox.y2() );
 
-    points.index( 4 ).copy_coords( bbox.mid_x(), bbox.y1() );
-    points.index( 5 ).copy_coords( bbox.x2(), bbox.mid_y() );
-    points.index( 6 ).copy_coords( bbox.mid_x(), bbox.y2() );
-    points.index( 7 ).copy_coords( bbox.x1(), bbox.mid_y() );
+    set_point_rotated( 4, bbox.mid_x(), bbox.y1() );
+    set_point_rotated( 5, bbox.x2(),    bbox.mid_y() );
+    set_point_rotated( 6, bbox.mid_x(), bbox.y2() );
+    set_point_rotated( 7, bbox.x1(),    bbox.mid_y() );
+
+    // The rotation selector (index 8) is positioned at draw time
 
   }
 
@@ -88,8 +92,18 @@ public class CanvasItemOval : CanvasItem {
   // Adjusts the bounding box
   public override void move_selector( int index, double diffx, double diffy, bool shift ) {
 
-    var box = new CanvasRect.from_rect( bbox );
+    if( index == rotator_index ) {
+      rotate_selector( index, diffx, diffy, shift );
+      return;
+    }
 
+    var box = new CanvasRect.from_rect( bbox );
+    double anchor_lx, anchor_ly, anchor_wx, anchor_wy;
+
+    // Work in the item's unrotated space and remember where the
+    // opposite side is so that it doesn't move when resizing
+    get_anchor( index, out anchor_lx, out anchor_ly, out anchor_wx, out anchor_wy );
+    unrotate_diffs( ref diffx, ref diffy );
     adjust_diffs( shift, box, ref diffx, ref diffy );
 
     switch( index ) {
@@ -104,6 +118,7 @@ public class CanvasItemOval : CanvasItem {
     }
 
     if( (box.width >= 1) && (box.height >= 1) ) {
+      fix_anchor( box, anchor_lx, anchor_ly, anchor_wx, anchor_wy );
       bbox = box;
     }
 
@@ -119,6 +134,9 @@ public class CanvasItemOval : CanvasItem {
   // Provides cursor to display when mouse cursor is hovering over
   // the given selector
   public override Cursor? get_selector_cursor( int index ) {
+    if( index == rotator_index ) {
+      return( base.get_selector_cursor( index ) );
+    }
     return( _sel_cursors[index] );
   }
 
@@ -133,6 +151,7 @@ public class CanvasItemOval : CanvasItem {
 
     var save_matrix = ctx.get_matrix();
     ctx.translate( bbox.mid_x(), bbox.mid_y() );
+    ctx.rotate( angle );
     ctx.scale( scale_width, scale_height );
     ctx.translate( (0 - bbox.mid_x()), (0 - bbox.mid_y()) );
     ctx.new_path();

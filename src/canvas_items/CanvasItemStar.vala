@@ -63,6 +63,8 @@ public class CanvasItemStar : CanvasItem {
     points.append_val( new CanvasPoint( CanvasPointType.RESIZER1 ) );  // Upper right
     points.append_val( new CanvasPoint( CanvasPointType.RESIZER1 ) );  // Lower left
     points.append_val( new CanvasPoint( CanvasPointType.RESIZER0 ) );  // Lower right
+    points.append_val( new CanvasPoint( CanvasPointType.ROTATOR ) );   // Rotator
+    rotator_index = 5;
   }
 
   public override int resize_selector() {
@@ -86,6 +88,10 @@ public class CanvasItemStar : CanvasItem {
     return( item );
   }
 
+  //-------------------------------------------------------------
+  // Calculates the given star vertex in the item's unrotated space.
+  // Rotation is applied separately when drawing and when placing
+  // the selectors.
   private void calculate_point( int point_num, CanvasPoint point ) {
 
     var outer     = outer_radius();
@@ -105,13 +111,17 @@ public class CanvasItemStar : CanvasItem {
   protected override void bbox_changed() {
 
     // Calculate the inner and outer control points
-    calculate_point( 0, points.index( 0 ) );
+    var inner = new CanvasPoint();
+    calculate_point( 0, inner );
+    set_point_rotated( 0, inner.x, inner.y );
 
     // Update the selector positions for changing the boundary
-    points.index( 1 ).copy_coords( bbox.x1(), bbox.y1() );
-    points.index( 2 ).copy_coords( bbox.x2(), bbox.y1() );
-    points.index( 3 ).copy_coords( bbox.x1(), bbox.y2() );
-    points.index( 4 ).copy_coords( bbox.x2(), bbox.y2() );
+    set_point_rotated( 1, bbox.x1(), bbox.y1() );
+    set_point_rotated( 2, bbox.x2(), bbox.y1() );
+    set_point_rotated( 3, bbox.x1(), bbox.y2() );
+    set_point_rotated( 4, bbox.x2(), bbox.y2() );
+
+    // The rotation selector (index 5) is positioned at draw time
 
   }
 
@@ -119,8 +129,21 @@ public class CanvasItemStar : CanvasItem {
   // Adjusts the bounding box
   public override void move_selector( int index, double diffx, double diffy, bool shift ) {
 
+    if( index == rotator_index ) {
+      rotate_selector( index, diffx, diffy, shift );
+      return;
+    }
+
     var box   = new CanvasRect.from_rect( bbox );
     var outer = outer_radius();
+    double anchor_lx = 0, anchor_ly = 0, anchor_wx = 0, anchor_wy = 0;
+
+    // Work in the item's unrotated space.  For the corner selectors,
+    // remember where the opposite corner is so that it doesn't move.
+    if( index > 0 ) {
+      get_anchor( index, out anchor_lx, out anchor_ly, out anchor_wx, out anchor_wy );
+    }
+    unrotate_diffs( ref diffx, ref diffy );
 
     // If we are moving the selector representing the outer radius, update the box
     switch( index ) {
@@ -134,6 +157,9 @@ public class CanvasItemStar : CanvasItem {
     }
 
     if( box.height >= 1 ) {
+      if( index > 0 ) {
+        fix_anchor( box, anchor_lx, anchor_ly, anchor_wx, anchor_wy );
+      }
       bbox = box;
     }
 
@@ -143,6 +169,9 @@ public class CanvasItemStar : CanvasItem {
   // Provides cursor to display when mouse cursor is hovering over
   // the given selector
   public override Cursor? get_selector_cursor( int index ) {
+    if( index == rotator_index ) {
+      return( base.get_selector_cursor( index ) );
+    }
     return( _sel_cursors[index] );
   }
 
@@ -197,15 +226,24 @@ public class CanvasItemStar : CanvasItem {
   // Draw the star.
   public override void draw_item( Context ctx, CanvasItemColor color ) {
 
-    var alpha = mode.alpha( props.color.alpha );
-    var point = new CanvasPoint();
+    var alpha       = mode.alpha( props.color.alpha );
+    var point       = new CanvasPoint();
+    var save_matrix = ctx.get_matrix();
 
-    ctx.move_to( points.index( 0 ).x, points.index( 0 ).y );
+    // Build the path in the item's rotated space, then restore the
+    // matrix so that stroke widths aren't distorted by the rotation
+    ctx.translate( bbox.mid_x(), bbox.mid_y() );
+    ctx.rotate( angle );
+    ctx.translate( (0 - bbox.mid_x()), (0 - bbox.mid_y()) );
+
+    calculate_point( 0, point );
+    ctx.move_to( point.x, point.y );
     for( int i=1; i<(num_points * 2); i++ ) {
       calculate_point( i, point );
       ctx.line_to( point.x, point.y );
     }
     ctx.close_path();
+    ctx.set_matrix( save_matrix );
 
     save_path( ctx, CanvasItemPathType.FILL );
 

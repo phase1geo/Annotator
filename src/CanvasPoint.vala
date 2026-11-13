@@ -32,7 +32,8 @@ public enum CanvasPointType {
   HIDDEN2,   // This is a resizer that is currently hidden from view
   HIDDEN3,   // This is a resizer that is currently hidden from view
   CONTROL,
-  SELECTOR;
+  SELECTOR,
+  ROTATOR;
 
   //-------------------------------------------------------------
   // Returns the string version of this type.
@@ -48,6 +49,7 @@ public enum CanvasPointType {
       case HIDDEN3  :  return( "hidden3" );
       case CONTROL  :  return( "control" );
       case SELECTOR :  return( "selector" );
+      case ROTATOR  :  return( "rotator" );
       default       :  return( "none" );
     }
   }
@@ -66,6 +68,7 @@ public enum CanvasPointType {
       case "hidden3"  :  return( HIDDEN3 );
       case "control"  :  return( CONTROL );
       case "selector" :  return( SELECTOR );
+      case "rotator"  :  return( ROTATOR );
       default         :  return( NONE );
     }
   }
@@ -89,7 +92,14 @@ public enum CanvasPointType {
   //-------------------------------------------------------------
   // Returns true if this point should be drawn.
   public bool draw() {
-    return( (this == RESIZER0) || (this == RESIZER1) || (this == RESIZER2) || (this == RESIZER3) || (this == CONTROL) || (this == SELECTOR) );
+    return(
+      (this == RESIZER0) ||
+      (this == RESIZER1) ||
+      (this == RESIZER2) ||
+      (this == RESIZER3) ||
+      (this == CONTROL)  ||
+      (this == SELECTOR) ||
+      (this == ROTATOR) );
   }
 
   //-------------------------------------------------------------
