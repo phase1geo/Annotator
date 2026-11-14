@@ -216,6 +216,9 @@ public class CanvasItems {
   private FormatBar?               _format_bar     = null;
   private Cursor                   _xterm_cursor   = new Cursor.from_name( "text", null );
   private CanvasTool               _current_tool   = CanvasTool.SELECTOR;
+  private CanvasRect?              _select_box     = null;
+  private double                   _select_x;
+  private double                   _select_y;
 
   private const GLib.ActionEntry[] action_entries = {
     { "action_copy",          action_copy },
@@ -670,6 +673,43 @@ public class CanvasItems {
   }
 
   //-------------------------------------------------------------
+  // Updates the size of the selection box based on the current point.
+  private void update_select_box( double x, double y ) {
+
+    if( _select_box == null ) return;
+
+    _select_box.x      = double.min( _select_x, x );
+    _select_box.y      = double.min( _select_y, y );
+    _select_box.width  = (_select_x - x).abs();
+    _select_box.height = (_select_y - y).abs();
+
+  }
+
+  //-------------------------------------------------------------
+  // Returns true if the given canvas item overlaps with the current
+  // selection box.
+  private bool overlaps_select_rect( CanvasItem item ) {
+    if( _select_box == null ) return( false );
+    return( _select_box.overlaps( item.bbox ) );
+  }
+
+  //-------------------------------------------------------------
+  // Sets the mode of each item based on whether it overlaps the
+  // selection rectangle.  Returns the number of selected items.
+  private int select_overlapping_items() {
+    var count = 0;
+    foreach( var item in _items ) {
+      if( overlaps_select_rect( item ) ) {
+        item.mode = CanvasItemMode.SELECTED;
+        count++;
+      } else {
+        item.mode = CanvasItemMode.NONE;
+      }
+    }
+    return( count );
+  }
+
+  //-------------------------------------------------------------
   // Adjusts all items by the given diff amounts
   public void adjust_items( double diffx, double diffy, bool moving = true ) {
     foreach( CanvasItem item in _items ) {
@@ -991,6 +1031,9 @@ public class CanvasItems {
       // Reverse the list so that we grab the top-most item
       _items.reverse();
 
+      // Clear the selection box
+      _select_box = null;
+
       // Handle a click within a selector
       foreach( CanvasItem item in _items ) {
         _selector_index = item.is_within_selector( x, y );
@@ -1049,6 +1092,11 @@ public class CanvasItems {
       // If we didn't click on anything, clear the selection
       clear_selection();
 
+      // Start the selection box
+      _select_box = new CanvasRect.from_coords( x, y, 0, 0 );
+      _select_x   = x;
+      _select_y   = y;
+
       // Clear the active indicator
       _active = null;
 
@@ -1085,6 +1133,12 @@ public class CanvasItems {
     // Since we pressed on a selector, move the selector
     if( _selector_index != -1 ) {
       _active.move_selector( _selector_index, diff_x, diff_y, shift_set );
+      return( true );
+
+    // If we are drawing out a selection box, do that now
+    } else if( _select_box != null ) {
+      update_select_box( x, y );
+      select_overlapping_items();
       return( true );
 
     // If we are in edit mode, drag out the selection
@@ -1175,6 +1229,11 @@ public class CanvasItems {
       _active.mode = was_selector ? CanvasItemMode.SELECTED : CanvasItemMode.NONE;
       selection_changed( was_selector ? _active : null, "cursor-released-1" );
       _active = null;
+      retval = true;
+
+    // If we were drawing out a selection box, 
+    } else if( _select_box != null ) {
+      _select_box = null;
       retval = true;
 
     // If we are editing text, do nothing
@@ -1574,6 +1633,23 @@ public class CanvasItems {
   }
 
   //-------------------------------------------------------------
+  // Draws the selection box, if it exists.
+  private void draw_select_box( Context ctx ) {
+
+    if( _select_box == null ) return;
+
+    ctx.save();
+    ctx.set_line_width( 1.0 / _canvas.zoom_factor );
+    ctx.rectangle( _select_box.x, _select_box.y, _select_box.width, _select_box.height );
+    ctx.set_source_rgba( 0.2, 0.5, 1.0, 0.15 );
+    ctx.fill_preserve();
+    ctx.set_source_rgba( 0.2, 0.5, 1.0, 0.9 );
+    ctx.stroke();
+    ctx.restore();
+
+  }
+
+  //-------------------------------------------------------------
   // Draws all of the canvas items on the given context
   public void draw( Context ctx ) {
     foreach( CanvasItem item in _items ) {
@@ -1584,6 +1660,7 @@ public class CanvasItems {
     foreach( CanvasItem item in _items ) {
       item.draw_selectors( ctx );
     }
+    draw_select_box( ctx );
   }
 
 }

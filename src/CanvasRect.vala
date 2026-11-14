@@ -164,6 +164,12 @@ public class CanvasRect {
   }
 
   //-------------------------------------------------------------
+  // Returns true if the given rectangle overlaps ourselves.
+  public bool overlaps( CanvasRect rect ) {
+    return( (x1() <= rect.x2()) && (x2() >= rect.x1()) && (y1() <= rect.y2()) && (y2() >= rect.y1()) );    
+  }
+
+  //-------------------------------------------------------------
   // Returns true if this rectangle contains the given point.
   public bool contains( double x, double y ) {
     return( Utils.is_within_bounds( x, y, this.x, this.y, this.width, this.height ) );
