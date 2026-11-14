@@ -23,7 +23,7 @@ using Gtk;
 using Gdk;
 using Cairo;
 
-public class CanvasItemBlur : CanvasItem {
+public class CanvasItemBlur : CanvasItemRotatable {
 
   private const double min_blur  = 5;
   private const double max_blur  = 45;
@@ -60,6 +60,8 @@ public class CanvasItemBlur : CanvasItem {
     points.append_val( new CanvasPoint( CanvasPointType.RESIZER3 ) );  // right
     points.append_val( new CanvasPoint( CanvasPointType.RESIZER2 ) );  // bottom
     points.append_val( new CanvasPoint( CanvasPointType.RESIZER3 ) );  // left
+    points.append_val( new CanvasPoint( CanvasPointType.ROTATOR ) );   // rotator
+    rotator_index = 8;
   }
 
   //-------------------------------------------------------------
@@ -90,15 +92,17 @@ public class CanvasItemBlur : CanvasItem {
   // Updates the selection boxes whenever the bounding box changes
   protected override void bbox_changed() {
 
-    points.index( 0 ).copy_coords( bbox.x1(), bbox.y1() );
-    points.index( 1 ).copy_coords( bbox.x2(), bbox.y1() );
-    points.index( 2 ).copy_coords( bbox.x1(), bbox.y2() );
-    points.index( 3 ).copy_coords( bbox.x2(), bbox.y2() );
+    set_point_rotated( 0, bbox.x1(),    bbox.y1() );
+    set_point_rotated( 1, bbox.x2(),    bbox.y1() );
+    set_point_rotated( 2, bbox.x1(),    bbox.y2() );
+    set_point_rotated( 3, bbox.x2(),    bbox.y2() );
 
-    points.index( 4 ).copy_coords( bbox.mid_x(), bbox.y1() );
-    points.index( 5 ).copy_coords( bbox.x2(), bbox.mid_y() );
-    points.index( 6 ).copy_coords( bbox.mid_x(), bbox.y2() );
-    points.index( 7 ).copy_coords( bbox.x1(), bbox.mid_y() );
+    set_point_rotated( 4, bbox.mid_x(), bbox.y1() );
+    set_point_rotated( 5, bbox.x2(),    bbox.mid_y() );
+    set_point_rotated( 6, bbox.mid_x(), bbox.y2() );
+    set_point_rotated( 7, bbox.x1(),    bbox.mid_y() );
+
+    // The rotation selector (index 8) is positioned at draw time
 
   }
 
@@ -106,8 +110,18 @@ public class CanvasItemBlur : CanvasItem {
   // Adjusts the bounding box
   public override void move_selector( int index, double diffx, double diffy, bool shift ) {
 
-    var box = new CanvasRect.from_rect( bbox );
+    if( index == rotator_index ) {
+      rotate_selector( index, diffx, diffy, shift );
+      return;
+    }
 
+    var box = new CanvasRect.from_rect( bbox );
+    double anchor_lx, anchor_ly, anchor_wx, anchor_wy;
+
+    // Work in the item's unrotated space and remember where the
+    // opposite side is so that it doesn't move when resizing
+    get_anchor( index, out anchor_lx, out anchor_ly, out anchor_wx, out anchor_wy );
+    unrotate_diffs( ref diffx, ref diffy );
     adjust_diffs( shift, box, ref diffx, ref diffy );
 
     switch( index ) {
@@ -122,6 +136,7 @@ public class CanvasItemBlur : CanvasItem {
     }
 
     if( (box.width >= 1) && (box.height >= 1) ) {
+      fix_anchor( box, anchor_lx, anchor_ly, anchor_wx, anchor_wy );
       bbox = box;
     }
 
@@ -137,6 +152,9 @@ public class CanvasItemBlur : CanvasItem {
   // Provides cursor to display when mouse cursor is hovering over
   // the given selector.
   public override Cursor? get_selector_cursor( int index ) {
+    if( index == rotator_index ) {
+      return( base.get_selector_cursor( index ) );
+    }
     return( _sel_cursors[index] );
   }
 
@@ -177,15 +195,63 @@ public class CanvasItemBlur : CanvasItem {
   }
 
   //-------------------------------------------------------------
+  // Returns the (axis-aligned) region of the image that needs to
+  // be blurred.  When the item is rotated, this is the bounding
+  // box of the rotated rectangle, limited to the image.  The
+  // blurred result is clipped to the rotated rectangle when drawn.
+  private CanvasRect get_blur_area() {
+
+    var area = new CanvasRect.from_rect( bbox );
+
+    if( angle == 0.0 ) {
+      return( area );
+    }
+
+    double[] cx   = { bbox.x1(), bbox.x2(), bbox.x2(), bbox.x1() };
+    double[] cy   = { bbox.y1(), bbox.y1(), bbox.y2(), bbox.y2() };
+    double   minx = double.MAX;
+    double   miny = double.MAX;
+    double   maxx = (0 - double.MAX);
+    double   maxy = (0 - double.MAX);
+
+    for( int i=0; i<4; i++ ) {
+      double rx, ry;
+      rotate_about_center( bbox, cx[i], cy[i], out rx, out ry );
+      minx = Math.fmin( minx, rx );
+      miny = Math.fmin( miny, ry );
+      maxx = Math.fmax( maxx, rx );
+      maxy = Math.fmax( maxy, ry );
+    }
+
+    var x1 = Math.fmax( 0, Math.floor( minx ) );
+    var y1 = Math.fmax( 0, Math.floor( miny ) );
+    var x2 = Math.fmin( (double)canvas.image.info.width,  Math.ceil( maxx ) );
+    var y2 = Math.fmin( (double)canvas.image.info.height, Math.ceil( maxy ) );
+
+    area.x      = x1;
+    area.y      = y1;
+    area.width  = Math.fmax( 0, (x2 - x1) );
+    area.height = Math.fmax( 0, (y2 - y1) );
+
+    return( area );
+
+  }
+
+  //-------------------------------------------------------------
   // Draw the rectangle
   public override void draw_item( Context ctx, CanvasItemColor color ) {
 
-    var black = Utils.color_from_string( "black" );
+    var black       = Utils.color_from_string( "black" );
+    var save_matrix = ctx.get_matrix();
 
     // TODO - Utils.set_context_color_with_alpha( ctx, canvas.image.average_color, mode.alpha() );
     Utils.set_context_color_with_alpha( ctx, black, mode.alpha() );
     ctx.set_line_width( 0 );
+
+    // Create the rotated rectangle path in canvas coordinates
+    rotate_context( ctx );
     ctx.rectangle( bbox.x, bbox.y, bbox.width, bbox.height );
+    ctx.set_matrix( save_matrix );
     save_path( ctx, CanvasItemPathType.FILL );
 
     // If we are moving the node or resizing it, just draw an alpha box
@@ -194,21 +260,34 @@ public class CanvasItemBlur : CanvasItem {
 
     // Otherwise, calculate and apply the blur
     } else {
-      ctx.stroke();
 
-      var pixbuf = canvas.image.get_pixbuf_for_rect( bbox );
-      var buffer = new BufferSurface.with_pixbuf( (int)bbox.width, (int)bbox.height, pixbuf );
+      var area = get_blur_area();
 
-      // Copy the surface contents over
-      cairo_set_source_pixbuf( buffer.context, pixbuf, 0, 0 );
-      buffer.context.paint();
+      if( (area.width >= 1) && (area.height >= 1) ) {
 
-      // Perform the blur
-      buffer.exponential_blur( blur_radius );
+        // Restrict drawing to the (rotated) rectangle
+        ctx.save();
+        ctx.clip();
 
-      // Draw the blurred pixbuf onto the context
-      ctx.set_source_surface( buffer.surface, bbox.x, bbox.y );
-      ctx.paint();
+        var pixbuf = canvas.image.get_pixbuf_for_rect( area );
+        var buffer = new BufferSurface.with_pixbuf( (int)area.width, (int)area.height, pixbuf );
+
+        // Copy the surface contents over
+        cairo_set_source_pixbuf( buffer.context, pixbuf, 0, 0 );
+        buffer.context.paint();
+
+        // Perform the blur
+        buffer.exponential_blur( blur_radius );
+
+        // Draw the blurred pixbuf onto the context
+        ctx.set_source_surface( buffer.surface, area.x, area.y );
+        ctx.paint();
+
+        ctx.restore();
+
+      } else {
+        ctx.new_path();
+      }
 
     }
 

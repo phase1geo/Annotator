@@ -24,7 +24,7 @@ using Gdk;
 using Cairo;
 using Pango;
 
-public class CanvasItemText : CanvasItem {
+public class CanvasItemText : CanvasItemRotatable {
 
   private const double _padding = 10;
 
@@ -126,6 +126,9 @@ public class CanvasItemText : CanvasItem {
   // Creates the items points
   private void create_points() {
     points.append_val( new CanvasPoint( CanvasPointType.RESIZER0 ) );   // Drag handle to right of text
+    points.append_val( new CanvasPoint( CanvasPointType.ROTATOR ) );    // Rotator
+    rotator_index  = 1;
+    rotator_margin = _padding;
   }
 
   //-------------------------------------------------------------
@@ -166,6 +169,7 @@ public class CanvasItemText : CanvasItem {
   //-------------------------------------------------------------
   // If we start to resize, capture the original width
   public override void mode_changed() {
+    base.mode_changed();
     if( mode == CanvasItemMode.RESIZING ) {
       int text_width, text_height;
       _orig_width = max_width;
@@ -183,10 +187,15 @@ public class CanvasItemText : CanvasItem {
     var pad        = _padding;
     var sel_width  = (selector_width  / 2);
     var sel_height = (selector_height / 2);
-    points.index( 0 ).copy_coords( (bbox.x2() + pad + sel_width + 8), (bbox.mid_y() - (sel_height / 2)) );
+    set_point_rotated( 0, (bbox.x2() + pad + sel_width + 8), (bbox.mid_y() - (sel_height / 2)) );
   }
 
   public override void move_selector( int index, double diffx, double diffy, bool shift ) {
+    if( index == rotator_index ) {
+      rotate_selector( index, diffx, diffy, shift );
+      return;
+    }
+    unrotate_diffs( ref diffx, ref diffy );
     if( (_resize_width + diffx) > 0 ) {
       _resize_width += diffx;
       _pango_layout.set_width( (int)_resize_width * Pango.SCALE );
@@ -195,10 +204,16 @@ public class CanvasItemText : CanvasItem {
   }
 
   public override Cursor? get_selector_cursor( int index ) {
+    if( index == rotator_index ) {
+      return( base.get_selector_cursor( index ) );
+    }
     return( _sel_cursor );
   }
 
   public override UndoItem? get_undo_item_for_selector( int index ) {
+    if( index == rotator_index ) {
+      return( base.get_undo_item_for_selector( index ) );
+    }
     return( new UndoItemTextResize( this, _orig_width, max_width ) );
   }
 
@@ -283,11 +298,16 @@ public class CanvasItemText : CanvasItem {
     if( _pango_layout != null ) {
       CanvasRect box = new CanvasRect.from_rect( bbox );
       int text_width, text_height;
+      double anchor_wx, anchor_wy;
+      // When rotated, resizing moves the center of the box, so remember
+      // where the upper-left corner is on screen and keep it there
+      rotate_about_center( bbox, bbox.x, bbox.y, out anchor_wx, out anchor_wy );
       _pango_layout.set_text( _text.text, -1 );
       _pango_layout.set_attributes( _text.get_attributes() );
       _pango_layout.get_size( out text_width, out text_height );
       box.width  = (text_width  / Pango.SCALE);
       box.height = (text_height / Pango.SCALE);
+      fix_anchor( box, bbox.x, bbox.y, anchor_wx, anchor_wy );
       bbox = box;
     }
   }
@@ -323,8 +343,10 @@ public class CanvasItemText : CanvasItem {
   // Sets the cursor from the given mouse coordinates.
   public void set_cursor_at_char( double x, double y, bool motion ) {
     int cursor, trailing;
-    int adjusted_x = (int)(x - bbox.x) * Pango.SCALE;
-    int adjusted_y = (int)(y - bbox.y) * Pango.SCALE;
+    double lx, ly;
+    unrotate_about_center( bbox, x, y, out lx, out ly );
+    int adjusted_x = (int)(lx - bbox.x) * Pango.SCALE;
+    int adjusted_y = (int)(ly - bbox.y) * Pango.SCALE;
     if( !_pango_layout.xy_to_index( adjusted_x, adjusted_y, out cursor, out trailing ) ) {
       cursor   = text.text.index_of_nth_char( text.text.length );
       trailing = 0;
@@ -349,8 +371,10 @@ public class CanvasItemText : CanvasItem {
   // Selects the word at the current x/y position in the text.
   public void set_cursor_at_word( double x, double y, bool motion ) {
     int cursor, trailing;
-    int adjusted_x = (int)(x - bbox.x) * Pango.SCALE;
-    int adjusted_y = (int)(y - bbox.y) * Pango.SCALE;
+    double lx, ly;
+    unrotate_about_center( bbox, x, y, out lx, out ly );
+    int adjusted_x = (int)(lx - bbox.x) * Pango.SCALE;
+    int adjusted_y = (int)(ly - bbox.y) * Pango.SCALE;
     if( _pango_layout.xy_to_index( adjusted_x, adjusted_y, out cursor, out trailing ) ) {
       cursor += trailing;
       var word_start = text.text.substring( 0, cursor ).last_index_of( " " );
@@ -874,6 +898,19 @@ public class CanvasItemText : CanvasItem {
     ytop = (int)(bbox.y + (rect.y / Pango.SCALE));
     ybot = ytop + (int)(rect.height / Pango.SCALE);
 
+    // Convert to canvas coordinates if the text is rotated
+    if( angle != 0.0 ) {
+      double tx, ty, bx, by;
+      var    lx = (bbox.x + (rect.x / Pango.SCALE)) - (log_rect.x / Pango.SCALE);
+      var    lt = bbox.y + (rect.y / Pango.SCALE);
+      var    lb = lt + (rect.height / Pango.SCALE);
+      rotate_about_center( bbox, lx, lt, out tx, out ty );
+      rotate_about_center( bbox, lx, lb, out bx, out by );
+      x    = (int)tx;
+      ytop = (int)ty;
+      ybot = (int)by;
+    }
+
   }
 
   //-------------------------------------------------------------
@@ -889,6 +926,16 @@ public class CanvasItemText : CanvasItem {
     left   = (bbox.x + (rect.x / Pango.SCALE)) - (log_rect.x / Pango.SCALE);
     top    = bbox.y + (rect.y / Pango.SCALE);
     bottom = top + (rect.height / Pango.SCALE);
+
+    // Convert to canvas coordinates if the text is rotated
+    if( angle != 0.0 ) {
+      double tx, ty, bx, by;
+      rotate_about_center( bbox, left, top,    out tx, out ty );
+      rotate_about_center( bbox, left, bottom, out bx, out by );
+      left   = tx;
+      top    = ty;
+      bottom = by;
+    }
 
     int x_pos;
     _pango_layout.index_to_line_x( index, false, out line, out x_pos );
@@ -975,7 +1022,9 @@ public class CanvasItemText : CanvasItem {
   // Returns true if the given coordinates are withing this item's
   // bounding box.
   public override bool is_within( double x, double y ) {
-    return( bbox.contains( x, y ) );
+    double lx, ly;
+    unrotate_about_center( bbox, x, y, out lx, out ly );
+    return( bbox.contains( lx, ly ) );
   }
 
   //-------------------------------------------------------------
@@ -1022,6 +1071,10 @@ public class CanvasItemText : CanvasItem {
 
     Pango.Rectangle ink_rect, log_rect;
     layout.get_extents( out ink_rect, out log_rect );
+
+    // Everything below is drawn in the item's rotated space
+    var save_matrix = ctx.get_matrix();
+    rotate_context( ctx );
 
     var x = bbox.x - _padding;
     var y = bbox.y - _padding;
@@ -1076,6 +1129,8 @@ public class CanvasItemText : CanvasItem {
       ctx.rectangle( ix, iy, 1, (rect.height / Pango.SCALE) );
       ctx.fill();
     }
+
+    ctx.set_matrix( save_matrix );
 
   }
 

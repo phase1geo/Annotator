@@ -23,7 +23,7 @@ using Gtk;
 using Gdk;
 using Cairo;
 
-public class CanvasItemImage : CanvasItem {
+public class CanvasItemImage : CanvasItemRotatable {
 
   private string? _name = null;
   private Pixbuf? _buf  = null;
@@ -41,6 +41,8 @@ public class CanvasItemImage : CanvasItem {
   // Creates the item points.
   private void create_points() {
     points.append_val( new CanvasPoint( CanvasPointType.RESIZER0 ) );  // Resizer
+    points.append_val( new CanvasPoint( CanvasPointType.ROTATOR ) );   // Rotator
+    rotator_index = 1;
   }
 
   //-------------------------------------------------------------
@@ -96,7 +98,7 @@ public class CanvasItemImage : CanvasItem {
   // Updates the selection boxes whenever the bounding box changes.
   protected override void bbox_changed() {
 
-    points.index( 0 ).copy_coords( bbox.x2(), bbox.y2() );
+    set_point_rotated( 0, bbox.x2(), bbox.y2() );
 
     if( (_buf == null) || (_buf.width != (int)bbox.width) ) {
       resize_image();
@@ -108,6 +110,17 @@ public class CanvasItemImage : CanvasItem {
   // Adjusts the bounding box.
   public override void move_selector( int index, double diffx, double diffy, bool shift ) {
 
+    if( index == rotator_index ) {
+      rotate_selector( index, diffx, diffy, shift );
+      return;
+    }
+
+    // Work in the item's unrotated space and keep the opposite
+    // (upper-left) corner fixed on screen
+    double anchor_lx, anchor_ly, anchor_wx, anchor_wy;
+    get_anchor( index, out anchor_lx, out anchor_ly, out anchor_wx, out anchor_wy );
+    unrotate_diffs( ref diffx, ref diffy );
+
     var box = new CanvasRect.from_rect( bbox );
     var dy  = (diffx / box.width) * box.height;
 
@@ -115,6 +128,7 @@ public class CanvasItemImage : CanvasItem {
     box.height += (_buf == null) ? diffy : dy;
 
     if( (box.width > 5) && (box.height > 5) ) {
+      fix_anchor( box, anchor_lx, anchor_ly, anchor_wx, anchor_wy );
       bbox = box;
     }
 
@@ -124,6 +138,9 @@ public class CanvasItemImage : CanvasItem {
   // Provides cursor to display when mouse cursor is hovering over
   // the given selector.
   public override Cursor? get_selector_cursor( int index ) {
+    if( index == rotator_index ) {
+      return( base.get_selector_cursor( index ) );
+    }
     return( _sel_cursor );
   }
 
@@ -159,12 +176,22 @@ public class CanvasItemImage : CanvasItem {
   }
 
   //-------------------------------------------------------------
+  // Adds the (rotated) image rectangle to the current path in
+  // canvas coordinates.
+  private void rotated_rectangle( Context ctx ) {
+    var save_matrix = ctx.get_matrix();
+    rotate_context( ctx );
+    ctx.rectangle( bbox.x, bbox.y, bbox.width, bbox.height );
+    ctx.set_matrix( save_matrix );
+  }
+
+  //-------------------------------------------------------------
   // Draw the rectangle.
   public override void draw_item( Context ctx, CanvasItemColor color ) {
 
     var alpha = mode.alpha( props.alpha );
 
-    ctx.rectangle( bbox.x, bbox.y, bbox.width, bbox.height );
+    rotated_rectangle( ctx );
     save_path( ctx, CanvasItemPathType.FILL );
 
     if( props.outline || (_buf == null) ) {
@@ -178,15 +205,18 @@ public class CanvasItemImage : CanvasItem {
     }
 
     if( _buf != null ) {
+      var save_matrix = ctx.get_matrix();
+      rotate_context( ctx );
       cairo_set_source_pixbuf( ctx, _buf, bbox.x, bbox.y );
-     	ctx.paint_with_alpha( alpha );
+      ctx.paint_with_alpha( alpha );
+      ctx.set_matrix( save_matrix );
     }
 
     if( props.stroke && (_buf != null) ) {
       set_color( ctx, color, props.stroke_color, alpha );
       ctx.set_line_width( props.stroke_width.width() );
       props.dash.set_fg_pattern( ctx );
-      ctx.rectangle( bbox.x, bbox.y, bbox.width, bbox.height );
+      rotated_rectangle( ctx );
       ctx.stroke();
     }
 

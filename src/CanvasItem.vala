@@ -359,7 +359,7 @@ public class CanvasItem {
   //-------------------------------------------------------------
   // Returns the selector index that is below the current pointer
   // coordinate
-  public int is_within_selector( double x, double y ) {
+  public virtual int is_within_selector( double x, double y ) {
     if( !mode.draw_selectors() ) return( -1 );
     var box = new CanvasRect();
     for( int i=0; i<points.length; i++ ) {
@@ -408,7 +408,7 @@ public class CanvasItem {
 
   //-------------------------------------------------------------
   // Draw the selection boxes
-  public void draw_selectors( Context ctx ) {
+  public virtual void draw_selectors( Context ctx ) {
 
     if( !mode.draw_selectors() ) return;
 
