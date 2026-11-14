@@ -47,6 +47,7 @@ public enum CanvasItemType {
   SEQUENCE,
   STICKER,
   IMAGE,
+  GROUP,
   NONE,
   NUM;
 
@@ -67,6 +68,7 @@ public enum CanvasItemType {
       case SEQUENCE     :  return( "sequence" );
       case STICKER      :  return( "sticker" );
       case IMAGE        :  return( "image" );
+      case GROUP        :  return( "group" );
       default           :  return( "none" );
     }
   }
@@ -88,6 +90,7 @@ public enum CanvasItemType {
       case "sequence"     :  return( SEQUENCE );
       case "sticker"      :  return( STICKER );
       case "image"        :  return( IMAGE );
+      case "group"        :  return( GROUP );
       default             :  return( NONE );
     }
   }

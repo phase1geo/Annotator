@@ -86,8 +86,6 @@ public class CanvasItemRect : CanvasItemRotatable {
     set_point_rotated( 6, bbox.mid_x(), bbox.y2() );
     set_point_rotated( 7, bbox.x1(),    bbox.mid_y() );
 
-    // The rotation selector (index 8) is positioned at draw time
-
   }
 
   //-------------------------------------------------------------
