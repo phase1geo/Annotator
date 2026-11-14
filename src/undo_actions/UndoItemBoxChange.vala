@@ -25,12 +25,17 @@ public class UndoItemBoxChange : UndoItem {
     CanvasItem item;
     CanvasRect old_rect;
     CanvasRect new_rect;
+    double     old_angle;
+    double     new_angle;
     public UndoItemChangeElem( CanvasItem i ) {
       item = i;
       old_rect = new CanvasRect();
       old_rect.copy( item.last_bbox );
       new_rect = new CanvasRect();
       new_rect.copy( item.bbox );
+      var rot_item = item as CanvasItemRotatable;
+      old_angle = (rot_item != null) ? rot_item.last_angle : 0.0;
+      new_angle = (rot_item != null) ? rot_item.angle      : 0.0;
     }
   }
 
@@ -58,10 +63,22 @@ public class UndoItemBoxChange : UndoItem {
   }
 
   //-------------------------------------------------------------
+  // Restores the rotation of the given item (if it can be rotated).
+  // This is done before restoring the bounding box so that the
+  // box change positions the selectors using the correct angle.
+  private void set_angle( CanvasItem item, double angle ) {
+    var rot_item = item as CanvasItemRotatable;
+    if( rot_item != null ) {
+      rot_item.angle = angle;
+    }
+  }
+
+  //-------------------------------------------------------------
   // Causes the stored item to be put into the before state
   public override void undo( Canvas canvas ) {
     for( int i=0; i<_list.length; i++ ) {
       var elem = _list.index( i );
+      set_angle( elem.item, elem.old_angle );
       elem.item.bbox = elem.old_rect;
     }
     canvas.queue_draw();
@@ -72,6 +89,7 @@ public class UndoItemBoxChange : UndoItem {
   public override void redo( Canvas canvas ) {
     for( int i=0; i<_list.length; i++ ) {
       var elem = _list.index( i );
+      set_angle( elem.item, elem.new_angle );
       elem.item.bbox = elem.new_rect;
     }
     canvas.queue_draw();

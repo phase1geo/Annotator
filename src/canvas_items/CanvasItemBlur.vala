@@ -23,7 +23,7 @@ using Gtk;
 using Gdk;
 using Cairo;
 
-public class CanvasItemBlur : CanvasItem {
+public class CanvasItemBlur : CanvasItemRotatable {
 
   private const double min_blur  = 5;
   private const double max_blur  = 45;

@@ -125,20 +125,9 @@ public class CanvasItem {
   private Cairo.Path?          _path      = null;
   private CanvasItemPathType   _path_type = CanvasItemPathType.FILL;
   private Cursor               _sel_cursor;
-  private double               _angle      = 0.0;
-  private double               _rot_hx     = 0.0;    // Virtual pointer position while dragging the rotator
-  private double               _rot_hy     = 0.0;
-  private bool                 _rot_active = false;
 
   protected Array<CanvasPoint> points { get; set; default = new Array<CanvasPoint>(); }
   protected Canvas             canvas { get; private set; }
-
-  // Index of the rotation selector in points (-1 if the item cannot be rotated)
-  protected int rotator_index { get; set; default = -1; }
-
-  // Extra distance (beyond bbox) that the rotation selector should clear, for
-  // items which draw a padded border around their bbox
-  protected double rotator_margin { get; set; default = 0.0; }
 
   protected double selector_width {
     get {
@@ -173,11 +162,9 @@ public class CanvasItem {
             set_selector_visual( 0, true );
           }
         }
-        _mode       = value;
-        _rot_active = false;
+        _mode = value;
         if( _mode.moving() ) {
           last_bbox.copy( bbox );
-          last_angle = _angle;
         }
         mode_changed();
       }
@@ -196,20 +183,6 @@ public class CanvasItem {
   }
   public CanvasItemProperties last_props { get; private set; default = new CanvasItemProperties(); }
   public CanvasRect           last_bbox  { get; private set; default = new CanvasRect(); }
-
-  // Rotation of the item (in radians, clockwise) about the center of its bounding box
-  public double angle {
-    get {
-      return( _angle );
-    }
-    set {
-      if( _angle != value ) {
-        _angle = value;
-        bbox_changed();
-      }
-    }
-  }
-  public double last_angle { get; private set; default = 0.0; }
 
   //-------------------------------------------------------------
   // Constructor
@@ -231,9 +204,7 @@ public class CanvasItem {
   public virtual void copy( CanvasItem item ) {
 
     _bbox.copy( item.bbox );
-    _angle     = item.angle;
-    last_angle = item.last_angle;
-    _mode      = item.mode;
+    _mode = item.mode;
     props.copy( item.props );
 
     points.remove_range( 0, points.length );
@@ -294,152 +265,6 @@ public class CanvasItem {
   }
 
   //-------------------------------------------------------------
-  //  ROTATION SUPPORT
-  //-------------------------------------------------------------
-
-  //-------------------------------------------------------------
-  // Rotates the given point by the given angle around (cx, cy)
-  protected void rotate_point( double cx, double cy, double a, double x, double y, out double rx, out double ry ) {
-    var c  = Math.cos( a );
-    var s  = Math.sin( a );
-    var dx = x - cx;
-    var dy = y - cy;
-    rx = cx + ((dx * c) - (dy * s));
-    ry = cy + ((dx * s) + (dy * c));
-  }
-
-  //-------------------------------------------------------------
-  // Rotates the given (unrotated) point around the center of the
-  // given box using the item's current angle
-  protected void rotate_about_center( CanvasRect box, double x, double y, out double rx, out double ry ) {
-    if( _angle == 0.0 ) {
-      rx = x;
-      ry = y;
-    } else {
-      rotate_point( box.mid_x(), box.mid_y(), _angle, x, y, out rx, out ry );
-    }
-  }
-
-  //-------------------------------------------------------------
-  // Converts the given canvas coordinates into the item's
-  // unrotated space (the inverse of rotate_about_center).  Use
-  // this to hit-test or to convert mouse positions.
-  protected void unrotate_about_center( CanvasRect box, double x, double y, out double lx, out double ly ) {
-    if( _angle == 0.0 ) {
-      lx = x;
-      ly = y;
-    } else {
-      rotate_point( box.mid_x(), box.mid_y(), (0 - _angle), x, y, out lx, out ly );
-    }
-  }
-
-  //-------------------------------------------------------------
-  // Applies the item's rotation to the given context (about the
-  // center of the bounding box).  The caller is responsible for
-  // saving and restoring the context's matrix.
-  protected void rotate_context( Context ctx ) {
-    ctx.translate( bbox.mid_x(), bbox.mid_y() );
-    ctx.rotate( _angle );
-    ctx.translate( (0 - bbox.mid_x()), (0 - bbox.mid_y()) );
-  }
-
-  //-------------------------------------------------------------
-  // Sets the given point to the given unrotated coordinates
-  // after applying the item's rotation to it.  This should be
-  // used in bbox_changed to position the selectors.
-  protected void set_point_rotated( int index, double x, double y ) {
-    double rx, ry;
-    rotate_about_center( bbox, x, y, out rx, out ry );
-    points.index( index ).copy_coords( rx, ry );
-  }
-
-  //-------------------------------------------------------------
-  // Converts pointer differences (in canvas coordinates) into the
-  // item's unrotated coordinate space.  Call this at the start of
-  // move_selector for resize selectors.
-  protected void unrotate_diffs( ref double diffx, ref double diffy ) {
-    if( _angle == 0.0 ) return;
-    var c  = Math.cos( _angle );
-    var s  = Math.sin( _angle );
-    var dx = diffx;
-    var dy = diffy;
-    diffx = (dx * c) + (dy * s);
-    diffy = (dy * c) - (dx * s);
-  }
-
-  //-------------------------------------------------------------
-  // Gets the anchor for a resize operation: the point opposite
-  // the selector being dragged.  Returns its position in canvas
-  // coordinates (wx, wy) and in the item's unrotated space
-  // (lx, ly).  Call this BEFORE modifying the bounding box.
-  protected void get_anchor( int index, out double lx, out double ly, out double wx, out double wy ) {
-    wx = (2 * bbox.mid_x()) - points.index( index ).x;
-    wy = (2 * bbox.mid_y()) - points.index( index ).y;
-    if( _angle == 0.0 ) {
-      lx = wx;
-      ly = wy;
-    } else {
-      rotate_point( bbox.mid_x(), bbox.mid_y(), (0 - _angle), wx, wy, out lx, out ly );
-    }
-  }
-
-  //-------------------------------------------------------------
-  // Shifts the given (resized) box so that the anchor stays at the
-  // same location on screen.  Resizing a rotated box moves its
-  // center, which would otherwise make the opposite side drift.
-  protected void fix_anchor( CanvasRect box, double lx, double ly, double wx, double wy ) {
-    if( _angle == 0.0 ) return;
-    double nx, ny;
-    rotate_point( box.mid_x(), box.mid_y(), _angle, lx, ly, out nx, out ny );
-    box.x += (wx - nx);
-    box.y += (wy - ny);
-  }
-
-  //-------------------------------------------------------------
-  // Positions the rotation selector above the top of the item.
-  // The distance is kept constant on screen, so this is done at
-  // draw time rather than in bbox_changed.
-  protected void place_rotator() {
-    if( rotator_index < 0 ) return;
-    var gap = selector_height * 2.5;
-    set_point_rotated( rotator_index, bbox.mid_x(), (bbox.y1() - rotator_margin - gap) );
-  }
-
-  //-------------------------------------------------------------
-  // Handles dragging of the rotation selector.  Call this from
-  // move_selector when the rotator is the selector being moved.
-  // Holding shift snaps the angle to 15 degree increments.
-  protected void rotate_selector( int index, double diffx, double diffy, bool shift ) {
-
-    // Track where the pointer really is, since the selector itself
-    // is constrained to a fixed distance from the item
-    if( !_rot_active ) {
-      _rot_hx     = points.index( index ).x;
-      _rot_hy     = points.index( index ).y;
-      _rot_active = true;
-    }
-    _rot_hx += diffx;
-    _rot_hy += diffy;
-
-    var a = Math.atan2( (_rot_hy - bbox.mid_y()), (_rot_hx - bbox.mid_x()) ) + (Math.PI / 2);
-
-    if( shift ) {
-      var step = Math.PI / 12;
-      a = Math.round( a / step ) * step;
-    }
-
-    while( a < 0 ) {
-      a += (2 * Math.PI);
-    }
-    while( a >= (2 * Math.PI) ) {
-      a -= (2 * Math.PI);
-    }
-
-    angle = a;
-
-  }
-
-  //-------------------------------------------------------------
   // Returns true if any of the selectors are hidden
   private bool any_selectors_hidden() {
     bool hidden = false;
@@ -495,9 +320,7 @@ public class CanvasItem {
   // Returns the undo item associated with a release of the given
   // selector
   public virtual UndoItem? get_undo_item_for_selector( int index ) {
-    _rot_active = false;
-    var name = (index == rotator_index) ? _( "rotate item" ) : _( "resize item" );
-    return( new UndoItemBoxChange.with_item( name, this ) );
+    return( new UndoItemBoxChange.with_item( _( "resize item" ), this ) );
   }
 
   //-------------------------------------------------------------
@@ -536,9 +359,8 @@ public class CanvasItem {
   //-------------------------------------------------------------
   // Returns the selector index that is below the current pointer
   // coordinate
-  public int is_within_selector( double x, double y ) {
+  public virtual int is_within_selector( double x, double y ) {
     if( !mode.draw_selectors() ) return( -1 );
-    place_rotator();
     var box = new CanvasRect();
     for( int i=0; i<points.length; i++ ) {
       if( points.index( i ).kind.draw() ) {
@@ -586,24 +408,12 @@ public class CanvasItem {
 
   //-------------------------------------------------------------
   // Draw the selection boxes
-  public void draw_selectors( Context ctx ) {
+  public virtual void draw_selectors( Context ctx ) {
 
     if( !mode.draw_selectors() ) return;
 
     var black = Utils.color_from_string( "black" );
     var box   = new CanvasRect();
-
-    // Draw a line connecting the item to its rotation selector
-    if( rotator_index >= 0 ) {
-      double tx, ty;
-      place_rotator();
-      rotate_about_center( bbox, bbox.mid_x(), (bbox.y1() - rotator_margin), out tx, out ty );
-      ctx.set_line_width( 1 );
-      Utils.set_context_color( ctx, black );
-      ctx.move_to( tx, ty );
-      ctx.line_to( points.index( rotator_index ).x, points.index( rotator_index ).y );
-      ctx.stroke();
-    }
 
     for( int i=0; i<points.length; i++ ) {
 
@@ -653,9 +463,6 @@ public class CanvasItem {
     node->set_prop( "w",    bbox.width.to_string() );
     node->set_prop( "h",    bbox.height.to_string() );
     node->set_prop( "mode", mode.to_string() );
-    if( _angle != 0.0 ) {
-      node->set_prop( "angle", _angle.to_string() );
-    }
     node->add_child( props.save() );
     return( node );
   }
@@ -683,10 +490,6 @@ public class CanvasItem {
     var h = node->get_prop( "h" );
     if( h != null ) {
       bbox.height = int.parse( h );
-    }
-    var a = node->get_prop( "angle" );
-    if( a != null ) {
-      _angle = double.parse( a );
     }
     var m = node->get_prop( "mode" );
     if( m != null ) {

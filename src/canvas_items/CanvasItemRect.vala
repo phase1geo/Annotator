@@ -23,7 +23,7 @@ using Gtk;
 using Gdk;
 using Cairo;
 
-public class CanvasItemRect : CanvasItem {
+public class CanvasItemRect : CanvasItemRotatable {
 
   private Cursor[] _sel_cursors;
 

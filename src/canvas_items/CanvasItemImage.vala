@@ -23,7 +23,7 @@ using Gtk;
 using Gdk;
 using Cairo;
 
-public class CanvasItemImage : CanvasItem {
+public class CanvasItemImage : CanvasItemRotatable {
 
   private string? _name = null;
   private Pixbuf? _buf  = null;

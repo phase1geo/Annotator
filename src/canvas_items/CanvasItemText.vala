@@ -24,7 +24,7 @@ using Gdk;
 using Cairo;
 using Pango;
 
-public class CanvasItemText : CanvasItem {
+public class CanvasItemText : CanvasItemRotatable {
 
   private const double _padding = 10;
 
@@ -169,6 +169,7 @@ public class CanvasItemText : CanvasItem {
   //-------------------------------------------------------------
   // If we start to resize, capture the original width
   public override void mode_changed() {
+    base.mode_changed();
     if( mode == CanvasItemMode.RESIZING ) {
       int text_width, text_height;
       _orig_width = max_width;

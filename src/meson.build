@@ -8,6 +8,7 @@ sources += files(
     'CanvasItem.vala',
     'CanvasItemMenu.vala',
     'CanvasItemProperties.vala',
+    'CanvasItemRotatable.vala',
     'CanvasItems.vala',
     'CanvasPoint.vala',
     'CanvasRect.vala',

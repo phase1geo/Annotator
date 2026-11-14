@@ -23,7 +23,7 @@ using Gtk;
 using Gdk;
 using Cairo;
 
-public class CanvasItemStar : CanvasItem {
+public class CanvasItemStar : CanvasItemRotatable {
 
   private double   _inner_ratio = 0.381966;
   private Cursor[] _sel_cursors;
