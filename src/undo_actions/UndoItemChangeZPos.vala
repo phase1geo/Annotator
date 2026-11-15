@@ -19,32 +19,30 @@
 * Authored by: Trevor Williams <phase1geo@gmail.com>
 */
 
-public class UndoItemSendBackward : UndoItem {
+public class UndoItemChangeZPos : UndoItem {
 
-  private CanvasItem _item;
-  private int        _position;
+  private int _old_pos;
+  private int _new_pos;
 
   //-------------------------------------------------------------
   // Default constructor
-  public UndoItemSendBackward( CanvasItem item, int position ) {
-    base( _( "move item backward" ) );
-    _item     = item;
-    _position = position;
+  public UndoItemChangeZPos( int old_pos, int new_pos, string msg ) {
+    base( msg );
+    _old_pos = old_pos;
+    _new_pos = new_pos;
   }
 
   //-------------------------------------------------------------
   // Causes the stored item to be put into the before state
   public override void undo( Canvas canvas ) {
-    canvas.items.remove_item( _item );
-    canvas.items.insert_item( _item, _position );
+    canvas.items.move_to_z_position( _new_pos, _old_pos );
     canvas.queue_draw();
   }
 
   //-------------------------------------------------------------
   // Causes the stored item to be put into the after state
   public override void redo( Canvas canvas ) {
-    canvas.items.remove_item( _item );
-    canvas.items.insert_item( _item, (_position - 1) );
+    canvas.items.move_to_z_position( _old_pos, _new_pos );
     canvas.queue_draw();
   }
 

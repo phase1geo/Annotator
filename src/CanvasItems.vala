@@ -574,15 +574,15 @@ public class CanvasItems {
   }
 
   //-------------------------------------------------------------
-  // Adds the given item at the top of the item stack
-  public void move_to_front( CanvasItem item ) {
-    _items.append( item );
-  }
-
-  //-------------------------------------------------------------
-  // Adds the given item at the bottom of the item stack
-  public void move_to_back( CanvasItem item ) {
-    _items.prepend( item );
+  // Moves the item at the old position to the new position.
+  public void move_to_z_position( int old_pos, int new_pos ) {
+    var item = _items.nth_data( old_pos );
+    _items.remove( item );
+    if( old_pos < new_pos ) {
+      _items.insert( item, (new_pos - 1) );
+    } else {
+      _items.insert( item, new_pos );
+    }
   }
 
   //-------------------------------------------------------------
@@ -664,7 +664,7 @@ public class CanvasItems {
   //-------------------------------------------------------------
   // Returns the position of the given canvas item in the list of
   // items
-  private int item_position( CanvasItem item ) {
+  private int item_z_position( CanvasItem item ) {
     var pos = 0;
     foreach( CanvasItem it in _items ) {
       if( it == item ) {
@@ -1318,9 +1318,12 @@ public class CanvasItems {
   // item.
   private void create_contextual_menu( CanvasItem item ) {
 
-    var pos  = item_position( item );
-    var last = (int)(_items.length() - 1);
-    var menu = new CanvasItemMenu( _canvas );
+    var pos      = item_z_position( item );
+    var front    = (int)(_items.length() - 1);
+    var back     = 0;
+    var forward  = next_item_z_position( item, true ) - 1;
+    var backward = next_item_z_position( item, false );
+    var menu     = new CanvasItemMenu( _canvas );
 
     // Add the item's contextual menu items
     item.add_contextual_menu_items( menu );
@@ -1335,10 +1338,10 @@ public class CanvasItems {
       menu.add_menu_item( item, _( "Delete" ), "Delete", true, do_delete );
       menu.complete_section();
 
-      menu.add_menu_item( item, _( "Send to Front" ), null, (pos != last), do_send_to_front );
-      menu.add_menu_item( item, _( "Send Forward" ),  null, (pos != last), do_send_forward );
-      menu.add_menu_item( item, _( "Send Backward" ), null, (pos != 0), do_send_backward );
-      menu.add_menu_item( item, _( "Send to Back" ),  null, (pos != 0), do_send_to_back );
+      menu.add_menu_item( item, _( "Send to Front" ), null, (pos != front),    do_send_to_front );
+      menu.add_menu_item( item, _( "Send Forward" ),  null, (pos != forward),  do_send_forward );
+      menu.add_menu_item( item, _( "Send Backward" ), null, (pos != backward), do_send_backward );
+      menu.add_menu_item( item, _( "Send to Back" ),  null, (pos != back),     do_send_to_back );
       menu.complete_section();
 
       if( item.itype.category() != CanvasItemCategory.NONE ) {
@@ -1420,6 +1423,36 @@ public class CanvasItems {
     }
   }
 
+  //-------------------------------------------------------------
+  // Starting at the bottom-most Z position, find all unselected
+  // items that overlap with the item at the give
+  private int next_item_z_position( CanvasItem current, bool forward ) {
+    var pos = 0;
+    if( forward ) {
+      var current_pos = -1;
+      foreach( var item in _items ) {
+        if( item == current ) {
+          current_pos = pos;
+        } else if( (current_pos != -1) && (item.mode != CanvasItemMode.SELECTED) && current.bbox.overlaps( item.bbox ) ) {
+          return( pos + 1 );
+        }
+        pos++;
+      }
+      return( current_pos + 1 );
+    } else {
+      var last_pos = -1;
+      foreach( var item in _items ) {
+        if( item == current ) {
+          return( (last_pos == -1) ? int.max( 0, (pos - 1) ) : last_pos );
+        } else if( (item.mode != CanvasItemMode.SELECTED) && current.bbox.overlaps( item.bbox ) ) {
+          last_pos = pos;
+        }
+        pos++;
+      }
+      return( 0 );
+    }
+  }
+
   private void action_send_to_front() {
     do_send_to_front( get_selected_item() );
   }
@@ -1427,9 +1460,10 @@ public class CanvasItems {
   //-------------------------------------------------------------
   // Moves the item to the top of the item list
   private void do_send_to_front( CanvasItem item ) {
-    _canvas.undo_buffer.add_item( new UndoItemSendFront( item, item_position( item ) ) );
-    remove_item( item );
-    move_to_front( item );
+    var old_pos = item_z_position( item );
+    var new_pos = (int)_items.length();
+    _canvas.undo_buffer.add_item( new UndoItemChangeZPos( old_pos, new_pos, _( "send to front" ) ) );
+    move_to_z_position( old_pos, new_pos );
     _canvas.queue_draw();
   }
 
@@ -1440,10 +1474,10 @@ public class CanvasItems {
   //-------------------------------------------------------------
   // Moves the item forward by one
   private void do_send_forward( CanvasItem item ) {
-    var pos = item_position( item );
-    _canvas.undo_buffer.add_item( new UndoItemSendForward( item, pos ) );
-    remove_item( item );
-    insert_item( item, (pos + 1) );
+    var old_pos = item_z_position( item );
+    var new_pos = next_item_z_position( item, true );
+    _canvas.undo_buffer.add_item( new UndoItemChangeZPos( old_pos, new_pos, _( "send forward" ) ) );
+    move_to_z_position( old_pos, new_pos );
     _canvas.queue_draw();
   }
 
@@ -1454,10 +1488,10 @@ public class CanvasItems {
   //-------------------------------------------------------------
   // Moves the item backward by one
   private void do_send_backward( CanvasItem item ) {
-    var pos = item_position( item );
-    _canvas.undo_buffer.add_item( new UndoItemSendBackward( item, pos ) );
-    remove_item( item );
-    insert_item( item, (pos - 1) );
+    var old_pos = item_z_position( item );
+    var new_pos = next_item_z_position( item, false );
+    _canvas.undo_buffer.add_item( new UndoItemChangeZPos( old_pos, new_pos, _( "send backward" ) ) );
+    move_to_z_position( old_pos, new_pos );
     _canvas.queue_draw();
   }
 
@@ -1468,9 +1502,10 @@ public class CanvasItems {
   //-------------------------------------------------------------
   // Moves the item to the bottom of the item list
   private void do_send_to_back( CanvasItem item ) {
-    _canvas.undo_buffer.add_item( new UndoItemSendBack( item, item_position( item ) ) );
-    remove_item( item );
-    move_to_back( item );
+    var old_pos = item_z_position( item );
+    var new_pos = 0;
+    _canvas.undo_buffer.add_item( new UndoItemChangeZPos( old_pos, new_pos, _( "send to back" ) ) );
+    move_to_z_position( old_pos, new_pos );
     _canvas.queue_draw();
   }
 
