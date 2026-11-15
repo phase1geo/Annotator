@@ -21,29 +21,38 @@
 
 public class UndoItemChangeZPos : UndoItem {
 
+  private CanvasItem _item;
   private int _old_pos;
   private int _new_pos;
 
   //-------------------------------------------------------------
   // Default constructor
-  public UndoItemChangeZPos( int old_pos, int new_pos, string msg ) {
+  public UndoItemChangeZPos( CanvasItem item, int old_pos, int new_pos, string msg ) {
     base( msg );
+    _item    = item;
     _old_pos = old_pos;
     _new_pos = new_pos;
   }
 
   //-------------------------------------------------------------
+  // Moves the item from its current Z-position to the specified
+  // Z-position
+  private void move( Canvas canvas, int to_pos ) {
+    var from_pos = canvas.items.item_z_position( _item );
+    canvas.items.move_to_z_position( from_pos, to_pos );
+    canvas.queue_draw();
+  }
+
+  //-------------------------------------------------------------
   // Causes the stored item to be put into the before state
   public override void undo( Canvas canvas ) {
-    canvas.items.move_to_z_position( _new_pos, _old_pos );
-    canvas.queue_draw();
+    move( canvas, _old_pos );
   }
 
   //-------------------------------------------------------------
   // Causes the stored item to be put into the after state
   public override void redo( Canvas canvas ) {
-    canvas.items.move_to_z_position( _old_pos, _new_pos );
-    canvas.queue_draw();
+    move( canvas, _new_pos );
   }
 
 }

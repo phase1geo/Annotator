@@ -608,6 +608,18 @@ public class CanvasItems {
   }
 
   //-------------------------------------------------------------
+  // Returns the currently selected items.
+  public List<CanvasItem> get_selected_items() {
+    var list = new List<CanvasItem>();
+    foreach( CanvasItem item in _items ) {
+      if( item.mode == CanvasItemMode.SELECTED ) {
+        list.append( item );
+      }
+    }
+    return( list );
+  }
+
+  //-------------------------------------------------------------
   // Deletes all of the selected items
   private bool remove_selected() {
     var retval    = false;
@@ -664,7 +676,7 @@ public class CanvasItems {
   //-------------------------------------------------------------
   // Returns the position of the given canvas item in the list of
   // items
-  private int item_z_position( CanvasItem item ) {
+  public int item_z_position( CanvasItem item ) {
     var pos = 0;
     foreach( CanvasItem it in _items ) {
       if( it == item ) {
@@ -1338,10 +1350,10 @@ public class CanvasItems {
       menu.add_menu_item( item, _( "Delete" ), "Delete", true, do_delete );
       menu.complete_section();
 
-      menu.add_menu_item( item, _( "Send to Front" ), null, (pos != front),    do_send_to_front );
-      menu.add_menu_item( item, _( "Send Forward" ),  null, (pos != forward),  do_send_forward );
-      menu.add_menu_item( item, _( "Send Backward" ), null, (pos != backward), do_send_backward );
-      menu.add_menu_item( item, _( "Send to Back" ),  null, (pos != back),     do_send_to_back );
+      menu.add_menu_item( item, _( "Send to Front" ), "<Control><Shift>f", (pos != front),    do_send_to_front );
+      menu.add_menu_item( item, _( "Send Forward" ),  "<Control>f",        (pos != forward),  do_send_forward );
+      menu.add_menu_item( item, _( "Send Backward" ), "<Control>b",        (pos != backward), do_send_backward );
+      menu.add_menu_item( item, _( "Send to Back" ),  "<Control><Shift>b", (pos != back),     do_send_to_back );
       menu.complete_section();
 
       if( item.itype.category() != CanvasItemCategory.NONE ) {
@@ -1462,7 +1474,7 @@ public class CanvasItems {
   private void do_send_to_front( CanvasItem item ) {
     var old_pos = item_z_position( item );
     var new_pos = (int)_items.length();
-    _canvas.undo_buffer.add_item( new UndoItemChangeZPos( old_pos, new_pos, _( "send to front" ) ) );
+    _canvas.undo_buffer.add_item( new UndoItemChangeZPos( item, old_pos, new_pos, _( "send to front" ) ) );
     move_to_z_position( old_pos, new_pos );
     _canvas.queue_draw();
   }
@@ -1476,7 +1488,7 @@ public class CanvasItems {
   private void do_send_forward( CanvasItem item ) {
     var old_pos = item_z_position( item );
     var new_pos = next_item_z_position( item, true );
-    _canvas.undo_buffer.add_item( new UndoItemChangeZPos( old_pos, new_pos, _( "send forward" ) ) );
+    _canvas.undo_buffer.add_item( new UndoItemChangeZPos( item, old_pos, new_pos, _( "send forward" ) ) );
     move_to_z_position( old_pos, new_pos );
     _canvas.queue_draw();
   }
@@ -1490,7 +1502,7 @@ public class CanvasItems {
   private void do_send_backward( CanvasItem item ) {
     var old_pos = item_z_position( item );
     var new_pos = next_item_z_position( item, false );
-    _canvas.undo_buffer.add_item( new UndoItemChangeZPos( old_pos, new_pos, _( "send backward" ) ) );
+    _canvas.undo_buffer.add_item( new UndoItemChangeZPos( item, old_pos, new_pos, _( "send backward" ) ) );
     move_to_z_position( old_pos, new_pos );
     _canvas.queue_draw();
   }
@@ -1504,7 +1516,7 @@ public class CanvasItems {
   private void do_send_to_back( CanvasItem item ) {
     var old_pos = item_z_position( item );
     var new_pos = 0;
-    _canvas.undo_buffer.add_item( new UndoItemChangeZPos( old_pos, new_pos, _( "send to back" ) ) );
+    _canvas.undo_buffer.add_item( new UndoItemChangeZPos( item, old_pos, new_pos, _( "send to back" ) ) );
     move_to_z_position( old_pos, new_pos );
     _canvas.queue_draw();
   }

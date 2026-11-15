@@ -79,7 +79,7 @@ public class CanvasItemMenu {
     }
 
     // Set the stage for menu actions
-    _canvas.insert_action_group( "item_menu", _actions );
+    _canvas.win.insert_action_group( "item_menu", _actions );
 
     return( popover );
 
@@ -114,6 +114,7 @@ public class CanvasItemMenu {
     _actions.add_action( saction );
 
     if( shortcut != null ) {
+      stdout.printf( "Setting shortcut for %s (%s)\n", name, shortcut );
       _canvas.win.application.set_accels_for_action( "item_menu.%s".printf( name ), { shortcut } );
     }
 
