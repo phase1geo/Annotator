@@ -176,6 +176,30 @@ public class CanvasItemGroup : CanvasItem {
   }
 
   //-------------------------------------------------------------
+  // Saves the description of this blur item in XML format.
+  public override Xml.Node* save( int id, string image_dir ) {
+    Xml.Node* node = base.save( id, image_dir );
+    foreach( var item in _group ) {
+      node->add_child( item.save( id, image_dir ) );
+    }
+    return( node );
+  }
+
+  //-------------------------------------------------------------
+  // Loads the description of this blur item from XML format.
+  public override void load( Xml.Node* node ) {
+    base.load( node );
+    for( Xml.Node* it = node->children; it != null; it = it->next ) {
+      if( (it->type == Xml.ElementType.ELEMENT_NODE) && (it->name == "item") ) {
+        var item = canvas.items.load_item( it );
+        if( item != null ) {
+          _group.append( item );
+        }
+      }
+    }
+  }
+
+  //-------------------------------------------------------------
   // Draw the rectangle
   public override void draw_item( Context ctx, CanvasItemColor color ) {
     // Need to update path

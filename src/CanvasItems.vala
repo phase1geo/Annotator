@@ -453,6 +453,15 @@ public class CanvasItems {
     return( item );
   }
 
+  private CanvasItem create_group( bool loading = false ) {
+    var group = new List<CanvasItem>();
+    var item  = new CanvasItemGroup( _canvas, group );
+    if( !loading ) {
+      position_item( item, item.bbox.width, item.bbox.height );
+    }
+    return( item );
+  }
+
   public void add_item( CanvasItem item, int position, bool undo, bool draw = true ) {
     var after_tool_click = (auto_select_mode == CanvasToolAutoSelectMode.AFTER_TOOL_CLICK);
     if( after_tool_click ) {
@@ -1595,7 +1604,11 @@ public class CanvasItems {
   public void deserialize_for_paste( string serialized ) {
     Xml.Doc* doc = Xml.Parser.parse_doc( serialized );
     if( doc == null ) return;
-    var undo_item = new UndoItemPaste();
+    var undo_item  = new UndoItemPaste();
+    var diffx      = 0.0;
+    var diffy      = 0.0;
+    var first_item = true;
+    clear_selection();
     for( Xml.Node* it=doc->get_root_element()->children; it!=null; it=it->next ) {
       if( (it->type == Xml.ElementType.ELEMENT_NODE) && (it->name == "item") ) {
         CanvasItem? item = null;
@@ -1614,12 +1627,17 @@ public class CanvasItems {
           case CanvasItemType.SEQUENCE     :  item = create_sequence();      break;
           case CanvasItemType.STICKER      :  item = create_sticker();       break;
           case CanvasItemType.IMAGE        :  item = create_image();         break;
+          case CanvasItemType.GROUP        :  item = create_group();         break;
           default                          :  assert_not_reached();
         }
         if( item != null ) {
           item.load( it );
-          var rect = new CanvasRect.from_coords( _last_x, _last_y, item.bbox.width, item.bbox.height );
-          item.bbox = rect;
+          if( first_item ) {
+            diffx = _last_x - item.bbox.x;
+            diffy = _last_y - item.bbox.y;
+            first_item = false;
+          }
+          item.move_item( diffx, diffy, false );
           add_item( item, -1, false, false );
           _selector_index = -1;
           _active = null;
@@ -1695,16 +1713,17 @@ public class CanvasItems {
       case CanvasItemType.STAR         :  item = create_star( true );        break;
       case CanvasItemType.TALK         :  item = create_bubble( CanvasBubbleType.TALK, true );   break;
       case CanvasItemType.THINK        :  item = create_bubble( CanvasBubbleType.THINK, true );  break;
-      case CanvasItemType.LINE         :  item = create_line( true );              break;
-      case CanvasItemType.ARROW        :  item = create_arrow( true );             break;
-      case CanvasItemType.MODERN_ARROW :  item = create_modern_arrow( true );      break;
-      case CanvasItemType.TEXT         :  item = create_text( true );              break;
-      case CanvasItemType.BLUR         :  item = create_blur( true );              break;
-      case CanvasItemType.MAGNIFIER    :  item = create_magnifier( true );         break;
-      case CanvasItemType.PENCIL       :  item = create_pencil( true );            break;
-      case CanvasItemType.SEQUENCE     :  item = create_sequence( true );          break;
-      case CanvasItemType.STICKER      :  item = create_sticker( true );           break;
-      case CanvasItemType.IMAGE        :  item = create_image( true );             break;
+      case CanvasItemType.LINE         :  item = create_line( true );          break;
+      case CanvasItemType.ARROW        :  item = create_arrow( true );         break;
+      case CanvasItemType.MODERN_ARROW :  item = create_modern_arrow( true );  break;
+      case CanvasItemType.TEXT         :  item = create_text( true );          break;
+      case CanvasItemType.BLUR         :  item = create_blur( true );          break;
+      case CanvasItemType.MAGNIFIER    :  item = create_magnifier( true );     break;
+      case CanvasItemType.PENCIL       :  item = create_pencil( true );        break;
+      case CanvasItemType.SEQUENCE     :  item = create_sequence( true );      break;
+      case CanvasItemType.STICKER      :  item = create_sticker( true );       break;
+      case CanvasItemType.IMAGE        :  item = create_image( true );         break;
+      case CanvasItemType.GROUP        :  item = create_group( true );         break;
       default                          :  assert_not_reached();
     }
     if( item != null ) {
