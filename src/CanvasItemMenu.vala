@@ -133,6 +133,7 @@ public class CanvasItemMenu {
     var parts   = action_name.split( "." );
     var saction = (SimpleAction)group.lookup_action( parts[1] );
     assert( saction != null );
+    saction.set_enabled( sensitive );
 
     _submenu.append( label, action_name );
 

@@ -1385,15 +1385,17 @@ public class CanvasItems {
       menu.add_menu_action( _actions, _( "Ungroup" ), "items.action_ungroup", grouped );
       menu.complete_section();
 
-      menu.add_menu_action( _actions, _( "Send to Front" ), "items.action_send_to_front", (pos != front) );
-      menu.add_menu_action( _actions, _( "Send Forward" ),  "items.action_send_forward",  (pos != forward) );
-      menu.add_menu_action( _actions, _( "Send Backward" ), "items.action_send_backward", (pos != backward) );
-      menu.add_menu_action( _actions, _( "Send to Back" ),  "items.action_send_to_back",  (pos != back) );
-      menu.complete_section();
-
-      if( (num_selected == 1) && (item.itype.category() != CanvasItemCategory.NONE) ) {
-        menu.add_menu_action( _actions, _( "Save As Custom" ), "items.action_save_custom", true );
+      if( num_selected == 1 ) {
+        menu.add_menu_action( _actions, _( "Send to Front" ), "items.action_send_to_front", (pos != front) );
+        menu.add_menu_action( _actions, _( "Send Forward" ),  "items.action_send_forward",  (pos != forward) );
+        menu.add_menu_action( _actions, _( "Send Backward" ), "items.action_send_backward", (pos != backward) );
+        menu.add_menu_action( _actions, _( "Send to Back" ),  "items.action_send_to_back",  (pos != back) );
         menu.complete_section();
+
+        if( item.itype.category() != CanvasItemCategory.NONE ) {
+          menu.add_menu_action( _actions, _( "Save As Custom" ), "items.action_save_custom", true );
+          menu.complete_section();
+        }
       }
 
     }
@@ -1534,53 +1536,70 @@ public class CanvasItems {
   //-------------------------------------------------------------
   // Moves the item to the top of the item list
   private void do_send_to_front() {
-    var item = get_selected_item();  // TBD
-    var old_pos = item_z_position( item );
-    var new_pos = (int)_items.length();
-    _canvas.undo_buffer.add_item( new UndoItemChangeZPos( item, old_pos, new_pos, _( "send to front" ) ) );
-    move_to_z_position( old_pos, new_pos );
-    _canvas.queue_draw();
+    var selected = get_selected_items();
+    if( selected.length() == 1 ) {
+      var item    = selected.nth_data( 0 );
+      var old_pos = item_z_position( item );
+      var new_pos = (int)_items.length();
+      _canvas.undo_buffer.add_item( new UndoItemChangeZPos( item, old_pos, new_pos, _( "send to front" ) ) );
+      move_to_z_position( old_pos, new_pos );
+      _canvas.queue_draw();
+    }
   }
 
   //-------------------------------------------------------------
   // Moves the item forward by one
   private void do_send_forward() {
-    var item = get_selected_item();  // TBD
-    var old_pos = item_z_position( item );
-    var new_pos = next_item_z_position( item, true );
-    _canvas.undo_buffer.add_item( new UndoItemChangeZPos( item, old_pos, new_pos, _( "send forward" ) ) );
-    move_to_z_position( old_pos, new_pos );
-    _canvas.queue_draw();
+    var selected = get_selected_items();
+    if( selected.length() == 1 ) {
+      var item    = selected.nth_data( 0 );
+      var old_pos = item_z_position( item );
+      var new_pos = next_item_z_position( item, true );
+      _canvas.undo_buffer.add_item( new UndoItemChangeZPos( item, old_pos, new_pos, _( "send forward" ) ) );
+      move_to_z_position( old_pos, new_pos );
+      _canvas.queue_draw();
+    }
   }
 
   //-------------------------------------------------------------
   // Moves the item backward by one
   private void do_send_backward() {
-    var item = get_selected_item();  // TBD
-    var old_pos = item_z_position( item );
-    var new_pos = next_item_z_position( item, false );
-    _canvas.undo_buffer.add_item( new UndoItemChangeZPos( item, old_pos, new_pos, _( "send backward" ) ) );
-    move_to_z_position( old_pos, new_pos );
-    _canvas.queue_draw();
+    var selected = get_selected_items();
+    if( selected.length() == 1 ) {
+      var item    = selected.nth_data( 0 );
+      var old_pos = item_z_position( item );
+      var new_pos = next_item_z_position( item, false );
+      _canvas.undo_buffer.add_item( new UndoItemChangeZPos( item, old_pos, new_pos, _( "send backward" ) ) );
+      move_to_z_position( old_pos, new_pos );
+      _canvas.queue_draw();
+    }
   }
 
   //-------------------------------------------------------------
   // Moves the item to the bottom of the item list
   private void do_send_to_back() {
-    var item = get_selected_item();  // TBD
-    var old_pos = item_z_position( item );
-    var new_pos = 0;
-    _canvas.undo_buffer.add_item( new UndoItemChangeZPos( item, old_pos, new_pos, _( "send to back" ) ) );
-    move_to_z_position( old_pos, new_pos );
-    _canvas.queue_draw();
+    var selected = get_selected_items();
+    if( selected.length() == 1 ) {
+      var item    = selected.nth_data( 0 );
+      var old_pos = item_z_position( item );
+      var new_pos = 0;
+      _canvas.undo_buffer.add_item( new UndoItemChangeZPos( item, old_pos, new_pos, _( "send to back" ) ) );
+      move_to_z_position( old_pos, new_pos );
+      _canvas.queue_draw();
+    }
   }
 
   //-------------------------------------------------------------
   // Saves the given item as a custom item
   private void do_save_custom() {
-    var item = get_selected_item();  // TBD
-    var save_item = new CustomItem.with_item( item.duplicate() );
-    custom_items.add( _canvas.win, save_item );
+    var selected = get_selected_items();
+    if( selected.length() == 1 ) {
+      var item = selected.nth_data( 0 );
+      if( item.itype.category() != CanvasItemCategory.NONE ) {
+        var save_item = new CustomItem.with_item( item.duplicate() );
+        custom_items.add( _canvas.win, save_item );
+      }
+    }
   }
 
   //-------------------------------------------------------------
