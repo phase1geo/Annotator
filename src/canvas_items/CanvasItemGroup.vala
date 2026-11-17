@@ -25,20 +25,38 @@ using Cairo;
 
 public class CanvasItemGroup : CanvasItem {
 
-  private Cursor[]          _sel_cursors;
-  private Array<CanvasItem> _items;
+  private Cursor[]         _sel_cursors;
+  private List<CanvasItem> _group;
+
+  public List<CanvasItem> group {
+    get {
+      return( _group );
+    }
+  }
 
   //-------------------------------------------------------------
   // Constructor
-  public CanvasItemGroup( Canvas canvas ) {
+  public CanvasItemGroup( Canvas canvas, List<CanvasItem> items ) {
+
     base( CanvasItemType.GROUP, canvas, null );
+
     create_points();
+
+    // Add the items and update the stored bbox
+    _group = new List<CanvasItem>();
+    foreach( var item in items ) {
+      _group.append( item );
+      canvas.items.remove_item( item );
+      bbox.union( item.bbox );
+    }
+    bbox_changed();
+
     _sel_cursors = new Cursor[4];  // The rotator uses the default cursor
     _sel_cursors[0] = new Cursor.from_name( "nw-resize", null );
     _sel_cursors[1] = new Cursor.from_name( "ne-resize", null );
     _sel_cursors[2] = new Cursor.from_name( "sw-resize", null );
     _sel_cursors[3] = new Cursor.from_name( "se-resize", null );
-    // TBD
+
   }
 
   //-------------------------------------------------------------
@@ -60,17 +78,18 @@ public class CanvasItemGroup : CanvasItem {
   // Copies the contents of the given item to this one.
   public override void copy( CanvasItem item ) {
     base.copy( item );
-    _items.remove_range( 0, _items.length );
     var group_item = (CanvasItemGroup)item;
-    for( int i=0; i<group_item._items.length; i++ ) {
-      _items.append_val( group_item._items.index( i ).duplicate() );
+    _group = new List<CanvasItem>();
+    foreach( var grouped_item in group_item.group ) {
+      _group.append( grouped_item.duplicate() );
     }
   }
 
   //-------------------------------------------------------------
   // Returns a duplicate of this item
   public override CanvasItem duplicate() {
-    var item = new CanvasItemGroup( canvas );
+    var empty = new List<CanvasItem>();
+    var item  = new CanvasItemGroup( canvas, empty );
     item.copy( this );
     return( item );
   }
@@ -131,8 +150,8 @@ public class CanvasItemGroup : CanvasItem {
   //-------------------------------------------------------------
   // Draw the rectangle
   public override void draw_item( Context ctx, CanvasItemColor color ) {
-    for( int i=0; i<_items.length; i++ ) {
-      _items.index( i ).draw_item( ctx, color );
+    foreach( var item in _group ) {
+      item.draw_item( ctx, color );
     }
   }
 

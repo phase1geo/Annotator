@@ -19,30 +19,29 @@
 * Authored by: Trevor Williams <phase1geo@gmail.com>
 */
 
-public class UndoItemDelete : UndoItem {
+public class UndoItemsDelete : UndoItem {
 
-  private struct UndoItemDeleteElem {
+  private struct UndoItemDelete {
     CanvasItem item;
     int        position;
-    public UndoItemDeleteElem( CanvasItem i, int p ) {
+    public UndoItemDelete( CanvasItem i, int p ) {
       item     = i;
       position = p;
     }
   }
 
-  private Array<UndoItemDeleteElem?> _list;
+  private Array<UndoItemDelete?> _list;
 
   //-------------------------------------------------------------
   // Default constructor
-  public UndoItemDelete() {
+  public UndoItemsDelete( List<CanvasItem> items, List<int> pos ) {
     base( _( "item delete" ) );
-    _list = new Array<UndoItemDeleteElem?>();
-  }
-
-  //-------------------------------------------------------------
-  // Adds a canvas item to this undo list
-  public void add( CanvasItem item, int position ) {
-    _list.append_val( UndoItemDeleteElem( item, position ) );
+    _list = new Array<UndoItemDelete?>();
+    var i = 0;
+    foreach( var item in items ) {
+      _list.append_val( UndoItemDelete( item, pos.nth_data( i ) ) );
+      i++;
+    }
   }
 
   //-------------------------------------------------------------
@@ -50,7 +49,7 @@ public class UndoItemDelete : UndoItem {
   public override void undo( Canvas canvas ) {
     for( int i=0; i<_list.length; i++ ) {
       var elem = _list.index( i );
-      canvas.items.add_item( elem.item, elem.position, false, false );
+      canvas.items.insert_item( elem.item, elem.position );
     }
     canvas.queue_draw();
   }

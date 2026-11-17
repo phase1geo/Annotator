@@ -189,20 +189,14 @@ public class Canvas : DrawingArea {
   //-------------------------------------------------------------
   // Copies the selected item to the clipboard
   public void do_copy() {
-    var item = items.get_selected_item();
-    if( (item != null) || items.in_edit_mode() ) {
-      items.do_copy( item );
-    }
+    items.do_copy();
   }
 
   //-------------------------------------------------------------
   // Cuts the selected item to the clipboard
   public void do_cut() {
-    var item = items.get_selected_item();
-    if( (item != null) || items.in_edit_mode() ) {
-      items.do_cut( item );
-      queue_draw();
-    }
+    items.do_cut();
+    queue_draw();
   }
 
   //-------------------------------------------------------------
