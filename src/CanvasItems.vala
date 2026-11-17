@@ -288,15 +288,15 @@ public class CanvasItems {
     _canvas.insert_action_group( "items", _actions );
 
     var app = _canvas.win.application;
-    app.set_accels_for_action( "action_copy",          { "<Control>c" } );
-    app.set_accels_for_action( "action_cut",           { "<Control>x" } );
-    app.set_accels_for_action( "action_delete",        { "Delete" } );
-    app.set_accels_for_action( "action_group",         { "<Control>g" } );
-    app.set_accels_for_action( "action_ungroup",       { "<Control><Shift>g" } );
-    app.set_accels_for_action( "action_send_to_front", { "<Control><Shift>f" } );
-    app.set_accels_for_action( "action_send_forward",  { "<Control>f" } );
-    app.set_accels_for_action( "action_send_backward", { "<Control>b" } );
-    app.set_accels_for_action( "action_send_to_back",  { "<Control><Shift>b" } );
+    app.set_accels_for_action( "items.action_copy",          { "<Control>c" } );
+    app.set_accels_for_action( "items.action_cut",           { "<Control>x" } );
+    app.set_accels_for_action( "items.action_delete",        { "Delete" } );
+    app.set_accels_for_action( "items.action_group",         { "<Control>g" } );
+    app.set_accels_for_action( "items.action_ungroup",       { "<Control><Shift>g" } );
+    app.set_accels_for_action( "items.action_send_to_front", { "<Control><Shift>f" } );
+    app.set_accels_for_action( "items.action_send_forward",  { "<Control>f" } );
+    app.set_accels_for_action( "items.action_send_backward", { "<Control>b" } );
+    app.set_accels_for_action( "items.action_send_to_back",  { "<Control><Shift>b" } );
 
   }
 
@@ -849,7 +849,13 @@ public class CanvasItems {
     else if( !shift && Utils.has_key( kvs, Key.p ) ) { _canvas.editor.set_toolbar_item( CanvasItemType.PENCIL );     return( true ); }
     else if( !shift && Utils.has_key( kvs, Key.q ) ) { _canvas.editor.set_toolbar_item( CanvasItemType.SEQUENCE );   return( true ); }
     else if( !shift && Utils.has_key( kvs, Key.i ) ) { _canvas.editor.set_toolbar_item( CanvasItemType.IMAGE );      return( true ); }
-    else if( !shift && Utils.has_key( kvs, Key.v ) ) { do_paste(); }
+    else if( !shift && Utils.has_key( kvs, Key.v ) ) { do_paste();          return( true ); }
+    else if( !shift && Utils.has_key( kvs, Key.g ) ) { do_group();          return( true ); }
+    else if(  shift && Utils.has_key( kvs, Key.g ) ) { do_ungroup();        return( true ); }
+    else if( !shift && Utils.has_key( kvs, Key.f ) ) { do_send_forward();   return( true ); }
+    else if(  shift && Utils.has_key( kvs, Key.f ) ) { do_send_to_front();  return( true ); }
+    else if( !shift && Utils.has_key( kvs, Key.b ) ) { do_send_backward();  return( true ); }
+    else if(  shift && Utils.has_key( kvs, Key.b ) ) { do_send_to_back();   return( true ); }
     else if( !shift && Utils.has_key( kvs, Key.Shift_L ) ) { return( handle_shift() ); }
     else if( !shift && Utils.has_key( kvs, Key.Control_L ) ) { return( handle_control() ); }
 
