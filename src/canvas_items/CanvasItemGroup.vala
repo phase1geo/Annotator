@@ -140,6 +140,14 @@ public class CanvasItemGroup : CanvasItem {
 
   }
 
+  protected override void mode_changed() {
+    if( mode != CanvasItemMode.MOVING ) {
+      foreach( var item in _group ) {
+        item.mode = CanvasItemMode.NONE;
+      }
+    }
+  }
+
   //-------------------------------------------------------------
   // Provides cursor to display when mouse cursor is hovering over
   // the given selector
@@ -148,8 +156,29 @@ public class CanvasItemGroup : CanvasItem {
   }
 
   //-------------------------------------------------------------
+  // Moves the item by the given amount
+  public override void move_item( double diffx, double diffy, bool moving = true ) {
+    foreach( var item in _group ) {
+      item.move_item( diffx, diffy, moving );
+    }
+    base.move_item( diffx, diffy, moving );
+  }
+
+  //-------------------------------------------------------------
+  // Returns true if the given coordinates are within this item
+  public override bool is_within( double x, double y ) {
+    foreach( var item in _group ) {
+      if( item.is_within( x, y ) ) {
+        return( true );
+      }
+    }
+    return( false );
+  }
+
+  //-------------------------------------------------------------
   // Draw the rectangle
   public override void draw_item( Context ctx, CanvasItemColor color ) {
+    // Need to update path
     foreach( var item in _group ) {
       item.draw_item( ctx, color );
     }

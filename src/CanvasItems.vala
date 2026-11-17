@@ -1475,7 +1475,9 @@ public class CanvasItems {
     if( selected.length() > 1 ) {
       var pos   = item_z_position( selected.nth_data( 0 ) );
       var group = new CanvasItemGroup( _canvas, selected );
+      group.mode = CanvasItemMode.SELECTED;
       insert_item( group, pos );
+      _canvas.queue_draw();
     }
   }
 
@@ -1500,10 +1502,12 @@ public class CanvasItems {
         var pos        = item_z_position( item );
         var group_item = (CanvasItemGroup)item;
         foreach( var grouped in group_item.group ) {
+          grouped.mode = CanvasItemMode.SELECTED;
           insert_item( grouped, pos );
           pos++;
         }
         remove_item( group_item );
+        _canvas.queue_draw();
       }
     }
   }
