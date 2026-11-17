@@ -1075,7 +1075,7 @@ public class CanvasItems {
       foreach( CanvasItem item in _items ) {
         if( item.is_within( x, y ) ) {
           _active = item;
-          if( _active.mode == CanvasItemMode.NONE ) {
+          if( (_active.mode == CanvasItemMode.NONE) && !shift_set ) {
             clear_selection();
           }
           if( in_edit_mode() ) {
@@ -1094,8 +1094,12 @@ public class CanvasItems {
           } else {
             switch( press_count ) {
               case 1 :
-                _active.mode = CanvasItemMode.SELECTED;
-                _canvas.set_cursor_from_name( "grabbing" );
+                if( shift_set ) {
+                  _active.mode = (_active.mode == CanvasItemMode.SELECTED) ? CanvasItemMode.NONE : CanvasItemMode.SELECTED;
+                } else {
+                  _active.mode = CanvasItemMode.SELECTED;
+                  _canvas.set_cursor_from_name( "grabbing" );
+                }
                 selection_changed( item, "cursor-pressed-1" );
                 break;
               case 2 :
