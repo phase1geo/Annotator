@@ -1498,6 +1498,7 @@ public class CanvasItems {
       var group = new CanvasItemGroup( _canvas, selected );
       group.mode = CanvasItemMode.SELECTED;
       insert_item( group, pos );
+      _canvas.undo_buffer.add_item( new UndoItemGroup( group ) );
       _canvas.queue_draw();
     }
   }
@@ -1528,6 +1529,7 @@ public class CanvasItems {
           pos++;
         }
         remove_item( group_item );
+        _canvas.undo_buffer.add_item( new UndoItemUngroup( group_item ) );
         _canvas.queue_draw();
       }
     }

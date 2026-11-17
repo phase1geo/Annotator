@@ -7,7 +7,7 @@ sources += files(
     'UndoItemBlur.vala',
     'UndoItemBoxChange.vala',
     'UndoItemChangeZPos.vala',
-    'UndoItemsDelete.vala',
+    'UndoItemGroup.vala',
     'UndoItemMagnifierFocus.vala',
     'UndoItemMagnifierZoom.vala',
     'UndoItemPaste.vala',
@@ -15,6 +15,9 @@ sources += files(
     'UndoItemSequenceNum.vala',
     'UndoItemStarPoints.vala',
     'UndoItemTextResize.vala',
+    'UndoItemUngroup.vala',
+
+    'UndoItemsDelete.vala',
 
     'UndoTextClearTags.vala',
     'UndoTextCommit.vala',
