@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.annotator\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-04 01:26-0600\n"
+"POT-Creation-Date: 2026-11-18 22:09-0600\n"
 "PO-Revision-Date: 2026-10-04 16:59+0200\n"
 "Last-Translator: Benjamin Weis <benjamin.weis@gmx.com>\n"
 "Language-Team: \n"
@@ -92,7 +92,12 @@ msgstr "Bildausschnitt"
 msgid "Image to Clipboard"
 msgstr "Bild aus der Zwischenablage einfügen"
 
-#: src/canvas_items/CanvasItemBlur.vala:165
+#: src/CanvasItemRotatable.vala:246
+#, fuzzy
+msgid "rotate item"
+msgstr "Elemente verschieben"
+
+#: src/canvas_items/CanvasItemBlur.vala:183
 msgid "Blur Amount:"
 msgstr "Weichzeichnungsfaktor:"
 
@@ -116,126 +121,154 @@ msgstr "Brennpunkt zurücksetzen"
 msgid "Sequence Number:"
 msgstr "Sequenznummer:"
 
-#: src/canvas_items/CanvasItemStar.vala:161
+#: src/canvas_items/CanvasItemStar.vala:182
 msgid "Points:"
 msgstr "Punkte:"
 
-#: src/canvas_items/CanvasItemText.vala:112 src/CanvasItems.vala:124
+#: src/canvas_items/CanvasItemText.vala:114 src/CanvasItems.vala:127
 msgid "Text"
 msgstr "Text"
 
-#: src/canvas_items/CanvasItemText.vala:979 src/CanvasItems.vala:1279
+#: src/canvas_items/CanvasItemText.vala:1039 src/CanvasItems.vala:1377
 #: src/FormatBar.vala:60
 msgid "Copy"
 msgstr "Kopieren"
 
-#: src/canvas_items/CanvasItemText.vala:982 src/CanvasItems.vala:1280
+#: src/canvas_items/CanvasItemText.vala:1042 src/CanvasItems.vala:1378
 #: src/FormatBar.vala:66
 msgid "Cut"
 msgstr "Ausschneiden"
 
-#: src/canvas_items/CanvasItemText.vala:986
+#: src/canvas_items/CanvasItemText.vala:1046
 msgid "Paste"
 msgstr "Einfügen"
 
-#: src/canvas_items/CanvasItemText.vala:991
+#: src/canvas_items/CanvasItemText.vala:1051
 msgid "Select All"
 msgstr "Alles auswählen"
 
-#: src/canvas_items/CanvasItemText.vala:996
+#: src/canvas_items/CanvasItemText.vala:1056
 msgid "Insert Emoji"
 msgstr "Emoji einfügen"
 
-#: src/CanvasItems.vala:116
+#: src/CanvasItems.vala:119
 msgid "Rectangle Outline"
 msgstr "Rechteckumriss"
 
-#: src/CanvasItems.vala:117
+#: src/CanvasItems.vala:120
 msgid "Oval Outline"
 msgstr "Ovaler Umriss"
 
-#: src/CanvasItems.vala:118
+#: src/CanvasItems.vala:121
 msgid "Star Outline"
 msgstr "Sternumriss"
 
-#: src/CanvasItems.vala:119
+#: src/CanvasItems.vala:122
 msgid "Talk Bubble"
 msgstr "Sprechblase"
 
-#: src/CanvasItems.vala:120
+#: src/CanvasItems.vala:123
 msgid "Think Bubble"
 msgstr "Denkblase"
 
-#: src/CanvasItems.vala:121 data/io.github.phase1geo.annotator.shortcuts.ui:227
+#: src/CanvasItems.vala:124 data/io.github.phase1geo.annotator.shortcuts.ui:227
 msgid "Line"
 msgstr "Linie"
 
-#: src/CanvasItems.vala:122
+#: src/CanvasItems.vala:125
 #, fuzzy
 msgid "Modern Arrow"
 msgstr "Weitere Pfeile"
 
-#: src/CanvasItems.vala:123
+#: src/CanvasItems.vala:126
 #, fuzzy
 msgid "Classic Arrow"
 msgstr "Benutzerdefinierte Pfeile"
 
-#: src/CanvasItems.vala:125
+#: src/CanvasItems.vala:128
 msgid "Blur"
 msgstr "Weichzeichnung"
 
-#: src/CanvasItems.vala:126 data/io.github.phase1geo.annotator.shortcuts.ui:254
+#: src/CanvasItems.vala:129 data/io.github.phase1geo.annotator.shortcuts.ui:254
 msgid "Magnifier"
 msgstr "Lupe"
 
-#: src/CanvasItems.vala:127
+#: src/CanvasItems.vala:130
 msgid "Pencil Tool"
 msgstr "Bleistiftwerkzeug"
 
-#: src/CanvasItems.vala:128
+#: src/CanvasItems.vala:131
 msgid "Sequence Number"
 msgstr "Sequenznummer"
 
-#: src/CanvasItems.vala:129
+#: src/CanvasItems.vala:132
 msgid "Sticker"
 msgstr "Sticker"
 
-#: src/CanvasItems.vala:130
+#: src/CanvasItems.vala:133
 msgid "Image"
 msgstr "Bild"
 
-#: src/CanvasItems.vala:496
+#: src/CanvasItems.vala:528
 msgid "Open Insertion Image"
 msgstr "Einfügungsbild öffnen"
 
-#: src/CanvasItems.vala:1202
+#: src/CanvasItems.vala:1290
 msgid "move items"
 msgstr "Elemente verschieben"
 
-#: src/CanvasItems.vala:1283
+#: src/CanvasItems.vala:1381
 msgid "Delete"
 msgstr "Löschen"
 
-#: src/CanvasItems.vala:1286
+#: src/CanvasItems.vala:1384
+msgid "Group"
+msgstr ""
+
+#: src/CanvasItems.vala:1385
+msgid "Ungroup"
+msgstr ""
+
+#: src/CanvasItems.vala:1389
 msgid "Send to Front"
 msgstr "Nach vorne senden"
 
-#: src/CanvasItems.vala:1287
+#: src/CanvasItems.vala:1390
 msgid "Send Forward"
 msgstr ""
 
-#: src/CanvasItems.vala:1288
+#: src/CanvasItems.vala:1391
 #, fuzzy
 msgid "Send Backward"
 msgstr "Nach hinten senden"
 
-#: src/CanvasItems.vala:1289
+#: src/CanvasItems.vala:1392
 msgid "Send to Back"
 msgstr "Nach hinten senden"
 
-#: src/CanvasItems.vala:1293
+#: src/CanvasItems.vala:1396
 msgid "Save As Custom"
 msgstr "Als Benutzerdefiniert speichern"
+
+#: src/CanvasItems.vala:1546
+#, fuzzy
+msgid "send to front"
+msgstr "Nach vorne senden"
+
+#: src/CanvasItems.vala:1560
+#, fuzzy
+msgid "send forward"
+msgstr "Nach hinten senden"
+
+#: src/CanvasItems.vala:1574
+#, fuzzy
+msgid "send backward"
+msgstr "Nach hinten senden"
+
+#: src/CanvasItems.vala:1588
+#, fuzzy
+msgid "send to back"
+msgstr "Nach hinten senden"
 
 #: src/CanvasItem.vala:323
 msgid "resize item"
@@ -257,184 +290,209 @@ msgstr "Weitere Formen"
 msgid "Custom Shapes"
 msgstr "Benutzerdefinierte Formen"
 
-#: src/CanvasToolbar.vala:159
+#: src/CanvasToolbar.vala:160
 #, fuzzy
 msgid "Selection Tool"
 msgstr "Auswahl"
 
-#: src/CanvasToolbar.vala:542
+#: src/CanvasToolbar.vala:546
 msgid "Crop Image"
 msgstr "Bild zuschneiden"
 
-#: src/CanvasToolbar.vala:573 src/Resizer.vala:186
+#: src/CanvasToolbar.vala:577 src/Resizer.vala:186
 msgid "Resize Image"
 msgstr "Bildgröße ändern"
 
-#: src/CanvasToolbar.vala:604
+#: src/CanvasToolbar.vala:608
 msgid "Pick Color To Clipboard"
 msgstr "Farbe auswählen für Zwischenablage"
 
-#: src/CanvasToolbar.vala:631
+#: src/CanvasToolbar.vala:635
 msgid ""
 "Drag To Create Image File\n"
 "\n"
 "Right-click to change export type"
 msgstr ""
 
-#: src/CanvasToolButton.vala:127
+#: src/CanvasToolButton.vala:135
 #, fuzzy
 msgid "New Arrow Properties"
 msgstr "Schriftart-Eigenschaften"
 
-#: src/CanvasToolButton.vala:128
+#: src/CanvasToolButton.vala:136
 #, fuzzy
 msgid "New Shape Properties"
 msgstr "Eigenschaften"
 
-#: src/CanvasToolButton.vala:129
+#: src/CanvasToolButton.vala:137
+#, fuzzy
+msgid "New Line Properties"
+msgstr "Schriftart-Eigenschaften"
+
+#: src/CanvasToolButton.vala:138
 #, fuzzy
 msgid "New Sticker Properties"
 msgstr "Schriftart-Eigenschaften"
 
-#: src/CanvasToolButton.vala:130
+#: src/CanvasToolButton.vala:139
 #, fuzzy
 msgid "New Image Properties"
 msgstr "Eigenschaften"
 
-#: src/CanvasToolButton.vala:131
+#: src/CanvasToolButton.vala:140
 #, fuzzy
 msgid "New Sequence Properties"
 msgstr "Schriftart-Eigenschaften"
 
-#: src/CanvasToolButton.vala:132
+#: src/CanvasToolButton.vala:141
 #, fuzzy
 msgid "New Pencil Properties"
 msgstr "Schriftart-Eigenschaften"
 
-#: src/CanvasToolButton.vala:133
+#: src/CanvasToolButton.vala:142
 #, fuzzy
 msgid "New Text Properties"
 msgstr "Schriftart-Eigenschaften"
 
-#: src/CanvasToolButton.vala:134
+#: src/CanvasToolButton.vala:143
 #, fuzzy
 msgid "New Magnifier Properties"
 msgstr "Neue Lupe"
 
-#: src/CanvasToolButton.vala:135
+#: src/CanvasToolButton.vala:144
 #, fuzzy
 msgid "New Blur Properties"
 msgstr "Eigenschaften"
 
-#: src/CanvasToolButton.vala:144
+#: src/CanvasToolButton.vala:153
 #, fuzzy
 msgid "Selected Arrow Properties"
 msgstr "Schriftart-Eigenschaften"
 
-#: src/CanvasToolButton.vala:145
+#: src/CanvasToolButton.vala:154
 #, fuzzy
 msgid "Selected Shape Properties"
 msgstr "Formfarbe"
 
-#: src/CanvasToolButton.vala:146
+#: src/CanvasToolButton.vala:155
+#, fuzzy
+msgid "Selected Line Properties"
+msgstr "Schriftart-Eigenschaften"
+
+#: src/CanvasToolButton.vala:156
 msgid "Selected Sticker Properties"
 msgstr ""
 
-#: src/CanvasToolButton.vala:147
+#: src/CanvasToolButton.vala:157
 #, fuzzy
 msgid "Selected Image Properties"
 msgstr "Schriftart-Eigenschaften"
 
-#: src/CanvasToolButton.vala:148
+#: src/CanvasToolButton.vala:158
 msgid "Selected Sequence Properties"
 msgstr ""
 
-#: src/CanvasToolButton.vala:149
+#: src/CanvasToolButton.vala:159
 msgid "Selected Pencil Properties"
 msgstr ""
 
-#: src/CanvasToolButton.vala:150
+#: src/CanvasToolButton.vala:160
 #, fuzzy
 msgid "Selected Text Properties"
 msgstr "Schriftart-Eigenschaften"
 
-#: src/CanvasToolButton.vala:151
+#: src/CanvasToolButton.vala:161
 msgid "Selected Magnifier Properties"
 msgstr ""
 
-#: src/CanvasToolButton.vala:152
+#: src/CanvasToolButton.vala:162
 #, fuzzy
 msgid "Selected Blur Properties"
 msgstr "Schriftart-Eigenschaften"
 
-#: src/CanvasToolButton.vala:317 src/CanvasToolButton.vala:324
-#: src/CanvasToolButton.vala:854
+#: src/CanvasToolButton.vala:332 src/CanvasToolButton.vala:339
+#: src/CanvasToolButton.vala:996
 #, fuzzy
 msgid "Font"
 msgstr "Schriftart:"
 
-#: src/CanvasToolButton.vala:429
+#: src/CanvasToolButton.vala:448
 msgid "Right-click for tool options"
 msgstr ""
 
-#: src/CanvasToolButton.vala:520
+#: src/CanvasToolButton.vala:546
 #, fuzzy
 msgid "Border"
 msgstr "Formrahmen"
 
-#: src/CanvasToolButton.vala:538
+#: src/CanvasToolButton.vala:564
 #, fuzzy
 msgid "Border Color"
 msgstr "Formfarbe"
 
-#: src/CanvasToolButton.vala:545 src/CanvasToolButton.vala:768
-#: src/CanvasToolButton.vala:880
+#: src/CanvasToolButton.vala:571 src/CanvasToolButton.vala:700
+#: src/CanvasToolButton.vala:910 src/CanvasToolButton.vala:1022
 #, fuzzy
 msgid "Choose Color"
 msgstr "Formfarbe"
 
-#: src/CanvasToolButton.vala:565
+#: src/CanvasToolButton.vala:591
 msgid "Border Width"
 msgstr "Rahmenbreite"
 
-#: src/CanvasToolButton.vala:607
+#: src/CanvasToolButton.vala:633
 #, fuzzy
 msgid "Border Dash"
 msgstr "Rahmenbreite"
 
-#: src/CanvasToolButton.vala:740
+#: src/CanvasToolButton.vala:694
+#, fuzzy
+msgid "Line Color"
+msgstr "Gefüllter Filter"
+
+#: src/CanvasToolButton.vala:720
+#, fuzzy
+msgid "Line Width"
+msgstr "Rahmenbreite"
+
+#: src/CanvasToolButton.vala:762
+#, fuzzy
+msgid "Line Dash"
+msgstr "Liniendiagramm"
+
+#: src/CanvasToolButton.vala:882
 msgid "Fill"
 msgstr ""
 
-#: src/CanvasToolButton.vala:758
+#: src/CanvasToolButton.vala:900
 #, fuzzy
 msgid "Fill Color"
 msgstr "Gefüllter Filter"
 
-#: src/CanvasToolButton.vala:801
+#: src/CanvasToolButton.vala:943
 msgid "Alpha"
 msgstr ""
 
-#: src/CanvasToolButton.vala:828
+#: src/CanvasToolButton.vala:970
 #, fuzzy
 msgid "Outline"
 msgstr "Ovaler Umriss"
 
-#: src/CanvasToolButton.vala:860
+#: src/CanvasToolButton.vala:1002
 #, fuzzy
 msgid "Select Font"
 msgstr "Auswahl"
 
-#: src/CanvasToolButton.vala:874
+#: src/CanvasToolButton.vala:1016
 #, fuzzy
 msgid "Font Color"
 msgstr "Schriftfarbe anwenden"
 
-#: src/Canvas.vala:224
+#: src/Canvas.vala:218
 msgid "Annotate new image?"
 msgstr "Neues Bild annotieren?"
 
-#: src/Canvas.vala:229
+#: src/Canvas.vala:223
 msgid "Pasting a new image to annotate will destroy the current annotation."
 msgstr ""
 "Das Einfügen eines neuen Bildes zum Annotieren wird die aktuelle Annotation "
@@ -1996,9 +2054,9 @@ msgstr "Element hinzufügen"
 msgid "blur amount"
 msgstr "Weichzeichnungsfaktor"
 
-#: src/undo_actions/UndoItemDelete.vala:38
-msgid "item delete"
-msgstr "Element löschen"
+#: src/undo_actions/UndoItemGroup.vala:29
+msgid "group"
+msgstr ""
 
 #: src/undo_actions/UndoItemMagnifierFocus.vala:31
 msgid "magnifier focus change"
@@ -2016,23 +2074,9 @@ msgstr "Element einfügen"
 msgid "item property change"
 msgstr "Elementeigenschaftsänderung"
 
-#: src/undo_actions/UndoItemSendBack.vala:30
-msgid "move item to back"
-msgstr "Element nach hinten verschieben"
-
-#: src/undo_actions/UndoItemSendBackward.vala:30
-#, fuzzy
-msgid "move item backward"
-msgstr "Element nach hinten verschieben"
-
-#: src/undo_actions/UndoItemSendForward.vala:30
-#, fuzzy
-msgid "move item forward"
-msgstr "Element nach hinten verschieben"
-
-#: src/undo_actions/UndoItemSendFront.vala:30
-msgid "move item to front"
-msgstr "Element nach vorne verschieben"
+#: src/undo_actions/UndoItemsDelete.vala:38
+msgid "item delete"
+msgstr "Element löschen"
 
 #: src/undo_actions/UndoItemSequenceNum.vala:31
 msgid "sequence number change"
@@ -2045,6 +2089,10 @@ msgstr "Startpunktänderung"
 #: src/undo_actions/UndoItemTextResize.vala:31
 msgid "text resize"
 msgstr "Textgröße ändern"
+
+#: src/undo_actions/UndoItemUngroup.vala:29
+msgid "ungroup"
+msgstr ""
 
 #: src/undo_actions/UndoTextClearTags.vala:31
 msgid "clear formatting"
@@ -2371,6 +2419,20 @@ msgstr "Text über dem Cursor zur Auswahl hinzufügen"
 #: data/io.github.phase1geo.annotator.shortcuts.ui:502
 msgid "Add Text Below Cursor To Selection"
 msgstr "Text unter dem Cursor zur Auswahl hinzufügen"
+
+#~ msgid "move item to back"
+#~ msgstr "Element nach hinten verschieben"
+
+#, fuzzy
+#~ msgid "move item backward"
+#~ msgstr "Element nach hinten verschieben"
+
+#, fuzzy
+#~ msgid "move item forward"
+#~ msgstr "Element nach hinten verschieben"
+
+#~ msgid "move item to front"
+#~ msgstr "Element nach vorne verschieben"
 
 #~ msgid "Rectangle"
 #~ msgstr "Rechteck"
