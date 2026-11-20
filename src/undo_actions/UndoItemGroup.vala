@@ -19,31 +19,38 @@
 * Authored by: Trevor Williams <phase1geo@gmail.com>
 */
 
-public class UndoItemSendBack : UndoItem {
+public class UndoItemGroup : UndoItem {
 
-  private CanvasItem _item;
-  private int        _position;
+  private CanvasItemGroup _group;
 
   //-------------------------------------------------------------
   // Default constructor
-  public UndoItemSendBack( CanvasItem item, int position ) {
-    base( _( "move item to back" ) );
-    _item     = item;
-    _position = position;
+  public UndoItemGroup( CanvasItemGroup group ) {
+    base( _( "group" ) );
+    _group = group;
   }
 
   //-------------------------------------------------------------
   // Causes the stored item to be put into the before state
   public override void undo( Canvas canvas ) {
-    canvas.items.remove_item( _item );
-    canvas.items.insert_item( _item, _position );
+    var pos = canvas.items.item_z_position( _group );
+    foreach( var item in _group.group ) {
+      item.mode = CanvasItemMode.SELECTED;
+      canvas.items.insert_item( item, pos );
+      pos++;
+    }
+    canvas.items.remove_item( _group );
     canvas.queue_draw();
   }
 
   //-------------------------------------------------------------
   // Causes the stored item to be put into the after state
   public override void redo( Canvas canvas ) {
-    canvas.items.move_to_back( _item );
+    var pos  = canvas.items.item_z_position( _group.group.nth_data( 0 ) );
+    var item = new CanvasItemGroup( canvas, _group.group );
+    item.mode = CanvasItemMode.SELECTED;
+    canvas.items.insert_item( item, pos );
+    _group = item;
     canvas.queue_draw();
   }
 

@@ -47,6 +47,7 @@ public enum CanvasItemType {
   SEQUENCE,
   STICKER,
   IMAGE,
+  GROUP,
   NONE,
   NUM;
 
@@ -67,6 +68,7 @@ public enum CanvasItemType {
       case SEQUENCE     :  return( "sequence" );
       case STICKER      :  return( "sticker" );
       case IMAGE        :  return( "image" );
+      case GROUP        :  return( "group" );
       default           :  return( "none" );
     }
   }
@@ -88,6 +90,7 @@ public enum CanvasItemType {
       case "sequence"     :  return( SEQUENCE );
       case "sticker"      :  return( STICKER );
       case "image"        :  return( IMAGE );
+      case "group"        :  return( GROUP );
       default             :  return( NONE );
     }
   }
@@ -206,29 +209,32 @@ public enum CanvasToolAutoSelectMode {
 
 public class CanvasItems {
 
-  private Canvas                   _canvas;
-  private List<CanvasItem>         _items;
-  private CanvasItem?              _active         = null;
-  private int                      _selector_index = -1;
-  private double                   _last_x;
-  private double                   _last_y;
-  private int                      _press_count    = -1;
-  private FormatBar?               _format_bar     = null;
-  private Cursor                   _xterm_cursor   = new Cursor.from_name( "text", null );
-  private CanvasTool               _current_tool   = CanvasTool.SELECTOR;
-  private CanvasRect?              _select_box     = null;
-  private double                   _select_x;
-  private double                   _select_y;
+  private Canvas            _canvas;
+  private List<CanvasItem>  _items;
+  private CanvasItem?       _active         = null;
+  private int               _selector_index = -1;
+  private double            _last_x;
+  private double            _last_y;
+  private int               _press_count    = -1;
+  private FormatBar?        _format_bar     = null;
+  private Cursor            _xterm_cursor   = new Cursor.from_name( "text", null );
+  private CanvasTool        _current_tool   = CanvasTool.SELECTOR;
+  private CanvasRect?       _select_box     = null;
+  private double            _select_x;
+  private double            _select_y;
+  private SimpleActionGroup _actions;
 
   private const GLib.ActionEntry[] action_entries = {
-    { "action_copy",          action_copy },
-    { "action_cut",           action_cut },
-    { "action_delete",        action_delete },
-    { "action_send_to_front", action_send_to_front },
-    { "action_send_forward",  action_send_forward },
-    { "action_send_backward", action_send_backward },
-    { "action_send_to_back",  action_send_to_back },
-    { "action_save_custom",   action_save_custom }
+    { "action_copy",          do_copy },
+    { "action_cut",           do_cut },
+    { "action_delete",        do_delete },
+    { "action_group",         do_group },
+    { "action_ungroup",       do_ungroup },
+    { "action_send_to_front", do_send_to_front },
+    { "action_send_forward",  do_send_forward },
+    { "action_send_backward", do_send_backward },
+    { "action_send_to_back",  do_send_to_back },
+    { "action_save_custom",   do_save_custom }
   };
 
   public CanvasItemProperties     props            { get; private set; }
@@ -277,9 +283,20 @@ public class CanvasItems {
     custom_items.load( this );
 
     // Set the stage for menu actions
-    var actions = new SimpleActionGroup ();
-    actions.add_action_entries( action_entries, this );
-    _canvas.insert_action_group( "items", actions );
+    _actions = new SimpleActionGroup();
+    _actions.add_action_entries( action_entries, this );
+    _canvas.insert_action_group( "items", _actions );
+
+    var app = _canvas.win.application;
+    app.set_accels_for_action( "items.action_copy",          { "<Control>c" } );
+    app.set_accels_for_action( "items.action_cut",           { "<Control>x" } );
+    app.set_accels_for_action( "items.action_delete",        { "Delete" } );
+    app.set_accels_for_action( "items.action_group",         { "<Control>g" } );
+    app.set_accels_for_action( "items.action_ungroup",       { "<Control><Shift>g" } );
+    app.set_accels_for_action( "items.action_send_to_front", { "<Control><Shift>f" } );
+    app.set_accels_for_action( "items.action_send_forward",  { "<Control>f" } );
+    app.set_accels_for_action( "items.action_send_backward", { "<Control>b" } );
+    app.set_accels_for_action( "items.action_send_to_back",  { "<Control><Shift>b" } );
 
   }
 
@@ -436,6 +453,15 @@ public class CanvasItems {
     return( item );
   }
 
+  private CanvasItem create_group( bool loading = false ) {
+    var group = new List<CanvasItem>();
+    var item  = new CanvasItemGroup( _canvas, group );
+    if( !loading ) {
+      position_item( item, item.bbox.width, item.bbox.height );
+    }
+    return( item );
+  }
+
   public void add_item( CanvasItem item, int position, bool undo, bool draw = true ) {
     var after_tool_click = (auto_select_mode == CanvasToolAutoSelectMode.AFTER_TOOL_CLICK);
     if( after_tool_click ) {
@@ -571,15 +597,15 @@ public class CanvasItems {
   }
 
   //-------------------------------------------------------------
-  // Adds the given item at the top of the item stack
-  public void move_to_front( CanvasItem item ) {
-    _items.append( item );
-  }
-
-  //-------------------------------------------------------------
-  // Adds the given item at the bottom of the item stack
-  public void move_to_back( CanvasItem item ) {
-    _items.prepend( item );
+  // Moves the item at the old position to the new position.
+  public void move_to_z_position( int old_pos, int new_pos ) {
+    var item = _items.nth_data( old_pos );
+    _items.remove( item );
+    if( old_pos < new_pos ) {
+      _items.insert( item, (new_pos - 1) );
+    } else {
+      _items.insert( item, new_pos );
+    }
   }
 
   //-------------------------------------------------------------
@@ -605,29 +631,32 @@ public class CanvasItems {
   }
 
   //-------------------------------------------------------------
+  // Returns the currently selected items.
+  public List<CanvasItem> get_selected_items() {
+    var list = new List<CanvasItem>();
+    foreach( CanvasItem item in _items ) {
+      if( item.mode == CanvasItemMode.SELECTED ) {
+        list.append( item );
+      }
+    }
+    return( list );
+  }
+
+  //-------------------------------------------------------------
   // Deletes all of the selected items
   private bool remove_selected() {
-    var retval    = false;
-    var position  = 0;
-    var undo_item = new UndoItemDelete();
-    unowned var item = _items.first();
-    while( item != null ) {
-      if( item.data.mode == CanvasItemMode.SELECTED ) {
-        unowned var next = item.next;
-        undo_item.add( item.data, position );
-        _items.delete_link( item );
-        _canvas.set_cursor( null );
-        item = next;
-        retval = true;
-      } else {
-        item = item.next;
+    var selected = get_selected_items();
+    if( !selected.is_empty() ) {
+      var pos_list = new List<int>();
+      foreach( var sel_item in selected ) {
+        var position = item_z_position( sel_item );
+        pos_list.append( position );
+        _items.remove( sel_item );
       }
-      position++;
+      _canvas.undo_buffer.add_item( new UndoItemsDelete( selected, pos_list ) );
+      return( true );
     }
-    if( retval ) {
-      _canvas.undo_buffer.add_item( undo_item );
-    }
-    return( retval );
+    return( false );
   }
 
   //-------------------------------------------------------------
@@ -661,7 +690,7 @@ public class CanvasItems {
   //-------------------------------------------------------------
   // Returns the position of the given canvas item in the list of
   // items
-  private int item_position( CanvasItem item ) {
+  public int item_z_position( CanvasItem item ) {
     var pos = 0;
     foreach( CanvasItem it in _items ) {
       if( it == item ) {
@@ -829,7 +858,13 @@ public class CanvasItems {
     else if( !shift && Utils.has_key( kvs, Key.p ) ) { _canvas.editor.set_toolbar_item( CanvasItemType.PENCIL );     return( true ); }
     else if( !shift && Utils.has_key( kvs, Key.q ) ) { _canvas.editor.set_toolbar_item( CanvasItemType.SEQUENCE );   return( true ); }
     else if( !shift && Utils.has_key( kvs, Key.i ) ) { _canvas.editor.set_toolbar_item( CanvasItemType.IMAGE );      return( true ); }
-    else if( !shift && Utils.has_key( kvs, Key.v ) ) { do_paste(); }
+    else if( !shift && Utils.has_key( kvs, Key.v ) ) { do_paste();          return( true ); }
+    else if( !shift && Utils.has_key( kvs, Key.g ) ) { do_group();          return( true ); }
+    else if(  shift && Utils.has_key( kvs, Key.g ) ) { do_ungroup();        return( true ); }
+    else if( !shift && Utils.has_key( kvs, Key.f ) ) { do_send_forward();   return( true ); }
+    else if(  shift && Utils.has_key( kvs, Key.f ) ) { do_send_to_front();  return( true ); }
+    else if( !shift && Utils.has_key( kvs, Key.b ) ) { do_send_backward();  return( true ); }
+    else if(  shift && Utils.has_key( kvs, Key.b ) ) { do_send_to_back();   return( true ); }
     else if( !shift && Utils.has_key( kvs, Key.Shift_L ) ) { return( handle_shift() ); }
     else if( !shift && Utils.has_key( kvs, Key.Control_L ) ) { return( handle_control() ); }
 
@@ -1049,7 +1084,7 @@ public class CanvasItems {
       foreach( CanvasItem item in _items ) {
         if( item.is_within( x, y ) ) {
           _active = item;
-          if( _active.mode == CanvasItemMode.NONE ) {
+          if( (_active.mode == CanvasItemMode.NONE) && !shift_set ) {
             clear_selection();
           }
           if( in_edit_mode() ) {
@@ -1068,8 +1103,12 @@ public class CanvasItems {
           } else {
             switch( press_count ) {
               case 1 :
-                _active.mode = CanvasItemMode.SELECTED;
-                _canvas.set_cursor_from_name( "grabbing" );
+                if( shift_set ) {
+                  _active.mode = (_active.mode == CanvasItemMode.SELECTED) ? CanvasItemMode.NONE : CanvasItemMode.SELECTED;
+                } else {
+                  _active.mode = CanvasItemMode.SELECTED;
+                  _canvas.set_cursor_from_name( "grabbing" );
+                }
                 selection_changed( item, "cursor-pressed-1" );
                 break;
               case 2 :
@@ -1289,10 +1328,9 @@ public class CanvasItems {
   public void show_contextual_menu( double x, double y ) {
 
     CanvasItem? within = null;
-
-    foreach( CanvasItem item in _items ) {
+    foreach( var item in _items ) {
       if( item.mode == CanvasItemMode.SELECTED ) {
-        create_contextual_menu( item );
+        create_contextual_menu( x, y );
         return;
       }
       if( item.is_within( x, y ) ) {
@@ -1300,12 +1338,11 @@ public class CanvasItems {
       }
     }
 
-    // If a node was not selected, display it for the item under the given cursor position
     if( within != null ) {
-      create_contextual_menu( within );
       within.mode = CanvasItemMode.SELECTED;
       selection_changed( within, "show-contextual" );
       _canvas.queue_draw();
+      create_contextual_menu( x, y );
     }
 
   }
@@ -1313,173 +1350,258 @@ public class CanvasItems {
   //-------------------------------------------------------------
   // Creates the contextual menu and displays it for the current
   // item.
-  private void create_contextual_menu( CanvasItem item ) {
+  private void create_contextual_menu( double x, double y ) {
 
-    var pos  = item_position( item );
-    var last = (int)(_items.length() - 1);
-    var menu = new CanvasItemMenu( _canvas );
+    var selected     = get_selected_items();
+    var num_selected = selected.length();
+
+    if( num_selected == 0 ) return;
+
+    var item     = selected.nth_data( 0 );
+    var pos      = item_z_position( item );
+    var front    = (int)(_items.length() - 1);
+    var back     = 0;
+    var forward  = next_item_z_position( item, true ) - 1;
+    var backward = next_item_z_position( item, false );
+    var grouped  = contains_group( selected );
+    var menu     = new CanvasItemMenu( _canvas );
 
     // Add the item's contextual menu items
-    item.add_contextual_menu_items( menu );
-    menu.complete_section();
+    if( num_selected == 1 ) {
+      item.add_contextual_menu_items( menu );
+      menu.complete_section();
+    }
 
     if( !in_edit_mode() ) {
 
-      menu.add_menu_item( item, _( "Copy" ), "<Control>c", true, do_copy );
-      menu.add_menu_item( item, _( "Cut" ),  "<Control>x", true, do_cut );
+      menu.add_menu_action( _actions, _( "Copy" ), "items.action_copy", true );
+      menu.add_menu_action( _actions, _( "Cut" ),  "items.action_cut",  true );
       menu.complete_section();
 
-      menu.add_menu_item( item, _( "Delete" ), "Delete", true, do_delete );
+      menu.add_menu_action( _actions, _( "Delete" ), "items.action_delete", true );
       menu.complete_section();
 
-      menu.add_menu_item( item, _( "Send to Front" ), null, (pos != last), do_send_to_front );
-      menu.add_menu_item( item, _( "Send Forward" ),  null, (pos != last), do_send_forward );
-      menu.add_menu_item( item, _( "Send Backward" ), null, (pos != 0), do_send_backward );
-      menu.add_menu_item( item, _( "Send to Back" ),  null, (pos != 0), do_send_to_back );
+      menu.add_menu_action( _actions, _( "Group" ),   "items.action_group",   (selected.length() > 1) );
+      menu.add_menu_action( _actions, _( "Ungroup" ), "items.action_ungroup", grouped );
       menu.complete_section();
 
-      if( item.itype.category() != CanvasItemCategory.NONE ) {
-        menu.add_menu_item( item, _( "Save As Custom" ), null, true, do_save_custom );
+      if( num_selected == 1 ) {
+        menu.add_menu_action( _actions, _( "Send to Front" ), "items.action_send_to_front", (pos != front) );
+        menu.add_menu_action( _actions, _( "Send Forward" ),  "items.action_send_forward",  (pos != forward) );
+        menu.add_menu_action( _actions, _( "Send Backward" ), "items.action_send_backward", (pos != backward) );
+        menu.add_menu_action( _actions, _( "Send to Back" ),  "items.action_send_to_back",  (pos != back) );
         menu.complete_section();
+
+        if( item.itype.category() != CanvasItemCategory.NONE ) {
+          menu.add_menu_action( _actions, _( "Save As Custom" ), "items.action_save_custom", true );
+          menu.complete_section();
+        }
       }
 
     }
 
     // Create and display the popover
-    var popover = menu.create_popover( item.bbox.to_rectangle( _canvas.zoom_factor ) );
+    var pointing = new CanvasRect.from_coords( x, y, 1, 1 );
+    var popover = menu.create_popover( pointing.to_rectangle( _canvas.zoom_factor ) );
     popover.popup();
 
   }
 
   //-------------------------------------------------------------
-  // Copy operation
-  private void action_copy() {
-    do_copy( get_selected_item() );
-  }
-
-  //-------------------------------------------------------------
   // Creates a copy of the item and sends it to the clipboard
-  public void do_copy( CanvasItem? item ) {
+  public void do_copy() {
+    var selected = get_selected_items();
     if( in_edit_mode() ) {
       var text = get_active_text();
       if( text.is_selected() ) {
         AnnotatorClipboard.copy_text( text.get_selected_text() );
       }
-    } else if( item != null ) {
+    } else if( !selected.is_empty() ) {
       var items = new Array<CanvasItem>();
-      items.append_val( item );
+      foreach( var sel_item in selected ) {
+        items.append_val( sel_item );
+      }
       AnnotatorClipboard.copy_items( serialize_for_copy( items ) );
     }
-  }
-
-  private void action_cut() {
-    do_cut( get_selected_item() );
   }
 
   //-------------------------------------------------------------
   // Creates a copy of the item, sends it to the clipboard, and
   // removes the item
-  public void do_cut( CanvasItem? item ) {
-    do_copy( item );
-    do_delete( item );
+  public void do_cut() {
+    do_copy();
+    do_delete();
   }
 
   //-------------------------------------------------------------
   // Pastes the given item from the clipboard (if one exists)
-  private void do_paste() {
+  public void do_paste() {
     AnnotatorClipboard.paste( _canvas.editor );
-  }
-
-  private void action_delete() {
-    do_delete( get_selected_item() );
   }
 
   //-------------------------------------------------------------
   // Deletes the item
-  private void do_delete( CanvasItem? item ) {
+  private void do_delete() {
+    var selected = get_selected_items();
     if( in_edit_mode() ) {
       var text = get_active_text();
       if( text.is_selected() ) {
         text.backspace( _canvas.undo_text );
       }
-    } else if( item != null ) {
-      var position  = 0;
-      var undo_item = new UndoItemDelete();
-      for( unowned List<CanvasItem> it=_items.first(); it!=null; it=it.next ) {
-        if( it.data == item ) {
-          undo_item.add( item, position );
-          _items.delete_link( it );
-          _canvas.undo_buffer.add_item( undo_item );
-          return;
+    } else if( !selected.is_empty() ) {
+      var pos_list = new List<int>();
+      foreach( var sel_item in selected ) {
+        var position = item_z_position( sel_item );
+        pos_list.append( position );
+        _items.remove( sel_item );
+      }
+      _canvas.undo_buffer.add_item( new UndoItemsDelete( selected, pos_list ) );
+    }
+  }
+
+  //-------------------------------------------------------------
+  // Starting at the bottom-most Z position, find all unselected
+  // items that overlap with the item at the give
+  private int next_item_z_position( CanvasItem current, bool forward ) {
+    var pos = 0;
+    if( forward ) {
+      var current_pos = -1;
+      foreach( var item in _items ) {
+        if( item == current ) {
+          current_pos = pos;
+        } else if( (current_pos != -1) && (item.mode != CanvasItemMode.SELECTED) && current.bbox.overlaps( item.bbox ) ) {
+          return( pos + 1 );
         }
-        position++;
+        pos++;
+      }
+      return( current_pos + 1 );
+    } else {
+      var last_pos = -1;
+      foreach( var item in _items ) {
+        if( item == current ) {
+          return( (last_pos == -1) ? int.max( 0, (pos - 1) ) : last_pos );
+        } else if( (item.mode != CanvasItemMode.SELECTED) && current.bbox.overlaps( item.bbox ) ) {
+          last_pos = pos;
+        }
+        pos++;
+      }
+      return( 0 );
+    }
+  }
+
+  //-------------------------------------------------------------
+  // Groups the selected items into a single item.
+  private void do_group() {
+    var selected = get_selected_items();
+    if( selected.length() > 1 ) {
+      var pos   = item_z_position( selected.nth_data( 0 ) );
+      var group = new CanvasItemGroup( _canvas, selected );
+      group.mode = CanvasItemMode.SELECTED;
+      insert_item( group, pos );
+      _canvas.undo_buffer.add_item( new UndoItemGroup( group ) );
+      _canvas.queue_draw();
+    }
+  }
+
+  //-------------------------------------------------------------
+  // Returns true if the list of canvas items contains at least one
+  // CanvasItemGroup.
+  private bool contains_group( List<CanvasItem> selected ) {
+    foreach( var item in selected ) {
+      if( item.itype == CanvasItemType.GROUP ) {
+        return( true );
+      }
+    }
+    return( false );
+  }
+
+  //-------------------------------------------------------------
+  // Ungroups any selected items that are grouped.
+  private void do_ungroup() {
+    var selected = get_selected_items();
+    foreach( var item in selected ) {
+      if( item.itype == CanvasItemType.GROUP ) {
+        var pos        = item_z_position( item );
+        var group_item = (CanvasItemGroup)item;
+        foreach( var grouped in group_item.group ) {
+          grouped.mode = CanvasItemMode.SELECTED;
+          insert_item( grouped, pos );
+          pos++;
+        }
+        remove_item( group_item );
+        _canvas.undo_buffer.add_item( new UndoItemUngroup( group_item ) );
+        _canvas.queue_draw();
       }
     }
   }
 
-  private void action_send_to_front() {
-    do_send_to_front( get_selected_item() );
-  }
-
   //-------------------------------------------------------------
   // Moves the item to the top of the item list
-  private void do_send_to_front( CanvasItem item ) {
-    _canvas.undo_buffer.add_item( new UndoItemSendFront( item, item_position( item ) ) );
-    remove_item( item );
-    move_to_front( item );
-    _canvas.queue_draw();
-  }
-
-  private void action_send_forward() {
-    do_send_forward( get_selected_item() );
+  private void do_send_to_front() {
+    var selected = get_selected_items();
+    if( selected.length() == 1 ) {
+      var item    = selected.nth_data( 0 );
+      var old_pos = item_z_position( item );
+      var new_pos = (int)_items.length();
+      _canvas.undo_buffer.add_item( new UndoItemChangeZPos( item, old_pos, new_pos, _( "send to front" ) ) );
+      move_to_z_position( old_pos, new_pos );
+      _canvas.queue_draw();
+    }
   }
 
   //-------------------------------------------------------------
   // Moves the item forward by one
-  private void do_send_forward( CanvasItem item ) {
-    var pos = item_position( item );
-    _canvas.undo_buffer.add_item( new UndoItemSendForward( item, pos ) );
-    remove_item( item );
-    insert_item( item, (pos + 1) );
-    _canvas.queue_draw();
-  }
-
-  private void action_send_backward() {
-    do_send_backward( get_selected_item() );
+  private void do_send_forward() {
+    var selected = get_selected_items();
+    if( selected.length() == 1 ) {
+      var item    = selected.nth_data( 0 );
+      var old_pos = item_z_position( item );
+      var new_pos = next_item_z_position( item, true );
+      _canvas.undo_buffer.add_item( new UndoItemChangeZPos( item, old_pos, new_pos, _( "send forward" ) ) );
+      move_to_z_position( old_pos, new_pos );
+      _canvas.queue_draw();
+    }
   }
 
   //-------------------------------------------------------------
   // Moves the item backward by one
-  private void do_send_backward( CanvasItem item ) {
-    var pos = item_position( item );
-    _canvas.undo_buffer.add_item( new UndoItemSendBackward( item, pos ) );
-    remove_item( item );
-    insert_item( item, (pos - 1) );
-    _canvas.queue_draw();
-  }
-
-  private void action_send_to_back() {
-    do_send_to_back( get_selected_item() );
+  private void do_send_backward() {
+    var selected = get_selected_items();
+    if( selected.length() == 1 ) {
+      var item    = selected.nth_data( 0 );
+      var old_pos = item_z_position( item );
+      var new_pos = next_item_z_position( item, false );
+      _canvas.undo_buffer.add_item( new UndoItemChangeZPos( item, old_pos, new_pos, _( "send backward" ) ) );
+      move_to_z_position( old_pos, new_pos );
+      _canvas.queue_draw();
+    }
   }
 
   //-------------------------------------------------------------
   // Moves the item to the bottom of the item list
-  private void do_send_to_back( CanvasItem item ) {
-    _canvas.undo_buffer.add_item( new UndoItemSendBack( item, item_position( item ) ) );
-    remove_item( item );
-    move_to_back( item );
-    _canvas.queue_draw();
-  }
-
-  private void action_save_custom() {
-    do_save_custom( get_selected_item() );
+  private void do_send_to_back() {
+    var selected = get_selected_items();
+    if( selected.length() == 1 ) {
+      var item    = selected.nth_data( 0 );
+      var old_pos = item_z_position( item );
+      var new_pos = 0;
+      _canvas.undo_buffer.add_item( new UndoItemChangeZPos( item, old_pos, new_pos, _( "send to back" ) ) );
+      move_to_z_position( old_pos, new_pos );
+      _canvas.queue_draw();
+    }
   }
 
   //-------------------------------------------------------------
   // Saves the given item as a custom item
-  private void do_save_custom( CanvasItem item ) {
-    var save_item = new CustomItem.with_item( item.duplicate() );
-    custom_items.add( _canvas.win, save_item );
+  private void do_save_custom() {
+    var selected = get_selected_items();
+    if( selected.length() == 1 ) {
+      var item = selected.nth_data( 0 );
+      if( item.itype.category() != CanvasItemCategory.NONE ) {
+        var save_item = new CustomItem.with_item( item.duplicate() );
+        custom_items.add( _canvas.win, save_item );
+      }
+    }
   }
 
   //-------------------------------------------------------------
@@ -1503,7 +1625,11 @@ public class CanvasItems {
   public void deserialize_for_paste( string serialized ) {
     Xml.Doc* doc = Xml.Parser.parse_doc( serialized );
     if( doc == null ) return;
-    var undo_item = new UndoItemPaste();
+    var undo_item  = new UndoItemPaste();
+    var diffx      = 0.0;
+    var diffy      = 0.0;
+    var first_item = true;
+    clear_selection();
     for( Xml.Node* it=doc->get_root_element()->children; it!=null; it=it->next ) {
       if( (it->type == Xml.ElementType.ELEMENT_NODE) && (it->name == "item") ) {
         CanvasItem? item = null;
@@ -1522,12 +1648,17 @@ public class CanvasItems {
           case CanvasItemType.SEQUENCE     :  item = create_sequence();      break;
           case CanvasItemType.STICKER      :  item = create_sticker();       break;
           case CanvasItemType.IMAGE        :  item = create_image();         break;
+          case CanvasItemType.GROUP        :  item = create_group();         break;
           default                          :  assert_not_reached();
         }
         if( item != null ) {
           item.load( it );
-          var rect = new CanvasRect.from_coords( _last_x, _last_y, item.bbox.width, item.bbox.height );
-          item.bbox = rect;
+          if( first_item ) {
+            diffx = _last_x - item.bbox.x;
+            diffy = _last_y - item.bbox.y;
+            first_item = false;
+          }
+          item.move_item( diffx, diffy, false );
           add_item( item, -1, false, false );
           _selector_index = -1;
           _active = null;
@@ -1603,16 +1734,17 @@ public class CanvasItems {
       case CanvasItemType.STAR         :  item = create_star( true );        break;
       case CanvasItemType.TALK         :  item = create_bubble( CanvasBubbleType.TALK, true );   break;
       case CanvasItemType.THINK        :  item = create_bubble( CanvasBubbleType.THINK, true );  break;
-      case CanvasItemType.LINE         :  item = create_line( true );              break;
-      case CanvasItemType.ARROW        :  item = create_arrow( true );             break;
-      case CanvasItemType.MODERN_ARROW :  item = create_modern_arrow( true );      break;
-      case CanvasItemType.TEXT         :  item = create_text( true );              break;
-      case CanvasItemType.BLUR         :  item = create_blur( true );              break;
-      case CanvasItemType.MAGNIFIER    :  item = create_magnifier( true );         break;
-      case CanvasItemType.PENCIL       :  item = create_pencil( true );            break;
-      case CanvasItemType.SEQUENCE     :  item = create_sequence( true );          break;
-      case CanvasItemType.STICKER      :  item = create_sticker( true );           break;
-      case CanvasItemType.IMAGE        :  item = create_image( true );             break;
+      case CanvasItemType.LINE         :  item = create_line( true );          break;
+      case CanvasItemType.ARROW        :  item = create_arrow( true );         break;
+      case CanvasItemType.MODERN_ARROW :  item = create_modern_arrow( true );  break;
+      case CanvasItemType.TEXT         :  item = create_text( true );          break;
+      case CanvasItemType.BLUR         :  item = create_blur( true );          break;
+      case CanvasItemType.MAGNIFIER    :  item = create_magnifier( true );     break;
+      case CanvasItemType.PENCIL       :  item = create_pencil( true );        break;
+      case CanvasItemType.SEQUENCE     :  item = create_sequence( true );      break;
+      case CanvasItemType.STICKER      :  item = create_sticker( true );       break;
+      case CanvasItemType.IMAGE        :  item = create_image( true );         break;
+      case CanvasItemType.GROUP        :  item = create_group( true );         break;
       default                          :  assert_not_reached();
     }
     if( item != null ) {

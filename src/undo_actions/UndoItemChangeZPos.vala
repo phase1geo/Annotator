@@ -19,49 +19,40 @@
 * Authored by: Trevor Williams <phase1geo@gmail.com>
 */
 
-public class UndoItemDelete : UndoItem {
+public class UndoItemChangeZPos : UndoItem {
 
-  private struct UndoItemDeleteElem {
-    CanvasItem item;
-    int        position;
-    public UndoItemDeleteElem( CanvasItem i, int p ) {
-      item     = i;
-      position = p;
-    }
-  }
-
-  private Array<UndoItemDeleteElem?> _list;
+  private CanvasItem _item;
+  private int _old_pos;
+  private int _new_pos;
 
   //-------------------------------------------------------------
   // Default constructor
-  public UndoItemDelete() {
-    base( _( "item delete" ) );
-    _list = new Array<UndoItemDeleteElem?>();
+  public UndoItemChangeZPos( CanvasItem item, int old_pos, int new_pos, string msg ) {
+    base( msg );
+    _item    = item;
+    _old_pos = old_pos;
+    _new_pos = new_pos;
   }
 
   //-------------------------------------------------------------
-  // Adds a canvas item to this undo list
-  public void add( CanvasItem item, int position ) {
-    _list.append_val( UndoItemDeleteElem( item, position ) );
+  // Moves the item from its current Z-position to the specified
+  // Z-position
+  private void move( Canvas canvas, int to_pos ) {
+    var from_pos = canvas.items.item_z_position( _item );
+    canvas.items.move_to_z_position( from_pos, to_pos );
+    canvas.queue_draw();
   }
 
   //-------------------------------------------------------------
   // Causes the stored item to be put into the before state
   public override void undo( Canvas canvas ) {
-    for( int i=0; i<_list.length; i++ ) {
-      var elem = _list.index( i );
-      canvas.items.add_item( elem.item, elem.position, false, false );
-    }
-    canvas.queue_draw();
+    move( canvas, _old_pos );
   }
 
   //-------------------------------------------------------------
   // Causes the stored item to be put into the after state
   public override void redo( Canvas canvas ) {
-    for( int i=0; i<_list.length; i++ ) {
-      canvas.items.remove_item( _list.index( i ).item );
-    }
-    canvas.queue_draw();
+    move( canvas, _new_pos );
   }
 
 }

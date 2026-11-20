@@ -19,32 +19,38 @@
 * Authored by: Trevor Williams <phase1geo@gmail.com>
 */
 
-public class UndoItemSendForward : UndoItem {
+public class UndoItemUngroup : UndoItem {
 
-  private CanvasItem _item;
-  private int        _position;
+  private CanvasItemGroup _group;
 
   //-------------------------------------------------------------
   // Default constructor
-  public UndoItemSendForward( CanvasItem item, int position ) {
-    base( _( "move item forward" ) );
-    _item     = item;
-    _position = position;
-  }
-
-  //-------------------------------------------------------------
-  // Causes the stored item to be put into the before state
-  public override void undo( Canvas canvas ) {
-    canvas.items.remove_item( _item );
-    canvas.items.insert_item( _item, _position );
-    canvas.queue_draw();
+  public UndoItemUngroup( CanvasItemGroup group ) {
+    base( _( "ungroup" ) );
+    _group = group;
   }
 
   //-------------------------------------------------------------
   // Causes the stored item to be put into the after state
+  public override void undo( Canvas canvas ) {
+    var pos  = canvas.items.item_z_position( _group.group.nth_data( 0 ) );
+    var item = new CanvasItemGroup( canvas, _group.group );
+    item.mode = CanvasItemMode.SELECTED;
+    canvas.items.insert_item( item, pos );
+    _group = item;
+    canvas.queue_draw();
+  }
+
+  //-------------------------------------------------------------
+  // Causes the stored item to be put into the before state
   public override void redo( Canvas canvas ) {
-    canvas.items.remove_item( _item );
-    canvas.items.insert_item( _item, (_position + 1) );
+    var pos = canvas.items.item_z_position( _group );
+    foreach( var item in _group.group ) {
+      item.mode = CanvasItemMode.SELECTED;
+      canvas.items.insert_item( item, pos );
+      pos++;
+    }
+    canvas.items.remove_item( _group );
     canvas.queue_draw();
   }
 

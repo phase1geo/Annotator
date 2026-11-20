@@ -41,7 +41,7 @@ public class MainWindow : Gtk.ApplicationWindow {
 
   private const GLib.ActionEntry[] action_entries = {
     { "action_open",              do_open },
-    { "action_screenshot",           action_screenshot },
+    { "action_screenshot",        action_screenshot },
     { "action_quit",              do_quit },
     { "action_undo",              do_undo },
     { "action_redo",              do_redo },

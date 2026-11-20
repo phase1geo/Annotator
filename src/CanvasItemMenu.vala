@@ -36,6 +36,8 @@ public class CanvasItemMenu {
   private Array<Widget>     _widgets;
   private SimpleActionGroup _actions;
 
+  private signal void closed();
+
   //-------------------------------------------------------------
   // Default constructor
   public CanvasItemMenu( Canvas canvas ) {
@@ -79,7 +81,11 @@ public class CanvasItemMenu {
     }
 
     // Set the stage for menu actions
-    _canvas.insert_action_group( "item_menu", _actions );
+    _canvas.win.insert_action_group( "item_menu", _actions );
+
+    popover.closed.connect(() => {
+      closed();
+    });
 
     return( popover );
 
@@ -116,6 +122,24 @@ public class CanvasItemMenu {
     if( shortcut != null ) {
       _canvas.win.application.set_accels_for_action( "item_menu.%s".printf( name ), { shortcut } );
     }
+
+  }
+
+  //-------------------------------------------------------------
+  // Returns a menuitem with the given label, action and (optional)
+  // keyboard shortcut.
+  public void add_menu_action( SimpleActionGroup group, string label, string action_name, bool sensitive ) {
+
+    var parts   = action_name.split( "." );
+    var saction = (SimpleAction)group.lookup_action( parts[1] );
+    assert( saction != null );
+    saction.set_enabled( sensitive );
+
+    _submenu.append( label, action_name );
+
+    closed.connect(() => {
+      saction.set_enabled( true );
+    });
 
   }
 

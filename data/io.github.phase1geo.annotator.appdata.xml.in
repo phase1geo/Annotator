@@ -49,6 +49,7 @@
   <content_rating type="oars-1.1" />
   <url type="homepage">https://github.com/phase1geo/Annotator/</url>
   <url type="bugtracker">https://github.com/phase1geo/Annotator/issues/</url>
+  <url type="donation">https://github.com/sponsors/phase1geo/</url>
   <custom>
     <value key="x-appcenter-color-primary">#007367</value>
     <value key="x-appcenter-color-primary-text">#ffffff</value>

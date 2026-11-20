@@ -19,32 +19,47 @@
 * Authored by: Trevor Williams <phase1geo@gmail.com>
 */
 
-public class UndoItemSendBackward : UndoItem {
+public class UndoItemsDelete : UndoItem {
 
-  private CanvasItem _item;
-  private int        _position;
+  private struct UndoItemDelete {
+    CanvasItem item;
+    int        position;
+    public UndoItemDelete( CanvasItem i, int p ) {
+      item     = i;
+      position = p;
+    }
+  }
+
+  private Array<UndoItemDelete?> _list;
 
   //-------------------------------------------------------------
   // Default constructor
-  public UndoItemSendBackward( CanvasItem item, int position ) {
-    base( _( "move item backward" ) );
-    _item     = item;
-    _position = position;
+  public UndoItemsDelete( List<CanvasItem> items, List<int> pos ) {
+    base( _( "item delete" ) );
+    _list = new Array<UndoItemDelete?>();
+    var i = 0;
+    foreach( var item in items ) {
+      _list.append_val( UndoItemDelete( item, pos.nth_data( i ) ) );
+      i++;
+    }
   }
 
   //-------------------------------------------------------------
   // Causes the stored item to be put into the before state
   public override void undo( Canvas canvas ) {
-    canvas.items.remove_item( _item );
-    canvas.items.insert_item( _item, _position );
+    for( int i=0; i<_list.length; i++ ) {
+      var elem = _list.index( i );
+      canvas.items.insert_item( elem.item, elem.position );
+    }
     canvas.queue_draw();
   }
 
   //-------------------------------------------------------------
   // Causes the stored item to be put into the after state
   public override void redo( Canvas canvas ) {
-    canvas.items.remove_item( _item );
-    canvas.items.insert_item( _item, (_position - 1) );
+    for( int i=0; i<_list.length; i++ ) {
+      canvas.items.remove_item( _list.index( i ).item );
+    }
     canvas.queue_draw();
   }
 

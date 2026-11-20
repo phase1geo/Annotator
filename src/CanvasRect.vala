@@ -157,10 +157,21 @@ public class CanvasRect {
     var y1 = (a.y1() < b.y1()) ? b.y1() : a.y1();
     var x2 = (a.x2() < b.x2()) ? a.x2() : b.x2();
     var y2 = (a.y2() < b.y2()) ? a.y2() : b.y2();
-    x      = x1;
-    y      = y1;
-    width  = (x2 - x1);
-    height = (y2 - y1);
+    copy_coords( x1, y1, (x2 - x1), (y2 - y1) );
+  }
+
+  //-------------------------------------------------------------
+  // Creates a union of this rectangle with the given rectangle
+  public void union( CanvasRect rect ) {
+    if( (width == 0.0) && (height == 0.0) ) {
+      copy( rect );
+    } else {
+      var x1 = (x1() < rect.x1()) ? x1() : rect.x1();
+      var y1 = (y1() < rect.y1()) ? y1() : rect.y1();
+      var x2 = (x2() > rect.x2()) ? x2() : rect.x2();
+      var y2 = (y2() > rect.y2()) ? y2() : rect.y2();
+      copy_coords( x1, y1, (x2 - x1), (y2 - y1) );
+    }
   }
 
   //-------------------------------------------------------------
