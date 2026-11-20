@@ -225,6 +225,10 @@ public class CanvasToolbar : Box {
       }
     });
 
+    var type_buttons = new Gee.HashMap<CanvasItemType,Button>();
+
+    fb.focusable = false;
+
     for( int i=0; i<CanvasItemType.NUM; i++ ) {
       var shape_type = (CanvasItemType)i;
       if( shape_type.category() == category ) {
@@ -244,8 +248,21 @@ public class CanvasToolbar : Box {
           popover.popdown();
         });
         fb.append( b );
+        b.get_parent().focusable = false;
+        type_buttons.set( shape_type, b );
       }
     }
+
+    popover.show.connect(() => {
+      Idle.add(() => {
+        var cur = _current_item.get( category ).get_item_type();
+        var b   = type_buttons.get( cur );
+        if( b != null ) {
+          b.grab_focus();
+        }
+        return( false );
+      });
+    });
 
     box.append( fb );
     _canvas.items.custom_items.create_menu( _canvas.win, category, popover, box, custom_label, 4 );

@@ -391,7 +391,7 @@ public class Canvas : DrawingArea {
       queue_draw();
     }
 
-    return( true );
+    return( false );
 
   }
 
