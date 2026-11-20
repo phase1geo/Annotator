@@ -1403,7 +1403,10 @@ public class CanvasItems {
     // Create and display the popover
     var pointing = new CanvasRect.from_coords( x, y, 1, 1 );
     var popover = menu.create_popover( pointing.to_rectangle( _canvas.zoom_factor ) );
-    popover.popup();
+    Idle.add(() => {
+      popover.popup();
+      return( false );
+    });
 
   }
 
