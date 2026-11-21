@@ -425,7 +425,7 @@ public class Canvas : DrawingArea {
     var y = scale_y( ey );
 
     if( image.cropping ) {
-      if( image.cursor_pressed( ex, ey, n_press ) ) {
+      if( image.cursor_pressed( x, y, n_press ) ) {
         queue_draw();
       }
     } else if( items.cursor_pressed( x, y, n_press ) ) {
@@ -467,7 +467,7 @@ public class Canvas : DrawingArea {
     _last_y = y;
 
     if( image.cropping || image.picking ) {
-      if( image.cursor_moved( ex, ey ) ) {
+      if( image.cursor_moved( x, y ) ) {
         queue_draw();
       }
     } else if( items.cursor_moved( x, y ) ) {
@@ -498,7 +498,7 @@ public class Canvas : DrawingArea {
     var y = scale_y( ey );
 
     if( image.cropping || image.picking ) {
-      if( image.cursor_released( ex, ey ) ) {
+      if( image.cursor_released( x, y ) ) {
         queue_draw();
       }
     } else if( items.cursor_released( x, y ) ) {
@@ -539,8 +539,9 @@ public class Canvas : DrawingArea {
   }
 
   //-------------------------------------------------------------
-  // Zooms the image to fit into the window
-  public void zoom_fit() {
+  // Calculates the zoom factor needed to fit the image into the
+  // current window.
+  public double calculate_zoom_fit() {
 
     int win_width, win_height;
     editor.get_win_size( out win_width, out win_height );
@@ -550,8 +551,14 @@ public class Canvas : DrawingArea {
     var dw         = Math.fabs( win_width  - img_width );
     var dh         = Math.fabs( win_height - img_height );
 
-    zoom_set( (dw < dh) ? (win_height / img_height) : (win_width / img_width) );
+    return( (dw < dh) ? (win_height / img_height) : (win_width / img_width) );
 
+  }
+
+  //-------------------------------------------------------------
+  // Zooms the image to fit into the window
+  public void zoom_fit() {
+    zoom_set( calculate_zoom_fit() );
   }
 
   private void zoom_adjust() {
