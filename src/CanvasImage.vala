@@ -69,6 +69,7 @@ public class CanvasImage {
   private int[]         _pick_offset     = new int[pick_size];
   private double        _pick_x          = 0.0;
   private double        _pick_y          = 0.0;
+  private double?       _last_zoom       = null;
 
   public Pixbuf?          pixbuf        { get; private set; default = null; }  // Original pixbuf of image
   public bool             cropping      { get; private set; default = false; }
@@ -516,6 +517,12 @@ public class CanvasImage {
   // Start the cropping function.
   public void start_crop() {
     cropping = true;
+    if( _canvas.calculate_zoom_fit() < 1.0 ) {
+      _last_zoom = _canvas.zoom_factor;
+      _canvas.zoom_fit();
+    } else {
+      _last_zoom = null;
+    }
     crop_rect.copy_coords( 0, 0, info.width, info.height );
     crop_changed( crop_rect );
     crop_started();
@@ -525,6 +532,9 @@ public class CanvasImage {
   // Cancels the crop operation.
   public bool cancel_crop() {
     cropping = false;
+    if( _last_zoom != null ) {
+      _canvas.zoom_set( _last_zoom );
+    }
     _canvas.queue_draw();
     crop_ended();
     return( true );
@@ -537,6 +547,9 @@ public class CanvasImage {
     var buf = new Pixbuf.subpixbuf( _buf, (int)crop_rect.x, (int)crop_rect.y, (int)crop_rect.width, (int)crop_rect.height );
     change_image( buf, _( "image crop" ) );
     _canvas.items.adjust_items( (0 - crop_rect.x), (0 - crop_rect.y), false );
+    if( _last_zoom != null ) {
+      _canvas.zoom_set( _last_zoom );
+    }
     _canvas.queue_draw();
     crop_ended();
     return( true );
@@ -664,32 +677,34 @@ public class CanvasImage {
   // Calculates the box for the given selector.
   private void selector_bbox( int index, CanvasRect rect ) {
 
+    var sel_size = selector_size / _canvas.zoom_factor;
+
     switch( index ) {
       case 0 :  // UL
       case 1 :  // UR
       case 2 :  // LL
       case 3 :  // LR
-        rect.x = ((index & 1) == 0) ? crop_rect.x1() : (crop_rect.x2() - selector_size);
-        rect.y = ((index & 2) == 0) ? crop_rect.y1() : (crop_rect.y2() - selector_size);
+        rect.x = ((index & 1) == 0) ? crop_rect.x1() : (crop_rect.x2() - sel_size);
+        rect.y = ((index & 2) == 0) ? crop_rect.y1() : (crop_rect.y2() - sel_size);
         break;
       case 4 :  // TOP
       case 5 :  // BOTTOM
-        rect.x = crop_rect.mid_x() - (selector_size / 2);
-        rect.y = (index == 4) ? crop_rect.y1() : (crop_rect.y2() - selector_size);
+        rect.x = crop_rect.mid_x() - (sel_size / 2);
+        rect.y = (index == 4) ? crop_rect.y1() : (crop_rect.y2() - sel_size);
         break;
       case 6 :  // LEFT
       case 7 :  // RIGHT
-        rect.x = (index == 6) ? crop_rect.x1() : (crop_rect.x2() - selector_size);
-        rect.y = crop_rect.mid_y() - (selector_size / 2);
+        rect.x = (index == 6) ? crop_rect.x1() : (crop_rect.x2() - sel_size);
+        rect.y = crop_rect.mid_y() - (sel_size / 2);
         break;
       case 8 :  // ROTATE
-        rect.x = ((info.width / 2) - (selector_size / 2)) + (int)_angle;
+        rect.x = ((info.width / 2) - (sel_size / 2)) + (int)_angle;
         rect.y = 20;
         break;
     }
 
-    rect.width  = selector_size;
-    rect.height = selector_size;
+    rect.width  = sel_size;
+    rect.height = sel_size;
 
   }
 
