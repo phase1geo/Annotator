@@ -38,6 +38,7 @@ src/undo_actions/UndoItemPaste.vala
 src/undo_actions/UndoItemPropChange.vala
 src/undo_actions/UndoItemsDelete.vala
 src/undo_actions/UndoItemSequenceNum.vala
+src/undo_actions/UndoItemsFlatten.vala
 src/undo_actions/UndoItemStarPoints.vala
 src/undo_actions/UndoItemTextResize.vala
 src/undo_actions/UndoItemUngroup.vala

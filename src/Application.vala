@@ -38,7 +38,7 @@ public class Annotator : Gtk.Application {
     Object(
       application_id: "io.github.phase1geo.annotator",
       flags: ApplicationFlags.HANDLES_OPEN,
-      version: "2.1.0"
+      version: "3.0.0"
     );
 
     Intl.setlocale( LocaleCategory.ALL, "" );
