@@ -18,6 +18,7 @@ sources += files(
     'UndoItemUngroup.vala',
 
     'UndoItemsDelete.vala',
+    'UndoItemsFlatten.vala',
 
     'UndoTextClearTags.vala',
     'UndoTextCommit.vala',

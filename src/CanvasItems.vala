@@ -230,6 +230,7 @@ public class CanvasItems {
     { "action_delete",        do_delete },
     { "action_group",         do_group },
     { "action_ungroup",       do_ungroup },
+    { "action_flatten",       do_flatten },
     { "action_send_to_front", do_send_to_front },
     { "action_send_forward",  do_send_forward },
     { "action_send_backward", do_send_backward },
@@ -1398,6 +1399,9 @@ public class CanvasItems {
         }
       }
 
+      menu.add_menu_action( _actions, _( "Flatten" ), "items.action_flatten", true );
+      menu.complete_section();
+
     }
 
     // Create and display the popover
@@ -1605,6 +1609,32 @@ public class CanvasItems {
         custom_items.add( _canvas.win, save_item );
       }
     }
+  }
+
+  //-------------------------------------------------------------
+  // Bakes the selected items into the base image
+  private void do_flatten() {
+
+    if( in_edit_mode() ) return;
+
+    var selected = get_selected_items();   // already in z-order
+    if( selected.is_empty() ) return;
+
+    var old_pixbuf = _canvas.image.pixbuf;
+    var new_pixbuf = _canvas.image.render_items( selected );
+    if( new_pixbuf == null ) return;
+
+    // Remove the items (same bookkeeping as do_delete)
+    var pos_list = new List<int>();
+    foreach( var sel_item in selected ) {
+      pos_list.append( item_z_position( sel_item ) );
+      _items.remove( sel_item );
+    }
+    hide_format_bar();
+
+    _canvas.image.set_base_pixbuf( new_pixbuf );
+    _canvas.undo_buffer.add_item( new UndoItemsFlatten( selected, pos_list, old_pixbuf, new_pixbuf ) );
+
   }
 
   //-------------------------------------------------------------
