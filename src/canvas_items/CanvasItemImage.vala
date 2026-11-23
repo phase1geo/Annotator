@@ -25,16 +25,18 @@ using Cairo;
 
 public class CanvasItemImage : CanvasItemRotatable {
 
-  private string? _name = null;
-  private Pixbuf? _buf  = null;
-  private Cursor  _sel_cursor;
+  private string?  _name = null;
+  private Pixbuf?  _buf  = null;
+  private Cursor[] _sel_cursors;
 
   //-------------------------------------------------------------
   // Constructor.
   public CanvasItemImage( Canvas canvas, bool file, CanvasItemProperties props ) {
     base( (file ? CanvasItemType.IMAGE : CanvasItemType.STICKER), canvas, props );
     create_points();
-    _sel_cursor = new Cursor.from_name( "se-resize", null );
+    _sel_cursors    = new Cursor[2];
+    _sel_cursors[0] = new Cursor.from_name( "se-resize", null );
+    _sel_cursors[1] = rotate_cursor();
   }
 
   //-------------------------------------------------------------
@@ -138,10 +140,7 @@ public class CanvasItemImage : CanvasItemRotatable {
   // Provides cursor to display when mouse cursor is hovering over
   // the given selector.
   public override Cursor? get_selector_cursor( int index ) {
-    if( index == rotator_index ) {
-      return( base.get_selector_cursor( index ) );
-    }
-    return( _sel_cursor );
+    return( _sel_cursors[index] );
   }
 
   //-------------------------------------------------------------

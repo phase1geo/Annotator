@@ -42,6 +42,7 @@ public class CanvasItemStar : CanvasItemRotatable {
     _sel_cursors[2] = new Cursor.from_name( "ne-resize", null );
     _sel_cursors[3] = new Cursor.from_name( "sw-resize", null );
     _sel_cursors[4] = new Cursor.from_name( "se-resize", null );
+    _sel_cursors[5] = rotate_cursor();
   }
 
   private double regular_ratio( int n ) {
@@ -169,9 +170,6 @@ public class CanvasItemStar : CanvasItemRotatable {
   // Provides cursor to display when mouse cursor is hovering over
   // the given selector
   public override Cursor? get_selector_cursor( int index ) {
-    if( index == rotator_index ) {
-      return( base.get_selector_cursor( index ) );
-    }
     return( _sel_cursors[index] );
   }
 

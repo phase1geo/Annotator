@@ -38,7 +38,7 @@ public class CanvasItemBlur : CanvasItemRotatable {
   public CanvasItemBlur( Canvas canvas ) {
     base( CanvasItemType.BLUR, canvas, null );
     create_points();
-    _sel_cursors = new Cursor[8];
+    _sel_cursors = new Cursor[9];
     _sel_cursors[0] = new Cursor.from_name( "nw-resize", null );
     _sel_cursors[1] = new Cursor.from_name( "ne-resize", null );
     _sel_cursors[2] = new Cursor.from_name( "sw-resize", null );
@@ -47,6 +47,7 @@ public class CanvasItemBlur : CanvasItemRotatable {
     _sel_cursors[5] = new Cursor.from_name( "e-resize", null );
     _sel_cursors[6] = new Cursor.from_name( "s-resize", null );
     _sel_cursors[7] = new Cursor.from_name( "w-resize", null );
+    _sel_cursors[8] = rotate_cursor();
   }
 
   //-------------------------------------------------------------
@@ -152,9 +153,6 @@ public class CanvasItemBlur : CanvasItemRotatable {
   // Provides cursor to display when mouse cursor is hovering over
   // the given selector.
   public override Cursor? get_selector_cursor( int index ) {
-    if( index == rotator_index ) {
-      return( base.get_selector_cursor( index ) );
-    }
     return( _sel_cursors[index] );
   }
 

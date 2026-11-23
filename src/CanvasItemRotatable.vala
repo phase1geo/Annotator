@@ -97,6 +97,15 @@ public abstract class CanvasItemRotatable : CanvasItem {
   }
 
   //-------------------------------------------------------------
+  // Creates a rotation cursor and returns it to the calling function.
+  protected Gdk.Cursor rotate_cursor() {
+    var texture  = Gdk.Texture.from_resource( "/io/github/phase1geo/annotator/images/rotate.svg" );
+    var fallback = new Gdk.Cursor.from_name( "grab", null );
+    var cursor   = new Gdk.Cursor.from_texture( texture, 12, 12, fallback );
+    return( cursor );
+  }
+
+  //-------------------------------------------------------------
   // Rotates the given point by the given angle around (cx, cy)
   protected void rotate_point( double cx, double cy, double a, double x, double y, out double rx, out double ry ) {
     var c  = Math.cos( a );

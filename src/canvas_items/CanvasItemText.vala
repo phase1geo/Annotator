@@ -44,7 +44,7 @@ public class CanvasItemText : CanvasItemRotatable {
   private double         _height       = 0;
   private bool           _debug        = false;
   private int            _font_size    = 16;
-  private Cursor         _sel_cursor;
+  private Cursor[]       _sel_cursors;
   private bool           _resized      = false;
 
   // Signals
@@ -105,7 +105,9 @@ public class CanvasItemText : CanvasItemRotatable {
     base( CanvasItemType.TEXT, canvas, props );
     initialize( canvas );
     update_size();
-    _sel_cursor = new Cursor.from_name( "e-resize", null );
+    _sel_cursors = new Cursor[2];
+    _sel_cursors[0] = new Cursor.from_name( "e-resize", null );
+    _sel_cursors[1] = rotate_cursor();
   }
 
   //-------------------------------------------------------------
@@ -204,10 +206,7 @@ public class CanvasItemText : CanvasItemRotatable {
   }
 
   public override Cursor? get_selector_cursor( int index ) {
-    if( index == rotator_index ) {
-      return( base.get_selector_cursor( index ) );
-    }
-    return( _sel_cursor );
+    return( _sel_cursors[index] );
   }
 
   public override UndoItem? get_undo_item_for_selector( int index ) {

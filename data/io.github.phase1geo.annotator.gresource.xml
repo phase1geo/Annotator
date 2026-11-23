@@ -13,6 +13,7 @@
         <file alias="stickers.xml" compressed="true">images/icons/flat-color-icons/categories.xml</file>
         <file alias="README.md">custom_sticker_readme.md</file>
 
+	      <file alias="rotate.svg" preprocess="xml-stripblanks">images/icons/hicolor/scalable/actions/rotate-symbolic.svg</file>
         <file preprocess="xml-stripblanks">images/icons/hicolor/scalable/actions/rect-fill-symbolic.svg</file>
         <file preprocess="xml-stripblanks">images/icons/hicolor/scalable/actions/rect-stroke-symbolic.svg</file>
         <file preprocess="xml-stripblanks">images/icons/hicolor/scalable/actions/circle-fill-symbolic.svg</file>
