@@ -661,6 +661,22 @@ public class CanvasItems {
   }
 
   //-------------------------------------------------------------
+  // Selects all items.
+  public bool select_all() {
+    var retval = false;
+    _selector_index = -1;
+    _canvas.editor.set_toolbar_tool( CanvasTool.SELECTOR );
+    foreach( var item in _items ) {
+      retval |= (item.mode != CanvasItemMode.SELECTED);
+      item.mode = CanvasItemMode.SELECTED;
+    }
+    if( retval ) {
+      _canvas.queue_draw();
+    }
+    return( retval );
+  }
+
+  //-------------------------------------------------------------
   // Clears the currently selected items
   public bool clear_selection() {
     var retval = false;
@@ -829,14 +845,21 @@ public class CanvasItems {
 
     if( Utils.has_key( kvs, Key.BackSpace ) )        { return( handle_backspace() ); }
     else if( Utils.has_key( kvs, Key.Delete ) )      { return( handle_delete() ); }
-    else if( Utils.has_key( kvs, Key.Return ) )      { return( handle_return( shift ) ); }
-    else if( Utils.has_key( kvs, Key.Escape ) )      { return( handle_escape() ); }
-    else if(  shift && Utils.has_key( kvs, Key.a ) ) { return( handle_cursor( control, shift, Key.A ) ); }
+    else if( !control && Utils.has_key( kvs, Key.Return ) )      { return( handle_return( shift ) ); }
+    else if( !control && !shift && Utils.has_key( kvs, Key.Escape ) )      { return( handle_escape() ); }
+    else if(  shift && Utils.has_key( kvs, Key.a ) ) {
+      if( in_edit_mode() ) {
+        return( handle_cursor( control, shift, Key.A ) );
+      } else if( control ) {
+        clear_selection();
+        return( true );
+      }
+    }
     else if( !shift && Utils.has_key( kvs, Key.a ) ) {
       if( in_edit_mode() ) {
         return( handle_cursor( control, shift, Key.a ) );
-      } else {
-        _canvas.editor.set_toolbar_item( CanvasItemType.MODERN_ARROW );
+      } else if( control ) {
+        select_all();
         return( true );
       }
     }
@@ -846,26 +869,27 @@ public class CanvasItems {
     else if( Utils.has_key( kvs, Key.End ) )         { return( handle_cursor( control, shift, Key.End ) ); }
     else if( Utils.has_key( kvs, Key.Up ) )          { return( handle_cursor( control, shift, Key.Up ) ); }
     else if( Utils.has_key( kvs, Key.Down ) )        { return( handle_cursor( control, shift, Key.Down ) ); }
-    else if( !shift && Utils.has_key( kvs, Key.space ) ) { handle_space(); }
-    else if( !shift && Utils.has_key( kvs, Key.r ) ) { _canvas.editor.set_toolbar_item( CanvasItemType.RECT );       return( true ); }
-    else if( !shift && Utils.has_key( kvs, Key.o ) ) { _canvas.editor.set_toolbar_item( CanvasItemType.OVAL );       return( true ); }
-    else if( !shift && Utils.has_key( kvs, Key.s ) ) { _canvas.editor.set_toolbar_item( CanvasItemType.STAR );       return( true ); }
-    else if( !shift && Utils.has_key( kvs, Key.k ) ) { _canvas.editor.set_toolbar_item( CanvasItemType.TALK );       return( true ); }
-    else if(  shift && Utils.has_key( kvs, Key.k ) ) { _canvas.editor.set_toolbar_item( CanvasItemType.THINK );      return( true ); }
-    else if( !shift && Utils.has_key( kvs, Key.l ) ) { _canvas.editor.set_toolbar_item( CanvasItemType.LINE );       return( true ); }
-    else if( !shift && Utils.has_key( kvs, Key.t ) ) { _canvas.editor.set_toolbar_item( CanvasItemType.TEXT );       return( true ); }
-    else if( !shift && Utils.has_key( kvs, Key.b ) ) { _canvas.editor.set_toolbar_item( CanvasItemType.BLUR );       return( true ); }
-    else if( !shift && Utils.has_key( kvs, Key.m ) ) { _canvas.editor.set_toolbar_item( CanvasItemType.MAGNIFIER );  return( true ); }
-    else if( !shift && Utils.has_key( kvs, Key.p ) ) { _canvas.editor.set_toolbar_item( CanvasItemType.PENCIL );     return( true ); }
-    else if( !shift && Utils.has_key( kvs, Key.q ) ) { _canvas.editor.set_toolbar_item( CanvasItemType.SEQUENCE );   return( true ); }
-    else if( !shift && Utils.has_key( kvs, Key.i ) ) { _canvas.editor.set_toolbar_item( CanvasItemType.IMAGE );      return( true ); }
-    else if( !shift && Utils.has_key( kvs, Key.v ) ) { do_paste();          return( true ); }
-    else if( !shift && Utils.has_key( kvs, Key.g ) ) { do_group();          return( true ); }
-    else if(  shift && Utils.has_key( kvs, Key.g ) ) { do_ungroup();        return( true ); }
-    else if( !shift && Utils.has_key( kvs, Key.f ) ) { do_send_forward();   return( true ); }
-    else if(  shift && Utils.has_key( kvs, Key.f ) ) { do_send_to_front();  return( true ); }
-    else if( !shift && Utils.has_key( kvs, Key.b ) ) { do_send_backward();  return( true ); }
-    else if(  shift && Utils.has_key( kvs, Key.b ) ) { do_send_to_back();   return( true ); }
+    else if( !control && !shift && Utils.has_key( kvs, Key.space ) ) { handle_space(); }
+    else if( !control && !shift && Utils.has_key( kvs, Key.a ) ) { _canvas.editor.set_toolbar_item( CanvasItemType.MODERN_ARROW );  return( true ); }
+    else if( !control && !shift && Utils.has_key( kvs, Key.r ) ) { _canvas.editor.set_toolbar_item( CanvasItemType.RECT );       return( true ); }
+    else if( !control && !shift && Utils.has_key( kvs, Key.o ) ) { _canvas.editor.set_toolbar_item( CanvasItemType.OVAL );       return( true ); }
+    else if( !control && !shift && Utils.has_key( kvs, Key.s ) ) { _canvas.editor.set_toolbar_item( CanvasItemType.STAR );       return( true ); }
+    else if( !control && !shift && Utils.has_key( kvs, Key.k ) ) { _canvas.editor.set_toolbar_item( CanvasItemType.TALK );       return( true ); }
+    else if( !control &&  shift && Utils.has_key( kvs, Key.k ) ) { _canvas.editor.set_toolbar_item( CanvasItemType.THINK );      return( true ); }
+    else if( !control && !shift && Utils.has_key( kvs, Key.l ) ) { _canvas.editor.set_toolbar_item( CanvasItemType.LINE );       return( true ); }
+    else if( !control && !shift && Utils.has_key( kvs, Key.t ) ) { _canvas.editor.set_toolbar_item( CanvasItemType.TEXT );       return( true ); }
+    else if( !control && !shift && Utils.has_key( kvs, Key.b ) ) { _canvas.editor.set_toolbar_item( CanvasItemType.BLUR );       return( true ); }
+    else if( !control && !shift && Utils.has_key( kvs, Key.m ) ) { _canvas.editor.set_toolbar_item( CanvasItemType.MAGNIFIER );  return( true ); }
+    else if( !control && !shift && Utils.has_key( kvs, Key.p ) ) { _canvas.editor.set_toolbar_item( CanvasItemType.PENCIL );     return( true ); }
+    else if( !control && !shift && Utils.has_key( kvs, Key.q ) ) { _canvas.editor.set_toolbar_item( CanvasItemType.SEQUENCE );   return( true ); }
+    else if( !control && !shift && Utils.has_key( kvs, Key.i ) ) { _canvas.editor.set_toolbar_item( CanvasItemType.IMAGE );      return( true ); }
+    else if(  control && !shift && Utils.has_key( kvs, Key.v ) ) { do_paste();          return( true ); }
+    else if(  control && !shift && Utils.has_key( kvs, Key.g ) ) { do_group();          return( true ); }
+    else if(  control &&  shift && Utils.has_key( kvs, Key.g ) ) { do_ungroup();        return( true ); }
+    else if(  control && !shift && Utils.has_key( kvs, Key.f ) ) { do_send_forward();   return( true ); }
+    else if(  control &&  shift && Utils.has_key( kvs, Key.f ) ) { do_send_to_front();  return( true ); }
+    else if(  control && !shift && Utils.has_key( kvs, Key.b ) ) { do_send_backward();  return( true ); }
+    else if(  control &&  shift && Utils.has_key( kvs, Key.b ) ) { do_send_to_back();   return( true ); }
     else if( !shift && Utils.has_key( kvs, Key.Shift_L ) ) { return( handle_shift() ); }
     else if( !shift && Utils.has_key( kvs, Key.Control_L ) ) { return( handle_control() ); }
 
