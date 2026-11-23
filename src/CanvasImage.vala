@@ -221,6 +221,41 @@ public class CanvasImage {
   }
 
   //-------------------------------------------------------------
+  // Draws the given items (must be in z-order) on top of a copy of
+  // the original pixbuf and returns the result.
+  public Pixbuf? render_items( List<CanvasItem> items ) {
+
+    var surface = new ImageSurface( Cairo.Format.ARGB32, pixbuf.width, pixbuf.height );
+    var ctx     = new Context( surface );
+
+    // Start with the original image
+    cairo_set_source_pixbuf( ctx, pixbuf, 0, 0 );
+    ctx.paint();
+
+    // Map item coordinates to original-pixbuf coordinates
+    ctx.translate( (0 - (info.pixbuf_rect.x / width_scale)), (0 - (info.pixbuf_rect.y / height_scale)) );
+
+    foreach( var item in items ) {
+      ctx.save();
+      item.draw_item( ctx );
+      ctx.restore();
+    }
+
+    return( pixbuf_get_from_surface( surface, 0, 0, pixbuf.width, pixbuf.height ) );
+
+  }
+
+  //-------------------------------------------------------------
+  // Replaces the original pixbuf and regenerates the display buffer
+  // using the current margin/scale info.  Used by flatten and its
+  // undo/redo.
+  public void set_base_pixbuf( Pixbuf buf ) {
+    pixbuf = buf;
+    do_resize( new CanvasImageInfo.from_info( info ), new CanvasImageInfo.from_info( info ) );
+    _canvas.queue_draw();
+  }
+
+  //-------------------------------------------------------------
   // KEY EVENT HANDLER
   //-------------------------------------------------------------
 
