@@ -139,7 +139,7 @@
     <value key="x-appcenter-stripe">pk_live_51Ccoj4BJm4hDdHaF1YKGdyGLCLtShzElKsr4GM9hJDJAoZArcWrNHsjL9b8SBs01GQBYpakj0l1tYenVJOqke93300TULHWdph</value>
   </custom>
   <releases>
-    <release version="2.1.0" date="2026-10-31">
+    <release version="3.0.0" date="2026-11-30">
       <description>
         <p>New</p>
         <p xml:lang="zh_TW">新功能</p>
@@ -148,15 +148,30 @@
         <ul>
           <li>Added traditional Chinese translation (thanks to Peter Dave Hello).</li>
           <li>Added cropping dimensions to window when cropping mode is enabled.</li>
+          <li>Added new selection toolbar button.</li>
+          <li>Added keyboard shortcut for Control+Shift+c to copy annotated image to clipboard (thanks to Gerhard Schaden).</li>
+          <li>Added keyboard shortcut for Control+e to export with current export settings (thanks to Gerhard Schaden).</li>
+          <li>Added new modern arrow object to arrow toolbar button (thanks to Gerhard Schaden).</li>
+          <li>Added ability to change draggable export type from PNG to any other supported export type.</li>
+          <li>Added support for rotating various annotation objects.</li>
+          <li>Added support for selecting multiple annotation objects (including with selection box).</li>
+          <li>Added support for grouping/ungrouping selected items.</li>
+          <li>Added support for moving items forward/backward by one in their Z-position.</li>
+          <li>Added keyboard shortcuts for selecting/deselecting all annotation items.</li>
+          <li>Added support for flattening annotation items to the background image.</li>
         </ul>
         <p>Changes</p>
         <p xml:lang="zh_TW">變更</p>
         <p xml:lang="ru">Изменения</p>
         <p xml:lang="de">Änderungen</p>
         <ul>
+          <li>Changed toolbar default behavior from an insertion model to a modal one.</li>
+          <li>Moved object properties to their respective toolbar button with a right-click.</li>
           <li>Changed application ID from com.github.phase1geo.annotator to io.github.phase1geo.annotator.</li>
           <li>Improved symbolic icons to be themeable.</li>
           <li>Updated German translation (thanks to Benjamin Weis).</li>
+          <li>Changed image to automatically zoom to fit when cropping image.</li>
+          <li>Improved selection handles when cropping to always be the same size.</li>
         </ul>
         <p>Bug Fixes</p>
         <p xml:lang="zh_TW">問題修正</p>
@@ -167,6 +182,13 @@
           <li>Fixed issues with color picker.</li>
           <li>Fixed application name within system.</li>
           <li>Fixed potential application crash issue.</li>
+          <li>Fixed issues with line and pencil properties.</li>
+          <li>Fixed inner star radius to use a ratio.</li>
+          <li>Fixed issue with drawing with pencil.</li>
+          <li>Fixed memory allocation issue when changing star points.</li>
+          <li>Fixed contextual menu display when multiple items are drawn.</li>
+          <li>Fixed issue where scrollbar is displayed in contextual menu when it is not needed.</li>
+          <li>Fixed crop selection issues where selection boxes were not drawn where dragging was supported.</li>
         </ul>
       </description>
     </release>

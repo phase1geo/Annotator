@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.annotator\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-18 22:09-0600\n"
+"POT-Creation-Date: 2026-11-23 09:57-0600\n"
 "PO-Revision-Date: 2021-09-30 18:25+0200\n"
 "Last-Translator: Heimen Stoffels <vistausss@fastmail.com>\n"
 "Language-Team: \n"
@@ -78,30 +78,30 @@ msgstr "Maak een schermfoto en aantekening."
 msgid "Uses image data from standard input"
 msgstr "Gebruikt afbeeldingsgegevens uit de standaardinvoer"
 
-#: src/CanvasImage.vala:135 src/CanvasImage.vala:162
+#: src/CanvasImage.vala:136 src/CanvasImage.vala:163
 msgid "change image"
 msgstr "Afbeelding wijzigen"
 
-#: src/CanvasImage.vala:474
+#: src/CanvasImage.vala:510
 #, fuzzy
 msgid "Color copied to clipboard"
 msgstr "Kopiëren naar klembord"
 
-#: src/CanvasImage.vala:538
+#: src/CanvasImage.vala:583
 msgid "image crop"
 msgstr "Afbeelding bijsnijden"
 
-#: src/CanvasImage.vala:589
+#: src/CanvasImage.vala:637
 #, fuzzy
 msgid "Image to Clipboard"
 msgstr "Afbeelding laden van klembord"
 
-#: src/CanvasItemRotatable.vala:246
+#: src/CanvasItemRotatable.vala:255
 #, fuzzy
 msgid "rotate item"
 msgstr "Items verplaatsen"
 
-#: src/canvas_items/CanvasItemBlur.vala:183
+#: src/canvas_items/CanvasItemBlur.vala:181
 msgid "Blur Amount:"
 msgstr "Hoeveelheid vervaging:"
 
@@ -125,33 +125,33 @@ msgstr "Focuspunt herstellen"
 msgid "Sequence Number:"
 msgstr "Reeksnummer:"
 
-#: src/canvas_items/CanvasItemStar.vala:182
+#: src/canvas_items/CanvasItemStar.vala:180
 msgid "Points:"
 msgstr "Punten:"
 
-#: src/canvas_items/CanvasItemText.vala:114 src/CanvasItems.vala:127
+#: src/canvas_items/CanvasItemText.vala:116 src/CanvasItems.vala:127
 msgid "Text"
 msgstr "Tekst"
 
-#: src/canvas_items/CanvasItemText.vala:1039 src/CanvasItems.vala:1377
+#: src/canvas_items/CanvasItemText.vala:1038 src/CanvasItems.vala:1402
 #: src/FormatBar.vala:60
 msgid "Copy"
 msgstr "Kopiëren"
 
-#: src/canvas_items/CanvasItemText.vala:1042 src/CanvasItems.vala:1378
+#: src/canvas_items/CanvasItemText.vala:1041 src/CanvasItems.vala:1403
 #: src/FormatBar.vala:66
 msgid "Cut"
 msgstr "Knippen"
 
-#: src/canvas_items/CanvasItemText.vala:1046
+#: src/canvas_items/CanvasItemText.vala:1045
 msgid "Paste"
 msgstr "Plakken"
 
-#: src/canvas_items/CanvasItemText.vala:1051
+#: src/canvas_items/CanvasItemText.vala:1050
 msgid "Select All"
 msgstr "Alles selecteren"
 
-#: src/canvas_items/CanvasItemText.vala:1056
+#: src/canvas_items/CanvasItemText.vala:1055
 msgid "Insert Emoji"
 msgstr "Emoji invoegen"
 
@@ -214,64 +214,68 @@ msgstr "Sticker"
 msgid "Image"
 msgstr "Afbeelding bijsnijden"
 
-#: src/CanvasItems.vala:528
+#: src/CanvasItems.vala:529
 #, fuzzy
 msgid "Open Insertion Image"
 msgstr "Afbeelding openen"
 
-#: src/CanvasItems.vala:1290
+#: src/CanvasItems.vala:1315
 msgid "move items"
 msgstr "Items verplaatsen"
 
-#: src/CanvasItems.vala:1381
+#: src/CanvasItems.vala:1406
 msgid "Delete"
 msgstr "Verwijderen"
 
-#: src/CanvasItems.vala:1384
+#: src/CanvasItems.vala:1409
 msgid "Group"
 msgstr ""
 
-#: src/CanvasItems.vala:1385
+#: src/CanvasItems.vala:1410
 msgid "Ungroup"
 msgstr ""
 
-#: src/CanvasItems.vala:1389
+#: src/CanvasItems.vala:1414
 msgid "Send to Front"
 msgstr "Tonen op voorgrond"
 
-#: src/CanvasItems.vala:1390
+#: src/CanvasItems.vala:1415
 msgid "Send Forward"
 msgstr ""
 
-#: src/CanvasItems.vala:1391
+#: src/CanvasItems.vala:1416
 #, fuzzy
 msgid "Send Backward"
 msgstr "Tonen op achtergrond"
 
-#: src/CanvasItems.vala:1392
+#: src/CanvasItems.vala:1417
 msgid "Send to Back"
 msgstr "Tonen op achtergrond"
 
-#: src/CanvasItems.vala:1396
+#: src/CanvasItems.vala:1421
 msgid "Save As Custom"
 msgstr "Opslaan als aangepast"
 
-#: src/CanvasItems.vala:1546
+#: src/CanvasItems.vala:1426
+msgid "Flatten"
+msgstr ""
+
+#: src/CanvasItems.vala:1577
 #, fuzzy
 msgid "send to front"
 msgstr "Tonen op voorgrond"
 
-#: src/CanvasItems.vala:1560
+#: src/CanvasItems.vala:1591
 #, fuzzy
 msgid "send forward"
 msgstr "Tonen op achtergrond"
 
-#: src/CanvasItems.vala:1574
+#: src/CanvasItems.vala:1605
 #, fuzzy
 msgid "send backward"
 msgstr "Tonen op achtergrond"
 
-#: src/CanvasItems.vala:1588
+#: src/CanvasItems.vala:1619
 #, fuzzy
 msgid "send to back"
 msgstr "Tonen op achtergrond"
@@ -301,20 +305,20 @@ msgstr "Aangepaste vormen"
 msgid "Selection Tool"
 msgstr "Selectie"
 
-#: src/CanvasToolbar.vala:546
+#: src/CanvasToolbar.vala:563
 msgid "Crop Image"
 msgstr "Afbeelding bijsnijden"
 
-#: src/CanvasToolbar.vala:577 src/Resizer.vala:186
+#: src/CanvasToolbar.vala:594 src/Resizer.vala:186
 msgid "Resize Image"
 msgstr "Afbeeldingsgrootte aanpassen"
 
-#: src/CanvasToolbar.vala:608
+#: src/CanvasToolbar.vala:625
 #, fuzzy
 msgid "Pick Color To Clipboard"
 msgstr "Kopiëren naar klembord"
 
-#: src/CanvasToolbar.vala:635
+#: src/CanvasToolbar.vala:652
 msgid ""
 "Drag To Create Image File\n"
 "\n"
@@ -2132,6 +2136,11 @@ msgstr "Item verwijderen"
 #: src/undo_actions/UndoItemSequenceNum.vala:31
 msgid "sequence number change"
 msgstr "Reeksnummer aanpassen"
+
+#: src/undo_actions/UndoItemsFlatten.vala:40
+#, fuzzy
+msgid "flatten items"
+msgstr "Items verplaatsen"
 
 #: src/undo_actions/UndoItemStarPoints.vala:31
 msgid "start points change"
