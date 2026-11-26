@@ -94,6 +94,8 @@ public abstract class CanvasItemRotatable : CanvasItem {
     if( mode.moving() ) {
       last_angle = _angle;
     }
+    points.index( rotator_index ).set_visual( CanvasPointType.SELECTOR, (mode != CanvasItemMode.CURRENT) );
+    stdout.printf( "In mode_changed, mode: %s, point kind: %s\n", mode.to_string(), points.index( rotator_index ).kind.to_string() );
   }
 
   //-------------------------------------------------------------
@@ -248,6 +250,30 @@ public abstract class CanvasItemRotatable : CanvasItem {
   }
 
   //-------------------------------------------------------------
+  // Returns true if any of the selectors are hidden
+  protected override bool any_selectors_hidden() {
+    bool hidden = false;
+    for( int i=0; i<points.length; i++ ) {
+      if( i != rotator_index ) {
+        hidden |= points.index( i ).kind.is_hidden();
+      }
+    }
+    return( hidden );
+  }
+
+  //-------------------------------------------------------------
+  // Called when the selectors need to be adjusted from shown or
+  // hidden
+  protected override void set_selector_visual( int index, bool hide ) {
+    CanvasPointType kind = points.index( index ).kind;
+    for( int i=0; i<points.length; i++ ) {
+      if( i != rotator_index ) {
+        points.index( i ).set_visual( kind, hide );
+      }
+    }
+  }
+
+  //-------------------------------------------------------------
   // Returns the undo item for a released selector
   public override UndoItem? get_undo_item_for_selector( int index ) {
     _rot_active = false;
@@ -270,9 +296,10 @@ public abstract class CanvasItemRotatable : CanvasItem {
   // item to its rotation selector
   public override void draw_selectors( Context ctx ) {
 
-    if( !mode.draw_selectors() ) return;
+    stdout.printf( "In draw_selectors, mode: %s, draw: %s\n",
+      mode.to_string(), points.index( rotator_index ).kind.draw().to_string() );
 
-    if( rotator_index >= 0 ) {
+    if( points.index( rotator_index ).kind.draw() ) {
       double tx, ty;
       place_rotator();
       rotate_about_center( bbox, bbox.mid_x(), (bbox.y1() - rotator_margin), out tx, out ty );

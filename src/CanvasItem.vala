@@ -25,6 +25,7 @@ using Cairo;
 
 public enum CanvasItemMode {
   NONE,
+  CURRENT,
   SELECTED,
   MOVING,
   RESIZING,
@@ -34,6 +35,7 @@ public enum CanvasItemMode {
   public string to_string() {
     switch( this ) {
       case NONE     :  return( "none" );
+      case CURRENT  :  return( "current" );
       case SELECTED :  return( "selected" );
       case MOVING   :  return( "moving" );
       case RESIZING :  return( "resizing" );
@@ -46,6 +48,7 @@ public enum CanvasItemMode {
   public static CanvasItemMode parse( string value ) {
     switch( value ) {
       case "none"     :  return( NONE );
+      case "current"  :  return( CURRENT );
       case "selected" :  return( SELECTED );
       case "moving"   :  return( MOVING );
       case "resizing" :  return( RESIZING );
@@ -58,13 +61,19 @@ public enum CanvasItemMode {
   //-------------------------------------------------------------
   // Returns true if the item can be moved
   public bool can_move() {
-    return( (this == SELECTED) || (this == MOVING) );
+    return( (this == CURRENT) || (this == SELECTED) || (this == MOVING) );
   }
 
   //-------------------------------------------------------------
   // Returns true if the item is being moved/resized
   public bool moving() {
     return( (this == MOVING) || (this == RESIZING) );
+  }
+
+  //-------------------------------------------------------------
+  // Returns true if the item is considered to be selected.
+  public bool selected() {
+    return( (this == CURRENT) || (this == SELECTED) || (this == RESIZING) );
   }
 
   //-------------------------------------------------------------
@@ -77,7 +86,7 @@ public enum CanvasItemMode {
   //-------------------------------------------------------------
   // Returns true if the canvas item should display the selectors
   public bool draw_selectors() {
-    return( (this == SELECTED) || (this == RESIZING) );
+    return( (this == CURRENT) || (this == SELECTED) || (this == RESIZING) );
   }
 
 }
@@ -156,7 +165,7 @@ public class CanvasItem {
     }
     set {
       if( _mode != value ) {
-        if( (_mode == CanvasItemMode.NONE) && (value == CanvasItemMode.SELECTED) ) {
+        if( (_mode == CanvasItemMode.NONE) && value.selected() ) {
           if( any_selectors_hidden() ) {
             reset_selectors();
             set_selector_visual( 0, true );
@@ -266,7 +275,7 @@ public class CanvasItem {
 
   //-------------------------------------------------------------
   // Returns true if any of the selectors are hidden
-  private bool any_selectors_hidden() {
+  protected virtual bool any_selectors_hidden() {
     bool hidden = false;
     for( int i=0; i<points.length; i++ ) {
       hidden |= points.index( i ).kind.is_hidden();
@@ -285,7 +294,7 @@ public class CanvasItem {
   //-------------------------------------------------------------
   // Called when the selectors need to be adjusted from shown or
   // hidden
-  protected void set_selector_visual( int index, bool hide ) {
+  protected virtual void set_selector_visual( int index, bool hide ) {
     CanvasPointType kind = points.index( index ).kind;
     for( int i=0; i<points.length; i++ ) {
       points.index( i ).set_visual( kind, hide );

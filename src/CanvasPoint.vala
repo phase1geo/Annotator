@@ -31,6 +31,7 @@ public enum CanvasPointType {
   HIDDEN1,   // This is a resizer that is currently hidden from view
   HIDDEN2,   // This is a resizer that is currently hidden from view
   HIDDEN3,   // This is a resizer that is currently hidden from view
+  HIDDEN4,
   CONTROL,
   SELECTOR,
   ROTATOR;
@@ -47,6 +48,7 @@ public enum CanvasPointType {
       case HIDDEN1  :  return( "hidden1" );
       case HIDDEN2  :  return( "hidden2" );
       case HIDDEN3  :  return( "hidden3" );
+      case HIDDEN4  :  return( "hidden4" );
       case CONTROL  :  return( "control" );
       case SELECTOR :  return( "selector" );
       case ROTATOR  :  return( "rotator" );
@@ -66,6 +68,7 @@ public enum CanvasPointType {
       case "hidden1"  :  return( HIDDEN1 );
       case "hidden2"  :  return( HIDDEN2 );
       case "hidden3"  :  return( HIDDEN3 );
+      case "hidden4"  :  return( HIDDEN4 );
       case "control"  :  return( CONTROL );
       case "selector" :  return( SELECTOR );
       case "rotator"  :  return( ROTATOR );
@@ -85,6 +88,8 @@ public enum CanvasPointType {
       case HIDDEN1  :  return( hide ? HIDDEN1 : RESIZER1 );
       case HIDDEN2  :  return( hide ? HIDDEN2 : RESIZER2 );
       case HIDDEN3  :  return( hide ? HIDDEN3 : RESIZER3 );
+      case HIDDEN4  :  return( hide ? HIDDEN4 : ROTATOR );
+      case ROTATOR  :  return( hide ? HIDDEN4 : ROTATOR );
       default       :  return( this );
     }
   }
@@ -123,7 +128,7 @@ public enum CanvasPointType {
   //-------------------------------------------------------------
   // Returns true if the kind is hidden.
   public bool is_hidden() {
-    return( (this == HIDDEN0) || (this == HIDDEN1) || (this == HIDDEN2) || (this == HIDDEN3) );
+    return( (this == HIDDEN0) || (this == HIDDEN1) || (this == HIDDEN2) || (this == HIDDEN3) || (this == HIDDEN4) );
   }
 
 }
@@ -185,6 +190,7 @@ public class CanvasPoint {
   // Updates the visual status of this point kind.
   public void set_visual( CanvasPointType point_kind, bool hide ) {
     if( point_kind != kind ) {
+      stdout.printf( "In set_visual, hide: %s, kind: %s, new: %s\n", hide.to_string(), kind.to_string(), kind.version( hide ).to_string() );
       kind = kind.version( hide );
     }
   }
