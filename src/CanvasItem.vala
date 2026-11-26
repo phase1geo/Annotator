@@ -24,13 +24,54 @@ using Gdk;
 using Cairo;
 
 public enum CanvasItemMode {
+
+  // Selectors?  Do not draw any selectors
+  // Active?     No
+  // Starts?     Default state
+  // Ends?       Not automatically
   NONE,
+
+  // Selectors?  Draw all selectors, including rotation selector, in a blue color.
+  // Active?     Yes, when cursor is pressing, moving, releasing.  State still valid when active is null.
+  // Starts?     When single item is clicked (no shift), selection box overlaps (and nothing is selected), or when item is created.
+  // Ends?       Not automatically
   CURRENT,
+
+  // Selectors?  Draw selectors (exclude rotation selector) in a white color
+  // Active?     Yes, when cursor is pressing, moving, releasing.  State still valid when active is null.
+  // Starts?     When item is shift clicked or selection box overlaps (when one item is in the CURRENT state).
+  // Ends?       Not automatically
   SELECTED,
+
+  // Selectors?  Do not draw any selectors
+  // Active?     Yes, this state is only valid when active is not null.
+  // Starts?     When cursor is clicked within a selected item.  All selected items will be moved.
+  // Ends?       Ends when cursor is released after moving
   MOVING,
+
+  // Selectors?  Draw selectors (exclude rotation selector) in a blue color.
+  // Active?     Yes, this state is only valid when active is not null.
+  // Starts?     When cursor is clicked within a selector.
+  // Ends?       When cursor is released.
   RESIZING,
+
+  // Selectors?  Do not draw any selectors
+  // Active?     Yes, this state is only valid when active is not null.
+  // Starts?     When text item is created or when it is double-clicked.
+  // Ends?       When return key is pressed, when another item is selected, or when cursor is pressed outside the text item.
   EDITING,
+
+  // Selectors?  Do not draw any selectors
+  // Active?     Yes, this state is only valid when active is not null.
+  // Starts?     When cursor is pressed and the draw tool is active (i.e., on item creation)
+  // Ends?       When cursor is released in this state.
   DRAWING;
+
+  // TBD - We may want a ROTATING state
+  // Selectors?  Draw rotator selector only
+  // Active?     Yes, this state is only valid when active is not null.
+  // Starts?     When cursor is pressed on a rotation selector.
+  // Ends?       When cursor is released in this state.
 
   public string to_string() {
     switch( this ) {
