@@ -95,6 +95,17 @@ public enum CanvasPointType {
   }
 
   //-------------------------------------------------------------
+  // Returns true if we are a drawable resizer type.
+  public bool draw_resizer() {
+    return(
+      (this == RESIZER0) ||
+      (this == RESIZER1) ||
+      (this == RESIZER2) ||
+      (this == RESIZER3)
+    );
+  }
+
+  //-------------------------------------------------------------
   // Returns true if this point should be drawn.
   public bool draw() {
     return(
@@ -109,19 +120,23 @@ public enum CanvasPointType {
 
   //-------------------------------------------------------------
   // Returns the color to draw the given point.
-  public Gdk.RGBA color() {
-    switch( this ) {
-      case SELECTOR :
-      case HIDDEN0  :
-      case HIDDEN1  :
-      case HIDDEN2  :
-      case HIDDEN3  :
-      case RESIZER0 :
-      case RESIZER1 :
-      case RESIZER2 :
-      case RESIZER3 :  return( Utils.color_from_string( "light blue" ) );
-      case CONTROL  :  return( Utils.color_from_string( "yellow" ) );
-      default       :  return( Utils.color_from_string( "white" ) );
+  public Gdk.RGBA color( bool active ) {
+    if( active ) {
+      switch( this ) {
+        case SELECTOR :
+        case HIDDEN0  :
+        case HIDDEN1  :
+        case HIDDEN2  :
+        case HIDDEN3  :
+        case RESIZER0 :
+        case RESIZER1 :
+        case RESIZER2 :
+        case RESIZER3 :  return( Utils.color_from_string( "light blue" ) );
+        case CONTROL  :  return( Utils.color_from_string( "yellow" ) );
+        default       :  return( Utils.color_from_string( "white" ) );
+      }
+    } else {
+      return( Utils.color_from_string( "white" ) );
     }
   }
 
@@ -190,7 +205,6 @@ public class CanvasPoint {
   // Updates the visual status of this point kind.
   public void set_visual( CanvasPointType point_kind, bool hide ) {
     if( point_kind != kind ) {
-      stdout.printf( "In set_visual, hide: %s, kind: %s, new: %s\n", hide.to_string(), kind.to_string(), kind.version( hide ).to_string() );
       kind = kind.version( hide );
     }
   }

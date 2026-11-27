@@ -181,7 +181,7 @@ public class CanvasItemMagnifier : CanvasItem {
   //-------------------------------------------------------------
   // Provides cursor to display when mouse cursor is hovering over
   // the given selector
-  public override Cursor? get_selector_cursor( int index ) {
+  public override Cursor? selector_cursor( int index ) {
     switch( index ) {
       case 0  :  return( _sel_cursors[0] );
       case 1  :  return( _sel_cursors[1] );

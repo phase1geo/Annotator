@@ -205,7 +205,7 @@ public class CanvasItemText : CanvasItemRotatable {
     }
   }
 
-  public override Cursor? get_selector_cursor( int index ) {
+  public override Cursor? selector_cursor( int index ) {
     return( _sel_cursors[index] );
   }
 

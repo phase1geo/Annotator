@@ -94,8 +94,7 @@ public abstract class CanvasItemRotatable : CanvasItem {
     if( mode.moving() ) {
       last_angle = _angle;
     }
-    points.index( rotator_index ).set_visual( CanvasPointType.SELECTOR, (mode != CanvasItemMode.CURRENT) );
-    stdout.printf( "In mode_changed, mode: %s, point kind: %s\n", mode.to_string(), points.index( rotator_index ).kind.to_string() );
+    points.index( rotator_index ).set_visual( CanvasPointType.SELECTOR, !mode.draw_rotator() );
   }
 
   //-------------------------------------------------------------
@@ -288,7 +287,14 @@ public abstract class CanvasItemRotatable : CanvasItem {
   // point (or -1 if none)
   public override int is_within_selector( double x, double y ) {
     place_rotator();
+    // TBD
     return( base.is_within_selector( x, y ) );
+  }
+
+  //-------------------------------------------------------------
+  // Returns true if the selector index is for the rotator.
+  public override bool is_rotator( int selector_index ) {
+    return( selector_index == rotator_index );
   }
 
   //-------------------------------------------------------------
@@ -296,10 +302,7 @@ public abstract class CanvasItemRotatable : CanvasItem {
   // item to its rotation selector
   public override void draw_selectors( Context ctx ) {
 
-    stdout.printf( "In draw_selectors, mode: %s, draw: %s\n",
-      mode.to_string(), points.index( rotator_index ).kind.draw().to_string() );
-
-    if( points.index( rotator_index ).kind.draw() ) {
+    if( mode.draw_rotator() ) {
       double tx, ty;
       place_rotator();
       rotate_about_center( bbox, bbox.mid_x(), (bbox.y1() - rotator_margin), out tx, out ty );

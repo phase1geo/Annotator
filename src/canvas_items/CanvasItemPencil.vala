@@ -80,7 +80,7 @@ public class CanvasItemPencil : CanvasItem {
     points.index( 1 ).adjust( diffx, diffy );
   }
 
-  public override Cursor? get_selector_cursor( int index ) {
+  public override Cursor? selector_cursor( int index ) {
     return( _sel_cursor );
   }
 

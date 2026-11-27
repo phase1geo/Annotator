@@ -55,6 +55,12 @@ public enum CanvasItemMode {
   // Ends?       When cursor is released.
   RESIZING,
 
+  // Selectors?  Draw rotator selector only
+  // Active?     Yes, this state is only valid when active is not null.
+  // Starts?     When cursor is pressed on a rotation selector.
+  // Ends?       When cursor is released in this state.
+  ROTATING,
+
   // Selectors?  Do not draw any selectors
   // Active?     Yes, this state is only valid when active is not null.
   // Starts?     When text item is created or when it is double-clicked.
@@ -67,11 +73,6 @@ public enum CanvasItemMode {
   // Ends?       When cursor is released in this state.
   DRAWING;
 
-  // TBD - We may want a ROTATING state
-  // Selectors?  Draw rotator selector only
-  // Active?     Yes, this state is only valid when active is not null.
-  // Starts?     When cursor is pressed on a rotation selector.
-  // Ends?       When cursor is released in this state.
 
   public string to_string() {
     switch( this ) {
@@ -80,6 +81,7 @@ public enum CanvasItemMode {
       case SELECTED :  return( "selected" );
       case MOVING   :  return( "moving" );
       case RESIZING :  return( "resizing" );
+      case ROTATING :  return( "rotating" );
       case EDITING  :  return( "editing" );
       case DRAWING  :  return( "drawing" );
       default       :  assert_not_reached();
@@ -93,10 +95,17 @@ public enum CanvasItemMode {
       case "selected" :  return( SELECTED );
       case "moving"   :  return( MOVING );
       case "resizing" :  return( RESIZING );
+      case "rotating" :  return( ROTATING );
       case "editing"  :  return( EDITING );
       case "drawing"  :  return( DRAWING );
       default         :  assert_not_reached();
     }
+  }
+
+  //-------------------------------------------------------------
+  // Returns true if this mode is valid for the currently active item.
+  public bool active() {
+    return( (this != NONE) && (this != SELECTED) );
   }
 
   //-------------------------------------------------------------
@@ -108,26 +117,45 @@ public enum CanvasItemMode {
   //-------------------------------------------------------------
   // Returns true if the item is being moved/resized
   public bool moving() {
-    return( (this == MOVING) || (this == RESIZING) );
+    return( (this == MOVING) || (this == RESIZING) || (this == ROTATING) );
   }
 
   //-------------------------------------------------------------
-  // Returns true if the item is considered to be selected.
+  // Returns true if the item is considered to be selected when not
+  // being acted on.
   public bool selected() {
-    return( (this == CURRENT) || (this == SELECTED) || (this == RESIZING) );
+    return( (this == CURRENT) || (this == SELECTED) );
   }
 
   //-------------------------------------------------------------
   // Returns the alpha value to use for drawing an item based on
   // the current mode
   public double alpha( double dflt = 1.0 ) {
-    return( ((this == MOVING) || (this == RESIZING)) ? (dflt * 0.5) : dflt );
+    return( ((this == ROTATING) || (this == MOVING) || (this == RESIZING)) ? (dflt * 0.5) : dflt );
   }
 
   //-------------------------------------------------------------
   // Returns true if the canvas item should display the selectors
   public bool draw_selectors() {
-    return( (this == CURRENT) || (this == SELECTED) || (this == RESIZING) );
+    return( (this == CURRENT) || (this == SELECTED) || (this == RESIZING) || (this == ROTATING) );
+  }
+
+  //-------------------------------------------------------------
+  // Returns true if the given selector point type can be drawn in the current mode.
+  public bool draw_selector( CanvasPointType kind ) {
+    switch( this ) {
+      case CURRENT  :  return( kind.draw() );
+      case SELECTED :  return( kind.draw_resizer() );
+      case RESIZING :  return( kind.draw_resizer() );
+      case ROTATING :  return( kind == CanvasPointType.ROTATOR );
+      default       :  return( false );
+    }
+  }
+
+  //-------------------------------------------------------------
+  // Returns true if the rotator selector should be drawn.
+  public bool draw_rotator() {
+    return( (this == CURRENT) || (this == ROTATING) );
   }
 
 }
@@ -352,10 +380,16 @@ public class CanvasItem {
   public virtual void draw( double x, double y ) {}
 
   //-------------------------------------------------------------
+  // Returns selector cursor that items can override.
+  protected virtual Cursor? selector_cursor( int index ) {
+    return( _sel_cursor );
+  }
+
+  //-------------------------------------------------------------
   // Returns the type of cursor to use for the given selection
   // cursor
-  public virtual Cursor? get_selector_cursor( int index ) {
-    return( _sel_cursor );
+  public Cursor? get_selector_cursor( int index ) {
+    return( mode.active() ? selector_cursor( index ) : null );
   }
 
   //-------------------------------------------------------------
@@ -424,6 +458,12 @@ public class CanvasItem {
   }
 
   //-------------------------------------------------------------
+  // Returns true if the given selector index is a rotator.
+  public virtual bool is_rotator( int selector_index ) {
+    return( false );
+  }
+
+  //-------------------------------------------------------------
   // Saves the current path so that we can calculate is_within
   protected void save_path( Context ctx, CanvasItemPathType type ) {
     _path      = ctx.copy_path_flat();
@@ -467,14 +507,14 @@ public class CanvasItem {
 
     for( int i=0; i<points.length; i++ ) {
 
-      if( points.index( i ).kind.draw() ) {
+      if( mode.draw_selector( points.index( i ).kind ) ) {
 
         selector_bbox( i, box );
 
         ctx.set_line_width( 1 );
 
         // Draw the selection rectangle
-        Utils.set_context_color( ctx, points.index( i ).kind.color() );
+        Utils.set_context_color( ctx, points.index( i ).kind.color( mode.active() ) );
         ctx.rectangle( box.x, box.y, box.width, box.height );
         ctx.fill_preserve();
 
