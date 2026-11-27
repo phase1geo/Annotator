@@ -389,7 +389,7 @@ public class CanvasItem {
   // Returns the type of cursor to use for the given selection
   // cursor
   public Cursor? get_selector_cursor( int index ) {
-    return( mode.active() ? selector_cursor( index ) : null );
+    return( (mode.active() && (itype != CanvasItemType.GROUP)) ? selector_cursor( index ) : null );
   }
 
   //-------------------------------------------------------------
@@ -514,7 +514,7 @@ public class CanvasItem {
         ctx.set_line_width( 1 );
 
         // Draw the selection rectangle
-        Utils.set_context_color( ctx, points.index( i ).kind.color( mode.active() ) );
+        Utils.set_context_color( ctx, points.index( i ).kind.color( mode.active() && (itype != CanvasItemType.GROUP) ) );
         ctx.rectangle( box.x, box.y, box.width, box.height );
         ctx.fill_preserve();
 
