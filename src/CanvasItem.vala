@@ -515,7 +515,11 @@ public class CanvasItem {
 
         // Draw the selection rectangle
         Utils.set_context_color( ctx, points.index( i ).kind.color( mode.active() && (itype != CanvasItemType.GROUP) ) );
-        ctx.rectangle( box.x, box.y, box.width, box.height );
+        if( is_rotator( i ) ) {
+          ctx.arc( box.mid_x(), box.mid_y(), (box.width / 2), 0, (2 * Math.PI) );
+        } else {
+          ctx.rectangle( box.x, box.y, box.width, box.height );
+        }
         ctx.fill_preserve();
 
         // Draw the stroke
