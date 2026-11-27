@@ -662,7 +662,7 @@ public class CanvasItems {
   // Returns true if at least one item is movable.
   public bool is_item_movable() {
     foreach( var item in _items ) {
-      if( item.mode == CanvasItemMode.MOVING ) {
+      if( item.mode.can_move() ) {
         return( true );
       }
     }
@@ -1335,15 +1335,15 @@ public class CanvasItems {
       return( true );
 
     // Otherwise, move any selected items by the given amount
-    } else if( !in_edit_mode() && is_item_movable() ) {
+    } else if( (_press_count == 1) && !in_edit_mode() && is_item_movable() ) {
       var retval = false;
       foreach( CanvasItem item in _items ) {
-        if( item.mode == CanvasItemMode.MOVING ) {
-          item.move_item( diff_x, diff_y );
+        if( item.mode.can_move() ) {
+          item.move_item( diff_x, diff_y, true );
           retval = true;
         }
       }
-      return( retval );
+      return( true );
 
     // Otherwise, we are just moving the cursor around the screen
     } else {
