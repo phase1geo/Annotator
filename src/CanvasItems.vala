@@ -313,8 +313,6 @@ public class CanvasItems {
   // of all other items as necessary.
   public void set_item_mode( CanvasItem item, CanvasItemMode mode, string msg ) {
     if( item.mode == mode ) return;
-    // stdout.printf( "In set_item_mode, item: %s (%p), mode: %s, msg: %s\n", item.itype.to_string(), item, mode.to_string(), msg );
-    // display_items( "A" );
     switch( mode ) {
       case CanvasItemMode.CURRENT :
         clear_selection( "set-item-mode" );
@@ -350,7 +348,6 @@ public class CanvasItems {
         _active = item;
         break;
     }
-    // display_items( "B" );
   }
 
   //-------------------------------------------------------------
@@ -446,6 +443,7 @@ public class CanvasItems {
     });
     if( !loading ) {
       position_item( item, 200, 1 );
+      _active = item;
       set_edit_mode( true );
     }
     return( item );
