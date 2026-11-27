@@ -326,7 +326,7 @@ public class CanvasItems {
         if( selected.length() == 0 ) {
           item.mode = CanvasItemMode.CURRENT;
           _active = item;
-        } else {
+        } else if( (_active == null) || (_active != item) ) {
           item.mode = mode;
           if( _active != null ) {
             _active.mode = mode;
