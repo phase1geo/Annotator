@@ -113,5 +113,17 @@
         "jpeg", "tiff", "bmp", "pdf", "png", "svg", "webp"
       </description>
     </key>
+    <key name="add-mode" type="i">
+      <default>0</default>
+      <summary>Specifies what happens when a toolbar button is clicked.</summary>
+      <description>
+        Specifies what happens when a toolbar button is clicked.  The following are the valid values:
+        0 - Adds item to center of canvas and selects it (switches to selection tool automatically).
+            Works similar to how Annotator worked pre-3.0.
+        1 - Adds item where cursor is clicked and dragged and selects the item
+            (switches to selection tool automatically).
+        2 - Adds item where cursor is clicked and dragged.  Stays in tool mode. 
+      </description>
+    </key>
   </schema>
 </schemalist>

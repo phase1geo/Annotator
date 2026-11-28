@@ -58,7 +58,8 @@ public class MainWindow : Gtk.ApplicationWindow {
     { "action_copy_to_clipboard", do_copy_to_clipboard },
     { "action_export",            do_export_current },
     { "action_print",             do_print },
-    { "action_emoji",             do_emoji }
+    { "action_emoji",             do_emoji },
+    { "action_prefs",             do_prefs }
   };
 
   private bool on_elementary = Gtk.Settings.get_default().gtk_icon_theme_name == "elementary";
@@ -165,6 +166,7 @@ public class MainWindow : Gtk.ApplicationWindow {
     app.set_accels_for_action( "win.action_copy_to_clipboard", { "<Control><Shift>c" } );
     app.set_accels_for_action( "win.action_export",          { "<Control>e" } );
     app.set_accels_for_action( "win.action_emoji",           { "<Control>slash" } );
+    app.set_accels_for_action( "win.action_prefs",           { "<Control>comma" } );
   }
 
   //-------------------------------------------------------------
@@ -803,8 +805,17 @@ public class MainWindow : Gtk.ApplicationWindow {
     _editor.canvas.image.export_print();
   }
 
+  //-------------------------------------------------------------
+  // Inserts emoji in EDITING text item.
   private void do_emoji() {
     _editor.canvas.insert_emoji();
+  }
+
+  //-------------------------------------------------------------
+  // Displays the application preferences window.
+  private void do_prefs() {
+    var prefs = new Preferences( this );
+    prefs.present();
   }
 
   //-------------------------------------------------------------

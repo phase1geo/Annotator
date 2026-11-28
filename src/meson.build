@@ -26,6 +26,7 @@ sources += files(
     'FormatBar.vala',
     'FormattedText.vala',
     'MainWindow.vala',
+    'Preferences.vala',
     'Resizer.vala',
     'SettingsUpdater.vala',
     'StickerSet.vala',

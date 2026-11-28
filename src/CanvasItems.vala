@@ -176,34 +176,34 @@ public enum CanvasItemType {
 // This enumeration determines when a current tool is automatically
 // ended (tool is changed from non-selection to selection mode).
 // The values are as follows:
-// NONE             - Auto-select mode is disabled.  All tool changes must be caused by the user.
-// AFTER_CLICK_DRAG - New items are added by click and drag.  After drag has completed, switch to selection tool.
-// AFTER_TOOL_CLICK - New items are added by clicking tool button.  Items are placed in the center of the visible canvas
-//                    and we switch back to selection mode (this mimics the historic insertion mode).
-public enum CanvasToolAutoSelectMode {
-  NONE,
-  AFTER_CLICK_DRAG,
-  AFTER_TOOL_CLICK;
+// CLASSIC  - New items are added by clicking tool button.  Items are placed in center of visible canvas and selected.
+// SINGLE   - New items are added by click and drag.  After drag has completed, switch to selection tool.
+// MULTIPLE - New items are added by click and drag.  Nothing is selected.
+public enum CanvasToolAddMode {
+  CLASSIC,
+  SINGLE,
+  MULTIPLE,
+  NUM;
 
   public string to_string() {
     switch( this ) {
-      case NONE             :  return( "none" );
-      case AFTER_CLICK_DRAG :  return( "after-click-drag" );
-      case AFTER_TOOL_CLICK :  return( "after-tool-click" );
-      default               :  assert_not_reached();
+      case CLASSIC  :  return( "classic" );
+      case SINGLE   :  return( "single" );
+      case MULTIPLE :  return( "multiple" );
+      default       :  assert_not_reached();
     }
   }
 
-  public static CanvasToolAutoSelectMode parse( string val ) {
+  public static CanvasToolAddMode parse( string val ) {
     switch( val ) {
-      case "after-click-drag" :  return( AFTER_CLICK_DRAG );
-      case "after-tool-click" :  return( AFTER_TOOL_CLICK );
-      default                 :  return( NONE );
+      case "classic" :  return( CLASSIC );
+      case "single"  :  return( SINGLE );
+      default        :  return( MULTIPLE );
     }
   }
 
   public bool auto_select() {
-    return( this != NONE );
+    return( this != MULTIPLE );
   }
 }
 
@@ -238,14 +238,14 @@ public class CanvasItems {
     { "action_save_custom",   do_save_custom }
   };
 
-  public CanvasItemProperties     props            { get; private set; }
-  public string                   hilite_color     { get; set; default = "yellow"; }
-  public string                   font_color       { get; set; default = "black"; }
-  public CustomItems              custom_items     { get; private set; }
-  public bool                     control_set      { get; private set; default = false; }
-  public bool                     shift_set        { get; private set; default = false; }
-  public CanvasToolAutoSelectMode auto_select_mode { get; set; default = CanvasToolAutoSelectMode.NONE; }
-  public CanvasTool               current_tool {
+  public CanvasItemProperties props        { get; private set; }
+  public string               hilite_color { get; set; default = "yellow"; }
+  public string               font_color   { get; set; default = "black"; }
+  public CustomItems          custom_items { get; private set; }
+  public bool                 control_set  { get; private set; default = false; }
+  public bool                 shift_set    { get; private set; default = false; }
+  public CanvasToolAddMode    add_mode     { get; set; default = CanvasToolAddMode.CLASSIC; }
+  public CanvasTool           current_tool {
     get {
       return( _current_tool );
     }
@@ -254,7 +254,7 @@ public class CanvasItems {
         clear_selection( "current-tool" );
       }
       _current_tool = value;
-      if( auto_select_mode == CanvasToolAutoSelectMode.AFTER_TOOL_CLICK ) {
+      if( add_mode == CanvasToolAddMode.CLASSIC ) {
         if( value.canvas_item_type() != CanvasItemType.NONE ) {
           add_shape_item( value.canvas_item_type() );
         }
@@ -298,6 +298,14 @@ public class CanvasItems {
     app.set_accels_for_action( "items.action_send_forward",  { "<Control>f" } );
     app.set_accels_for_action( "items.action_send_backward", { "<Control>b" } );
     app.set_accels_for_action( "items.action_send_to_back",  { "<Control><Shift>b" } );
+
+    add_mode = (CanvasToolAddMode)Annotator.settings.get_int( "add-mode" );
+    Annotator.settings.changed["add-mode"].connect(() => {
+      add_mode = (CanvasToolAddMode)Annotator.settings.get_int( "add-mode" );
+      if( add_mode != CanvasToolAddMode.MULTIPLE ) {
+        _canvas.editor.set_toolbar_tool( CanvasTool.SELECTOR );
+      }
+    });
 
   }
 
@@ -371,7 +379,7 @@ public class CanvasItems {
   // Creates a bbox for the last cursor position which is used to set
   // the bbox of a CanvasItem.
   public void position_item( CanvasItem item, double width, double height ) {
-    if( auto_select_mode == CanvasToolAutoSelectMode.AFTER_TOOL_CLICK ) {
+    if( add_mode == CanvasToolAddMode.CLASSIC ) {
       item.bbox = center_box( width, height );
     } else {
       var rect = new CanvasRect.from_coords( _last_x, _last_y, 1, 1 );
@@ -480,7 +488,7 @@ public class CanvasItems {
   private CanvasItem create_sequence( bool loading = false ) {
     var item = new CanvasItemSequence( _canvas, _canvas.props.get_properties( CanvasTool.SEQUENCE ) );
     if( !loading ) {
-      if( auto_select_mode == CanvasToolAutoSelectMode.AFTER_TOOL_CLICK ) {
+      if( add_mode == CanvasToolAddMode.CLASSIC ) {
         item.bbox = center_box( 50, 50 );
       } else {
         item.bbox = new CanvasRect.from_coords( (_last_x - 25), (_last_y - 25), 50, 50 );
@@ -515,7 +523,7 @@ public class CanvasItems {
   }
 
   public void add_item( CanvasItem item, int position, bool undo, bool draw = true ) {
-    var after_tool_click = (auto_select_mode == CanvasToolAutoSelectMode.AFTER_TOOL_CLICK);
+    var after_tool_click = (add_mode == CanvasToolAddMode.CLASSIC);
     if( after_tool_click ) {
       _canvas.editor.set_toolbar_tool( CanvasTool.SELECTOR );
     }
@@ -1365,7 +1373,7 @@ public class CanvasItems {
       } else if( current_tool != CanvasTool.SELECTOR ) {
         optionally_resize( _active );
       }
-      if( auto_select_mode == CanvasToolAutoSelectMode.AFTER_CLICK_DRAG ) {
+      if( add_mode == CanvasToolAddMode.SINGLE ) {
         _canvas.editor.set_toolbar_tool( CanvasTool.SELECTOR );
       }
       _selector_index = -1;
@@ -1385,7 +1393,7 @@ public class CanvasItems {
 
     // Indicate that we are done editing
     } else if( in_draw_mode() ) {
-      set_item_mode( _active, ((auto_select_mode != CanvasToolAutoSelectMode.NONE) ? CanvasItemMode.CURRENT : CanvasItemMode.NONE), "released B" );
+      set_item_mode( _active, ((add_mode != CanvasToolAddMode.MULTIPLE) ? CanvasItemMode.CURRENT : CanvasItemMode.NONE), "released B" );
       selection_changed( _active, "cursor-released-2" );
       retval = true;
 
