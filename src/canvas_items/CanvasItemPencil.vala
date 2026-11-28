@@ -111,6 +111,25 @@ public class CanvasItemPencil : CanvasItem {
   //-------------------------------------------------------------
   // Add an edit point.
   public override void draw( double x, double y ) {
+    if( _edit_points.length == 0 ) {
+      bbox.x      = x;
+      bbox.y      = y;
+      bbox.width  = 1;
+      bbox.height = 1;
+    } else {
+      if( x < bbox.x1() ) {
+        bbox.x = x;
+      }
+      if( y < bbox.y1() ) {
+        bbox.y = y;
+      }
+      if( x >= bbox.x2() ) {
+        bbox.width = (x - bbox.x);
+      }
+      if( y >= bbox.y2() ) {
+        bbox.height = (y - bbox.y);
+      }
+    }
     _edit_points.append_val( new CanvasPoint.from_coords( x, y, CanvasPointType.RESIZER0 ) );
     points.index( 0 ).copy( _edit_points.index( 0 ) );
     points.index( 1 ).copy( _edit_points.index( _edit_points.length - 1 ) );
