@@ -240,6 +240,7 @@ public class MainWindow : Gtk.ApplicationWindow {
   private MenuButton create_preferences() {
 
     var sc_menu = new GLib.Menu();
+    sc_menu.append( _( "Preferences…" ),          "win.action_prefs" );
     sc_menu.append( _( "Shortcuts Cheatsheet…" ), "win.action_shortcuts" );
 
     var about_menu = new GLib.Menu();
