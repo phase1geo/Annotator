@@ -617,7 +617,7 @@ public class CanvasImage {
   // Make sure that everything is cleared from the image.
   private void clean_image() {
     cropping = false;
-    _canvas.items.clear_selection();
+    _canvas.items.clear_selection( "clean-image" );
     _canvas.queue_draw();
   }
 

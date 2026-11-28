@@ -165,7 +165,7 @@ public class CanvasItemLine : CanvasItem {
   //-------------------------------------------------------------
   // Provides cursor to display when mouse cursor is hovering over
   // the given selector.
-  public override Cursor? get_selector_cursor( int index ) {
+  public override Cursor? selector_cursor( int index ) {
     return( _sel_cursor );
   }
 

@@ -265,8 +265,8 @@ public class Canvas : DrawingArea {
   //-------------------------------------------------------------
   // Called whenever the user changes the edit mode of an active
   // text item
-  private void edit_mode_changed( CanvasItemText item ) {
-    if( item.edit ) {
+  public void edit_mode_changed( CanvasItemText item ) {
+    if( item.mode == CanvasItemMode.EDITING ) {
       _key_controller.set_im_context( _im_context );
       update_im_cursor( item );
       _im_context.focus_in();

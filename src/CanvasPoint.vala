@@ -31,6 +31,7 @@ public enum CanvasPointType {
   HIDDEN1,   // This is a resizer that is currently hidden from view
   HIDDEN2,   // This is a resizer that is currently hidden from view
   HIDDEN3,   // This is a resizer that is currently hidden from view
+  HIDDEN4,
   CONTROL,
   SELECTOR,
   ROTATOR;
@@ -47,6 +48,7 @@ public enum CanvasPointType {
       case HIDDEN1  :  return( "hidden1" );
       case HIDDEN2  :  return( "hidden2" );
       case HIDDEN3  :  return( "hidden3" );
+      case HIDDEN4  :  return( "hidden4" );
       case CONTROL  :  return( "control" );
       case SELECTOR :  return( "selector" );
       case ROTATOR  :  return( "rotator" );
@@ -66,6 +68,7 @@ public enum CanvasPointType {
       case "hidden1"  :  return( HIDDEN1 );
       case "hidden2"  :  return( HIDDEN2 );
       case "hidden3"  :  return( HIDDEN3 );
+      case "hidden4"  :  return( HIDDEN4 );
       case "control"  :  return( CONTROL );
       case "selector" :  return( SELECTOR );
       case "rotator"  :  return( ROTATOR );
@@ -85,8 +88,21 @@ public enum CanvasPointType {
       case HIDDEN1  :  return( hide ? HIDDEN1 : RESIZER1 );
       case HIDDEN2  :  return( hide ? HIDDEN2 : RESIZER2 );
       case HIDDEN3  :  return( hide ? HIDDEN3 : RESIZER3 );
+      case HIDDEN4  :  return( hide ? HIDDEN4 : ROTATOR );
+      case ROTATOR  :  return( hide ? HIDDEN4 : ROTATOR );
       default       :  return( this );
     }
+  }
+
+  //-------------------------------------------------------------
+  // Returns true if we are a drawable resizer type.
+  public bool draw_resizer() {
+    return(
+      (this == RESIZER0) ||
+      (this == RESIZER1) ||
+      (this == RESIZER2) ||
+      (this == RESIZER3)
+    );
   }
 
   //-------------------------------------------------------------
@@ -104,26 +120,30 @@ public enum CanvasPointType {
 
   //-------------------------------------------------------------
   // Returns the color to draw the given point.
-  public Gdk.RGBA color() {
-    switch( this ) {
-      case SELECTOR :
-      case HIDDEN0  :
-      case HIDDEN1  :
-      case HIDDEN2  :
-      case HIDDEN3  :
-      case RESIZER0 :
-      case RESIZER1 :
-      case RESIZER2 :
-      case RESIZER3 :  return( Utils.color_from_string( "light blue" ) );
-      case CONTROL  :  return( Utils.color_from_string( "yellow" ) );
-      default       :  return( Utils.color_from_string( "white" ) );
+  public Gdk.RGBA color( bool active ) {
+    if( active ) {
+      switch( this ) {
+        case SELECTOR :
+        case HIDDEN0  :
+        case HIDDEN1  :
+        case HIDDEN2  :
+        case HIDDEN3  :
+        case RESIZER0 :
+        case RESIZER1 :
+        case RESIZER2 :
+        case RESIZER3 :  return( Utils.color_from_string( "light blue" ) );
+        case CONTROL  :  return( Utils.color_from_string( "yellow" ) );
+        default       :  return( Utils.color_from_string( "white" ) );
+      }
+    } else {
+      return( Utils.color_from_string( "white" ) );
     }
   }
 
   //-------------------------------------------------------------
   // Returns true if the kind is hidden.
   public bool is_hidden() {
-    return( (this == HIDDEN0) || (this == HIDDEN1) || (this == HIDDEN2) || (this == HIDDEN3) );
+    return( (this == HIDDEN0) || (this == HIDDEN1) || (this == HIDDEN2) || (this == HIDDEN3) || (this == HIDDEN4) );
   }
 
 }

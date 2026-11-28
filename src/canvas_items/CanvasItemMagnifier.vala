@@ -129,7 +129,7 @@ public class CanvasItemMagnifier : CanvasItem {
   // If the mode changes to RESIZING, capture the current zoom
   // factor point in case it is the one being moved so that we can
   // recalculate the proper zoom_factor value.
-  protected override void mode_changed() {
+  protected override void mode_changed( CanvasItemMode prev_mode ) {
     if( mode == CanvasItemMode.RESIZING ) {
       _press0.copy( points.index( 0 ) );
       _press2.copy( points.index( 2 ) );
@@ -181,7 +181,7 @@ public class CanvasItemMagnifier : CanvasItem {
   //-------------------------------------------------------------
   // Provides cursor to display when mouse cursor is hovering over
   // the given selector
-  public override Cursor? get_selector_cursor( int index ) {
+  public override Cursor? selector_cursor( int index ) {
     switch( index ) {
       case 0  :  return( _sel_cursors[0] );
       case 1  :  return( _sel_cursors[1] );

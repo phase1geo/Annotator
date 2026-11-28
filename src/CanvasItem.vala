@@ -24,19 +24,64 @@ using Gdk;
 using Cairo;
 
 public enum CanvasItemMode {
+
+  // Selectors?  Do not draw any selectors
+  // Active?     No
+  // Starts?     Default state
+  // Ends?       Not automatically
   NONE,
+
+  // Selectors?  Draw all selectors, including rotation selector, in a blue color.
+  // Active?     Yes, when cursor is pressing, moving, releasing.  State still valid when active is null.
+  // Starts?     When single item is clicked (no shift), selection box overlaps (and nothing is selected), or when item is created.
+  // Ends?       Not automatically
+  CURRENT,
+
+  // Selectors?  Draw selectors (exclude rotation selector) in a white color
+  // Active?     Yes, when cursor is pressing, moving, releasing.  State still valid when active is null.
+  // Starts?     When item is shift clicked or selection box overlaps (when one item is in the CURRENT state).
+  // Ends?       Not automatically
   SELECTED,
+
+  // Selectors?  Do not draw any selectors
+  // Active?     Yes, this state is only valid when active is not null.
+  // Starts?     When cursor is clicked within a selected item.  All selected items will be moved.
+  // Ends?       Ends when cursor is released after moving
   MOVING,
+
+  // Selectors?  Draw selectors (exclude rotation selector) in a blue color.
+  // Active?     Yes, this state is only valid when active is not null.
+  // Starts?     When cursor is clicked within a selector.
+  // Ends?       When cursor is released.
   RESIZING,
+
+  // Selectors?  Draw rotator selector only
+  // Active?     Yes, this state is only valid when active is not null.
+  // Starts?     When cursor is pressed on a rotation selector.
+  // Ends?       When cursor is released in this state.
+  ROTATING,
+
+  // Selectors?  Do not draw any selectors
+  // Active?     Yes, this state is only valid when active is not null.
+  // Starts?     When text item is created or when it is double-clicked.
+  // Ends?       When return key is pressed, when another item is selected, or when cursor is pressed outside the text item.
   EDITING,
+
+  // Selectors?  Do not draw any selectors
+  // Active?     Yes, this state is only valid when active is not null.
+  // Starts?     When cursor is pressed and the draw tool is active (i.e., on item creation)
+  // Ends?       When cursor is released in this state.
   DRAWING;
+
 
   public string to_string() {
     switch( this ) {
       case NONE     :  return( "none" );
+      case CURRENT  :  return( "current" );
       case SELECTED :  return( "selected" );
       case MOVING   :  return( "moving" );
       case RESIZING :  return( "resizing" );
+      case ROTATING :  return( "rotating" );
       case EDITING  :  return( "editing" );
       case DRAWING  :  return( "drawing" );
       default       :  assert_not_reached();
@@ -46,9 +91,11 @@ public enum CanvasItemMode {
   public static CanvasItemMode parse( string value ) {
     switch( value ) {
       case "none"     :  return( NONE );
+      case "current"  :  return( CURRENT );
       case "selected" :  return( SELECTED );
       case "moving"   :  return( MOVING );
       case "resizing" :  return( RESIZING );
+      case "rotating" :  return( ROTATING );
       case "editing"  :  return( EDITING );
       case "drawing"  :  return( DRAWING );
       default         :  assert_not_reached();
@@ -56,28 +103,59 @@ public enum CanvasItemMode {
   }
 
   //-------------------------------------------------------------
+  // Returns true if this mode is valid for the currently active item.
+  public bool active() {
+    return( (this != NONE) && (this != SELECTED) );
+  }
+
+  //-------------------------------------------------------------
   // Returns true if the item can be moved
   public bool can_move() {
-    return( (this == SELECTED) || (this == MOVING) );
+    return( (this == CURRENT) || (this == SELECTED) || (this == MOVING) );
   }
 
   //-------------------------------------------------------------
   // Returns true if the item is being moved/resized
   public bool moving() {
-    return( (this == MOVING) || (this == RESIZING) );
+    return( (this == MOVING) || (this == RESIZING) || (this == ROTATING) );
+  }
+
+  //-------------------------------------------------------------
+  // Returns true if the item is considered to be selected when not
+  // being acted on.
+  public bool selected() {
+    return( (this == CURRENT) || (this == SELECTED) );
   }
 
   //-------------------------------------------------------------
   // Returns the alpha value to use for drawing an item based on
   // the current mode
   public double alpha( double dflt = 1.0 ) {
-    return( ((this == MOVING) || (this == RESIZING)) ? (dflt * 0.5) : dflt );
+    return( ((this == ROTATING) || (this == MOVING) || (this == RESIZING)) ? (dflt * 0.5) : dflt );
   }
 
   //-------------------------------------------------------------
   // Returns true if the canvas item should display the selectors
   public bool draw_selectors() {
-    return( (this == SELECTED) || (this == RESIZING) );
+    return( (this == CURRENT) || (this == SELECTED) || (this == RESIZING) || (this == ROTATING) );
+  }
+
+  //-------------------------------------------------------------
+  // Returns true if the given selector point type can be drawn in the current mode.
+  public bool draw_selector( CanvasPointType kind ) {
+    switch( this ) {
+      case CURRENT  :  return( kind.draw() );
+      case SELECTED :  return( kind.draw_resizer() );
+      case RESIZING :  return( kind.draw_resizer() );
+      case ROTATING :  return( kind == CanvasPointType.ROTATOR );
+      default       :  return( false );
+    }
+  }
+
+  //-------------------------------------------------------------
+  // Returns true if the rotator selector should be drawn.
+  public bool draw_rotator() {
+    return( (this == CURRENT) || (this == ROTATING) );
   }
 
 }
@@ -156,17 +234,18 @@ public class CanvasItem {
     }
     set {
       if( _mode != value ) {
-        if( (_mode == CanvasItemMode.NONE) && (value == CanvasItemMode.SELECTED) ) {
+        if( (_mode == CanvasItemMode.NONE) && value.selected() ) {
           if( any_selectors_hidden() ) {
             reset_selectors();
             set_selector_visual( 0, true );
           }
         }
+        var prev_mode = _mode;
         _mode = value;
         if( _mode.moving() ) {
           last_bbox.copy( bbox );
         }
-        mode_changed();
+        mode_changed( prev_mode );
       }
     }
   }
@@ -235,7 +314,7 @@ public class CanvasItem {
 
   //-------------------------------------------------------------
   // Called whenever the mode changes
-  protected virtual void mode_changed() {}
+  protected virtual void mode_changed( CanvasItemMode prev_mode ) {}
 
   //-------------------------------------------------------------
   // Moves the item by the given amount
@@ -266,7 +345,7 @@ public class CanvasItem {
 
   //-------------------------------------------------------------
   // Returns true if any of the selectors are hidden
-  private bool any_selectors_hidden() {
+  protected virtual bool any_selectors_hidden() {
     bool hidden = false;
     for( int i=0; i<points.length; i++ ) {
       hidden |= points.index( i ).kind.is_hidden();
@@ -285,7 +364,7 @@ public class CanvasItem {
   //-------------------------------------------------------------
   // Called when the selectors need to be adjusted from shown or
   // hidden
-  protected void set_selector_visual( int index, bool hide ) {
+  protected virtual void set_selector_visual( int index, bool hide ) {
     CanvasPointType kind = points.index( index ).kind;
     for( int i=0; i<points.length; i++ ) {
       points.index( i ).set_visual( kind, hide );
@@ -302,10 +381,16 @@ public class CanvasItem {
   public virtual void draw( double x, double y ) {}
 
   //-------------------------------------------------------------
+  // Returns selector cursor that items can override.
+  protected virtual Cursor? selector_cursor( int index ) {
+    return( _sel_cursor );
+  }
+
+  //-------------------------------------------------------------
   // Returns the type of cursor to use for the given selection
   // cursor
-  public virtual Cursor? get_selector_cursor( int index ) {
-    return( _sel_cursor );
+  public Cursor? get_selector_cursor( int index ) {
+    return( (mode.active() && (itype != CanvasItemType.GROUP)) ? selector_cursor( index ) : null );
   }
 
   //-------------------------------------------------------------
@@ -374,6 +459,12 @@ public class CanvasItem {
   }
 
   //-------------------------------------------------------------
+  // Returns true if the given selector index is a rotator.
+  public virtual bool is_rotator( int selector_index ) {
+    return( false );
+  }
+
+  //-------------------------------------------------------------
   // Saves the current path so that we can calculate is_within
   protected void save_path( Context ctx, CanvasItemPathType type ) {
     _path      = ctx.copy_path_flat();
@@ -417,15 +508,19 @@ public class CanvasItem {
 
     for( int i=0; i<points.length; i++ ) {
 
-      if( points.index( i ).kind.draw() ) {
+      if( mode.draw_selector( points.index( i ).kind ) ) {
 
         selector_bbox( i, box );
 
         ctx.set_line_width( 1 );
 
         // Draw the selection rectangle
-        Utils.set_context_color( ctx, points.index( i ).kind.color() );
-        ctx.rectangle( box.x, box.y, box.width, box.height );
+        Utils.set_context_color( ctx, points.index( i ).kind.color( mode.active() && (itype != CanvasItemType.GROUP) ) );
+        if( is_rotator( i ) ) {
+          ctx.arc( box.mid_x(), box.mid_y(), (box.width / 2), 0, (2 * Math.PI) );
+        } else {
+          ctx.rectangle( box.x, box.y, box.width, box.height );
+        }
         ctx.fill_preserve();
 
         // Draw the stroke

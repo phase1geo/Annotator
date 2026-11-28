@@ -568,7 +568,7 @@ public class CanvasToolbar : Box {
     btn.notify["active"].connect(() => {
       if( btn.active ) {
         current_tool = CanvasTool.CROP;
-        _canvas.items.clear_selection();
+        _canvas.items.clear_selection( "crop" );
         _canvas.image.start_crop();
         _canvas.queue_draw();
         _canvas.grab_focus();
@@ -599,7 +599,7 @@ public class CanvasToolbar : Box {
     btn.notify["active"].connect(() => {
       if( btn.active ) {
         current_tool = CanvasTool.RESIZE;
-        _canvas.items.clear_selection();
+        _canvas.items.clear_selection( "resize" );
         _canvas.image.resize_image();
         _canvas.queue_draw();
         _canvas.grab_focus();

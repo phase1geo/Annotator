@@ -140,7 +140,7 @@ public class CanvasItemGroup : CanvasItem {
 
   }
 
-  protected override void mode_changed() {
+  protected override void mode_changed( CanvasItemMode prev_mode ) {
     if( mode != CanvasItemMode.MOVING ) {
       foreach( var item in _group ) {
         item.mode = CanvasItemMode.NONE;
@@ -151,7 +151,7 @@ public class CanvasItemGroup : CanvasItem {
   //-------------------------------------------------------------
   // Provides cursor to display when mouse cursor is hovering over
   // the given selector
-  public override Cursor? get_selector_cursor( int index ) {
+  public override Cursor? selector_cursor( int index ) {
     return( _sel_cursors[index] );
   }
 

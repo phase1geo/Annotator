@@ -30,7 +30,6 @@ public class CanvasItemText : CanvasItemRotatable {
 
   // Member variables
   private FormattedText  _text;
-  private bool           _edit         = false;
   private int            _cursor       = 0;   // Location of the cursor when editing
   private int            _column       = 0;   // Character column to use when moving vertically
   private Pango.Layout   _pango_layout = null;
@@ -65,20 +64,6 @@ public class CanvasItemText : CanvasItemRotatable {
       if( _max_width != value ) {
         _max_width = value;
         _pango_layout.set_width( (int)value * Pango.SCALE );
-        update_size();
-      }
-    }
-  }
-  public bool edit {
-    get {
-      return( _edit );
-    }
-    set {
-      if( _edit != value ) {
-        _edit = value;
-        if( !_edit ) {
-          clear_selection( "edit" );
-        }
         update_size();
       }
     }
@@ -170,8 +155,15 @@ public class CanvasItemText : CanvasItemRotatable {
 
   //-------------------------------------------------------------
   // If we start to resize, capture the original width
-  public override void mode_changed() {
-    base.mode_changed();
+  public override void mode_changed( CanvasItemMode prev_mode ) {
+    base.mode_changed( prev_mode );
+    if( mode == CanvasItemMode.EDITING ) {
+      set_cursor_all( false );
+      canvas.edit_mode_changed( this );
+    } else if( prev_mode == CanvasItemMode.EDITING ) {
+      clear_selection( "edit" );
+      canvas.edit_mode_changed( this );
+    }
     if( mode == CanvasItemMode.RESIZING ) {
       int text_width, text_height;
       _orig_width = max_width;
@@ -180,6 +172,7 @@ public class CanvasItemText : CanvasItemRotatable {
     } else if( _resize_width != _max_width ) {
       _max_width = _resize_width;
     }
+    update_size();
   }
 
   //-------------------------------------------------------------
@@ -205,7 +198,7 @@ public class CanvasItemText : CanvasItemRotatable {
     }
   }
 
-  public override Cursor? get_selector_cursor( int index ) {
+  public override Cursor? selector_cursor( int index ) {
     return( _sel_cursors[index] );
   }
 
@@ -1030,7 +1023,7 @@ public class CanvasItemText : CanvasItemRotatable {
   // Adds the contextual menu item values.
   protected override void add_contextual_menu_items( CanvasItemMenu menu ) {
 
-    if( edit ) {
+    if( mode == CanvasItemMode.EDITING ) {
 
       var selected  = is_selected();
       var pasteable = AnnotatorClipboard.text_pasteable();
@@ -1118,7 +1111,7 @@ public class CanvasItemText : CanvasItemRotatable {
     ctx.new_path();
 
     // Draw the insertion cursor if we are in the 'editable' state
-    if( edit ) {
+    if( mode == CanvasItemMode.EDITING ) {
       var cpos = text.text.index_of_nth_char( _cursor );
       var rect = layout.index_to_pos( cpos );
       Utils.set_context_color( ctx, props.font_color );
