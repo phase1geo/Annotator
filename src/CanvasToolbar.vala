@@ -245,6 +245,7 @@ public class CanvasToolbar : Box {
           var item = _current_item.get( category );
           item.canvas_item( shape_type );
           btn.set_item( item );
+          btn.active = true;
           popover.popdown();
         });
         fb.append( b );

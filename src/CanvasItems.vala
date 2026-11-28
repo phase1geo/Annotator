@@ -255,7 +255,10 @@ public class CanvasItems {
       }
       _current_tool = value;
       if( add_mode == CanvasToolAddMode.CLASSIC ) {
-        if( value.canvas_item_type() != CanvasItemType.NONE ) {
+        var current_item = _canvas.editor.get_current_item();
+        if( current_item != null ) {
+          current_item.add_item( this );
+        } else if( value.canvas_item_type() != CanvasItemType.NONE ) {
           add_shape_item( value.canvas_item_type() );
         }
       }
@@ -264,7 +267,6 @@ public class CanvasItems {
 
   public signal void text_item_edit_changed( CanvasItemText item );
   public signal void selection_changed( CanvasItem? item, string msg );
-  public signal void change_tool( CanvasTool tool );
 
   //-------------------------------------------------------------
   // Constructor
@@ -1258,7 +1260,6 @@ public class CanvasItems {
       _select_y   = y;
 
     } else {
-
       var current_item = _canvas.editor.get_current_item();
       if( current_item != null ) {
         current_item.add_item( this );

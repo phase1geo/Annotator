@@ -403,10 +403,8 @@ public class CanvasToolButton : ToggleButton {
     add_controller( left );
     left.pressed.connect((n_press, x, y) => {
       if( popover != null ) {
-        if( !active ) {
-          active = true;
-          popover.popup();
-        } else if( popover.get_mapped() ) {
+        left.set_state( Gtk.EventSequenceState.CLAIMED );
+        if( popover.get_mapped() ) {
           popover.popdown();
         } else {
           popover.popup();
