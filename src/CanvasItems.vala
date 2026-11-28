@@ -302,6 +302,7 @@ public class CanvasItems {
   }
 
   private void display_items( string msg ) {
+    stdout.printf( "Items (%s)\n", msg );
     foreach( var item in _items ) {
       stdout.printf( "  item: %s (%p), mode: %s%s\n",
        item.itype.to_string(), item, item.mode.to_string(), ((_active == item) ? "  (active)" : "") );
@@ -313,6 +314,7 @@ public class CanvasItems {
   // of all other items as necessary.
   public void set_item_mode( CanvasItem item, CanvasItemMode mode, string msg ) {
     if( item.mode == mode ) return;
+    // stdout.printf( "Setting item %s (%p), mode: %s to mode: %s\n", item.itype.to_string(), item, item.mode.to_string(), mode.to_string() );
     switch( mode ) {
       case CanvasItemMode.CURRENT :
         clear_selection( "set-item-mode" );
@@ -344,10 +346,11 @@ public class CanvasItems {
         break;
       // DRAWING, EDITING, ROTATING, MOVING, RESIZING
       default :
-        item.mode = mode;
         _active = item;
+        item.mode = mode;
         break;
     }
+    // display_items( "AFTER" );
   }
 
   //-------------------------------------------------------------
@@ -443,8 +446,8 @@ public class CanvasItems {
     });
     if( !loading ) {
       position_item( item, 200, 1 );
-      _active = item;
-      set_edit_mode( true );
+      set_item_mode( item, CanvasItemMode.EDITING, "create_text" );
+      _canvas.set_cursor( _xterm_cursor );
     }
     return( item );
   }
@@ -854,38 +857,13 @@ public class CanvasItems {
   //-------------------------------------------------------------
   // Returns true if we are currently editing a text item
   public bool in_edit_mode() {
-    var text = get_active_text();
-    return( (text != null) ? text.edit : false );
+    return( (_active != null) && (_active.mode == CanvasItemMode.EDITING) );
   }
 
   //-------------------------------------------------------------
   // Returns true if we are currently drawing something
   public bool in_draw_mode() {
     return( (_active != null) && (_active.mode == CanvasItemMode.DRAWING) );
-  }
-
-  //-------------------------------------------------------------
-  // Sets the edit mode of the active text item to the given value
-  private bool set_edit_mode( bool value ) {
-    var text = get_active_text();
-    if( text != null ) {
-      if( text.edit != value ) {
-        text.edit = value;
-        if( value ) {
-          text.set_cursor_all( false );
-          _canvas.set_cursor( _xterm_cursor );
-          set_item_mode( text, CanvasItemMode.EDITING, "set_edit_mode A" );
-        } else {
-          text.clear_selection();
-          _canvas.set_cursor( null );
-          set_item_mode( text, CanvasItemMode.NONE, "set_edit_mode B" );
-        }
-        text_item_edit_changed( text );
-        _canvas.queue_draw();
-        return( true );
-      }
-    }
-    return( false );
   }
 
   //-------------------------------------------------------------
@@ -993,7 +971,7 @@ public class CanvasItems {
         var text = get_active_text();
         text.insert( "\n", _canvas.undo_text );
       } else {
-        set_edit_mode( false );
+        set_item_mode( _active, CanvasItemMode.NONE, "handle-return" );
       }
       return( true );
     }
@@ -1005,7 +983,7 @@ public class CanvasItems {
   // editing mode
   private bool handle_escape() {
     if( in_edit_mode() ) {
-      set_edit_mode( false );
+      set_item_mode( _active, CanvasItemMode.NONE, "handle-escape" );
       return( true );
     } else {
       _canvas.editor.set_toolbar_tool( CanvasTool.SELECTOR );
@@ -1249,7 +1227,7 @@ public class CanvasItems {
                   _items.reverse();
                   return( false );
                 }
-                set_edit_mode( true );
+                set_item_mode( item, CanvasItemMode.EDITING, "pressed F" );
                 break;
             }
           }
@@ -1272,11 +1250,6 @@ public class CanvasItems {
       _select_y   = y;
 
     } else {
-
-      // If we are editing text, disable editing
-      if( in_edit_mode() ) {
-        set_edit_mode( false );
-      }
 
       var current_item = _canvas.editor.get_current_item();
       if( current_item != null ) {

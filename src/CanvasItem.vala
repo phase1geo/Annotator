@@ -240,11 +240,12 @@ public class CanvasItem {
             set_selector_visual( 0, true );
           }
         }
+        var prev_mode = _mode;
         _mode = value;
         if( _mode.moving() ) {
           last_bbox.copy( bbox );
         }
-        mode_changed();
+        mode_changed( prev_mode );
       }
     }
   }
@@ -313,7 +314,7 @@ public class CanvasItem {
 
   //-------------------------------------------------------------
   // Called whenever the mode changes
-  protected virtual void mode_changed() {}
+  protected virtual void mode_changed( CanvasItemMode prev_mode ) {}
 
   //-------------------------------------------------------------
   // Moves the item by the given amount

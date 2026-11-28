@@ -140,7 +140,7 @@ public class CanvasItemGroup : CanvasItem {
 
   }
 
-  protected override void mode_changed() {
+  protected override void mode_changed( CanvasItemMode prev_mode ) {
     if( mode != CanvasItemMode.MOVING ) {
       foreach( var item in _group ) {
         item.mode = CanvasItemMode.NONE;

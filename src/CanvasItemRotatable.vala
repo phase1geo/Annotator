@@ -88,8 +88,8 @@ public abstract class CanvasItemRotatable : CanvasItem {
   //-------------------------------------------------------------
   // Called whenever the mode changes.  Ends any rotation drag and
   // remembers the angle so that changes can be undone.
-  protected override void mode_changed() {
-    base.mode_changed();
+  protected override void mode_changed( CanvasItemMode prev_mode ) {
+    base.mode_changed( prev_mode );
     _rot_active = false;
     if( mode.moving() ) {
       last_angle = _angle;
